@@ -1,0 +1,86 @@
+## AnthropicのDispatchがOpen Clawを上回る性能で話題
+
+* https://x.com/gagarotai200/status/2034121987694665789
+
+## Claude Code開発チームがSkills活用の実践的ノウハウを完全公開
+
+* https://x.com/masahirochaen/status/2034251485878550640
+
+## 国産AI「PLaMo 3.0 Prime」初のReasoningモデル開発ブログ公開
+
+* https://x.com/preferred_jp/status/2034503353976467489
+* https://tech.preferred.jp/ja/blog/plamo-3-prime-beta-release/
+
+残念ながら、クローズドモデルの模様
+
+## AIによる実装自動化では工数削減効果は限定的との指摘
+
+* https://x.com/misojiyuu/status/2034506489746825379
+* https://x.com/shin_sasaki19/status/2034461397644607925
+
+まあ、そうですよね。
+実際の所、コーディングの工程って全工程の1/4くらいのイメージです。
+
+## GitHubで見えないUnicode文字を使った新手の不正コード挿入攻撃が発生
+
+* https://x.com/x64koichi/status/2034524914259284305
+
+## 楽天AI-3.0がDeepSeek-V3のLoRA実装である可能性が定量的に確認
+
+* https://x.com/kis/status/2034700278247874795
+* https://note.com/hamachi_jp/n/n5ccfdedd2518
+
+## RakutenAI-3.0がDeepSeek-V3と99.94%類似、人間と使徒より高い一致率
+
+* https://x.com/umiyuki_ai/status/2035570526924755428
+
+## GitHubにAWSキーペアを故意に公開する実験で十数分で不正利用が発生
+
+* https://x.com/koder_dev/status/2034933256207180258
+
+## AIを神様扱いしていたが実際は間違いが多く驚きの声が続出
+
+* https://x.com/t_wada/status/2035574954151023020
+
+## AnthropicのClaude認定資格が無料で取得可能と話題
+
+* https://x.com/sora19ai/status/2035653469839970581
+
+## AIツール3つ以上の並行使用で脳疲労、生産性低下の可能性
+
+* https://x.com/GOROman/status/2035879619153588377
+
+## Claude Desktopで画面クリックだけでDOM要素を直接指定可能に
+
+* https://x.com/hata_AI_master/status/2035882927691882715
+
+## Claude Codeがラズパイのパスワードをランダム変更後に控え忘れ
+
+* https://x.com/necobut/status/2035945735666237484
+
+Claude Codeに、ラズパイのパスワード変更したいと伝えたら、勝手にランダムな
+パスワードを設定して、設定したパスワード自体は忘れたらしいです
+
+まだまだ、こういうミスを見かけるので、完全にお任せするのは難しいですね 笑
+
+## Claude Codeに/scheduleコマンド追加、クラウドで定期実行可能に
+
+* https://x.com/claudecode_lab/status/2036182963424206903
+
+## Claudeがコンピューター操作を代行する新機能をmacOS限定でプレビュー公開
+
+* https://x.com/claudeai/status/2036195789601374705
+
+## AIライブラリ「LiteLLM」がサプライチェーン攻撃を受けマルウェア版が配布されてしまう
+
+* https://x.com/umiyuki_ai/status/2036494490907853202
+* https://github.com/BerriAI/litellm/issues/24518
+* https://diary.shift-js.info/litellm-compromise/
+* https://gigazine.net/news/20260325-litellm-supply-chain-attack/
+
+pip install でインストールすると関連ライブラリが勝手にインストールされるため、
+LLM関係の環境では、pip show litellm によりバージョンを確認してください
+現状、1.82.7, 1.82.8だとマルウェアに感染している可能性があります。
+
+
+
