@@ -1,0 +1,460 @@
+## 2026-04-22
+
+## Sonnetが図を見ただけでUI実装を完成
+* 2026-04-21T22:33:46.000000Z kis
+* https://twitter.com/kis/status/2046719069202821394
+
+手書きの画像を渡して、「こんな感じのhtmlのゲーム作って」というプロンプトだけで、横スクロールシューティングだと判断してある程度実装するのすごいですよね。
+
+## SpaceXとCursorがH100 100万機規模でコーディングAI共同開発
+* 2026-04-21T22:39:42.000000Z MLBear2
+* https://twitter.com/MLBear2/status/2046720560907079815
+
+H100が100万機とか、どれだけお金かかってるでしょうね 笑
+
+## Claude ProプランからClaude Codeが利用不可に
+* 2026-04-21T22:40:18.000000Z Fumiya_Kume
+* https://twitter.com/Fumiya_Kume/status/2046720712174620760
+
+この時点では、ClaudeのProプラン($20の方)から、Claude Codeが使えない記述になっていた模様
+今は、使えるようになっていますね。
+
+* https://claude.com/pricing
+
+## Claude Developer ConsoleにPrompt Cachingダッシュボード追加
+* 2026-04-22T00:21:09.000000Z oikon48
+* https://twitter.com/oikon48/status/2046746091480354826
+
+## Claude Mythosの公式カナ表記は「クロード・ミュトス」
+* 2026-04-22T02:45:25.000000Z KobayashiYutaro
+* https://twitter.com/KobayashiYutaro/status/2046782398491488747
+
+ミトスという呼び方かと思っていましたが、ミュトスになったようです。
+
+## Claude MythosがProプランでも利用可能の可能性
+* 2026-04-22T02:56:37.000000Z gosrum
+* https://twitter.com/gosrum/status/2046785215818072166
+
+## claude --model claude-mythos-0417コマンドの動作報告
+* 2026-04-22T04:45:21.000000Z aarondotdev
+* https://twitter.com/aarondotdev/status/2046812577754435705
+
+## IPAが指名停止、今年度監査の行方
+* 2026-04-22T05:18:59.000000Z keishiro_w
+* https://twitter.com/keishiro_w/status/2046821044707852395
+
+IPAが指名停止とかあるんですね。令和8年4月10日～9月9日までの間、指名停止のようです。
+
+* https://www.cao.go.jp/chotatsu/shikaku/shikaku.html
+
+## CodexにProモデル追加への期待
+* 2026-04-22T05:30:02.000000Z super_bonochin
+* https://twitter.com/super_bonochin/status/2046823823513960567
+
+残念ながら、うちのcodexでは Proモデルはありませんでした。$200プランだけなんでしょうかね。
+
+## NotebookLMローカル版OSS「Opennote」が海外で話題
+* 2026-04-22T09:27:00.000000Z L_go_mrk
+* https://twitter.com/L_go_mrk/status/2046883457930862976
+
+## Qwen3.6-27Bリリースへの歓喜
+* 2026-04-22T13:17:46.000000Z gosrum
+* https://twitter.com/gosrum/status/2046941533476458574
+
+かなり、賢い感じですが、当然最先端モデルには届きません。
+また、4bit量子化を使っているせいか、ところどころ日本語が崩れる感じでした。
+
+## 2026-04-23
+
+## Custom GPTs終了、後継「Workspace Agents」リリース
+* 2026-04-22T22:59:40.000000Z MakeAI_CEO
+* https://twitter.com/MakeAI_CEO/status/2047087974333264358
+
+まあ、最近という結構前から、GPTs使わなくなりましたしねぇ
+
+## Claude Code + Qwen3.6-27Bのts-benchがglm-5.1と同等
+* 2026-04-23T00:50:09.000000Z gosrum
+* https://twitter.com/gosrum/status/2047115776524742762
+
+ちなみに、GLM5.1は754Bらしいので、ts-benchだけでも勝っているのはスゴイですね。
+
+## Qwen3.6-27BがClaude Opus 4.5に迫る性能で公開
+* 2026-04-23T02:40:20.000000Z gigazine
+* https://twitter.com/gigazine/status/2047143505428922537
+* https://gigazine.net/news/20260423-qwen-3-6-27b
+
+かなり性能が良いのは確かですが、Opus4.5ほどかと言われると疑問ですね。
+ただ、Anthropicはモデル自体の優秀さより、WebフロントエンドやClaude Codeの制御の上手さで印象が底上げされますので、モデル自体の性能は結構近いのかもしれません。
+
+## OpenAIが小型プライバシーフィルターOSSモデル公開
+* 2026-04-23T12:05:03.000000Z umiyuki_ai
+* https://twitter.com/umiyuki_ai/status/2047285622927401420
+
+## Claude Code + Qwen3.6-27B(thinkingなし)がベスト評価
+* 2026-04-23T12:24:00.000000Z gosrum
+* https://twitter.com/gosrum/status/2047290391884657021
+
+## 2026-04-24
+
+## 圏論本『Category Theory for Programmers』日本語版GitHub公開
+* 2026-04-23T15:10:02.000000Z phys_yoshiki
+* https://twitter.com/phys_yoshiki/status/2047332172282142806
+* https://github.com/ktgw0316/milewski-ctfp-markdown
+
+## Unsloth Studio + Qwen3.6-27BがGitHub Issueをトリアージ
+* 2026-04-23T16:15:23.000000Z UnslothAI
+* https://twitter.com/UnslothAI/status/2047348619465068995
+
+2bit量子化のQwen3.6-27Bが、Unslothのissueを３件修正できたとのこと。
+2bit量子化で精度を保っているのは凄いですね。
+
+## OpenAIがGPT-5.5を正式発表、エージェント向け新世代モデル
+* 2026-04-23T18:06:25.000000Z OpenAI
+* https://twitter.com/OpenAI/status/2047376561205325845
+
+## Qwen3.6 35B/27Bの実装力とデバッグ力の使い分け
+* 2026-04-23T18:18:47.000000Z kis
+* https://twitter.com/kis/status/2047379673420849589
+
+なるほど。実装だけだったら、35B-A3Bでも十分行けるんですね。
+
+## GPT-5.5発表、コード作成・調査・データ分析を高精度化
+* 2026-04-23T19:04:56.000000Z itnavi2022
+* https://twitter.com/itnavi2022/status/2047391288241320354
+
+## GPT-5.5/5.5 Proの実態がClaude Mythosに酷似
+* 2026-04-23T20:32:32.000000Z yugen_matuni
+* https://twitter.com/yugen_matuni/status/2047413332462977413
+
+このベンチマークだけではなんとも言えませんが、GPT-5.5 Proは結構良いみたいですね。
+
+## GPT-5.4→5.5は長文・ツール・業務遂行力で大幅進化
+* 2026-04-23T23:05:23.000000Z yukimasakiyu
+* https://twitter.com/yukimasakiyu/status/2047451797816750101
+
+## DeepSeek-V4がHugging Faceに登場
+* 2026-04-24T03:00:56.000000Z _akhaliq
+* https://twitter.com/_akhaliq/status/2047511075793314065
+
+まあ、日本でDeepSeek使うのは難しそうですが一応。
+
+## Codex Appの音声入力がOS全アプリで利用可能に
+* 2026-04-24T03:13:36.000000Z nukonuko
+* https://twitter.com/nukonuko/status/2047514264798400633
+
+Codex関係ないアプリでも、これで音声入力できるってことですかね？
+後で試してみなくては。
+
+## DeepSeek V4の性能比較、コーディングでトップ
+* 2026-04-24T03:23:38.000000Z itnavi2022
+* https://twitter.com/itnavi2022/status/2047516788766982221
+
+流石のDeepSeek。ベンチマークスコア、凄まじいですね。
+
+## DeepSeek-V4プレビューがMITライセンスで公開
+* 2026-04-24T06:31:07.000000Z umiyuki_ai
+* https://twitter.com/umiyuki_ai/status/2047563971348279310
+
+## カーボンナノチューブ電線の導電性10倍向上、銅代替へ
+* 2026-04-24T09:20:00.000000Z russianblue2009
+* https://twitter.com/russianblue2009/status/2047606471689740720
+
+## DeepSeek-V4は1.6TB-A49Bでも推論負荷激減
+* 2026-04-24T12:04:37.000000Z umiyuki_ai
+* https://twitter.com/umiyuki_ai/status/2047647901405626440
+
+モデルサイズもすごい。
+
+## 2026-04-25
+
+## Qwen3.6 27B/35B GGUF量子化評価まとめ
+* 2026-04-24T21:16:16.000000Z bnjmn_marie
+* https://twitter.com/bnjmn_marie/status/2047786725846724918
+
+## Qwen-3.6-27B + llama.cpp ngram-modで生成速度10倍
+* 2026-04-24T23:12:01.000000Z ai_hakase_
+* https://twitter.com/ai_hakase_/status/2047815856994881818
+
+2bit量子化で、97%ということは、このサイズでまだまだ賢くなるということでしょうか。
+
+## 2026-04-26
+
+## Microsoft VibeVoiceがOSSとして再公開
+* 2026-04-25T21:03:49.000000Z DeepTechTR
+* https://twitter.com/DeepTechTR/status/2048145980143415447
+
+## キャラクターのデザインシステム自動生成
+* 2026-04-26T06:53:29.000000Z oikon48
+* https://twitter.com/oikon48/status/2048294377173496286
+
+
+## 2026-04-27
+
+## Microsoft TRELLIS.2が画像→3D変換を3秒で実行
+* 2026-04-26T15:10:33.000000Z berryxia
+* https://twitter.com/berryxia/status/2048419466980306989
+
+## TRELLIS.2のHugging FaceデモとGitHub公開
+* 2026-04-26T15:10:51.000000Z berryxia
+* https://twitter.com/berryxia/status/2048419541378826335
+
+2D画像から、3Dモデルを生成するモデルとのこと。
+
+## Codex DesktopでUI案10個をボタン比較するプロンプト
+* 2026-04-26T21:20:22.000000Z zento_ai
+* https://twitter.com/zento_ai/status/2048512533791932539
+
+## Codexにcodex用プロンプトを書かせる自動化手法
+* 2026-04-27T04:28:17.000000Z notf
+* https://twitter.com/notf/status/2048620223427994016
+
+実際に、思った挙動をしないときに、
+「こういうことをやらせるために、こういうプロンプトを書いたけど、こういう結果になりました。なぜでしょうか？　また、プロンプトをどう記述するべきでしょうか？」
+のような使い方をしています。
+
+## CLAUDE_CODE_AUTO_COMPACT_WINDOWでローカルClaude Code動作
+* 2026-04-27T08:14:38.000000Z NuCode
+* https://twitter.com/NuCode/status/2048677186870423606
+
+## 2026-04-28
+
+## 日本語特化LLM音声合成sarashina2.2-tts公開
+* 2026-04-28T02:02:34.000000Z sbintuitions
+* https://twitter.com/sbintuitions/status/2048945941881958756
+
+## ベクトルDB不要のRAG手法「Corpus2Skill」解説
+* 2026-04-28T03:21:40.000000Z at_sushi_
+* https://twitter.com/at_sushi_/status/2048965845234393492
+* https://zenn.dev/knowledgesense/articles/7dddae04a7d828
+* https://arxiv.org/abs/2604.14572
+
+確かに、良さそうな手法ですね。
+
+## Codex + GPT-5.5の100分完全チュートリアル
+* 2026-04-28T05:43:12.000000Z Codestudiopjbk
+* https://twitter.com/Codestudiopjbk/status/2049001464639733987
+
+## Xiaomi MiMo-V2.5-Proがオープンモデルで公開
+* 2026-04-28T07:48:19.000000Z gigazine
+* https://twitter.com/gigazine/status/2049032953162760327
+* https://gigazine.net/news/20260428-xiaomi-mimo-v2-5-pro/
+
+
+
+## OpenAIがCodexエージェント自動管理ツール「Symphony」開発
+* 2026-04-28T09:13:20.000000Z gigazine
+* https://twitter.com/gigazine/status/2049054346550050944
+* https://gigazine.net/news/20260428-openai-symphony/
+
+複数エージェントを使うときに、どのエージェントにどのタスクを任せているのかがわからなくなります。
+それを、可視化して管理しやすくするツールのようです。
+
+## 2026-04-29
+
+## Hermes Agent + opencode goプランkimi-k2.6推奨
+* 2026-04-28T22:36:43.000000Z gosrum
+* https://twitter.com/gosrum/status/2049256526439923890
+
+## GPT-5.5は1世代前のProモードを上回る進化速度
+* 2026-04-29T05:37:14.000000Z K_Ishi_AI
+* https://twitter.com/K_Ishi_AI/status/2049362351460429941
+
+GPT 5.4 Proより、GPT-5.5のが賢いなんてこと、あるんですかね
+実際ベンチマーク上はそうなってるようですが、信じがたいです
+
+## Skymizer HTX301が1枚384GBで700Bモデル動作
+* 2026-04-29T06:06:01.000000Z ai_hakase_
+* https://twitter.com/ai_hakase_/status/2049369595853574288
+
+## Skymizer LLM推論アーキテクチャのRedditスレッド
+* 2026-04-29T06:06:02.000000Z ai_hakase_
+* https://twitter.com/ai_hakase_/status/2049369597208379710
+
+## Codexで画像生成→分割→透過→リネームをワンプロンプト自動化
+* 2026-04-29T07:07:10.000000Z gosrum
+* https://twitter.com/gosrum/status/2049384983182377257
+
+## Codexは日本語の曖昧さで挙動が荒れる
+* 2026-04-29T08:17:33.000000Z zento_ai
+* https://twitter.com/zento_ai/status/2049402696629989475
+
+あー、なるほど。
+Codexに対する不満は、プロンプトに日本語を使っているからの可能性があるんですね。
+
+## ChatGPT Proが数学の予想に反例を構成
+* 2026-04-29T08:57:09.000000Z henomoto1025
+* https://twitter.com/henomoto1025/status/2049412663206375892
+
+## Codexにネイティブブラウザ機能が統合
+* 2026-04-29T09:00:10.000000Z Codestudiopjbk
+* https://twitter.com/Codestudiopjbk/status/2049413420378997029
+
+Codexでもブラウザが使えるように
+
+## Ask Devinによる GPT-5.5評価の5傾向
+## LLMの視野の狭さの3軸（空間・時間・条件空間）
+* 2026-04-29T11:51:57.000000Z kinopee_ai
+* 2026-04-29T11:51:57.000000Z kinopee_ai
+
+* https://twitter.com/kinopee_ai/status/2049456650747326509
+* https://twitter.com/kinopee_ai/status/2049456653809205726
+
+この評価は興味深いですね。
+全体的な整合性とか弱いですし、確かに、視野が狭いような感覚はあります。
+
+## CodexのAIスライド生成（画像出力）が最強
+* 2026-04-29T12:38:40.000000Z SuguruKun_ai
+* https://twitter.com/SuguruKun_ai/status/2049468407926698355
+
+## 2026-04-30
+
+## Linuxカーネル Copy Fail脆弱性でroot権限奪取
+* 2026-04-30T00:11:52.000000Z yousukezan
+* https://twitter.com/yousukezan/status/2049642859465429340
+
+## NVIDIA Nemotron-3-Nano-Omni-30Bへの注目
+* 2026-04-30T02:20:30.000000Z Alisvolatprop12
+* https://twitter.com/Alisvolatprop12/status/2049675228188733485
+
+## VAE不要のSenseNova U1画像生成モデル登場
+* 2026-04-30T09:20:19.000000Z gigazine
+* https://twitter.com/gigazine/status/2049780881137488015
+* https://gigazine.net/news/20260430-sensenova-u1-image-generation-ai/
+
+## Codexがマウスカーソルで全機能を自動UIテスト
+* 2026-04-30T13:34:38.000000Z knshtyk
+* https://twitter.com/knshtyk/status/2049844879187124642
+
+## 2026-05-01
+
+## Claude Securityが企業向けパブリックベータ開始
+* 2026-04-30T17:08:39.000000Z claudeai
+* https://twitter.com/claudeai/status/2049898739783897537
+
+## GPT-5.5とClaude Opus 4.7のプロンプトガイド対比
+* 2026-04-30T17:50:36.000000Z AYi_AInotes
+* https://twitter.com/AYi_AInotes/status/2049909296754987242
+
+> ⃣OpenAI は「プロセスをあまり指定せず、欲しい結果を明確に伝え、モデルに自分でパスを選ばせろ」と言っています。
+> ⃣Anthropic は「モデルに意図を推測させるな、意図・フォーマット・成功基準を一切曖昧にしない」と言っています。
+
+OpenAIとAnthropicでモデルへの指示の詳細さというか、質が違うのが面白いですね。
+
+
+## Codexのゲーム開発プロンプトまとめ
+* 2026-04-30T22:35:23.000000Z npaka123
+* https://twitter.com/npaka123/status/2049980966383567306
+* https://note.com/npaka/n/n8fb9f73d2ce3
+
+## CodexのiOSアプリ開発プロンプトまとめ
+* 2026-05-01T00:42:04.000000Z npaka123
+* https://twitter.com/npaka123/status/2050012844188729604
+* https://note.com/npaka/n/n51962b239b68
+
+## Ubuntu 24.04→26.04 LTS業務移行の注意点
+* 2026-05-01T00:45:22.000000Z karaage0703
+* https://twitter.com/karaage0703/status/2050013677739499702
+* https://uepon.hatenadiary.com/entry/2026/04/30/235827
+
+どうも、24.04 LTSから26.04 LTSでは大幅な変更が入っているようです。
+26.04 LTSを初めて使う場合や、24.04 LTSから移行する場合は、目を通しておく方が良さそうです。
+
+## MiMo-V2.5-Proの性能評価への驚き
+* 2026-05-01T00:49:59.000000Z gosrum
+* https://twitter.com/gosrum/status/2050014839414960325
+
+## GPT-5.5がマルチステップサイバー攻撃シミュレーションで成功
+* 2026-05-01T01:55:44.000000Z umiyuki_ai
+* https://twitter.com/umiyuki_ai/status/2050031383532417077
+
+GPT-5.5がミュトス並みにサイバー攻撃能力が高いっぽいですね。
+これが公開されてしまった以上、半年後には、DeepSeekなどがここに到達しそうです
+
+## 米国企業がAI代替したシニアエンジニアの再雇用へ
+* 2026-05-01T03:33:13.000000Z kinopee_ai
+* https://twitter.com/kinopee_ai/status/2050055917379657906
+
+ちょっと安心できるニュースですね。
+というか、アメリカの企業は何も考えずに人員を切りますね
+
+## Qwen-ScopeでAI内部の特徴量を直接操作するSAE
+* 2026-05-01T03:35:55.000000Z NullEvi03
+* https://twitter.com/NullEvi03/status/2050056594969509976
+
+## Mistral-Medium-3.5-128BをRyzenAIMax395で3tps駆動
+* 2026-05-01T03:37:50.000000Z umiyuki_ai
+* https://twitter.com/umiyuki_ai/status/2050057079529120010
+
+## Anthropic調査でAI「ごますり構文」発生条件が判明
+* 2026-05-01T04:05:20.000000Z gigazine
+* https://twitter.com/gigazine/status/2050063999329251587
+* https://gigazine.net/news/20260501-ai-sycophantically-response/
+
+スピリチュアル関連、人間関係のお話だと、ゴマを摺りがちということですかね。
+イマイチ、条件が判明というほどの確定情報ではない感じです。
+
+## Gemini・NotebookLMのエンタープライズ版が政府認定入り
+* 2026-05-01T08:55:04.000000Z itmedia_news
+* https://twitter.com/itmedia_news/status/2050136912393089183
+
+## Claude Securityのエンプラ契約は年額80万円
+* 2026-05-01T11:09:53.000000Z zento_ai
+* https://twitter.com/zento_ai/status/2050170841674228180
+
+## 2026-05-02
+
+## 待望の機能リリースに歓喜
+* 2026-05-01T22:09:35.000000Z suh_sunaneko
+* https://twitter.com/suh_sunaneko/status/2050336858169909562
+
+Claude Codeの設定をインポート、という話ではなく、複数のエージェントを使っているときに、
+他のエージェントの設定をインポートできる機能っぽいです。
+マシンを移動して作業を続けさせられるのが良いところでしょうか。
+
+
+## Codex App Petでメモリ消費が増大、可愛さとのトレードオフ
+* 2026-05-02T11:06:46.000000Z yugen_matuni
+* https://twitter.com/yugen_matuni/status/2050532442826838472
+
+## 2026-05-04
+
+## Opus 4.7「ぜいたくに消費」プロンプト構文で復活
+* 2026-05-03T18:32:23.000000Z kinopee_ai
+* https://twitter.com/kinopee_ai/status/2051006974201045136
+
+## Codex App Serverで自作アプリ連携、実質API使い放題
+* 2026-05-03T22:33:14.000000Z super_bonochin
+* https://twitter.com/super_bonochin/status/2051067586788696359
+
+## 仕様駆動AIセキュリティ監査OSS「SPECA」公開
+* 2026-05-04T08:05:21.000000Z NyxFoundation
+* https://twitter.com/NyxFoundation/status/2051211563290497121
+
+公開した、NyxFoundationさんのツイート。
+今までのコードからバグを見つける手法ではなく、仕様からコードへの落とし込みでミスっているところを指摘できるようです。
+
+## Codex Appがアプリ連携・サブスク課金で利用可能に
+* 2026-05-04T08:41:52.000000Z tommy_love123
+* https://twitter.com/tommy_love123/status/2051220754658890214
+
+Codex App経由だと、ChatGPTのサブスクで割り当てられているトークンを使用して、自分が開発したアプリからAPIを呼べるようです。
+いや、これは、すごいですね。
+
+## 2026-05-05
+
+## Codex App Serverの概要解説
+* 2026-05-04T23:48:21.000000Z npaka123
+* https://twitter.com/npaka123/status/2051448878386606370
+
+## SPECAバグ報告件数1位ツールのOSS化に驚き
+* 2026-05-05T05:36:27.000000Z Rev1752999
+* https://twitter.com/Rev1752999/status/2051536481181905210
+
+## AI初心者にはGPT-3.5から触らせる教育論
+* 2026-05-05T07:29:37.000000Z umiyuki_ai
+* https://twitter.com/umiyuki_ai/status/2051564961235960117
+
+これ、良いですね。
+「AIって間違うんですね」みたいなことを言う人が居るというニュースを見た後では、
+実際に、こういうことをやった方が良いと思ってしまいます。
+
