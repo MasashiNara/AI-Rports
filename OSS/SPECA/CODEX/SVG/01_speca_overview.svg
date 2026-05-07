@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs>
+    <style>
+      .bg{fill:#f7f9fb}.title{font:700 48px sans-serif;fill:#17202a}.sub{font:400 24px sans-serif;fill:#394b59}
+      .h{font:700 28px sans-serif;fill:#102a43}.t{font:400 22px sans-serif;fill:#263238}.s{font:400 18px sans-serif;fill:#52616b}
+      .box{fill:#fff;stroke:#b7c3d0;stroke-width:2;rx:18}.blue{fill:#e7f0ff;stroke:#4d7cfe}.green{fill:#e8f7ef;stroke:#2f9e62}
+      .amber{fill:#fff4dc;stroke:#d99000}.red{fill:#ffe8e8;stroke:#d64545}.arrow{stroke:#435466;stroke-width:4;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M2,2 L10,6 L2,10 Z" fill="#435466"/></marker>
+  </defs>
+  <rect class="bg" width="1400" height="900"/>
+  <text class="title" x="70" y="80">SPECAとは何か</text>
+  <text class="sub" x="70" y="120">仕様書からセキュリティ性質を作り、実装がそれを満たすかを証明試行で監査するOSS</text>
+
+  <rect class="box blue" x="80" y="190" width="300" height="190"/>
+  <text class="h" x="115" y="240">入力</text>
+  <text class="t" x="115" y="285">自然言語の仕様書</text>
+  <text class="s" x="115" y="320">EIP、プロトコル仕様</text>
+  <text class="s" x="115" y="350">暗号・合意形成ルール</text>
+
+  <rect class="box green" x="540" y="170" width="320" height="230"/>
+  <text class="h" x="575" y="220">SPECA</text>
+  <text class="t" x="575" y="265">仕様から性質を抽出</text>
+  <text class="t" x="575" y="305">コードで証明を試行</text>
+  <text class="t" x="575" y="345">破綻点を脆弱性候補化</text>
+  <text class="s" x="575" y="380">LLM + 構造化パイプライン</text>
+
+  <rect class="box amber" x="1020" y="190" width="300" height="190"/>
+  <text class="h" x="1055" y="240">出力</text>
+  <text class="t" x="1055" y="285">候補脆弱性</text>
+  <text class="s" x="1055" y="320">コードパス</text>
+  <text class="s" x="1055" y="350">証明トレース・攻撃シナリオ</text>
+
+  <path class="arrow" d="M390 285 H520"/>
+  <path class="arrow" d="M870 285 H1000"/>
+
+  <rect class="box" x="95" y="520" width="1210" height="260"/>
+  <text class="h" x="140" y="575">中心思想</text>
+  <text class="t" x="140" y="625">従来: コードから怪しい箇所を探す</text>
+  <text class="t" x="140" y="675">SPECA: 仕様から「守るべき主張」を作り、その主張がコードで守られるかを調べる</text>
+  <text class="t" x="140" y="725">結果: 発見理由を、仕様 → 性質 → コード → 攻撃シナリオとして説明しやすい</text>
+  <rect class="box red" x="930" y="560" width="300" height="150"/>
+  <text class="h" x="965" y="610">注意</text>
+  <text class="s" x="965" y="650">完全な形式検証ではない</text>
+  <text class="s" x="965" y="680">人間の検証が必要</text>
+</svg>

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="900" viewBox="0 0 1500 900">
+  <defs>
+    <style>
+      .bg{fill:#f7f9fb}.title{font:700 44px sans-serif;fill:#17202a}.h{font:700 26px sans-serif;fill:#102a43}
+      .t{font:400 20px sans-serif;fill:#263238}.s{font:400 16px sans-serif;fill:#52616b}.box{fill:white;stroke:#bac6d3;stroke-width:2;rx:18}
+      .blue{fill:#e7f0ff;stroke:#4d7cfe}.green{fill:#e8f7ef;stroke:#2f9e62}.amber{fill:#fff4dc;stroke:#d99000}.red{fill:#ffe8e8;stroke:#d64545}
+      .arrow{stroke:#455a64;stroke-width:4;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M2,2 L10,6 L2,10 Z" fill="#455a64"/></marker>
+  </defs>
+  <rect class="bg" width="1500" height="900"/>
+  <text class="title" x="70" y="80">Phase 03「証明試行」の中身</text>
+  <text class="s" x="72" y="115">形式検証ではなく、LLMによる構造化された証拠構築</text>
+
+  <rect class="box blue" x="90" y="190" width="320" height="170"/>
+  <text class="h" x="130" y="240">入力プロパティ</text>
+  <text class="t" x="130" y="285">例: キャッシュキーは</text>
+  <text class="t" x="130" y="320">検証対象データを全て含む</text>
+
+  <path class="arrow" d="M420 275 H510"/>
+  <rect class="box amber" x="520" y="170" width="280" height="210"/>
+  <text class="h" x="560" y="220">1. Map</text>
+  <text class="t" x="560" y="265">主張を分解</text>
+  <text class="s" x="560" y="300">入力範囲</text>
+  <text class="s" x="560" y="330">関数・呼び出し元</text>
+  <text class="s" x="560" y="360">責務コード</text>
+
+  <path class="arrow" d="M810 275 H900"/>
+  <rect class="box green" x="910" y="170" width="280" height="210"/>
+  <text class="h" x="950" y="220">2. Prove</text>
+  <text class="t" x="950" y="265">コードで検証</text>
+  <text class="s" x="950" y="300">全パスを読む</text>
+  <text class="s" x="950" y="330">並行性・時間条件</text>
+  <text class="s" x="950" y="360">キー完全性</text>
+
+  <path class="arrow" d="M1050 385 V470"/>
+  <rect class="box red" x="860" y="480" width="380" height="170"/>
+  <text class="h" x="900" y="530">3. Stress-Test</text>
+  <text class="t" x="900" y="575">仮定を疑い、攻撃経路を構成</text>
+  <text class="s" x="900" y="610">成立しないなら候補脆弱性へ</text>
+
+  <path class="arrow" d="M860 565 H735 V600"/>
+  <rect class="box" x="450" y="600" width="570" height="170"/>
+  <text class="h" x="490" y="650">出力される説明</text>
+  <text class="t" x="490" y="695">classification / code_path / proof_trace / attack_scenario</text>
+  <text class="s" x="490" y="730">「どの主張が、どのコードで、なぜ破綻したか」を残す</text>
+
+  <rect class="box red" x="90" y="560" width="280" height="150"/>
+  <text class="h" x="130" y="610">採用理由</text>
+  <text class="s" x="130" y="650">「バグを探せ」方式は</text>
+  <text class="s" x="130" y="680">初期実験でFP率88%</text>
+</svg>

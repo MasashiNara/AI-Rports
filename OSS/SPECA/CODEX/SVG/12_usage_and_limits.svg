@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="900" viewBox="0 0 1500 900">
+  <defs>
+    <style>
+      .bg{fill:#f7f9fb}.title{font:700 44px sans-serif;fill:#17202a}.h{font:700 25px sans-serif;fill:#102a43}
+      .t{font:400 19px sans-serif;fill:#263238}.s{font:400 16px sans-serif;fill:#52616b}.mono{font:400 17px monospace;fill:#263238}
+      .box{fill:#fff;stroke:#b8c5d3;stroke-width:2;rx:18}.ok{fill:#e8f7ef;stroke:#2f9e62}.warn{fill:#fff4dc;stroke:#d99000}.red{fill:#ffe8e8;stroke:#d64545}
+    </style>
+  </defs>
+  <rect class="bg" width="1500" height="900"/>
+  <text class="title" x="70" y="80">利用イメージと注意点</text>
+
+  <rect class="box ok" x="90" y="160" width="610" height="280"/>
+  <text class="h" x="130" y="215">最小実行の流れ</text>
+  <text class="mono" x="130" y="270">uv sync</text>
+  <text class="mono" x="130" y="310">bash scripts/setup_mcp.sh --verify</text>
+  <text class="mono" x="130" y="350">SPEC_URLS=... uv run python3 scripts/run_phase.py --phase 01a</text>
+  <text class="mono" x="130" y="390">uv run python3 scripts/run_phase.py --target 04 --workers 4</text>
+
+  <rect class="box" x="800" y="160" width="610" height="280"/>
+  <text class="h" x="840" y="215">新しい対象に必要なもの</text>
+  <text class="t" x="840" y="270">1. 仕様URL</text>
+  <text class="t" x="840" y="310">2. 対象リポジトリと固定commit</text>
+  <text class="t" x="840" y="350">3. BUG_BOUNTY_SCOPE.json</text>
+  <text class="t" x="840" y="390">4. TARGET_INFO.json</text>
+
+  <rect class="box warn" x="90" y="520" width="610" height="230"/>
+  <text class="h" x="130" y="575">得意なこと</text>
+  <text class="t" x="130" y="630">仕様依存の不変条件違反を探す</text>
+  <text class="t" x="130" y="670">複数実装を同じ性質で比較する</text>
+  <text class="t" x="130" y="710">誤検知を原因別に分析する</text>
+
+  <rect class="box red" x="800" y="520" width="610" height="230"/>
+  <text class="h" x="840" y="575">注意点</text>
+  <text class="t" x="840" y="630">完全な形式検証ではない</text>
+  <text class="t" x="840" y="670">候補脆弱性は人間が検証する</text>
+  <text class="t" x="840" y="710">深い仕様知識は手動プロパティ補強が有効</text>
+</svg>

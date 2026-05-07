@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="900" viewBox="0 0 1500 900">
+  <defs>
+    <style>
+      .bg{fill:#f7f9fb}.title{font:700 44px sans-serif;fill:#17202a}.h{font:700 24px sans-serif;fill:#102a43}
+      .t{font:400 19px sans-serif;fill:#263238}.s{font:400 15px sans-serif;fill:#52616b}.box{fill:#fff;stroke:#b8c5d3;stroke-width:2;rx:14}
+      .core{fill:#e7f0ff;stroke:#4d7cfe}.safe{fill:#e8f7ef;stroke:#2f9e62}.warn{fill:#fff4dc;stroke:#d99000}
+      .arrow{stroke:#455a64;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M1,1 L9,5 L1,9 Z" fill="#455a64"/></marker>
+  </defs>
+  <rect class="bg" width="1500" height="900"/>
+  <text class="title" x="70" y="80">実行ハーネスの構造</text>
+  <text class="s" x="72" y="115">scripts/orchestrator がフェーズ共通の実行・再開・安全制御を担う</text>
+
+  <rect class="box core" x="560" y="160" width="380" height="120"/>
+  <text class="h" x="610" y="210">PhaseConfig</text>
+  <text class="t" x="610" y="245">入力・出力・依存・予算・ツール制限</text>
+
+  <rect class="box" x="90" y="350" width="260" height="120"/><text class="h" x="125" y="400">QueueManager</text><text class="s" x="125" y="435">処理対象を分割</text>
+  <rect class="box" x="410" y="350" width="260" height="120"/><text class="h" x="445" y="400">BatchStrategy</text><text class="s" x="445" y="435">count / tokenでバッチ化</text>
+  <rect class="box core" x="730" y="350" width="260" height="120"/><text class="h" x="765" y="400">ClaudeRunner</text><text class="s" x="765" y="435">Claude CLIを並列実行</text>
+  <rect class="box" x="1050" y="350" width="260" height="120"/><text class="h" x="1085" y="400">ResultCollector</text><text class="s" x="1085" y="435">JSON結果を保存</text>
+
+  <path class="arrow" d="M750 285 V330 H220 V345"/>
+  <path class="arrow" d="M350 410 H400"/><path class="arrow" d="M670 410 H720"/><path class="arrow" d="M990 410 H1040"/>
+
+  <rect class="box safe" x="180" y="610" width="300" height="135"/>
+  <text class="h" x="220" y="660">ResumeManager</text>
+  <text class="t" x="220" y="700">処理済みをスキップ</text>
+  <text class="s" x="220" y="728">PARTIAL出力から再開</text>
+
+  <rect class="box warn" x="600" y="610" width="300" height="135"/>
+  <text class="h" x="640" y="660">Circuit Breaker</text>
+  <text class="t" x="640" y="700">連続失敗・空結果を監視</text>
+  <text class="s" x="640" y="728">系統的失敗を早期停止</text>
+
+  <rect class="box safe" x="1020" y="610" width="300" height="135"/>
+  <text class="h" x="1060" y="660">CostTracker</text>
+  <text class="t" x="1060" y="700">トークン・推定費用を追跡</text>
+  <text class="s" x="1060" y="728">フェーズ予算を超えたら停止</text>
+
+  <path class="arrow" d="M330 600 V505 H860 V480"/>
+  <path class="arrow" d="M750 600 V480"/>
+  <path class="arrow" d="M1170 600 V505 H860 V480"/>
+</svg>

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="980" viewBox="0 0 1500 980">
+  <defs>
+    <style>
+      .bg{fill:#f7f9fb}.title{font:700 44px sans-serif;fill:#17202a}.h{font:700 24px sans-serif;fill:#102a43}
+      .t{font:400 18px sans-serif;fill:#263238}.s{font:400 15px sans-serif;fill:#52616b}.box{fill:#fff;stroke:#b8c5d3;stroke-width:2;rx:12}
+      .in{fill:#e7f0ff}.out{fill:#e8f7ef}.phase{fill:#fff4dc}.arrow{stroke:#455a64;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M1,1 L9,5 L1,9 Z" fill="#455a64"/></marker>
+  </defs>
+  <rect class="bg" width="1500" height="980"/>
+  <text class="title" x="60" y="70">フェーズ別の入力・処理・出力</text>
+  <text class="s" x="62" y="105">SPECAの実行単位を、ファイルと処理内容で読む</text>
+  <text class="h" x="100" y="160">入力</text><text class="h" x="615" y="160">処理</text><text class="h" x="1110" y="160">出力</text>
+
+  <g transform="translate(60 195)">
+    <rect class="box in" x="0" y="0" width="360" height="85"/><text class="t" x="25" y="35">SPEC_URLS</text><text class="s" x="25" y="62">起点となる仕様URL</text>
+    <rect class="box phase" x="520" y="0" width="340" height="85"/><text class="h" x="545" y="35">01a 仕様探索</text><text class="s" x="545" y="62">関連仕様をカタログ化</text>
+    <rect class="box out" x="1010" y="0" width="360" height="85"/><text class="t" x="1035" y="35">outputs/01a_STATE.json</text><text class="s" x="1035" y="62">発見仕様一覧</text>
+    <path class="arrow" d="M370 42 H510"/><path class="arrow" d="M870 42 H1000"/>
+  </g>
+  <g transform="translate(60 305)">
+    <rect class="box in" x="0" y="0" width="360" height="85"/><text class="t" x="25" y="35">01a_STATE.json</text><text class="s" x="25" y="62">仕様文書一覧</text>
+    <rect class="box phase" x="520" y="0" width="340" height="85"/><text class="h" x="545" y="35">01b サブグラフ抽出</text><text class="s" x="545" y="62">処理フローと不変条件へ分解</text>
+    <rect class="box out" x="1010" y="0" width="360" height="85"/><text class="t" x="1035" y="35">01b_PARTIAL_*.json</text><text class="s" x="1035" y="62">graphs/*.mmd</text>
+    <path class="arrow" d="M370 42 H510"/><path class="arrow" d="M870 42 H1000"/>
+  </g>
+  <g transform="translate(60 415)">
+    <rect class="box in" x="0" y="0" width="360" height="85"/><text class="t" x="25" y="32">01b_PARTIAL + BUG_BOUNTY_SCOPE</text><text class="s" x="25" y="62">信頼境界・重大度基準</text>
+    <rect class="box phase" x="520" y="0" width="340" height="85"/><text class="h" x="545" y="35">01e 性質生成</text><text class="s" x="545" y="62">Invariant / Pre / Post / Assumption</text>
+    <rect class="box out" x="1010" y="0" width="360" height="85"/><text class="t" x="1035" y="35">01e_PARTIAL_*.json</text><text class="s" x="1035" y="62">property_id付き性質</text>
+    <path class="arrow" d="M370 42 H510"/><path class="arrow" d="M870 42 H1000"/>
+  </g>
+  <g transform="translate(60 525)">
+    <rect class="box in" x="0" y="0" width="360" height="85"/><text class="t" x="25" y="32">01e_PARTIAL + TARGET_INFO</text><text class="s" x="25" y="62">対象repoとcommit</text>
+    <rect class="box phase" x="520" y="0" width="340" height="85"/><text class="h" x="545" y="35">02c コード位置解決</text><text class="s" x="545" y="62">Tree-sitter / Grep / Glob</text>
+    <rect class="box out" x="1010" y="0" width="360" height="85"/><text class="t" x="1035" y="35">02c_PARTIAL_*.json</text><text class="s" x="1035" y="62">file / symbol / line range</text>
+    <path class="arrow" d="M370 42 H510"/><path class="arrow" d="M870 42 H1000"/>
+  </g>
+  <g transform="translate(60 635)">
+    <rect class="box in" x="0" y="0" width="360" height="85"/><text class="t" x="25" y="35">02c_PARTIAL + 対象コード</text><text class="s" x="25" y="62">自動cloneされた固定commit</text>
+    <rect class="box phase" x="520" y="0" width="340" height="85"/><text class="h" x="545" y="35">03 監査</text><text class="s" x="545" y="62">Map → Prove → Stress-Test</text>
+    <rect class="box out" x="1010" y="0" width="360" height="85"/><text class="t" x="1035" y="35">03_PARTIAL_*.json</text><text class="s" x="1035" y="62">証明トレース・攻撃シナリオ</text>
+    <path class="arrow" d="M370 42 H510"/><path class="arrow" d="M870 42 H1000"/>
+  </g>
+  <g transform="translate(60 745)">
+    <rect class="box in" x="0" y="0" width="360" height="85"/><text class="t" x="25" y="32">03_PARTIAL + Scope + Target</text><text class="s" x="25" y="62">候補発見と審査基準</text>
+    <rect class="box phase" x="520" y="0" width="340" height="85"/><text class="h" x="545" y="35">04 レビュー</text><text class="s" x="545" y="62">Dead Code / Trust / Scope</text>
+    <rect class="box out" x="1010" y="0" width="360" height="85"/><text class="t" x="1035" y="35">04_PARTIAL_*.json</text><text class="s" x="1035" y="62">CONFIRMED / DISPUTED等</text>
+    <path class="arrow" d="M370 42 H510"/><path class="arrow" d="M870 42 H1000"/>
+  </g>
+</svg>

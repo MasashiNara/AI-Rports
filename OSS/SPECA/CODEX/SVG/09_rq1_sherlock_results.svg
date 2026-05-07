@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="900" viewBox="0 0 1500 900">
+  <defs>
+    <style>
+      .bg{fill:#f7f9fb}.title{font:700 44px sans-serif;fill:#17202a}.h{font:700 25px sans-serif;fill:#102a43}
+      .big{font:700 52px sans-serif;fill:#102a43}.t{font:400 20px sans-serif;fill:#263238}.s{font:400 16px sans-serif;fill:#52616b}
+      .box{fill:#fff;stroke:#b8c5d3;stroke-width:2;rx:18}.metric{fill:#e7f0ff;stroke:#4d7cfe}.good{fill:#e8f7ef;stroke:#2f9e62}.warn{fill:#fff4dc;stroke:#d99000}
+    </style>
+  </defs>
+  <rect class="bg" width="1500" height="900"/>
+  <text class="title" x="70" y="80">実績 RQ1: Sherlock Ethereum Fusaka Audit Contest</text>
+  <text class="s" x="72" y="115">10実装・5言語・366件の専門監査投稿・有効H/M/L 15件</text>
+
+  <rect class="box metric" x="80" y="180" width="300" height="170"/>
+  <text class="big" x="125" y="255">15/15</text>
+  <text class="h" x="125" y="300">H/M/L回収</text>
+  <text class="s" x="125" y="325">専門家補強構成で100%</text>
+
+  <rect class="box good" x="430" y="180" width="300" height="170"/>
+  <text class="big" x="485" y="255">4</text>
+  <text class="h" x="485" y="300">新規バグ</text>
+  <text class="s" x="485" y="325">修正コミットで確認</text>
+
+  <rect class="box metric" x="780" y="180" width="300" height="170"/>
+  <text class="big" x="835" y="255">66.7%</text>
+  <text class="h" x="835" y="300">Broad precision</text>
+  <text class="s" x="835" y="325">Phase 6レビュー後</text>
+
+  <rect class="box warn" x="1130" y="180" width="300" height="170"/>
+  <text class="big" x="1185" y="255">8/15</text>
+  <text class="h" x="1185" y="300">自動のみ</text>
+  <text class="s" x="1185" y="325">専門家補強前の回収</text>
+
+  <rect class="box" x="110" y="455" width="520" height="250"/>
+  <text class="h" x="150" y="505">レビューによる改善</text>
+  <rect x="170" y="560" width="180" height="40" fill="#d64545"/><text class="t" x="370" y="590">Phase 5 findings: 102</text>
+  <rect x="170" y="625" width="127" height="40" fill="#2f9e62"/><text class="t" x="370" y="655">Phase 6 findings: 72</text>
+  <text class="s" x="150" y="690">Broad precision: 56.9% → 66.7%</text>
+
+  <rect class="box" x="750" y="455" width="620" height="250"/>
+  <text class="h" x="790" y="505">代表的な新規・重要バグ</text>
+  <text class="t" x="790" y="555">c-kzg-4844: KZG batch verificationの暗号的不変条件違反</text>
+  <text class="t" x="790" y="595">Lodestar: column sidecar cacheの検証ロジック問題</text>
+  <text class="t" x="790" y="635">Nimbus: RPC/Engine APIから到達する未検査配列アクセス</text>
+  <text class="t" x="790" y="675">Prysm: subnet計算ミスとcell-count検証不足</text>
+</svg>

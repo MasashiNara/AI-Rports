@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <style>
+      .bg{fill:#f7f9fb}.title{font:700 46px sans-serif;fill:#17202a}.label{font:700 24px sans-serif;fill:#102a43}
+      .t{font:400 20px sans-serif;fill:#263238}.s{font:400 16px sans-serif;fill:#52616b}.box{fill:#fff;stroke:#bac6d3;stroke-width:2;rx:16}
+      .k{fill:#e7f0ff;stroke:#4d7cfe}.a{fill:#e8f7ef;stroke:#2f9e62}.m{fill:#fff4dc;stroke:#d99000}
+      .arrow{stroke:#455a64;stroke-width:4;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M2,2 L10,6 L2,10 Z" fill="#455a64"/></marker>
+  </defs>
+  <rect class="bg" width="1600" height="900"/>
+  <text class="title" x="70" y="80">SPECAの主要パイプライン</text>
+  <text class="s" x="72" y="115">コード上のフェーズID: 01a → 01b → 01e → 02c → 03 → 04</text>
+
+  <rect class="box k" x="70" y="160" width="690" height="80"/><text class="label" x="270" y="210">仕様から性質を作る段階</text>
+  <rect class="box a" x="840" y="160" width="690" height="80"/><text class="label" x="1055" y="210">実装に対して検証する段階</text>
+
+  <g>
+    <rect class="box k" x="80" y="310" width="210" height="180"/>
+    <text class="label" x="110" y="360">01a 仕様探索</text>
+    <text class="t" x="110" y="405">関連仕様を収集</text>
+    <text class="s" x="110" y="440">出力: 01a_STATE.json</text>
+  </g>
+  <path class="arrow" d="M300 400 H360"/>
+  <g>
+    <rect class="box k" x="370" y="310" width="220" height="180"/>
+    <text class="label" x="400" y="360">01b サブグラフ</text>
+    <text class="t" x="400" y="405">仕様を構造化</text>
+    <text class="s" x="400" y="440">Mermaid + PARTIAL</text>
+  </g>
+  <path class="arrow" d="M600 400 H660"/>
+  <g>
+    <rect class="box k" x="670" y="310" width="230" height="180"/>
+    <text class="label" x="700" y="360">01e 性質生成</text>
+    <text class="t" x="700" y="405">Invariant等を生成</text>
+    <text class="s" x="700" y="440">Scopeも反映</text>
+  </g>
+  <path class="arrow" d="M910 400 H970"/>
+  <g>
+    <rect class="box a" x="980" y="310" width="230" height="180"/>
+    <text class="label" x="1010" y="360">02c 位置解決</text>
+    <text class="t" x="1010" y="405">関連コードを特定</text>
+    <text class="s" x="1010" y="440">40-60% token削減</text>
+  </g>
+  <path class="arrow" d="M1220 400 H1280"/>
+  <g>
+    <rect class="box a" x="1290" y="310" width="230" height="180"/>
+    <text class="label" x="1320" y="360">03 監査</text>
+    <text class="t" x="1320" y="405">証明試行</text>
+    <text class="s" x="1320" y="440">破綻点を発見</text>
+  </g>
+  <path class="arrow" d="M1405 500 V590 H1090 V540"/>
+  <g>
+    <rect class="box a" x="970" y="590" width="240" height="170"/>
+    <text class="label" x="1000" y="640">04 レビュー</text>
+    <text class="t" x="1000" y="685">3ゲートでFP削減</text>
+    <text class="s" x="1000" y="720">重大度も調整</text>
+  </g>
+
+  <rect class="box m" x="200" y="620" width="540" height="110"/>
+  <text class="label" x="230" y="665">手動支援フェーズ</text>
+  <text class="t" x="230" y="705">05 PoC生成 / 06 バグバウンティ報告 / 06b 監査報告書</text>
+</svg>

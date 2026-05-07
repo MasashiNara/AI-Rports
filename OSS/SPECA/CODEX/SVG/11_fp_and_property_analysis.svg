@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="940" viewBox="0 0 1500 940">
+  <defs>
+    <style>
+      .bg{fill:#f7f9fb}.title{font:700 44px sans-serif;fill:#17202a}.h{font:700 25px sans-serif;fill:#102a43}
+      .t{font:400 19px sans-serif;fill:#263238}.s{font:400 16px sans-serif;fill:#52616b}.box{fill:#fff;stroke:#b8c5d3;stroke-width:2;rx:18}
+      .a{fill:#4d7cfe}.b{fill:#2f9e62}.c{fill:#d99000}.d{fill:#d64545}
+    </style>
+  </defs>
+  <rect class="bg" width="1500" height="940"/>
+  <text class="title" x="70" y="80">誤検知分析とプロパティ種別の知見</text>
+
+  <rect class="box" x="90" y="150" width="620" height="660"/>
+  <text class="h" x="130" y="205">誤検知の原因分類 N=16</text>
+  <rect x="150" y="270" width="420" height="55" fill="#4d7cfe"/><text class="t" x="590" y="305">Trust boundary misunderstanding 50.0%</text>
+  <rect x="150" y="360" width="315" height="55" fill="#2f9e62"/><text class="t" x="485" y="395">Code reading error 37.5%</text>
+  <rect x="150" y="450" width="105" height="55" fill="#d99000"/><text class="t" x="275" y="485">Specification misinterpretation 12.5%</text>
+  <text class="s" x="130" y="590">意味: 誤検知を「なぜ起きたか」まで分解できる</text>
+  <text class="s" x="130" y="625">改善先: 信頼境界設定、コード読解コンテキスト、仕様再読</text>
+
+  <rect class="box" x="790" y="150" width="620" height="660"/>
+  <text class="h" x="830" y="205">プロパティ種別の精度</text>
+  <text class="s" x="830" y="235">RQ1の分析より</text>
+  <rect x="850" y="290" width="390" height="50" fill="#2f9e62"/><text class="t" x="1260" y="323">Precondition 100%</text>
+  <rect x="850" y="370" width="292" height="50" fill="#4d7cfe"/><text class="t" x="1162" y="403">Invariant 75%</text>
+  <rect x="850" y="450" width="195" height="50" fill="#d99000"/><text class="t" x="1065" y="483">Postcondition 50%</text>
+  <rect x="850" y="530" width="8" height="50" fill="#d64545"/><text class="t" x="880" y="563">Assumption 0%</text>
+  <text class="s" x="830" y="650">知見: 現状はInvariantが検出の主力</text>
+  <text class="s" x="830" y="685">Assumptionは探索的に扱うのが妥当</text>
+  <text class="s" x="830" y="720">今後はプロパティ生成の品質が検出力を左右する</text>
+</svg>

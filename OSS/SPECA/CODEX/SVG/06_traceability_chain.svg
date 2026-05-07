@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="760" viewBox="0 0 1500 760">
+  <defs>
+    <style>
+      .bg{fill:#f7f9fb}.title{font:700 44px sans-serif;fill:#17202a}.h{font:700 24px sans-serif;fill:#102a43}
+      .t{font:400 19px sans-serif;fill:#263238}.s{font:400 15px sans-serif;fill:#52616b}.box{fill:white;stroke:#b8c5d3;stroke-width:2;rx:16}
+      .a{fill:#e7f0ff}.b{fill:#e8f7ef}.c{fill:#fff4dc}.d{fill:#ffe8e8}.arrow{stroke:#455a64;stroke-width:4;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M2,2 L10,6 L2,10 Z" fill="#455a64"/></marker>
+  </defs>
+  <rect class="bg" width="1500" height="760"/>
+  <text class="title" x="70" y="80">発見事項のトレーサビリティ</text>
+  <text class="s" x="72" y="115">SPECAは「LLMがそう言った」ではなく、根拠の鎖を残す</text>
+
+  <rect class="box a" x="70" y="210" width="230" height="170"/>
+  <text class="h" x="105" y="260">仕様書</text>
+  <text class="t" x="105" y="305">EIP / spec</text>
+  <text class="s" x="105" y="340">自然言語の要求</text>
+  <path class="arrow" d="M310 295 H405"/>
+
+  <rect class="box b" x="415" y="210" width="230" height="170"/>
+  <text class="h" x="450" y="260">サブグラフ</text>
+  <text class="t" x="450" y="305">SG-003</text>
+  <text class="s" x="450" y="340">処理フロー + INV</text>
+  <path class="arrow" d="M655 295 H750"/>
+
+  <rect class="box c" x="760" y="210" width="250" height="170"/>
+  <text class="h" x="795" y="260">プロパティ</text>
+  <text class="t" x="795" y="305">PROP-...</text>
+  <text class="s" x="795" y="340">assertion / severity</text>
+  <path class="arrow" d="M1020 295 H1115"/>
+
+  <rect class="box d" x="1125" y="210" width="290" height="170"/>
+  <text class="h" x="1160" y="260">監査結果</text>
+  <text class="t" x="1160" y="305">code_path</text>
+  <text class="s" x="1160" y="340">proof_trace / attack_scenario</text>
+
+  <rect class="box" x="175" y="500" width="1150" height="140"/>
+  <text class="h" x="220" y="550">この鎖があることで可能になること</text>
+  <text class="t" x="220" y="595">1. 発見事項を仕様に戻って説明できる</text>
+  <text class="t" x="650" y="595">2. 複数実装で同じ性質を横展開できる</text>
+  <text class="t" x="220" y="630">3. 誤検知の原因をフェーズ単位で分類できる</text>
+</svg>

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="900" viewBox="0 0 1500 900">
+  <defs>
+    <style>
+      .bg{fill:#f7f9fb}.title{font:700 44px sans-serif;fill:#17202a}.h{font:700 25px sans-serif;fill:#102a43}
+      .big{font:700 52px sans-serif;fill:#102a43}.t{font:400 20px sans-serif;fill:#263238}.s{font:400 16px sans-serif;fill:#52616b}
+      .box{fill:#fff;stroke:#b8c5d3;stroke-width:2;rx:18}.metric{fill:#e7f0ff;stroke:#4d7cfe}.good{fill:#e8f7ef;stroke:#2f9e62}.warn{fill:#fff4dc;stroke:#d99000}
+    </style>
+  </defs>
+  <rect class="bg" width="1500" height="900"/>
+  <text class="title" x="70" y="80">実績 RQ2: RepoAudit C/C++ Benchmark</text>
+  <text class="s" x="72" y="115">15のOSS C/C++プロジェクト・35件の非disputed ground-truth bug</text>
+
+  <rect class="box metric" x="90" y="180" width="320" height="180"/>
+  <text class="big" x="145" y="260">88.9%</text>
+  <text class="h" x="145" y="305">Precision</text>
+  <text class="s" x="145" y="332">Sonnet 4.5構成</text>
+
+  <rect class="box good" x="470" y="180" width="320" height="180"/>
+  <text class="big" x="535" y="260">12</text>
+  <text class="h" x="535" y="305">Beyond-GT候補</text>
+  <text class="s" x="535" y="332">著者確認済み</text>
+
+  <rect class="box warn" x="850" y="180" width="320" height="180"/>
+  <text class="big" x="915" y="260">$81.05</text>
+  <text class="h" x="915" y="305">総コスト</text>
+  <text class="s" x="915" y="332">約$1.69 / bug</text>
+
+  <rect class="box good" x="1230" y="180" width="200" height="180"/>
+  <text class="big" x="1285" y="260">2</text>
+  <text class="h" x="1260" y="305">外部確認</text>
+  <text class="s" x="1260" y="332">候補バグ</text>
+
+  <rect class="box" x="140" y="455" width="1220" height="260"/>
+  <text class="h" x="180" y="505">読み取り方</text>
+  <text class="t" x="180" y="555">・公開ベースライン最高精度と同じ88.9%を達成</text>
+  <text class="t" x="180" y="600">・RepoAuditのGround Truth外にも、著者確認済み候補を提示</text>
+  <text class="t" x="180" y="645">・Ground TruthがRepoAudit由来なので、recall比較は構造的に不公平として非報告</text>
+  <text class="t" x="180" y="690">・Ethereum以外のC/C++ベンチマークにも適用できる可能性を示す</text>
+</svg>

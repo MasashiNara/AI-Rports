@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1100" viewBox="0 0 1500 1100">
+  <defs>
+    <style>
+      .bg{fill:#f7f9fb}.title{font:700 46px sans-serif;fill:#17202a}.sub{font:400 22px sans-serif;fill:#394b59}
+      .h{font:700 23px sans-serif;fill:#102a43}.t{font:400 18px sans-serif;fill:#263238}.s{font:400 15px sans-serif;fill:#52616b}
+      .card{fill:#fff;stroke:#b8c5d3;stroke-width:2;rx:16}.n{fill:#e7f0ff;stroke:#4d7cfe;stroke-width:2}
+    </style>
+  </defs>
+  <rect class="bg" width="1500" height="1100"/>
+  <text class="title" x="70" y="80">SPECA 日本語説明画像集</text>
+  <text class="sub" x="70" y="120">概略、仕組み、実績、利用時の注意点を図で読むための13枚</text>
+
+  <g transform="translate(70 175)">
+    <rect class="card" x="0" y="0" width="640" height="105"/><circle class="n" cx="50" cy="52" r="28"/><text class="h" x="38" y="61">1</text><text class="h" x="95" y="42">01_speca_overview.svg</text><text class="s" x="95" y="74">SPECAの全体像と中心思想</text>
+    <rect class="card" x="720" y="0" width="640" height="105"/><circle class="n" cx="770" cy="52" r="28"/><text class="h" x="758" y="61">2</text><text class="h" x="815" y="42">02_code_vs_spec_audit.svg</text><text class="s" x="815" y="74">コード起点監査と仕様起点監査の違い</text>
+
+    <rect class="card" x="0" y="130" width="640" height="105"/><circle class="n" cx="50" cy="182" r="28"/><text class="h" x="38" y="191">3</text><text class="h" x="95" y="172">03_pipeline_6phases.svg</text><text class="s" x="95" y="204">6フェーズの処理フロー</text>
+    <rect class="card" x="720" y="130" width="640" height="105"/><circle class="n" cx="770" cy="182" r="28"/><text class="h" x="758" y="191">4</text><text class="h" x="815" y="172">04_phase_io_map.svg</text><text class="s" x="815" y="204">フェーズ別の入力・処理・出力</text>
+
+    <rect class="card" x="0" y="260" width="640" height="105"/><circle class="n" cx="50" cy="312" r="28"/><text class="h" x="38" y="321">5</text><text class="h" x="95" y="302">05_proof_attempt_zoom.svg</text><text class="s" x="95" y="334">Phase 03の証明試行の中身</text>
+    <rect class="card" x="720" y="260" width="640" height="105"/><circle class="n" cx="770" cy="312" r="28"/><text class="h" x="758" y="321">6</text><text class="h" x="815" y="302">06_traceability_chain.svg</text><text class="s" x="815" y="334">仕様から発見事項までの根拠の鎖</text>
+
+    <rect class="card" x="0" y="390" width="640" height="105"/><circle class="n" cx="50" cy="442" r="28"/><text class="h" x="38" y="451">7</text><text class="h" x="95" y="432">07_orchestrator_architecture.svg</text><text class="s" x="95" y="464">実行ハーネス、再開、コスト制御</text>
+    <rect class="card" x="720" y="390" width="640" height="105"/><circle class="n" cx="770" cy="442" r="28"/><text class="h" x="758" y="451">8</text><text class="h" x="815" y="432">08_review_gates.svg</text><text class="s" x="815" y="464">Phase 04の3ゲートレビュー</text>
+
+    <rect class="card" x="0" y="520" width="640" height="105"/><circle class="n" cx="50" cy="572" r="28"/><text class="h" x="38" y="581">9</text><text class="h" x="95" y="562">09_rq1_sherlock_results.svg</text><text class="s" x="95" y="594">Sherlock Ethereum Fusakaでの実績</text>
+    <rect class="card" x="720" y="520" width="640" height="105"/><circle class="n" cx="770" cy="572" r="28"/><text class="h" x="752" y="581">10</text><text class="h" x="815" y="562">10_rq2_repoaudit_results.svg</text><text class="s" x="815" y="594">RepoAudit C/C++での実績</text>
+
+    <rect class="card" x="0" y="650" width="640" height="105"/><circle class="n" cx="50" cy="702" r="28"/><text class="h" x="32" y="711">11</text><text class="h" x="95" y="692">11_fp_and_property_analysis.svg</text><text class="s" x="95" y="724">誤検知分析とプロパティ種別の知見</text>
+    <rect class="card" x="720" y="650" width="640" height="105"/><circle class="n" cx="770" cy="702" r="28"/><text class="h" x="752" y="711">12</text><text class="h" x="815" y="692">12_usage_and_limits.svg</text><text class="s" x="815" y="724">使い方、得意領域、注意点</text>
+  </g>
+
+  <rect class="card" x="190" y="975" width="1120" height="70"/>
+  <text class="t" x="235" y="1018">読み順: 00 → 01 → 02 → 03 → 04 → 05 → 06 → 07 → 08 → 09 → 10 → 11 → 12</text>
+</svg>

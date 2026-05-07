@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs>
+    <style>
+      .bg{fill:#f7f9fb}.title{font:700 46px sans-serif;fill:#17202a}.h{font:700 28px sans-serif;fill:#102a43}
+      .t{font:400 22px sans-serif;fill:#263238}.s{font:400 18px sans-serif;fill:#52616b}.box{fill:white;stroke:#bec9d6;stroke-width:2;rx:16}
+      .left{fill:#eef2f7;stroke:#778899}.right{fill:#e8f7ef;stroke:#2f9e62}.bad{fill:#ffe8e8;stroke:#d64545}
+      .good{fill:#e7f0ff;stroke:#4d7cfe}.arrow{stroke:#455a64;stroke-width:4;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M2,2 L10,6 L2,10 Z" fill="#455a64"/></marker>
+  </defs>
+  <rect class="bg" width="1400" height="900"/>
+  <text class="title" x="70" y="80">コード起点監査と仕様起点監査の違い</text>
+
+  <rect class="box left" x="80" y="145" width="560" height="610"/>
+  <text class="h" x="120" y="200">従来のコード起点監査</text>
+  <rect class="box" x="130" y="250" width="460" height="90"/><text class="t" x="170" y="305">コードを読む</text>
+  <path class="arrow" d="M360 345 V400"/>
+  <rect class="box" x="130" y="405" width="460" height="90"/><text class="t" x="170" y="460">既知パターン・危険APIを探す</text>
+  <path class="arrow" d="M360 500 V555"/>
+  <rect class="box bad" x="130" y="560" width="460" height="120"/>
+  <text class="t" x="170" y="615">仕様依存バグを見落としやすい</text>
+  <text class="s" x="170" y="650">コードだけでは「守るべき条件」が見えない</text>
+
+  <rect class="box right" x="760" y="145" width="560" height="610"/>
+  <text class="h" x="800" y="200">SPECAの仕様起点監査</text>
+  <rect class="box" x="810" y="245" width="460" height="80"/><text class="t" x="850" y="295">仕様書を読む</text>
+  <path class="arrow" d="M1040 330 V375"/>
+  <rect class="box good" x="810" y="380" width="460" height="95"/>
+  <text class="t" x="850" y="430">不変条件・事前条件を作る</text>
+  <text class="s" x="850" y="460">監査すべき主張を明示</text>
+  <path class="arrow" d="M1040 480 V525"/>
+  <rect class="box" x="810" y="530" width="460" height="95"/>
+  <text class="t" x="850" y="580">実装が主張を満たすか証明試行</text>
+  <path class="arrow" d="M1040 630 V675"/>
+  <rect class="box good" x="810" y="680" width="460" height="90"/>
+  <text class="t" x="850" y="735">破綻点を候補脆弱性として説明</text>
+
+  <rect class="box" x="180" y="800" width="1040" height="58"/>
+  <text class="t" x="220" y="837">SPECAの狙い: 「なぜ危険か」を仕様に戻って説明できる監査結果を作る</text>
+</svg>
