@@ -1,0 +1,269 @@
+nara@claude-dev:~/projects/ai-topics$ bash a.bash
+bookmarks-2026-05-06.md
+## Gemma 4が最大3倍高速化、MTPドラフターで複数トークン同時予測
+2026-05-05T16:28:12.000000Z googledevs
+[oembed https://twitter.com/googledevs/status/2051700498328346945]
+
+## 拾い物画像で大笑い
+2026-05-06T05:12:50.000000Z taroinagaki025
+[oembed https://twitter.com/taroinagaki025/status/2051892927753007162]
+
+## オタク迫害時代を経験した世代から見た2026年の天国感
+2026-05-06T07:05:54.000000Z koge_dobo
+[oembed https://twitter.com/koge_dobo/status/2051921378778181773]
+
+
+bookmarks-2026-05-07.md
+## Claude Codeのレートリミット倍増とOpus API上限引き上げ
+2026-05-06T16:19:29.000000Z claudeai
+[oembed https://twitter.com/claudeai/status/2052060693269008586]
+
+## SpaceXAIとAnthropic提携、Colossus 1スパコン提供でClaude制限緩和
+2026-05-06T16:32:28.000000Z nukonuko
+[oembed https://twitter.com/nukonuko/status/2052063960573345983]
+
+## タイで発見の新コウモリコロナウイルスの性状解析論文（G2P-Japan 第57弾）
+2026-05-06T23:06:13.000000Z SystemsVirology
+[oembed https://twitter.com/SystemsVirology/status/2052163053513482278]
+
+## 非エンジニアは「履歴より作り直し」を期待するAgent観の差
+2026-05-07T02:43:46.000000Z shinoyu___
+[oembed https://twitter.com/shinoyu___/status/2052217801595859265]
+
+## Claude Managed Agentsにdreaming/outcomes/multiagentの3機能投入
+2026-05-07T03:01:36.000000Z masahirochaen
+[oembed https://twitter.com/masahirochaen/status/2052222286699368754]
+
+## Fakeコラボ後のテュフォン・エフェメロスのマイルームボイス
+2026-05-07T07:27:59.000000Z makoto_sanda
+[oembed https://twitter.com/makoto_sanda/status/2052289325585564065]
+
+## さくらインターネットのAI Engineをサービスで使うべきだった反省
+2026-05-07T10:58:45.000000Z kunihirotanaka
+[oembed https://twitter.com/kunihirotanaka/status/2052342367974514883]
+
+## バイブコーディングのバックエンドをさくらAI Engineに切替えてAPI費用激減
+2026-05-07T10:58:46.000000Z kunihirotanaka
+[oembed https://twitter.com/kunihirotanaka/status/2052342370897940615]
+
+## AIコードに「変更最小化・後方互換」バイアスがかかる理由はOSS学習由来
+2026-05-07T11:28:31.000000Z t_wada
+[oembed https://twitter.com/t_wada/status/2052349856505831482]
+
+## Anthropic Institute（TAI）の研究アジェンダ4領域公開
+2026-05-07T13:51:23.000000Z AnthropicAI
+[oembed https://twitter.com/AnthropicAI/status/2052385812881228218]
+
+## ElevenAPI/Agentsの大幅値下げ（TTS最大-55%、STT最大-45%）
+2026-05-07T14:00:37.000000Z ElevenLabs
+[oembed https://twitter.com/ElevenLabs/status/2052388133585436810]
+
+## PhysForge: 物理整合性のある対話型仮想世界向け3Dアセット生成
+2026-05-07T14:44:53.000000Z _akhaliq
+[oembed https://twitter.com/_akhaliq/status/2052399275003314322]
+
+## AtariがWizardry初期5作品の権利取得、リマスター・新作展開へ
+2026-05-07T14:47:28.000000Z Karl_taikou
+[oembed https://twitter.com/Karl_taikou/status/2052399922834735403]
+
+
+bookmarks-2026-05-08.md
+## 書籍『テスト駆動開発』読者感想への共感
+2026-05-07T15:43:06.000000Z t_wada
+[oembed https://twitter.com/t_wada/status/2052413924419805578]
+
+## AI時代こそバグの少ないコードのためTDDを学んだ記事紹介
+2026-05-07T15:43:06.000000Z t_wada
+[oembed https://twitter.com/t_wada/status/2052413926860824664]
+
+## 5/7のAI業界24時間トレンドニュースまとめ
+2026-05-07T15:53:16.000000Z tetumemo
+[oembed https://twitter.com/tetumemo/status/2052416482127278478]
+
+## Anthropic Natural Language Autoencoders: モデルの活性化を自然言語に翻訳
+2026-05-07T17:08:35.000000Z AnthropicAI
+[oembed https://twitter.com/AnthropicAI/status/2052435436157452769]
+
+## GPT-Realtime-2デモは日本語が外国人訛り・遅延残り進化感薄い
+2026-05-07T17:33:27.000000Z izutorishima
+[oembed https://twitter.com/izutorishima/status/2052441694000607465]
+
+## OpenAI GPT-Realtime-2発表、GPT-5級推論を音声で動かせる
+2026-05-07T17:45:01.000000Z masahirochaen
+[oembed https://twitter.com/masahirochaen/status/2052444608186184018]
+
+## Anthropic NLAでClaudeの隠れた動機や安全性評価疑念を解析
+2026-05-07T17:50:18.000000Z itnavi2022
+[oembed https://twitter.com/itnavi2022/status/2052445935574339586]
+
+## 「夢を見る」は本質的に/compactだったというClaude観察
+2026-05-07T17:59:43.000000Z izutorishima
+[oembed https://twitter.com/izutorishima/status/2052448305591038242]
+
+## OpenAIの翻訳コンニャクGPT-Realtime-Translate（70言語→13言語）
+2026-05-07T20:51:28.000000Z MLBear2
+[oembed https://twitter.com/MLBear2/status/2052491528011190285]
+
+## Codex AppのChromeプラグインを試用レポート
+2026-05-07T21:29:00.000000Z nukonuko
+[oembed https://twitter.com/nukonuko/status/2052500975186071716]
+
+## SPAN社が家庭にRTXPro6000搭載GPUを設置する分散DC構想XFRA
+2026-05-07T21:33:46.000000Z umiyuki_ai
+[oembed https://twitter.com/umiyuki_ai/status/2052502173645484160]
+
+## Discordのユーザー名仕組み変更（2023年振り返り）
+2026-05-07T22:30:01.000000Z gigazine
+[oembed https://twitter.com/gigazine/status/2052516328934617263]
+
+## GPT-Realtime-Translateアプリを自作してリアルタイム翻訳を試した
+2026-05-07T22:52:22.000000Z zento_ai
+[oembed https://twitter.com/zento_ai/status/2052521952993296451]
+
+## CodexのChromeプラグインがClaude製より総合的に使いやすい
+2026-05-07T23:25:01.000000Z super_bonochin
+[oembed https://twitter.com/super_bonochin/status/2052530170431746448]
+
+## コウモリがウイルス貯蔵庫である理由と治療薬開発への展望
+2026-05-07T23:32:23.000000Z FORCEPS4
+[oembed https://twitter.com/FORCEPS4/status/2052532023986893033]
+
+## Codex AppのWindows対応リリース
+2026-05-08T00:11:29.000000Z nemumusitocha
+[oembed https://twitter.com/nemumusitocha/status/2052541862863610135]
+
+## 海外学者が分析した日本の「推し活」
+2026-05-08T00:30:02.000000Z gigazine
+[oembed https://twitter.com/gigazine/status/2052546533837394047]
+
+## 推し活が経済を活性化させる効果の記事
+2026-05-08T00:30:03.000000Z gigazine
+[oembed https://twitter.com/gigazine/status/2052546538103099529]
+
+## 仕事効率化のレベルが異常で笑うしかない感想
+2026-05-08T00:52:42.000000Z super_bonochin
+[oembed https://twitter.com/super_bonochin/status/2052552238627975654]
+
+## GPT-Realtime-2を組み込んだリアルタイム翻訳CLIを自作
+2026-05-08T00:53:36.000000Z taiyo_ai_gakuse
+[oembed https://twitter.com/taiyo_ai_gakuse/status/2052552464327708931]
+
+## 新世代モデルほど「私はAI」と内面否定する「ピノキオ次元」研究
+2026-05-08T01:06:33.000000Z ai_database
+[oembed https://twitter.com/ai_database/status/2052555722634997901]
+
+## 米国の減量薬ブームが世界へ拡大
+2026-05-08T02:03:53.000000Z WSJJapan
+[oembed https://twitter.com/WSJJapan/status/2052570152764428362]
+
+## GPT-5.5-Cyberが重要インフラ向け限定プレビュー開始
+2026-05-08T02:56:17.000000Z gdb
+[oembed https://twitter.com/gdb/status/2052583338561683775]
+
+## Skymizerが700B LLMを約240Wで推論できるAIアクセラレータ
+2026-05-08T04:35:07.000000Z pc_watch
+[oembed https://twitter.com/pc_watch/status/2052608207852593587]
+
+## はしか感染者400人超、ワクチン接種呼びかけ
+2026-05-08T04:47:03.000000Z nhk_news
+[oembed https://twitter.com/nhk_news/status/2052611214577123428]
+
+## ZAYA1-8BがAMD環境訓練で大規模モデル級の数学・コード推論性能
+2026-05-08T05:20:19.000000Z gigazine
+[oembed https://twitter.com/gigazine/status/2052619583836565750]
+
+## 古代昆虫巨大化の「酸素濃度説」を覆す研究結果
+2026-05-08T05:30:19.000000Z gigazine
+[oembed https://twitter.com/gigazine/status/2052622100351828028]
+
+## Claude Code on the Webがマルチリポジトリ対応＆UI改善
+2026-05-08T05:40:29.000000Z oikon48
+[oembed https://twitter.com/oikon48/status/2052624661410963562]
+
+## Claude MythosがFirefoxの271件のバグを修正、20年前のものも
+2026-05-08T06:49:06.000000Z impress_watch
+[oembed https://twitter.com/impress_watch/status/2052641926575477203]
+
+## GitHubに機密情報を誤プッシュした際の多層防御的な消去手順
+2026-05-08T13:32:21.000000Z seltzer
+[oembed https://twitter.com/seltzer/status/2052743409354646008]
+
+
+bookmarks-2026-05-10.md
+## GPT-Image2とFACSコードによる表情制御とSeedance2動画生成の実験
+2026-05-10T02:34:03.000000Z wtry1102
+[oembed https://twitter.com/wtry1102/status/2053302519624090092]
+
+## 古い画像形式（.mag/.tiff/.pict）の話題でインターネット老人会
+2026-05-10T10:01:49.000000Z bari5
+[oembed https://twitter.com/bari5/status/2053415201496826072]
+
+
+bookmarks-2026-05-11.md
+## Google Workspace Studioが日本語対応、ノーコードAIエージェント作成
+2026-05-11T06:42:06.000000Z madonomori
+[oembed https://twitter.com/madonomori/status/2053727329462132845]
+
+## ポリコレと検閲、社会的圧力による実質的な表現の自由の縮小
+2026-05-11T09:40:39.000000Z lawyersuzuki
+[oembed https://twitter.com/lawyersuzuki/status/2053772264232083567]
+
+## UnslothがPyTorch Ecosystemに参画
+2026-05-11T13:59:15.000000Z UnslothAI
+[oembed https://twitter.com/UnslothAI/status/2053837340272161097]
+
+
+bookmarks-2026-05-12.md
+## Claude Platform on AWSが一般提供開始
+2026-05-11T16:03:26.000000Z claudeai
+[oembed https://twitter.com/claudeai/status/2053868592286822443]
+
+## Claude Platform on AWS紹介リポスト
+2026-05-11T16:11:18.000000Z oikon48
+[oembed https://twitter.com/oikon48/status/2053870573185642568]
+
+## Claude憲法のオーディオブック化、著者2人による朗読＋Q&A
+2026-05-11T16:56:01.000000Z AnthropicAI
+[oembed https://twitter.com/AnthropicAI/status/2053881827396653207]
+
+## Cursor CLI＋Opus 4.7がコーディングベンチで1位、Composer 2併用で快速
+2026-05-11T18:53:37.000000Z kinopee_ai
+[oembed https://twitter.com/kinopee_ai/status/2053911420480434638]
+
+## Gemma 4が日本語Swallow Leaderboard v2で好結果
+2026-05-11T18:54:02.000000Z googlegemma
+[oembed https://twitter.com/googlegemma/status/2053911525442928860]
+
+## Claude Codeにagent viewが追加、全セッションを一覧表示
+2026-05-11T20:50:53.000000Z claudeai
+[oembed https://twitter.com/claudeai/status/2053940934736228454]
+
+## Constitutional AIを補強する新手法MSM、ルール背景の理解を事前学習
+2026-05-11T23:18:15.000000Z compassinai
+[oembed https://twitter.com/compassinai/status/2053978017484185770]
+
+## Claude Codeのagents view機能解説、Desktop風一覧表示
+2026-05-12T00:50:02.000000Z oikon48
+[oembed https://twitter.com/oikon48/status/2054001116736880838]
+
+## 書籍『本を読めなくなった人たち』とLLM登場後の本離れの違い
+2026-05-12T01:30:47.000000Z SCA_DI
+[oembed https://twitter.com/SCA_DI/status/2054011371067748743]
+
+## 日本語マルチモーダル事後学習データセットJagle公開（LLM-jp）
+2026-05-12T01:32:46.000000Z strayer_13
+[oembed https://twitter.com/strayer_13/status/2054011869346840723]
+
+## OpenAIサイバー防御構想Daybreak発表、GPT-5.5-Cyber等を含む
+2026-05-12T01:54:30.000000Z itnavi2022
+[oembed https://twitter.com/itnavi2022/status/2054017340736782398]
+
+## Claude Codeに /goal コマンドが追加
+2026-05-12T01:57:24.000000Z oikon48
+[oembed https://twitter.com/oikon48/status/2054018071371956572]
+
+## 追加訓練済みLLMほど人間らしさから乖離、素のモデルは世代追うごとに人間化
+2026-05-12T02:45:56.000000Z ai_database
+[oembed https://twitter.com/ai_database/status/2054030282974691416]
+
+
