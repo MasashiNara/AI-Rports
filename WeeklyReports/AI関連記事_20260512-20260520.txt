@@ -1,0 +1,270 @@
+## bookmarks-2026-05-13.md
+
+## LLMエージェントの『記憶の呪い』、長い履歴で協力性が低下
+* 2026-05-13T02:32:30.000Z ai_database
+* https://twitter.com/ai_database/status/2054389293762912415
+
+AIに「忘れて許す（いわゆる水に流すような）」仕組みを備える必要があると考えているそうです
+
+LLMエージェントに長い会話履歴を持たせると、かえって協力しなくなっていくらしく、
+過去に裏切られた記録が積み重なるほど守りと仕返しを優先する思考に引きずられていくこと原因があるそうです。
+
+## 『記憶の呪い』論文へのリンク（AIDB）
+* 2026-05-13T02:42:56.000Z ai_database
+* https://twitter.com/ai_database/status/2054391918482886983
+
+## 認知的降伏が理解負債を生む、AIではなく姿勢が原因
+* 2026-05-13T03:24:55.000Z t_wada
+* https://twitter.com/t_wada/status/2054402482655432941
+
+## Claude for Legal、法律業務向け分野別プラグイン集を公開
+* 2026-05-13T05:52:29.000Z oikon48
+* https://twitter.com/oikon48/status/2054439618372919720
+
+これは、法律事務所が使うためのプラグインなんですかね？
+
+## エンジニアの認知スタイルの違いを言語化した記事を絶賛
+* 2026-05-13T14:56:51.000Z inuro
+* https://twitter.com/inuro/status/2054576613141192838
+
+
+
+## bookmarks-2026-05-14.md
+## 6月15日からClaude有料プランにプログラム使用専用クレジット導入
+* 2026-05-13T17:10:07.000Z ClaudeDevs
+* https://twitter.com/ClaudeDevs/status/2054610152817619388
+
+一部機能を月間トークン数の対象外にするみたいですね。
+支払った金額分のクレジットがウォレットにチャージされて、そこからAPIと同じような従量課金制で支払う形になるようです。
+
+## 6月15日からOpenClawなどがClaude有料サブスクで正式利用可能に
+* 2026-05-13T17:27:36.000Z nukonuko
+* https://twitter.com/nukonuko/status/2054614551908495817
+
+こちらも、基本的に上のお話と同じですかね。
+
+## Claude Codeの週次使用制限が50%増加、7月13日まで
+* 2026-05-13T19:07:51.000Z ClaudeDevs
+* https://twitter.com/ClaudeDevs/status/2054639777685934564
+
+## GitHub Copilot、6月1日よりトークン従量課金制へ移行
+* 2026-05-13T19:30:26.000Z chomado
+* https://twitter.com/chomado/status/2054645461437567407
+
+GitHub Copilot使う意味無くなって来た感じです。
+
+## Claude Opus Fast modeは2.5倍速、料金は6倍
+* 2026-05-14T02:18:05.000Z pc_watch
+* https://twitter.com/pc_watch/status/2054748050829320198
+
+## Codexに/goalを書かせる最強プロンプトが英語圏で話題
+* 2026-05-14T02:30:05.000Z Codestudiopjbk
+* https://twitter.com/Codestudiopjbk/status/2054751072292581832
+
+## Codex CLIの/goal機能の概要記事を紹介
+* 2026-05-14T10:04:31.000Z izutorishima
+* https://twitter.com/izutorishima/status/2054865432105128031
+
+
+
+## bookmarks-2026-05-15.md
+## Notion『Developer Platform』発表、ntn CLIで全API操作可能に
+* 2026-05-15T00:17:23.000Z masahirochaen
+* https://twitter.com/masahirochaen/status/2055080066187657447
+
+Claude CodeからNotionの連携ができるようですね。
+
+## Codex in ChatGPT公開、モバイルからデスクトップに接続して利用
+* 2026-05-15T00:31:30.000Z oikon48
+* https://twitter.com/oikon48/status/2055083617496559736
+
+## GrokCLIの便利な点8選を紹介
+* 2026-05-15T00:51:48.000Z currypurin
+* https://twitter.com/currypurin/status/2055088723721912828
+
+## Ollama 0.24がCodexアプリ対応、オープンモデルで動作
+* 2026-05-15T01:38:57.000Z ollama
+* https://twitter.com/ollama/status/2055100589428658462
+
+## arXivがLLM未確認の論文に1年BANのペナルティ導入
+* 2026-05-15T02:12:35.000Z webbigdata
+* https://twitter.com/webbigdata/status/2055109057204441432
+
+LLMが良くやる架空の引用とか、そういうのが残ってたらBANされるみたいですね。
+
+## 注意書きで嘘を否定してもLLMの追加学習では信じ込む現象
+* 2026-05-15T07:24:47.000Z ai_database
+* https://twitter.com/ai_database/status/2055187622419652901
+
+追加学習は難しいですね。
+人間でも、ウソでも何回も聞けば信じ込む、みたいな話がありますし、真偽の情報は薄れやすいのかもしれません。
+
+## bookmarks-2026-05-17.md
+## grep直接探索のDCIがベクトル検索RAGを大きく上回る
+* 2026-05-17T04:22:32.000000Z itarutomy
+* https://twitter.com/itarutomy/status/2055866534929523087
+
+おもしろいですね。
+Claude Codeなんかも、毎回 grep しますし、プログラム系では色々外部に情報を残すより、そちらの方が効率良いのかもしれません。
+まあ、向き不向きがあるのでしょうが。
+
+## MarkdownよりHTMLの方がエージェントとの会話に良い
+* 2026-05-17T08:35:51.000000Z oikon48
+* https://twitter.com/oikon48/status/2055930283585921322
+
+なるほど。今までmdやり取りしていましが、htmlでやってみるのも試した方が良さそうですね
+
+## bookmarks-2026-05-18.md
+## シニア開発者はなぜ専門知識をうまく伝えられないのか
+* 2026-05-17T21:00:22.000000Z gigazine
+* https://twitter.com/gigazine/status/2056117647729697016
+
+## Claude Codeの大規模コードベース運用ベストプラクティス
+* 2026-05-17T22:07:00.000000Z oikon48
+* https://twitter.com/oikon48/status/2056134414992888042
+
+## hermes-agentのヘッドレス呼び出しでX検索をスキル化
+* 2026-05-17T23:10:38.000000Z gosrum
+* https://twitter.com/gosrum/status/2056150429508227545
+
+twitterの情報を取得できるのは嬉しいでね。
+なんか、普通には取れないみたいですので。
+
+## LLMでWindowsアプリ作成時の古い作法回避ツール
+* 2026-05-18T01:34:37.000000Z super_bonochin
+* https://twitter.com/super_bonochin/status/2056186665673331148
+
+なるほど。あとで読んでおいた方が良さそうですね。
+
+## 単一HTMLファイル成果物の9つのデモ集
+* 2026-05-18T12:59:50.000000Z oikon48
+* https://twitter.com/oikon48/status/2056359102574637488
+* https://thariqs.github.io/html-effectiveness/
+
+## bookmarks-2026-05-19.md
+
+## DGX SparkでのローカルLLM比較、Gemma4-26B-A4B-NVFP4が好印象
+* 2026-05-18T15:19:56.000000Z karaage0703
+* https://twitter.com/karaage0703/status/2056394363123753333
+* https://zenn.dev/karaage0703/articles/fcca40c614dffd
+
+からあげさんの記事。
+やはり、gemma 4 と qwen 3.6 が良さそうですね。
+
+## Devin Auto-Triageによる自動監視・バグ報告・PR作成
+* 2026-05-18T15:38:02.000000Z oikon48
+* https://twitter.com/oikon48/status/2056398914950135931
+
+AIエージェントが保守をやってくれる感じだそうです。
+
+## Anthropic社員のimplementation-notes.html記録プロンプト
+* 2026-05-18T16:59:20.000000Z oikon48
+* https://twitter.com/oikon48/status/2056419378154139656
+
+仕様、逸脱、トレードオフ、未解決などを記録するhtmlを作り続けるように指示するそうです。
+
+## AnthropicがStainlessを買収、SDK生成基盤を強化
+* 2026-05-18T17:17:31.000000Z nukonuko
+* https://twitter.com/nukonuko/status/2056423954370494643
+
+## CursorモデルがOpus 4.7/GPT-5.5級性能の噂
+* 2026-05-18T18:29:57.000000Z izutorishima
+* https://twitter.com/izutorishima/status/2056442182094237861
+
+Composer 2.5は、ベンチ的には、かなり、迫っているみたいですね。
+
+## Composer 2.5はKimi-K2.5から強化学習でベンチスコア上昇
+* 2026-05-18T18:40:02.000000Z umiyuki_ai
+* https://twitter.com/umiyuki_ai/status/2056444720621187169
+
+## Composer 2.5は速度優先で思考が浅く指示通り過ぎる
+* 2026-05-18T19:38:17.000000Z izutorishima
+* https://twitter.com/izutorishima/status/2056459379793379558
+
+指示へ追従性が高すぎるので、間違ったことにも追従してしまうらしいですね。
+それが使いづらいという人と、追従性が高いので使いやすいという人がいるようです。
+
+## Claude Designで全プランのトークン上限が2倍に
+* 2026-05-18T19:40:56.000000Z claudeai
+* https://twitter.com/claudeai/status/2056460045756309820
+
+## Claude Opus 4.7 FastモードはExtra usage料金がかかる
+* 2026-05-19T00:14:18.000000Z oikon48
+* https://twitter.com/oikon48/status/2056528837660553351
+
+## 日立がAnthropicと戦略的パートナーシップ、10万人AI人財育成
+* 2026-05-19T02:09:42.000000Z Hitachi_Japan
+* https://twitter.com/Hitachi_Japan/status/2056557880237797436
+
+## 完了条件にVilification方法も含めるイメージ
+* 2026-05-19T09:26:04.000000Z oikon48
+* https://twitter.com/oikon48/status/2056667697749106995
+
+## Hermes Agent本体を回避しGrok x_searchへ直接アクセスする効率化
+* 2026-05-19T11:05:32.000000Z tetumemo
+* https://twitter.com/tetumemo/status/2056692728734589272
+* https://x.com/MtkN1XBt/status/2056615102120648973
+
+## フロンティアAI脅威への金融システム能動的停止案
+* 2026-05-19T11:43:52.000000Z horigome_t
+* https://twitter.com/horigome_t/status/2056702376644673733
+* https://www.asahi.com/articles/ASV5M35NBV5MULFA02VM.html
+
+脆弱性を付かれて侵入されるくらいなら、サービスを落としてしまえという考えのようです。
+なかなか、難しそうですが、確かにダメージを少なくするために必要な検討ですね
+
+## bookmarks-2026-05-20.md
+
+## Google I/O 2026の主要発表まとめ、Gemini 3.5 Flash/Omni/Spark
+* 2026-05-19T18:29:01.000000Z itnavi2022
+* https://twitter.com/itnavi2022/status/2056804334961328543
+   * Gemini 3.5 Flash / Pro
+      * 新しいモデル。従来の主要モデルと比べて出力速度が4倍高速化
+   * Gemini Omni
+      * テキスト、画像、音声、動画から、テキスト、画像、音声、動画を作るワールドモデルのようです。
+   * Gemini Spark
+      * OpenCrawlっぽいもの？
+      * バックグラウンドで24時間自律的にタスクを処理するパーソナルAIエージェント。クラウドで動作するようです。
+   * Google Antigravity 2.0
+      * エージェント向けの環境？
+
+## Gemini Sparkの常時稼働パーソナルAIエージェント詳細まとめ
+* 2026-05-19T17:46:02.000000Z MLBear2
+* https://twitter.com/MLBear2/status/2056793515569582361
+
+Geminiのデスクトップアプリっぽいです
+動作自体は、google側サーバーで動くとのこと。
+
+## Antigravity 2.0を新スタンドアロンデスクトップアプリとして発表
+* 2026-05-19T17:52:36.000000Z antigravity
+* https://twitter.com/antigravity/status/2056795168326754759
+* https://antigravity.google/blog/introducing-google-antigravity-2-0
+
+## Gemini CLIユーザーをAntigravity CLIへ30日かけ移行
+* 2026-05-19T17:56:14.000000Z geminicli
+* https://twitter.com/geminicli/status/2056796084790304833
+
+gemini cliが antigravityに統合される感じのようですね
+
+
+## Google I/O 2026注目24発表、AIがOSになる日
+* 2026-05-19T19:07:24.000000Z tetumemo
+* https://twitter.com/tetumemo/status/2056813994229518777
+
+## GeminiOmniFlashリリース、Nanobanana動画版とワールドモデル
+* 2026-05-19T19:27:49.000000Z umiyuki_ai
+* https://twitter.com/umiyuki_ai/status/2056819130452586996
+
+## Gemini大幅更新、Spark常時稼働とUltra $99.99プラン新設
+* 2026-05-19T19:40:42.000000Z Zimo41650079726
+* https://twitter.com/Zimo41650079726/status/2056822372578263357
+
+## Gemini 3.5 Flashベンチ検証、3.1Proには及ばず3倍コスト課題
+* 2026-05-19T20:57:21.000000Z suzukiAdIre
+* https://twitter.com/suzukiAdIre/status/2056841664715743395
+
+## Google Antigravity側で不具合、非エンジニアに辛い状況
+* 2026-05-19T23:25:46.000000Z tetumemo
+* https://twitter.com/tetumemo/status/2056879015739404650
+
+Antigravityを使ってみたいと思っていましたが、どうも、今バグでおかしくなっているっぽいですね。

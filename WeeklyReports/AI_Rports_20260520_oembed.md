@@ -1,0 +1,45 @@
+## bookmarks-2026-05-20.md
+
+## Gemini Sparkの常時稼働パーソナルAIエージェント詳細まとめ
+2026-05-19T17:46:02.000000Z MLBear2
+[oembed https://twitter.com/MLBear2/status/2056793515569582361]
+
+## Antigravity 2.0を新スタンドアロンデスクトップアプリとして発表
+2026-05-19T17:52:36.000000Z antigravity
+[oembed https://twitter.com/antigravity/status/2056795168326754759]
+
+## Gemini CLIユーザーをAntigravity CLIへ30日かけ移行
+2026-05-19T17:56:14.000000Z geminicli
+[oembed https://twitter.com/geminicli/status/2056796084790304833]
+
+## Google I/O 2026の主要発表まとめ、Gemini 3.5 Flash/Omni/Spark
+2026-05-19T18:29:01.000000Z itnavi2022
+[oembed https://twitter.com/itnavi2022/status/2056804334961328543]
+
+## Google I/O 2026注目24発表、AIがOSになる日
+2026-05-19T19:07:24.000000Z tetumemo
+[oembed https://twitter.com/tetumemo/status/2056813994229518777]
+
+## Gemini 3.5 Flash公開、エージェント特化でProは来月
+2026-05-19T19:09:08.000000Z impress_watch
+[oembed https://twitter.com/impress_watch/status/2056814431112458584]
+
+## GeminiOmniFlashリリース、Nanobanana動画版とワールドモデル
+2026-05-19T19:27:49.000000Z umiyuki_ai
+[oembed https://twitter.com/umiyuki_ai/status/2056819130452586996]
+
+## Gemini大幅更新、Spark常時稼働とUltra $99.99プラン新設
+2026-05-19T19:40:42.000000Z Zimo41650079726
+[oembed https://twitter.com/Zimo41650079726/status/2056822372578263357]
+
+## Gemini 3.5 Flashベンチ検証、3.1Proには及ばず3倍コスト課題
+2026-05-19T20:57:21.000000Z suzukiAdIre
+[oembed https://twitter.com/suzukiAdIre/status/2056841664715743395]
+
+## 5/20朝AIニュース、Karpathy加入とGoogle I/O各種発表
+2026-05-19T22:34:57.000000Z MLBear2
+[oembed https://twitter.com/MLBear2/status/2056866225201029297]
+
+## Google Antigravity側で不具合、非エンジニアに辛い状況
+2026-05-19T23:25:46.000000Z tetumemo
+[oembed https://twitter.com/tetumemo/status/2056879015739404650]
