@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cursor CLI インストール手順書</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper:        #f4f1ea;
+    --paper-deep:   #ebe7dc;
+    --ink:          #1a1916;
+    --ink-soft:     #3a3833;
+    --ink-mute:     #807a6c;
+    --ink-faint:    #b8b1a0;
+    --rule:         #d9d3c4;
+    --rule-soft:    #e6e1d3;
+    --card:         #fbfaf5;
+    --accent:       #b8451f;
+    --accent-deep:  #8a3416;
+    --accent-soft:  #f3e6dd;
+    --term-bg:      #16171c;
+    --term-bar:     #0f1014;
+    --term-text:    #e8e4d8;
+    --term-mute:    #7a7669;
+    --term-rule:    #26272d;
+    --term-green:   #a3c982;
+    --term-amber:   #e0b86a;
+    --green:        #4a7a3a;
+    --amber:        #8a6510;
+
+    --font-display: "Instrument Serif", "Times New Roman", serif;
+    --font-sans:    "Zen Kaku Gothic New", -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+    --font-mono:    "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 15.5px;
+    line-height: 1.85;
+    font-feature-settings: "palt";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection { background: var(--accent); color: var(--paper); }
+
+  /* Top progress bar */
+  .progress {
+    position: fixed; top: 0; left: 0; height: 2px;
+    width: 0%; background: var(--accent); z-index: 100;
+    transition: width 80ms linear;
+  }
+
+  /* Page frame */
+  .page {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 56px 48px 120px;
+  }
+
+  /* ───────── Hero ───────── */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: end;
+    padding-bottom: 36px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 56px;
+  }
+  .eyebrow {
+    display: flex; align-items: center; gap: 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-mute);
+    margin-bottom: 28px;
+  }
+  .eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+  .eyebrow .pipe { color: var(--ink-faint); }
+
+  h1.title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(48px, 6vw, 84px);
+    line-height: 0.98;
+    letter-spacing: -0.01em;
+    margin: 0 0 22px;
+    color: var(--ink);
+  }
+  h1.title em {
+    font-style: italic;
+    color: var(--accent-deep);
+  }
+  .lede {
+    max-width: 56ch;
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .hero-meta {
+    display: flex; flex-direction: column;
+    align-items: flex-end; gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+  .hero-meta .row { display: flex; gap: 10px; align-items: center; }
+  .hero-meta .k { color: var(--ink-faint); }
+  .hero-meta .v { color: var(--ink); }
+
+  /* ───────── Layout: TOC + body ───────── */
+  .layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  /* TOC */
+  .toc {
+    position: sticky;
+    top: 40px;
+    font-size: 13px;
+  }
+  .toc-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--ink-faint);
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 14px;
+  }
+  .toc ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: tocnum;
+  }
+  .toc li { counter-increment: tocnum; }
+  .toc a {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 10px;
+    padding: 7px 0;
+    color: var(--ink-mute);
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 1.45;
+    transition: color 150ms;
+    border-left: 1px solid transparent;
+    padding-left: 12px;
+    margin-left: -13px;
+  }
+  .toc a::before {
+    content: counter(tocnum, decimal-leading-zero);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+    padding-top: 2px;
+  }
+  .toc a:hover { color: var(--ink); }
+  .toc a.active {
+    color: var(--accent);
+    border-left-color: var(--accent);
+  }
+  .toc a.active::before { color: var(--accent); }
+
+  /* Body sections */
+  main { min-width: 0; max-width: 760px; }
+  section.sec {
+    padding-top: 24px;
+    margin-bottom: 88px;
+    scroll-margin-top: 32px;
+  }
+  .sec-head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 18px;
+    align-items: baseline;
+    margin-bottom: 28px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .sec-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 56px;
+    line-height: 0.9;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+  .sec-head h2 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+    margin: 0;
+  }
+  .sec-head .kicker {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-faint);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  h3 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 16px;
+    margin: 36px 0 12px;
+    color: var(--ink);
+    letter-spacing: 0.005em;
+  }
+  h3::before {
+    content: "";
+    display: inline-block;
+    width: 14px; height: 1px;
+    background: var(--accent);
+    vertical-align: middle;
+    margin-right: 10px;
+    transform: translateY(-3px);
+  }
+
+  p { margin: 14px 0; color: var(--ink-soft); }
+  p strong { color: var(--ink); font-weight: 700; }
+
+  ul, ol.steps { margin: 14px 0; padding-left: 22px; color: var(--ink-soft); }
+  li { margin: 6px 0; }
+  li::marker { color: var(--ink-faint); }
+
+  /* Inline code */
+  code.i {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: var(--paper-deep);
+    color: var(--ink);
+    padding: 2px 7px;
+    border-radius: 4px;
+    border: 1px solid var(--rule-soft);
+    white-space: nowrap;
+  }
+
+  /* ───────── Terminal ───────── */
+  .term {
+    background: var(--term-bg);
+    border-radius: 10px;
+    margin: 18px 0;
+    overflow: hidden;
+    border: 1px solid var(--term-rule);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.04) inset,
+      0 8px 24px -8px rgba(20, 18, 12, 0.18);
+  }
+  .term-bar {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px;
+    background: var(--term-bar);
+    border-bottom: 1px solid var(--term-rule);
+  }
+  .term-dots { display: flex; gap: 6px; }
+  .term-dots i {
+    width: 11px; height: 11px; border-radius: 50%; display: block;
+    background: #3a3b40;
+  }
+  .term-dots i:nth-child(1) { background: #ff5f57; }
+  .term-dots i:nth-child(2) { background: #febc2e; }
+  .term-dots i:nth-child(3) { background: #28c840; }
+  .term-lbl {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--term-mute);
+    letter-spacing: 0.06em;
+    flex: 1;
+    text-align: center;
+    transform: translateX(-30px);
+  }
+  .term-copy {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--term-mute);
+    background: transparent;
+    border: 1px solid var(--term-rule);
+    border-radius: 4px;
+    padding: 3px 9px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 160ms;
+  }
+  .term-copy:hover { color: var(--term-text); border-color: #3d3e46; }
+  .term-copy.ok { color: var(--term-green); border-color: var(--term-green); }
+  .term pre {
+    margin: 0;
+    padding: 16px 18px;
+    overflow-x: auto;
+    color: var(--term-text);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.75;
+    font-weight: 400;
+  }
+  .term .cmt    { color: #6c6f78; font-style: italic; }
+  .term .prompt { color: var(--term-green); user-select: none; }
+  .term .flag   { color: var(--term-amber); }
+  .term .str    { color: #d8b48c; }
+  .term .cmd    { color: #c9d4ff; }
+
+  /* ───────── Spec strip ───────── */
+  .specs {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 22px 0;
+  }
+  .spec {
+    background: var(--card);
+    padding: 16px 18px;
+  }
+  .spec .k {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+  }
+  .spec .v {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+
+  /* ───────── Callouts ───────── */
+  .note {
+    position: relative;
+    padding: 16px 20px 16px 56px;
+    margin: 20px 0;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    font-size: 14.5px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+  .note .glyph {
+    position: absolute;
+    left: 18px; top: 16px;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--paper);
+    font-weight: 400;
+    line-height: 1;
+  }
+  .note .ttl {
+    display: block;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+    font-size: 14px;
+  }
+  .note.tip   { border-left: 3px solid var(--green); }
+  .note.tip .glyph { background: var(--green); }
+  .note.warn  { border-left: 3px solid var(--amber); }
+  .note.warn .glyph { background: var(--amber); }
+  .note.info  { border-left: 3px solid var(--accent); }
+  .note.info .glyph { background: var(--accent); }
+  .note .term { margin: 12px 0 0; }
+
+  /* ───────── Tables ───────── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 14px;
+  }
+  thead th {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1.5px solid var(--ink);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  tbody td {
+    padding: 12px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-soft);
+    vertical-align: top;
+  }
+  tbody tr:hover { background: var(--card); }
+  td code {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    background: var(--paper-deep);
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: var(--ink);
+    display: inline-block;
+    margin: 1px 0;
+  }
+
+  /* Check list */
+  .check { list-style: none; padding-left: 0; }
+  .check li {
+    padding-left: 28px;
+    position: relative;
+    margin: 8px 0;
+  }
+  .check li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 12px;
+    width: 16px; height: 8px;
+    border-left: 2px solid var(--accent);
+    border-bottom: 2px solid var(--accent);
+    transform: rotate(-45deg);
+  }
+
+  /* Details */
+  details {
+    margin: 18px 0;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    background: var(--card);
+    overflow: hidden;
+  }
+  details[open] { background: var(--card); }
+  summary {
+    cursor: pointer;
+    padding: 12px 18px;
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 14px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::before {
+    content: "+";
+    font-family: var(--font-mono);
+    color: var(--accent);
+    width: 14px;
+    text-align: center;
+    font-weight: 400;
+    transition: transform 200ms;
+  }
+  details[open] summary::before { content: "−"; }
+  details > *:not(summary) {
+    padding: 0 18px 14px;
+  }
+  details .term { margin: 4px 18px 14px; }
+
+  /* Links */
+  a.link {
+    color: var(--accent-deep);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent-soft);
+    transition: border-color 160ms;
+  }
+  a.link:hover { border-bottom-color: var(--accent); }
+
+  /* References */
+  .refs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .refs a {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 14px;
+    align-items: baseline;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+    text-decoration: none;
+    color: var(--ink);
+    transition: padding 200ms;
+  }
+  .refs a:hover { padding-left: 8px; }
+  .refs a:nth-child(odd) { border-right: 1px solid var(--rule); padding-right: 24px; }
+  .refs a:nth-child(even) { padding-left: 24px; }
+  .refs a:nth-child(even):hover { padding-left: 32px; }
+  .refs .rn {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+  }
+  .refs .rt { font-size: 14.5px; font-weight: 500; }
+  .refs .ra {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-faint);
+    letter-spacing: 0.05em;
+  }
+
+  /* Colophon */
+  .colophon {
+    margin-top: 100px;
+    padding-top: 28px;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: end;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.04em;
+  }
+  .colophon .mark {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 28px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+  }
+  .colophon p { margin: 0; color: var(--ink-mute); font-family: var(--font-mono); font-size: 11px; line-height: 1.7; }
+  .colophon .right { text-align: right; }
+
+  /* Responsive */
+  @media (max-width: 960px) {
+    .layout { grid-template-columns: 1fr; gap: 0; }
+    .toc { position: static; margin-bottom: 48px; }
+    .toc ol { columns: 2; column-gap: 28px; }
+    .toc li { break-inside: avoid; }
+    .hero { grid-template-columns: 1fr; align-items: start; }
+    .hero-meta { align-items: flex-start; margin-top: 8px; }
+    .specs { grid-template-columns: repeat(2, 1fr); }
+    .refs { grid-template-columns: 1fr; }
+    .refs a:nth-child(odd) { border-right: none; padding-right: 0; }
+    .refs a:nth-child(even) { padding-left: 0; }
+  }
+  @media (max-width: 560px) {
+    .page { padding: 36px 22px 80px; }
+    .sec-head { grid-template-columns: 1fr; gap: 6px; }
+    .sec-num { font-size: 42px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="page">
+
+  <!-- ─────────────── HERO ─────────────── -->
+  <header class="hero">
+    <div>
+      <div class="eyebrow">
+        <span class="dot"></span>
+        <span>Engineering Handbook</span>
+        <span class="pipe">/</span>
+        <span>Tooling</span>
+        <span class="pipe">/</span>
+        <span>v1.0</span>
+      </div>
+      <h1 class="title">Cursor CLI<br><em>インストール手順書</em></h1>
+      <p class="lede">
+        ターミナルで動作する AI コーディングエージェント <strong>cursor-agent</strong> を、
+        Linux サーバーへ導入するための公式ガイド準拠の作業手順。GUI なし／CI 環境にも対応。
+      </p>
+    </div>
+    <div class="hero-meta">
+      <div class="row"><span class="k">OS</span><span class="v">Ubuntu 24.04 LTS</span></div>
+      <div class="row"><span class="k">Arch</span><span class="v">x86_64</span></div>
+      <div class="row"><span class="k">Updated</span><span class="v">2026.05.24</span></div>
+      <div class="row"><span class="k">Steps</span><span class="v">10</span></div>
+    </div>
+  </header>
+
+  <!-- ─────────────── LAYOUT ─────────────── -->
+  <div class="layout">
+
+    <!-- ─────────────── TOC ─────────────── -->
+    <aside class="toc" id="toc">
+      <div class="toc-label">Contents</div>
+      <ol>
+        <li><a href="#about">Cursor CLI とは</a></li>
+        <li><a href="#req">動作環境・前提条件</a></li>
+        <li><a href="#install">インストール</a></li>
+        <li><a href="#path">PATH の設定</a></li>
+        <li><a href="#verify">インストールの確認</a></li>
+        <li><a href="#auth">認証（ログイン）</a></li>
+        <li><a href="#usage">基本的な使い方</a></li>
+        <li><a href="#update">更新・アンインストール</a></li>
+        <li><a href="#trouble">トラブルシューティング</a></li>
+        <li><a href="#refs">参考リンク</a></li>
+      </ol>
+    </aside>
+
+    <main id="content">
+
+      <!-- ─── 01 ─── -->
+      <section class="sec" id="about">
+        <div class="sec-head">
+          <div class="sec-num">01</div>
+          <div>
+            <span class="kicker">Overview</span>
+            <h2>Cursor CLI とは</h2>
+          </div>
+        </div>
+        <p>
+          Cursor CLI は、Cursor エディタの AI エージェントを<strong>ターミナルから直接利用</strong>できるコマンドラインツールです。
+          自然言語の指示でコードの記述・レビュー・デバッグ・テストを行えます。GUI を持たないサーバー環境や、
+          CI/CD パイプライン（ヘッドレス実行）でも動作するのが特徴です。
+        </p>
+        <ul>
+          <li>対話モード（インタラクティブ）／非対話モード（スクリプト・CI 向け）の両方に対応</li>
+          <li>コマンド名は <code class="i">cursor-agent</code>（新しいエイリアスとして <code class="i">agent</code> も利用可）</li>
+          <li>macOS / Linux / Windows（WSL・ネイティブ）をサポート</li>
+        </ul>
+        <div class="note info">
+          <span class="glyph">i</span>
+          <span class="ttl">利用にあたって</span>
+          Cursor CLI の利用には Cursor アカウントが必要です。ログイン後、お使いの Cursor プランの利用枠に応じて
+          エージェント機能が使えます。インストール作業を始める前にアカウントを用意しておくとスムーズです。
+        </div>
+      </section>
+
+      <!-- ─── 02 ─── -->
+      <section class="sec" id="req">
+        <div class="sec-head">
+          <div class="sec-num">02</div>
+          <div>
+            <span class="kicker">Requirements</span>
+            <h2>動作環境・前提条件</h2>
+          </div>
+        </div>
+        <p>
+          今回のインストール先サーバーは、本作業環境（LXC コンテナ）と同等スペックを想定しています。
+          参考として現環境のスペックは以下のとおりです。Cursor CLI 自体は軽量で、特別な高スペックは不要です。
+        </p>
+        <div class="specs">
+          <div class="spec"><div class="k">OS</div><div class="v">Ubuntu 24.04</div></div>
+          <div class="spec"><div class="k">Arch</div><div class="v">x86_64</div></div>
+          <div class="spec"><div class="k">CPU</div><div class="v">4 cores</div></div>
+          <div class="spec"><div class="k">Memory</div><div class="v">8 GiB</div></div>
+          <div class="spec"><div class="k">Disk free</div><div class="v">≈ 30 GB</div></div>
+        </div>
+
+        <h3>必要なもの</h3>
+        <ul class="check">
+          <li>x86_64 または arm64 の Linux 環境（Ubuntu / Debian など）</li>
+          <li>インターネット接続（インストールスクリプトとバイナリのダウンロードに使用）</li>
+          <li><code class="i">curl</code> がインストールされていること</li>
+          <li>Cursor アカウント（ログイン認証用）</li>
+        </ul>
+
+        <div class="note tip">
+          <span class="glyph">✓</span>
+          <span class="ttl">curl が入っていない場合</span>
+          Ubuntu / Debian では以下で導入できます。
+          <div class="term">
+            <div class="term-bar"><span class="term-dots"><i></i><i></i><i></i></span><span class="term-lbl">bash</span><button class="term-copy">COPY</button></div>
+<pre><span class="prompt">$</span> sudo apt update &amp;&amp; sudo apt install -y curl</pre>
+          </div>
+        </div>
+
+        <div class="note info">
+          <span class="glyph">i</span>
+          <span class="ttl">root 権限は不要</span>
+          インストールはユーザーのホームディレクトリ配下（<code class="i">~/.local/bin</code>）に行われるため、
+          <strong>sudo / root 権限は不要</strong>です。一般ユーザーで実行してください。
+        </div>
+      </section>
+
+      <!-- ─── 03 ─── -->
+      <section class="sec" id="install">
+        <div class="sec-head">
+          <div class="sec-num">03</div>
+          <div>
+            <span class="kicker">Install</span>
+            <h2>インストール</h2>
+          </div>
+        </div>
+        <p>公式のインストールスクリプトを実行します。Linux（および macOS / WSL）では<strong>次の 1 行のみ</strong>です。</p>
+        <div class="term">
+          <div class="term-bar"><span class="term-dots"><i></i><i></i><i></i></span><span class="term-lbl">Linux / macOS / WSL — bash</span><button class="term-copy">COPY</button></div>
+<pre><span class="prompt">$</span> <span class="cmd">curl</span> <span class="str">https://cursor.com/install</span> <span class="flag">-fsS</span> | <span class="cmd">bash</span></pre>
+        </div>
+        <p>
+          スクリプトが自動でお使いの環境に合ったバイナリを取得し、<code class="i">~/.local/bin</code> 配下に
+          <code class="i">cursor-agent</code> を配置します。完了すると PATH 設定に関する案内が表示されます。
+        </p>
+
+        <div class="note warn">
+          <span class="glyph">!</span>
+          <span class="ttl">パイプ実行（curl | bash）について</span>
+          ダウンロードしたスクリプトをそのまま実行する形式です。内容を事前に確認したい場合は、
+          一度ファイルに保存してから中身を確認・実行することを推奨します。
+          <div class="term">
+            <div class="term-bar"><span class="term-dots"><i></i><i></i><i></i></span><span class="term-lbl">bash — verify before run</span><button class="term-copy">COPY</button></div>
+<pre><span class="cmt"># 1) スクリプトを保存</span>
+<span class="prompt">$</span> <span class="cmd">curl</span> <span class="str">https://cursor.com/install</span> <span class="flag">-fsS -o</span> cursor-install.sh
+<span class="cmt"># 2) 中身を確認</span>
+<span class="prompt">$</span> <span class="cmd">less</span> cursor-install.sh
+<span class="cmt"># 3) 実行</span>
+<span class="prompt">$</span> <span class="cmd">bash</span> cursor-install.sh</pre>
+          </div>
+        </div>
+
+        <details>
+          <summary>参考：Windows ネイティブ（PowerShell）の場合</summary>
+          <div class="term">
+            <div class="term-bar"><span class="term-dots"><i></i><i></i><i></i></span><span class="term-lbl">PowerShell</span><button class="term-copy">COPY</button></div>
+<pre>irm <span class="str">'https://cursor.com/install?win32=true'</span> | iex</pre>
+          </div>
+          <p style="font-size:13px;color:var(--ink-mute);margin-top:2px;">※ 今回の Linux サーバーへの導入では使用しません。</p>
+        </details>
+      </section>
+
+      <!-- ─── 04 ─── -->
+      <section class="sec" id="path">
+        <div class="sec-head">
+          <div class="sec-num">04</div>
+          <div>
+            <span class="kicker">PATH</span>
+            <h2>PATH の設定</h2>
+          </div>
+        </div>
+        <p>
+          インストール先の <code class="i">~/.local/bin</code> が PATH に含まれていないと、
+          <code class="i">cursor-agent</code> コマンドが見つかりません。多くの場合インストールスクリプトが
+          自動で追記しますが、反映されない場合は以下を手動で実行してください。
+        </p>
+
+        <h3>Bash を使っている場合</h3>
+        <div class="term">
+          <div class="term-bar"><span class="term-dots"><i></i><i></i><i></i></span><span class="term-lbl">~/.bashrc</span><button class="term-copy">COPY</button></div>
+<pre><span class="prompt">$</span> <span class="cmd">echo</span> <span class="str">'export PATH="$HOME/.local/bin:$PATH"'</span> &gt;&gt; ~/.bashrc
+<span class="prompt">$</span> <span class="cmd">source</span> ~/.bashrc</pre>
+        </div>
+
+        <h3>Zsh を使っている場合</h3>
+        <div class="term">
+          <div class="term-bar"><span class="term-dots"><i></i><i></i><i></i></span><span class="term-lbl">~/.zshrc</span><button class="term-copy">COPY</button></div>
+<pre><span class="prompt">$</span> <span class="cmd">echo</span> <span class="str">'export PATH="$HOME/.local/bin:$PATH"'</span> &gt;&gt; ~/.zshrc
+<span class="prompt">$</span> <span class="cmd">source</span> ~/.zshrc</pre>
+        </div>
+
+        <div class="note tip">
+          <span class="glyph">✓</span>
+          <span class="ttl">確認のコツ</span>
+          使用中のシェルは <code class="i">echo $SHELL</code> で確認できます。設定後、新しいターミナルを開き直すと確実です。
+        </div>
+      </section>
+
+      <!-- ─── 05 ─── -->
+      <section class="sec" id="verify">
+        <div class="sec-head">
+          <div class="sec-num">05</div>
+          <div>
+            <span class="kicker">Verify</span>
+            <h2>インストールの確認</h2>
+          </div>
+        </div>
+        <p>バージョンが表示されればインストール成功です。</p>
+        <div class="term">
+          <div class="term-bar"><span class="term-dots"><i></i><i></i><i></i></span><span class="term-lbl">verify</span><button class="term-copy">COPY</button></div>
+<pre><span class="prompt">$</span> <span class="cmd">cursor-agent</span> <span class="flag">--version</span>
+<span class="cmt"># 新しいエイリアスでも確認できます</span>
+<span class="prompt">$</span> <span class="cmd">agent</span> <span class="flag">--version</span></pre>
+        </div>
+        <div class="note warn">
+          <span class="glyph">!</span>
+          <span class="ttl">「command not found」と出る場合</span>
+          PATH が通っていない可能性があります。<a class="link" href="#path">手順 04（PATH の設定）</a>を実施し、
+          ターミナルを開き直してから再度お試しください。
+        </div>
+      </section>
+
+      <!-- ─── 06 ─── -->
+      <section class="sec" id="auth">
+        <div class="sec-head">
+          <div class="sec-num">06</div>
+          <div>
+            <span class="kicker">Authentication</span>
+            <h2>認証（ログイン）</h2>
+          </div>
+        </div>
+        <p>コマンドを使う前に Cursor アカウントでの認証が必要です。用途に応じて 2 つの方法があります。</p>
+
+        <h3>方法 A — ブラウザでログイン（通常の対話利用向け）</h3>
+        <div class="term">
+          <div class="term-bar"><span class="term-dots"><i></i><i></i><i></i></span><span class="term-lbl">login</span><button class="term-copy">COPY</button></div>
+<pre><span class="prompt">$</span> <span class="cmd">cursor-agent</span> login</pre>
+        </div>
+        <p>
+          実行するとブラウザが開き、認証を求められます。GUI の無いサーバーの場合は、
+          表示される URL を手元の PC のブラウザで開いて認証してください。認証状態は次のコマンドで確認できます。
+        </p>
+        <div class="term">
+          <div class="term-bar"><span class="term-dots"><i></i><i></i><i></i></span><span class="term-lbl">status / logout</span><button class="term-copy">COPY</button></div>
+<pre><span class="prompt">$</span> <span class="cmd">cursor-agent</span> status   <span class="cmt"># 認証状態とアカウント情報を表示</span>
+<span class="prompt">$</span> <span class="cmd">cursor-agent</span> logout   <span class="cmt"># ログアウト（認証情報をクリア）</span></pre>
+        </div>
+
+        <h3>方法 B — API キー（自動化・CI/CD・ヘッドレス向け）</h3>
+        <p>
+          Cursor のダッシュボード（<strong>Dashboard → Integrations → API Keys</strong>）でユーザー API キーを発行し、
+          環境変数 <code class="i">CURSOR_API_KEY</code> に設定します。ブラウザ認証が使えないサーバーで便利です。
+        </p>
+        <div class="term">
+          <div class="term-bar"><span class="term-dots"><i></i><i></i><i></i></span><span class="term-lbl">env — recommended</span><button class="term-copy">COPY</button></div>
+<pre><span class="prompt">$</span> <span class="cmd">export</span> CURSOR_API_KEY=your_api_key_here
+<span class="prompt">$</span> <span class="cmd">cursor-agent</span> <span class="str">"implement user authentication"</span></pre>
+        </div>
+        <div class="term">
+          <div class="term-bar"><span class="term-dots"><i></i><i></i><i></i></span><span class="term-lbl">flag</span><button class="term-copy">COPY</button></div>
+<pre><span class="prompt">$</span> <span class="cmd">cursor-agent</span> <span class="flag">--api-key</span> your_api_key_here <span class="str">"implement user authentication"</span></pre>
+        </div>
+        <div class="note warn">
+          <span class="glyph">!</span>
+          <span class="ttl">API キーの取り扱い</span>
+          API キーは秘密情報です。コマンド履歴やソースコードに直接書き込まず、環境変数や
+          シークレット管理機能で扱ってください。
+        </div>
+      </section>
+
+      <!-- ─── 07 ─── -->
+      <section class="sec" id="usage">
+        <div class="sec-head">
+          <div class="sec-num">07</div>
+          <div>
+            <span class="kicker">Usage</span>
+            <h2>基本的な使い方</h2>
+          </div>
+        </div>
+        <p>認証が済んだら、すぐに使い始められます。</p>
+        <div class="term">
+          <div class="term-bar"><span class="term-dots"><i></i><i></i><i></i></span><span class="term-lbl">examples</span><button class="term-copy">COPY</button></div>
+<pre><span class="cmt"># 対話モードで起動</span>
+<span class="prompt">$</span> <span class="cmd">cursor-agent</span>
+
+<span class="cmt"># プロンプトを直接渡して実行</span>
+<span class="prompt">$</span> <span class="cmd">cursor-agent</span> <span class="str">"find one bug and fix it"</span>
+
+<span class="cmt"># 非対話（print）モード — スクリプトや CI 向け</span>
+<span class="prompt">$</span> <span class="cmd">cursor-agent</span> <span class="flag">-p</span> <span class="str">"find and fix performance issues"</span>
+
+<span class="cmt"># JSON で結果を取得（自動処理向け）</span>
+<span class="prompt">$</span> <span class="cmd">cursor-agent</span> <span class="flag">-p --output-format</span> json <span class="str">"summarize this repo"</span></pre>
+        </div>
+
+        <h3>よく使うコマンド・フラグ</h3>
+        <table>
+          <thead>
+            <tr><th>目的</th><th>コマンド / フラグ</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>非対話（出力のみ）モード</td><td><code>-p</code> / <code>--print</code></td></tr>
+            <tr><td>出力フォーマット指定</td><td><code>--output-format json</code> / <code>text</code> / <code>stream-json</code></td></tr>
+            <tr><td>プランモード（実装前に方針設計）</td><td><code>--plan</code> / 対話中は <code>/plan</code></td></tr>
+            <tr><td>Ask モード（変更せず調査のみ）</td><td><code>--mode=ask</code> / 対話中は <code>/ask</code></td></tr>
+            <tr><td>独立した worktree で編集</td><td><code>--worktree</code></td></tr>
+            <tr><td>会話を再開</td><td><code>cursor-agent resume</code> / <code>--resume [thread id]</code></td></tr>
+            <tr><td>過去の会話一覧</td><td><code>cursor-agent ls</code></td></tr>
+          </tbody>
+        </table>
+
+        <div class="note tip">
+          <span class="glyph">✓</span>
+          <span class="ttl">対話モードの操作</span>
+          矢印キーで過去メッセージを参照、<code class="i">Shift+Enter</code> で複数行入力、
+          <code class="i">Ctrl+R</code> で変更内容のレビュー、<code class="i">Ctrl+D</code> で終了できます。
+          ターミナルコマンドの実行前には承認を求められます。
+        </div>
+      </section>
+
+      <!-- ─── 08 ─── -->
+      <section class="sec" id="update">
+        <div class="sec-head">
+          <div class="sec-num">08</div>
+          <div>
+            <span class="kicker">Maintenance</span>
+            <h2>更新・アンインストール</h2>
+          </div>
+        </div>
+
+        <h3>アップデート</h3>
+        <p>Cursor CLI はデフォルトで自動更新を試みます。手動で更新する場合は次のコマンドを使います。</p>
+        <div class="term">
+          <div class="term-bar"><span class="term-dots"><i></i><i></i><i></i></span><span class="term-lbl">update</span><button class="term-copy">COPY</button></div>
+<pre><span class="prompt">$</span> <span class="cmd">cursor-agent</span> update</pre>
+        </div>
+
+        <h3>アンインストール</h3>
+        <p>
+          インストール済みバイナリはホームディレクトリ配下にあります。削除するには実体を消し、
+          PATH 追記行を設定ファイルから取り除きます。
+        </p>
+        <div class="term">
+          <div class="term-bar"><span class="term-dots"><i></i><i></i><i></i></span><span class="term-lbl">uninstall</span><button class="term-copy">COPY</button></div>
+<pre><span class="cmt"># バイナリの場所を確認</span>
+<span class="prompt">$</span> <span class="cmd">which</span> cursor-agent
+<span class="cmt"># 例: ~/.local/bin 配下の関連ファイルを削除</span>
+<span class="prompt">$</span> <span class="cmd">rm</span> <span class="flag">-f</span> ~/.local/bin/cursor-agent ~/.local/bin/agent
+<span class="cmt"># 必要に応じて設定/キャッシュも削除（存在する場合）</span>
+<span class="prompt">$</span> <span class="cmd">rm</span> <span class="flag">-rf</span> ~/.cursor ~/.config/cursor-agent</pre>
+        </div>
+        <div class="note info">
+          <span class="glyph">i</span>
+          <span class="ttl">補足</span>
+          <code class="i">~/.bashrc</code> / <code class="i">~/.zshrc</code> に追記した
+          <code class="i">export PATH=...</code> の行も、不要であれば手動で削除してください。
+        </div>
+      </section>
+
+      <!-- ─── 09 ─── -->
+      <section class="sec" id="trouble">
+        <div class="sec-head">
+          <div class="sec-num">09</div>
+          <div>
+            <span class="kicker">Troubleshooting</span>
+            <h2>トラブルシューティング</h2>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr><th>症状</th><th>対処</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>cursor-agent: command not found</code></td>
+              <td><a class="link" href="#path">手順 04</a> で PATH を設定し、ターミナルを開き直す</td>
+            </tr>
+            <tr>
+              <td>認証エラー / 未ログイン</td>
+              <td><code>cursor-agent login</code> を実行、または <code>CURSOR_API_KEY</code> の設定を確認</td>
+            </tr>
+            <tr>
+              <td>SSL 関連のエラー（開発環境）</td>
+              <td><code>--insecure</code> フラグを使用（本番環境では非推奨）</td>
+            </tr>
+            <tr>
+              <td>独自エンドポイントに接続したい</td>
+              <td><code>--endpoint</code> フラグでカスタム API エンドポイントを指定</td>
+            </tr>
+            <tr>
+              <td>curl が無い</td>
+              <td><code>sudo apt install -y curl</code> で導入</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ─── 10 ─── -->
+      <section class="sec" id="refs">
+        <div class="sec-head">
+          <div class="sec-num">10</div>
+          <div>
+            <span class="kicker">References</span>
+            <h2>参考リンク（公式ドキュメント）</h2>
+          </div>
+        </div>
+        <div class="refs">
+          <a href="https://cursor.com/cli" target="_blank" rel="noopener">
+            <span class="rn">01</span><span class="rt">Cursor CLI 製品ページ</span><span class="ra">cursor.com/cli ↗</span>
+          </a>
+          <a href="https://cursor.com/docs/cli/installation" target="_blank" rel="noopener">
+            <span class="rn">02</span><span class="rt">CLI Installation</span><span class="ra">/installation ↗</span>
+          </a>
+          <a href="https://cursor.com/docs/cli/overview" target="_blank" rel="noopener">
+            <span class="rn">03</span><span class="rt">CLI Overview</span><span class="ra">/overview ↗</span>
+          </a>
+          <a href="https://cursor.com/docs/cli/using" target="_blank" rel="noopener">
+            <span class="rn">04</span><span class="rt">Using Agent in CLI</span><span class="ra">/using ↗</span>
+          </a>
+          <a href="https://cursor.com/docs/cli/reference/authentication" target="_blank" rel="noopener">
+            <span class="rn">05</span><span class="rt">Authentication</span><span class="ra">/authentication ↗</span>
+          </a>
+          <a href="https://cursor.com/docs/cli/headless" target="_blank" rel="noopener">
+            <span class="rn">06</span><span class="rt">Using Headless CLI</span><span class="ra">/headless ↗</span>
+          </a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="colophon">
+    <div>
+      <div class="mark">cursor-agent</div>
+      <p>本書は社内向け作業手順書です。コマンドや仕様は変更される場合があるため、<br>実施前に必ず公式ドキュメントの最新情報をご確認ください。</p>
+    </div>
+    <div class="right">
+      <p>v1.0 — 2026.05.24<br>Engineering Handbook<br>© Internal Use</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Progress bar
+  const progress = document.getElementById('progress');
+  document.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    progress.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+  }, { passive: true });
+
+  // Active TOC highlight via IntersectionObserver
+  function setupTOC() {
+    const links = [...document.querySelectorAll('.toc a')];
+    const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const link = map.get(e.target.id);
+          if (link) link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+    document.querySelectorAll('section.sec').forEach(s => observer.observe(s));
+  }
+
+  // Copy buttons
+  function setupCopy() {
+    document.querySelectorAll('.term').forEach(t => {
+      const btn = t.querySelector('.term-copy');
+      const pre = t.querySelector('pre');
+      if (!btn || !pre) return;
+      btn.addEventListener('click', async () => {
+        const txt = pre.innerText.replace(/^\$\s?/gm, '').trim();
+        try {
+          await navigator.clipboard.writeText(txt);
+          const orig = btn.textContent;
+          btn.textContent = 'COPIED';
+          btn.classList.add('ok');
+          setTimeout(() => { btn.textContent = orig; btn.classList.remove('ok'); }, 1400);
+        } catch (e) {}
+      });
+    });
+  }
+
+  // Init once sections are injected
+  window.addEventListener('DOMContentLoaded', () => {
+    setupTOC();
+    setupCopy();
+  });
+</script>
+
+</body>
+</html>
