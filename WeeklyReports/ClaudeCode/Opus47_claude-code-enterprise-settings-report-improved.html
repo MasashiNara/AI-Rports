@@ -1,0 +1,1648 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Claude Code 企業展開向け settings.json 推奨レポート（統合・検証版）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+<style>
+  :root {
+    --paper:        #FAF7F2;
+    --paper-2:      #F2EDE4;
+    --paper-3:      #EAE2D3;
+    --ink:          #1B1815;
+    --ink-2:        #3D362F;
+    --ink-3:        #6A6058;
+    --rule:         #DDD3C1;
+    --rule-2:       #E8DFCE;
+    --accent:       #C25A2A;     /* sienna */
+    --accent-2:     #8A3A14;
+    --accent-soft:  #F5E5D6;
+    --ok:           #2F7A3C;
+    --ok-soft:      #E1EFDD;
+    --warn:         #B96A0E;
+    --warn-soft:    #FBEAD0;
+    --bad:          #9C2D24;
+    --bad-soft:     #F5DBD6;
+    --info:         #2E5C8A;
+    --info-soft:    #DDE7F2;
+    --code-bg:      #1B1815;
+    --code-ink:     #ECE3D2;
+    --sans: "Noto Sans JP", system-ui, sans-serif;
+    --serif: "Noto Serif JP", "Times New Roman", serif;
+    --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.78;
+    font-feature-settings: "palt" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent); color: var(--paper); }
+
+  a { color: var(--accent-2); text-decoration: none; border-bottom: 1px solid rgba(138,58,20,.25); transition: border-color .15s; }
+  a:hover { border-bottom-color: var(--accent-2); }
+
+  .skip { position: absolute; left: -9999px; }
+  .skip:focus { left: 16px; top: 16px; background: var(--ink); color: var(--paper); padding: 8px 12px; border-radius: 6px; z-index: 999; }
+
+  /* ───────── HERO ───────── */
+  .hero {
+    background:
+      radial-gradient(1200px 600px at 85% -10%, rgba(194,90,42,.10), transparent 60%),
+      radial-gradient(900px 500px at 10% 110%, rgba(194,90,42,.05), transparent 60%),
+      linear-gradient(180deg, #F6F0E5 0%, var(--paper) 100%);
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 56px 40px 64px;
+  }
+  .eyebrow {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent-2);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .04em;
+  }
+  .badge::before {
+    content: "";
+    width: 6px; height: 6px; border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px rgba(194,90,42,.18);
+  }
+  .meta-pill {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-3);
+    letter-spacing: .02em;
+  }
+  .meta-pill span { color: var(--ink-2); }
+
+  h1.title {
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: clamp(34px, 4.8vw, 60px);
+    line-height: 1.15;
+    letter-spacing: -.01em;
+    margin: 0 0 18px;
+    color: var(--ink);
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+  .title em {
+    font-style: normal;
+    color: var(--accent-2);
+  }
+  .subtitle {
+    font-size: 17px;
+    color: var(--ink-2);
+    max-width: 64ch;
+    margin: 0 0 36px;
+    line-height: 1.7;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0;
+    margin: 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .meta-grid > div {
+    padding: 18px 24px 18px 0;
+    border-right: 1px solid var(--rule);
+  }
+  .meta-grid > div:last-child { border-right: 0; padding-right: 0; }
+  .meta-grid dt {
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .meta-grid dd {
+    margin: 0;
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .meta-grid dd .v {
+    font-family: var(--mono);
+    font-weight: 500;
+    color: var(--accent-2);
+  }
+
+  /* ───────── LAYOUT ───────── */
+  .body {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 56px 40px 96px;
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 56px;
+    align-items: start;
+  }
+  aside.toc {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    padding-right: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  aside.toc::-webkit-scrollbar { width: 6px; }
+  aside.toc::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+  aside.toc .toc-label {
+    font-size: 10px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 700;
+    margin-bottom: 14px;
+    padding-left: 14px;
+  }
+  aside.toc ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: toc;
+    border-left: 1px solid var(--rule);
+  }
+  aside.toc li { counter-increment: toc; }
+  aside.toc a {
+    display: flex;
+    gap: 10px;
+    padding: 5px 0 5px 14px;
+    color: var(--ink-3);
+    border-bottom: 0;
+    border-left: 2px solid transparent;
+    margin-left: -1px;
+    transition: color .15s, border-color .15s;
+  }
+  aside.toc a::before {
+    content: counter(toc, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    opacity: .7;
+    min-width: 22px;
+  }
+  aside.toc a:hover { color: var(--ink); }
+  aside.toc a.active {
+    color: var(--accent-2);
+    border-left-color: var(--accent);
+    font-weight: 700;
+  }
+  aside.toc a.active::before { color: var(--accent); opacity: 1; }
+
+  /* ───────── SECTIONS ───────── */
+  main { min-width: 0; }
+  section.sec { padding-top: 8px; padding-bottom: 56px; }
+  section.sec + section.sec { border-top: 1px solid var(--rule-2); padding-top: 56px; }
+  .sec-head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 28px;
+    align-items: baseline;
+    margin: 0 0 28px;
+  }
+  .sec-no {
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: 64px;
+    line-height: 1;
+    color: var(--paper-3);
+    letter-spacing: -.02em;
+  }
+  .sec-head h2 {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1.3;
+    margin: 0;
+    color: var(--ink);
+    letter-spacing: -.005em;
+  }
+
+  h3 {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 17px;
+    margin: 36px 0 12px;
+    color: var(--ink);
+    letter-spacing: -.005em;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  h3 .h3num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: .03em;
+  }
+
+  h4 {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 14px;
+    margin: 24px 0 8px;
+    color: var(--ink-2);
+    letter-spacing: .02em;
+  }
+
+  p { margin: 0 0 16px; color: var(--ink-2); }
+  main p strong { color: var(--ink); font-weight: 700; }
+
+  ul, ol { padding-left: 22px; margin: 0 0 16px; }
+  li { margin: 6px 0; color: var(--ink-2); }
+  li strong { color: var(--ink); font-weight: 700; }
+
+  code {
+    font-family: var(--mono);
+    font-size: .88em;
+    background: var(--paper-2);
+    color: var(--accent-2);
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--rule-2);
+    word-break: break-word;
+  }
+  pre code { background: transparent; border: 0; color: inherit; padding: 0; }
+
+  /* ───────── CALLOUTS ───────── */
+  .callout {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 14px;
+    padding: 18px 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    background: var(--paper-2);
+    border: 1px solid var(--rule-2);
+    border-left: 3px solid var(--ink-3);
+  }
+  .callout .ico {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: var(--ink-3);
+    color: var(--paper);
+    display: grid;
+    place-items: center;
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: 16px;
+    line-height: 1;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout p { color: var(--ink); font-size: 14.5px; }
+  .callout .label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    color: var(--ink-3);
+  }
+  .callout.critical  { background: var(--bad-soft); border-color: #EBBFB6; border-left-color: var(--bad); }
+  .callout.critical .ico { background: var(--bad); }
+  .callout.critical .label { color: var(--bad); }
+  .callout.warning   { background: var(--warn-soft); border-color: #F2D9A6; border-left-color: var(--warn); }
+  .callout.warning .ico { background: var(--warn); }
+  .callout.warning .label { color: var(--warn); }
+  .callout.note      { background: var(--info-soft); border-color: #C5D5E8; border-left-color: var(--info); }
+  .callout.note .ico { background: var(--info); }
+  .callout.note .label { color: var(--info); }
+  .callout.tip       { background: var(--ok-soft); border-color: #C8DDC2; border-left-color: var(--ok); }
+  .callout.tip .ico  { background: var(--ok); }
+  .callout.tip .label { color: var(--ok); }
+
+  /* ───────── TABLES ───────── */
+  .table-wrap {
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    margin: 18px 0 22px;
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th, td {
+    text-align: left;
+    padding: 12px 16px;
+    vertical-align: top;
+    border-bottom: 1px solid var(--rule-2);
+    line-height: 1.6;
+  }
+  th {
+    background: var(--paper-2);
+    font-weight: 700;
+    color: var(--ink);
+    font-size: 12px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:hover { background: #FCFAF6; }
+  td code { font-size: 12.5px; padding: 1px 5px; }
+  td.col-key { font-family: var(--mono); font-size: 12.5px; color: var(--ink); white-space: nowrap; }
+  td.col-val { white-space: nowrap; }
+
+  /* status pills */
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+    line-height: 1.6;
+  }
+  .pill.allow { background: var(--ok-soft);   color: var(--ok);   border-color: #C8DDC2; }
+  .pill.ask   { background: var(--warn-soft); color: var(--warn); border-color: #F2D9A6; }
+  .pill.deny  { background: var(--bad-soft);  color: var(--bad);  border-color: #EBBFB6; }
+  .pill.high  { background: var(--bad-soft);  color: var(--bad);  border-color: #EBBFB6; }
+  .pill.low   { background: var(--paper-2);   color: var(--ink-3); border-color: var(--rule); }
+
+  /* ───────── CODE BLOCK ───────── */
+  .code-block {
+    margin: 22px 0;
+    background: var(--code-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 0 var(--rule), 0 18px 32px -24px rgba(27,24,21,.4);
+  }
+  .code-block header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px;
+    background: #15120F;
+    color: #BCB1A0;
+    font-family: var(--mono);
+    font-size: 12px;
+    border-bottom: 1px solid #2A241F;
+  }
+  .code-block header .dots { display: flex; gap: 6px; }
+  .code-block header .dots span {
+    width: 10px; height: 10px; border-radius: 999px;
+    background: #2A241F;
+  }
+  .code-block header .dots span:nth-child(1) { background: #4A3D33; }
+  .code-block header .dots span:nth-child(2) { background: #3D352D; }
+  .code-block header .dots span:nth-child(3) { background: #2F2922; }
+  .code-block header .filename {
+    color: #ECE3D2;
+    letter-spacing: .04em;
+  }
+  .code-block header .badge-small {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: rgba(194,90,42,.18);
+    color: #E89766;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  pre[class*="language-"] {
+    margin: 0;
+    padding: 22px 24px;
+    background: transparent !important;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.75;
+    overflow-x: auto;
+  }
+  /* Prism color overrides for warmer terminal feel */
+  .token.property { color: #E89766 !important; }
+  .token.string   { color: #C9D9A6 !important; }
+  .token.number   { color: #E8C766 !important; }
+  .token.boolean  { color: #E8C766 !important; }
+  .token.null     { color: #B0A595 !important; font-style: italic; }
+  .token.punctuation { color: #8A8278 !important; }
+  .token.operator { color: #8A8278 !important; }
+
+  /* ───────── LAYER CARDS (Section 1) ───────── */
+  .layer-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 22px 0 28px;
+  }
+  .layer-card {
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 20px 22px;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .layer-card.high { border-top: 3px solid var(--accent); }
+  .layer-card.low  { border-top: 3px solid var(--ink-3); }
+  .layer-card .lc-eyebrow {
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .layer-card .lc-title {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .layer-card .lc-strength {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--ink-2);
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+  .layer-card .lc-strength b {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .layer-card .lc-strength .bar {
+    display: inline-block;
+    width: 80px; height: 5px;
+    border-radius: 3px;
+    background: var(--paper-3);
+    position: relative;
+    overflow: hidden;
+  }
+  .layer-card .lc-strength .bar i {
+    display: block;
+    height: 100%;
+    background: var(--ink-3);
+    border-radius: 3px;
+  }
+  .layer-card.high .lc-strength .bar i { background: var(--accent); width: 96%; }
+  .layer-card.low  .lc-strength .bar i { background: var(--ink-3);  width: 26%; }
+  .layer-card .lc-list {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0;
+    font-size: 12.5px;
+    font-family: var(--mono);
+    color: var(--ink-2);
+  }
+  .layer-card .lc-list li {
+    padding: 5px 0;
+    border-top: 1px dashed var(--rule-2);
+    line-height: 1.5;
+  }
+  .layer-card .lc-list li:first-child { border-top: 0; padding-top: 0; }
+  .layer-card .lc-list li strong { display: block; font-family: var(--sans); font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .08em; font-weight: 700; margin-bottom: 2px; }
+
+  /* ───────── PRIORITY DIAGRAM (Section 3.1) ───────── */
+  .priority-diagram {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin: 20px 0 24px;
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .priority-row {
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    gap: 18px;
+    align-items: center;
+    padding: 12px 20px;
+    border-top: 1px solid var(--rule-2);
+    position: relative;
+  }
+  .priority-row:first-child { border-top: 0; }
+  .priority-row .rank {
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: 24px;
+    color: var(--paper-3);
+    line-height: 1;
+    text-align: right;
+  }
+  .priority-row .what strong { color: var(--ink); font-weight: 700; font-size: 14px; }
+  .priority-row .what em { font-style: normal; color: var(--ink-3); font-size: 12.5px; display: block; margin-top: 2px; }
+  .priority-row .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    padding: 3px 8px;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--paper-2);
+    white-space: nowrap;
+  }
+  .priority-row.top {
+    background: linear-gradient(90deg, rgba(194,90,42,.06), transparent 70%);
+  }
+  .priority-row.top .rank { color: var(--accent); }
+  .priority-row.top .tag { background: var(--accent-soft); color: var(--accent-2); border-color: #ECC8AE; font-weight: 700; }
+
+  /* ───────── PROFILE CARDS (Section 12) ───────── */
+  .profile-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 18px 0 8px;
+  }
+  .profile-card {
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    background: #fff;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+  }
+  .profile-card.standard { border-top: 3px solid var(--ok); }
+  .profile-card.secure   { border-top: 3px solid var(--accent); }
+  .profile-card.champion { border-top: 3px solid var(--info); }
+  .profile-card .pc-tag {
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .profile-card.standard .pc-tag { color: var(--ok); }
+  .profile-card.secure   .pc-tag { color: var(--accent-2); }
+  .profile-card.champion .pc-tag { color: var(--info); }
+  .profile-card h3 {
+    margin: 0 0 14px;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--ink);
+    border-bottom: 1px solid var(--rule-2);
+    padding-bottom: 10px;
+  }
+  .profile-card ul { padding: 0; margin: 0; list-style: none; font-size: 13px; }
+  .profile-card li {
+    padding: 6px 0 6px 18px;
+    position: relative;
+    color: var(--ink-2);
+    border-top: 1px dashed var(--rule-2);
+    margin: 0;
+  }
+  .profile-card li:first-child { border-top: 0; }
+  .profile-card li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 14px;
+    width: 8px; height: 8px;
+    border-radius: 2px;
+    background: var(--paper-3);
+  }
+  .profile-card.standard li::before { background: var(--ok); }
+  .profile-card.secure li::before   { background: var(--accent); }
+  .profile-card.champion li::before { background: var(--info); }
+
+  /* ───────── CHECKLIST (Section 9) ───────── */
+  .checklist {
+    list-style: none;
+    padding: 0;
+    margin: 14px 0 24px;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    background: #fff;
+    overflow: hidden;
+  }
+  .checklist li {
+    padding: 12px 16px 12px 46px;
+    position: relative;
+    border-top: 1px solid var(--rule-2);
+    margin: 0;
+    font-size: 14px;
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+  .checklist li:first-child { border-top: 0; }
+  .checklist li::before {
+    content: "";
+    position: absolute;
+    left: 16px; top: 16px;
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--rule);
+    border-radius: 4px;
+    background: var(--paper);
+  }
+  .checklist li code { font-size: 12.5px; }
+
+  /* ───────── REFERENCES (Section 14) ───────── */
+  .refs {
+    list-style: none;
+    padding: 0;
+    margin: 18px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    background: #fff;
+    overflow: hidden;
+  }
+  .refs li {
+    padding: 14px 18px;
+    border-top: 1px solid var(--rule-2);
+    border-left: 1px solid var(--rule-2);
+    margin: 0;
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .refs li:nth-child(-n+2) { border-top: 0; }
+  .refs li:nth-child(odd)  { border-left: 0; }
+  .refs li .ref-title {
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 13.5px;
+    border-bottom: 0;
+    display: block;
+  }
+  .refs li .ref-title:hover { color: var(--accent-2); }
+  .refs li .ref-url {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-3);
+    border-bottom: 0;
+    word-break: break-all;
+  }
+
+  /* ───────── KICKER (Section 13) ───────── */
+  .final-quote {
+    background: linear-gradient(135deg, #1B1815 0%, #2A211B 100%);
+    color: var(--paper);
+    padding: 40px 44px;
+    border-radius: 14px;
+    margin: 24px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .final-quote::before {
+    content: "“";
+    position: absolute;
+    top: -30px; right: 30px;
+    font-family: var(--serif);
+    font-size: 220px;
+    color: rgba(194,90,42,.18);
+    line-height: 1;
+    font-weight: 900;
+  }
+  .final-quote .fq-eyebrow {
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: rgba(236,227,210,.5);
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .final-quote p {
+    color: var(--paper);
+    font-size: 18px;
+    line-height: 1.8;
+    margin: 0 0 14px;
+    font-weight: 500;
+    max-width: 60ch;
+  }
+  .final-quote p:last-child { margin-bottom: 0; }
+  .final-quote p strong, .final-quote p b { color: #E89766; font-weight: 700; }
+
+  /* ───────── FOOTER ───────── */
+  footer.foot {
+    border-top: 1px solid var(--rule);
+    padding: 36px 40px;
+    text-align: center;
+    color: var(--ink-3);
+    font-size: 12.5px;
+    background: var(--paper-2);
+  }
+  footer.foot .fb-row {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  footer.foot strong { color: var(--ink); font-weight: 700; }
+  footer.foot .mono { font-family: var(--mono); }
+
+  hr.divider {
+    border: 0;
+    border-top: 1px solid var(--rule-2);
+    margin: 32px 0;
+  }
+
+  /* ───────── RESPONSIVE ───────── */
+  @media (max-width: 960px) {
+    .body { grid-template-columns: 1fr; gap: 32px; padding: 36px 24px 64px; }
+    aside.toc { position: static; max-height: none; }
+    .hero-inner { padding: 40px 24px 48px; }
+    .layer-cards, .profile-cards, .refs { grid-template-columns: 1fr; }
+    .refs li { border-left: 0; border-top: 1px solid var(--rule-2); }
+    .refs li:first-child { border-top: 0; }
+    .sec-head { grid-template-columns: 1fr; gap: 4px; }
+    .sec-no { font-size: 36px; }
+    .priority-row { grid-template-columns: 36px 1fr; }
+    .priority-row .tag { grid-column: 2; justify-self: start; }
+  }
+
+  @media print {
+    aside.toc, .hero { background: #fff !important; }
+    section.sec { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">本文へスキップ</a>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">
+      <span class="badge">Enterprise Security Baseline</span>
+      <span class="meta-pill">version <span>v3</span> · published <span>2026-05-25</span> · lang <span>ja</span></span>
+    </div>
+    <h1 class="title">Claude Code 企業展開向け<br><em>settings.json / managed settings</em><br>推奨レポート</h1>
+    <p class="subtitle">統合・検証版 — 先行 2 件の調査レポート（ChatGPT 系・Genspark 系）を統合し、公式ドキュメント（<code>code.claude.com/docs</code>）・Claude Code バイナリ v2.1.118 から抽出された環境変数一覧・Anthropic 公式サンプル（<code>examples/settings</code>）と突き合わせて検証した。検証で判明した修正点は §11 にまとめている。</p>
+
+    <dl class="meta-grid">
+      <div>
+        <dt>目的</dt>
+        <dd>Claude Code を社内展開する際の <span class="v">${HOME}/.claude/settings.json</span> および managed settings の役割を整理し、レビュー可能かつ事実確認済みの標準設定案を提示する。</dd>
+      </div>
+      <div>
+        <dt>対象読者</dt>
+        <dd>Claude Code CLI を端末に配布する管理者・情報セキュリティ担当者・プラットフォームエンジニア。</dd>
+      </div>
+      <div>
+        <dt>適用バージョン</dt>
+        <dd>本書作成時点は <span class="v">v2.1.143</span> 想定。<br>展開前に検証バージョンで再確認のこと。</dd>
+      </div>
+    </dl>
+  </div>
+</header>
+
+<div class="body">
+
+  <aside class="toc">
+    <div class="toc-label">Contents</div>
+    <ol>
+      <li><a href="#s1">エグゼクティブサマリー</a></li>
+      <li><a href="#s2">前提とスコープ</a></li>
+      <li><a href="#s3">設定アーキテクチャ</a></li>
+      <li><a href="#s4">重要な設計判断</a></li>
+      <li><a href="#s5">推奨 managed settings ベースライン</a></li>
+      <li><a href="#s6">設定項目ごとの推奨理由</a></li>
+      <li><a href="#s7">MCP を完全に止める場合</a></li>
+      <li><a href="#s8">settings.json の外側の対策</a></li>
+      <li><a href="#s9">導入時のチェックリスト</a></li>
+      <li><a href="#s10">レビュー時の論点</a></li>
+      <li><a href="#s11">元レポートからの修正・検証結果</a></li>
+      <li><a href="#s12">実務上の推奨プロファイル</a></li>
+      <li><a href="#s13">最終結論</a></li>
+      <li><a href="#s14">参考資料</a></li>
+    </ol>
+  </aside>
+
+  <main id="main">
+
+    <!-- ════════ 1 ════════ -->
+    <section class="sec" id="s1">
+      <header class="sec-head"><span class="sec-no">01</span><h2>エグゼクティブサマリー</h2></header>
+
+      <p><code>${HOME}/.claude/settings.json</code> の事前配布だけでは、企業セキュリティポリシーの強制手段としては不十分である。Claude Code の設定優先順位では <strong>Managed settings が最上位</strong>であり、コマンドライン引数・ローカルプロジェクト設定・プロジェクト設定・ユーザー設定のいずれよりも優先され、他のどのレイヤーからも上書きできない。</p>
+
+      <p>したがって、組織として強制したい制御は、<code>managed-settings.json</code> ／ <code>managed-settings.d/</code>、MDM / OS ポリシー（macOS の <code>com.anthropic.claudecode</code>、Windows の <code>HKLM\SOFTWARE\Policies\ClaudeCode</code>）、または Claude.ai 管理コンソールの server-managed settings に置くべきである。</p>
+
+      <p>推奨方針は以下の <strong>2 層構成</strong>である。</p>
+
+      <div class="layer-cards">
+        <div class="layer-card high">
+          <div class="lc-eyebrow">Layer 1 / 強制ポリシー</div>
+          <div class="lc-title">Managed settings</div>
+          <div class="lc-strength">強制力 <b>高</b><span class="bar"><i></i></span><span style="color:var(--accent-2)">上書き不可</span></div>
+          <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2)">権限、sandbox、MCP、hooks、plugin、モデル、ログイン強制、Remote Control などの統制。</p>
+          <ul class="lc-list">
+            <li><strong>macOS</strong>/Library/Application Support/ClaudeCode/managed-settings.json</li>
+            <li><strong>Linux / WSL</strong>/etc/claude-code/managed-settings.json</li>
+            <li><strong>Windows</strong>C:\Program Files\ClaudeCode\managed-settings.json</li>
+            <li><strong>または</strong>MDM / server-managed settings</li>
+          </ul>
+        </div>
+        <div class="layer-card low">
+          <div class="lc-eyebrow">Layer 2 / 既定値</div>
+          <div class="lc-title">User settings</div>
+          <div class="lc-strength">強制力 <b>低</b><span class="bar"><i></i></span><span>容易に上書きされる</span></div>
+          <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2)">言語、表示、軽い既定値、個人の利便性。<br>セキュリティの主戦場にはしない。</p>
+          <ul class="lc-list">
+            <li><strong>配置先</strong>${HOME}/.claude/settings.json</li>
+            <li><strong>優先順位</strong>最下位（CLI 引数・Project 設定で上書きされる）</li>
+            <li><strong>マージ挙動</strong>配列は連結＋重複排除でマージされる</li>
+          </ul>
+        </div>
+      </div>
+
+      <p>会社標準として強く推奨する結論は以下のとおり。</p>
+
+      <ol>
+        <li><strong>権限・sandbox・MCP・hooks・plugin・ログイン強制は managed settings で統制する。</strong> user settings はセキュリティの主戦場にしない。</li>
+        <li><code>allowManagedPermissionRulesOnly: true</code> を使い、ユーザー・プロジェクト側で権限ルールを広げられないようにする。</li>
+        <li><code>permissions.disableBypassPermissionsMode: "disable"</code> と <code>permissions.disableAutoMode: "disable"</code> を設定する。</li>
+        <li><strong>Bash sandbox を有効化し、失敗時は fail-closed にする</strong>（<code>sandbox.enabled: true</code> + <code>failIfUnavailable: true</code> + <code>allowUnsandboxedCommands: false</code>）。sandbox は Bash とその子プロセスにのみ効く点に注意。</li>
+        <li><strong>資格情報は permission の <code>Read(...)</code> deny と sandbox の <code>filesystem.denyRead</code> の両方で塞ぐ。</strong> sandbox のデフォルト read は広く、明示的に deny しない限り <code>~/.aws</code> や <code>~/.ssh</code> も読める。</li>
+        <li><strong>MCP / hooks / plugin は初期状態では原則禁止</strong>し、審査済みのものだけ allowlist で許可する。</li>
+        <li><strong>WebFetch / WebSearch と Bash 経由の <code>curl</code> / <code>wget</code> は別々に制御する。</strong> WebFetch を止めても Bash 経由の外向き通信は残る。</li>
+        <li><strong>subprocess への資格情報引き渡しを <code>CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1</code> で遮断する。</strong>（prompt injection 対策として重要。元レポートの一方のみが言及していた強力な制御。）</li>
+        <li>settings.json の外側も設計する: <strong>Team / Enterprise（または Bedrock / Vertex / Foundry）での商用利用、SSO、企業プロキシ / CA / mTLS、監査ログ（OpenTelemetry）、データ保持方針（ZDR）</strong> までを一体で設計して初めて企業利用に耐える。</li>
+      </ol>
+
+      <div class="callout critical">
+        <div class="ico">!</div>
+        <div>
+          <div class="label">重要な前提</div>
+          <p>Claude Code の設定は非常に流動的で、v2.1.145 時点で <strong>80 以上の設定キーと 180 以上の環境変数</strong>が存在し、リリースごとに増減する。本レポートの設定値・挙動は本書作成時点（2026-05-25）のものであり、<strong>展開前に必ず社内で検証したバージョンの公式ドキュメントで再確認すること</strong>。Anthropic の公式サンプルですら「コミュニティ管理のスニペットであり、サポート対象外・不正確な場合がある」と明記されている。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ 2 ════════ -->
+    <section class="sec" id="s2">
+      <header class="sec-head"><span class="sec-no">02</span><h2>前提とスコープ</h2></header>
+
+      <p>本レポートは、Claude Code の CLI 利用を主対象とする。IDE 拡張、Claude Desktop、Claude Code on the web、Remote Control などは関連機能として扱うが、<strong>端末上の Claude Code CLI における設定配布・権限制御を中心に整理する</strong>。</p>
+
+      <p>想定するセキュリティ目標は以下である。</p>
+      <ul>
+        <li>認証情報、秘密鍵、<code>.env</code>、クラウド認証情報、Kubernetes 設定などを Claude Code 本体や subprocess から読み取らせない。</li>
+        <li>破壊的コマンド、外部送信、CI/CD・本番操作を最小権限にする。</li>
+        <li>ユーザーやプロジェクト（クローンしてきた信頼できないリポジトリを含む）が独自に権限・MCP・hooks・plugin を広げることを防ぐ。</li>
+        <li>管理者が設定を監査・検証・追跡できる配布方式にする。</li>
+      </ul>
+    </section>
+
+    <!-- ════════ 3 ════════ -->
+    <section class="sec" id="s3">
+      <header class="sec-head"><span class="sec-no">03</span><h2>設定アーキテクチャ</h2></header>
+
+      <h3><span class="h3num">3.1</span>設定スコープと優先順位</h3>
+      <p>同一キーが複数スコープにある場合、Claude Code は次の優先順位で適用する（高い順）。</p>
+
+      <div class="priority-diagram">
+        <div class="priority-row top">
+          <div class="rank">1</div>
+          <div class="what"><strong>Managed settings</strong><em>最上位、他のどのレイヤーでも上書き不可。コマンドライン引数すら上書きできない。</em></div>
+          <div class="tag">enforced</div>
+        </div>
+        <div class="priority-row">
+          <div class="rank">2</div>
+          <div class="what"><strong>コマンドライン引数</strong><em>--settings 等、当該セッション限り</em></div>
+          <div class="tag">--flag</div>
+        </div>
+        <div class="priority-row">
+          <div class="rank">3</div>
+          <div class="what"><strong>Local project settings</strong><em>.claude/settings.local.json（個人のリポジトリ別オーバーライド）</em></div>
+          <div class="tag">.local.json</div>
+        </div>
+        <div class="priority-row">
+          <div class="rank">4</div>
+          <div class="what"><strong>Project settings</strong><em>.claude/settings.json（リポジトリにコミットされる）</em></div>
+          <div class="tag">project</div>
+        </div>
+        <div class="priority-row">
+          <div class="rank">5</div>
+          <div class="what"><strong>User settings</strong><em>${HOME}/.claude/settings.json — 最下位</em></div>
+          <div class="tag">user</div>
+        </div>
+      </div>
+
+      <p>スカラー値は上位スコープが下位を上書きするが、<strong>配列値（<code>permissions.allow</code> / <code>ask</code> / <code>deny</code>、<code>sandbox.filesystem.*</code>、<code>sandbox.network.allowedDomains</code> など）はスコープ間で「連結＋重複排除」されてマージされる</strong>。つまり、deny 配列をユーザー設定だけに置いても、下位スコープからの追加が混ざるため、企業統制には向かない。<code>allowManaged...Only</code> 系のフラグ（後述）で「managed のものだけ有効」にして初めて統制になる。</p>
+
+      <h3><span class="h3num">3.2</span>Managed レイヤー内部の優先順位</h3>
+      <div class="callout note">
+        <div class="ico">i</div>
+        <div>
+          <div class="label">両元レポートとも未記載・重要</div>
+          <p>「Managed」は単一ではなく、内部にさらに優先順位がある。<strong>異なる managed 階層は互いにマージされず、最上位の 1 つだけが採用される（first-source-wins）</strong>。例えば server-managed settings が有効な場合、ファイルベースの <code>managed-settings.json</code> は使われない。ただしファイルベース階層の内部では、<code>managed-settings.json</code>（ベース）と <code>managed-settings.d/</code> 内の <code>*.json</code>（ドロップイン）はマージされる。</p>
+        </div>
+      </div>
+
+      <div class="priority-diagram">
+        <div class="priority-row top"><div class="rank">1</div><div class="what"><strong>server-managed settings</strong><em>Claude.ai 管理コンソールからリモート配信</em></div><div class="tag">(remote)</div></div>
+        <div class="priority-row"><div class="rank">2</div><div class="what"><strong>MDM / OS レベルポリシー</strong><em>macOS managed preferences / Windows HKLM レジストリ</em></div><div class="tag">(plist) / (HKLM)</div></div>
+        <div class="priority-row"><div class="rank">3</div><div class="what"><strong>ファイルベース</strong><em>managed-settings.d/*.json ＋ managed-settings.json</em></div><div class="tag">(file)</div></div>
+        <div class="priority-row"><div class="rank">4</div><div class="what"><strong>HKCU レジストリ</strong><em>Windows のユーザー単位、最下位。admin 級ソースが無い場合のみ</em></div><div class="tag">(HKCU)</div></div>
+      </div>
+
+      <h3><span class="h3num">3.3</span><code>managed-settings.d/</code> ドロップインディレクトリ（v2.1.83+）</h3>
+      <p><code>managed-settings.json</code> と同じシステムディレクトリに <code>managed-settings.d/</code> を置くと、複数チームが互いのファイルを編集せずに独立したポリシー断片を配布できる（systemd / sudoers の drop-in 方式）。</p>
+      <ul>
+        <li><strong>マージ順:</strong> <code>managed-settings.json</code>（ベース）を最初にマージ → <code>managed-settings.d/*.json</code> をファイル名のアルファベット順にマージ。後のファイルがスカラー値を上書き、配列は連結＋重複排除、オブジェクトは deep-merge。</li>
+        <li>数値プレフィックスでマージ順を制御する（例: <code>10-telemetry.json</code>、<code>20-security.json</code>、<code>30-mcp-allowlist.json</code>）。</li>
+        <li><code>.</code> で始まる隠しファイルは無視される。</li>
+      </ul>
+
+      <div class="callout tip">
+        <div class="ico">✓</div>
+        <div>
+          <div class="label">運用例</div>
+          <p>セキュリティチームは <code>20-security.json</code> に deny ルールと sandbox を、基盤チームは <code>30-mcp-allowlist.json</code> に MCP allowlist を、コスト管理チームは <code>40-model-restrictions.json</code> にモデル制限を、と分担できる。</p>
+        </div>
+      </div>
+
+      <h3><span class="h3num">3.4</span>配置先（OS 別）</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>OS</th><th>ファイルベース managed settings</th><th>MDM / OS ポリシー</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>macOS</strong></td>
+              <td><code>/Library/Application Support/ClaudeCode/managed-settings.json</code><br>＋ <code>managed-settings.d/</code></td>
+              <td><code>com.anthropic.claudecode</code> managed preferences（Jamf / Kandji 等の構成プロファイル）</td>
+            </tr>
+            <tr>
+              <td><strong>Linux / WSL</strong></td>
+              <td><code>/etc/claude-code/managed-settings.json</code><br>＋ <code>managed-settings.d/</code></td>
+              <td>（MDM なし。WSL は §9 の <code>wslInheritsWindowsSettings</code> 参照）</td>
+            </tr>
+            <tr>
+              <td><strong>Windows</strong></td>
+              <td><code>C:\Program Files\ClaudeCode\managed-settings.json</code><br>＋ <code>managed-settings.d/</code></td>
+              <td><code>HKLM\SOFTWARE\Policies\ClaudeCode</code> の <code>Settings</code> 値（Group Policy / Intune）。ユーザー単位は <code>HKCU\SOFTWARE\Policies\ClaudeCode</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout warning">
+        <div class="ico">!</div>
+        <div>
+          <div class="label">Windows の注意</div>
+          <p>旧パス <code>C:\ProgramData\ClaudeCode\managed-settings.json</code> は <strong>v2.1.75 以降サポートされない</strong>。<code>C:\Program Files\ClaudeCode\</code> へ移行すること。MCP を固定配布する場合の <code>managed-mcp.json</code> も同じディレクトリに置く（§7 参照）。MDM 配布テンプレート（Jamf / Kandji / Intune / Group Policy）は <code>anthropics/claude-code/tree/main/examples/mdm</code> にある。</p>
+        </div>
+      </div>
+
+      <h3><span class="h3num">3.5</span>設定の反映タイミングと確認</h3>
+      <ul>
+        <li>Claude Code は設定ファイルを監視し、ほとんどのキー（<code>permissions</code>、<code>hooks</code>、<code>apiKeyHelper</code> 等）は再起動なしで反映される。<code>ConfigChange</code> hook が変更ごとに発火する。</li>
+        <li><code>model</code> と <code>outputStyle</code> のみセッション開始時に一度読まれ、次回再起動で反映される。</li>
+        <li>反映状況の確認は <code>/status</code>（読み込まれた設定ソースと配信チャネルが <code>(remote)</code> / <code>(plist)</code> / <code>(HKLM)</code> / <code>(HKCU)</code> / <code>(file)</code> のように表示される）、<code>/permissions</code>、<code>/config</code>、<code>/doctor</code>、および <code>claude debug</code> 系コマンドで行う。</li>
+      </ul>
+    </section>
+
+    <!-- ════════ 4 ════════ -->
+    <section class="sec" id="s4">
+      <header class="sec-head"><span class="sec-no">04</span><h2>重要な設計判断</h2></header>
+
+      <h3><span class="h3num">4.1</span><code>${HOME}/.claude/settings.json</code> は「標準初期値」であり「強制ポリシー」ではない</h3>
+      <p>user settings は優先順位が最下位で、プロジェクトの <code>.claude/settings.json</code> や <code>.claude/settings.local.json</code>、CLI 引数で上書き・追加され得る。配列型は連結マージされるため、権限や sandbox の allowlist を user settings だけで完全統制するのは不可能。<strong>強制したいものは managed に置く。</strong></p>
+
+      <h3><span class="h3num">4.2</span>権限ルールと sandbox は役割が違う</h3>
+      <ul>
+        <li><strong>権限ルール</strong>（<code>Read</code> / <code>Edit</code> / <code>Bash</code> / <code>WebFetch</code> / <code>WebSearch</code> / <code>Agent</code> / MCP など）は Claude Code の<strong>ツール利用</strong>を制御する。</li>
+        <li><strong>sandbox</strong> は <strong>Bash とその子プロセスにのみ</strong> OS レベルのファイルシステム・ネットワーク境界を作る（macOS は Seatbelt、Linux/WSL2 は bubblewrap）。<strong>Read / Write / WebFetch / WebSearch / MCP / hooks / 内部コマンドには効かない</strong>（公式サンプル README に明記）。</li>
+      </ul>
+      <p>したがって、<code>Read(...)</code> deny だけでは Python / Node / shell script などの subprocess が直接ファイルやネットワークへアクセスする経路を塞げず、逆に sandbox だけでは Claude の Read ツールや WebFetch を縛れない。<strong>permissions と sandbox の両方</strong>を defense-in-depth として使う。なお、<code>Read(...)</code> deny や <code>Edit(...)</code> のパスは sandbox の <code>denyRead</code> / <code>denyWrite</code> にもマージされ、<code>WebFetch(domain:...)</code> の allow は sandbox の <code>allowedDomains</code> にもマージされる。</p>
+
+      <h3><span class="h3num">4.3</span>資格情報は二重に塞ぐ</h3>
+      <div class="callout critical">
+        <div class="ico">!</div>
+        <div>
+          <div class="label">重要な落とし穴</div>
+          <p>sandbox を有効にしただけでは不十分。<strong>sandbox のデフォルト read は広く、<code>~/.aws/credentials</code> や <code>~/.ssh/</code> も明示的に <code>filesystem.denyRead</code> しない限り読める。</strong> 同時に Claude 自身の Read ツールも <code>permissions.deny</code> の <code>Read(~/.aws/**)</code> 等で塞ぐ。両方を設定すること。</p>
+        </div>
+      </div>
+
+      <h3><span class="h3num">4.4</span>WebFetch と Bash ネットワークは別経路</h3>
+      <p><code>WebFetch</code> / <code>WebSearch</code> を deny しても、Bash が許可されていれば <code>curl</code> / <code>wget</code> / <code>python -c</code> / <code>node</code> などの外向き通信経路が残る。WebFetch の deny、Bash ネットワークコマンドの deny、sandbox の <code>network.allowedDomains</code> 制限を<strong>組み合わせる</strong>。</p>
+
+      <h3><span class="h3num">4.5</span>MCP・hooks・plugin は最初は閉じるのが安全</h3>
+      <ul>
+        <li><strong>MCP:</strong> 外部ツール連携の強力な拡張点。公式ディレクトリ掲載はセキュリティ監査を意味しない。初期は <code>allowedMcpServers: []</code> ＋ <code>allowManagedMcpServersOnly: true</code>（必要に応じて <code>managed-mcp.json</code> で空配布）。</li>
+        <li><strong>hooks:</strong> 任意の shell 実行・HTTP 送信ポイントになり得る。初期は <code>allowManagedHooksOnly: true</code>（＋必要なら <code>disableAllHooks</code>）。HTTP hook を使う場合は <code>allowedHttpHookUrls</code> / <code>httpHookAllowedEnvVars</code> で URL と環境変数を allowlist 化。</li>
+        <li><strong>plugin / marketplace:</strong> サプライチェーンリスク。初期は <code>strictKnownMarketplaces: []</code>（全 marketplace 追加禁止）＋ <code>strictPluginOnlyCustomization: true</code>（skills / agents / hooks / MCP を plugin・managed 由来のみに限定）。社内 marketplace を用意してから <code>strictKnownMarketplaces</code> に追加する。</li>
+      </ul>
+
+      <h3><span class="h3num">4.6</span>信頼できないリポジトリを脅威モデルに含める</h3>
+      <p>クローンしてきたリポジトリの <code>.claude/settings.json</code> や <code>.mcp.json</code> は攻撃ベクトルになり得る。Claude Code はこれを意識した設計になっている（例: <code>autoMemoryDirectory</code> は project/local 設定からは受け付けない＝クローンしたリポジトリにメモリ書き込み先を機密領域へ向けさせない、<code>defaultMode: "auto"</code> は project/local 設定では無視される＝リポジトリが自身に auto mode を付与できない）。<code>allowManagedPermissionRulesOnly</code> と <code>strictPluginOnlyCustomization</code> はこの脅威への中核的な防御になる。</p>
+    </section>
+
+    <!-- ════════ 5 ════════ -->
+    <section class="sec" id="s5">
+      <header class="sec-head"><span class="sec-no">05</span><h2>推奨 managed settings ベースライン</h2></header>
+
+      <p>以下は社内標準としてレビューしやすい「堅め」の baseline。<code>github.example.com</code>、<code>registry.npmjs.example.com</code>、<code>pypi.example.com</code> は社内 Git / npm mirror / PyPI mirror に置き換える。</p>
+
+      <div class="callout note">
+        <div class="ico">i</div>
+        <div>
+          <div class="label">注意</div>
+          <p><code>minimumVersion</code> は運用開始時点の検証済みバージョンに置き換えること。このベースラインは検証済みの設定キー・環境変数のみで構成している（検証で除外した項目は §11 参照）。公式の <code>settings-strict.json</code> は「全 Bash を <code>ask</code>」という、より単純で厳格な方針を採る。下記は開発生産性とのバランスを取り、低リスク操作を <span class="pill allow">allow</span>、要注意操作を <span class="pill ask">ask</span>、危険操作を <span class="pill deny">deny</span> に振り分けている。組織の方針に応じて「全 Bash ask」に倒してもよい。</p>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <header>
+          <div class="dots"><span></span><span></span><span></span></div>
+          <span class="filename">managed-settings.json</span>
+          <span class="badge-small">Baseline · enforced</span>
+        </header>
+<pre class="language-json"><code>{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "minimumVersion": "2.1.143",
+  "language": "japanese",
+  "autoUpdatesChannel": "stable",
+  "model": "sonnet",
+  "availableModels": ["sonnet", "haiku"],
+  "cleanupPeriodDays": 7,
+  "autoMemoryEnabled": false,
+  "respectGitignore": true,
+  "feedbackSurveyRate": 0,
+  "companyAnnouncements": [
+    "Claude Code は社内セキュリティポリシーに従って利用してください。秘密情報・個人情報・認証情報をプロンプトやリポジトリに含めないでください。"
+  ],
+  "claudeMd": "秘密情報・認証情報・個人情報をプロンプトやコミットに含めないこと。外部送信・破壊的コマンド・本番操作は事前承認が必要。",
+  "env": {
+    "CLAUDE_CODE_SUBPROCESS_ENV_SCRUB": "1",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "CLAUDE_CODE_MCP_ALLOWLIST_ENV": "1",
+    "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1",
+    "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1",
+    "CLAUDE_CODE_DISABLE_CRON": "1",
+    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1",
+    "CLAUDE_CODE_CERT_STORE": "system",
+    "BASH_DEFAULT_TIMEOUT_MS": "120000",
+    "BASH_MAX_TIMEOUT_MS": "300000",
+    "BASH_MAX_OUTPUT_LENGTH": "20000",
+    "CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY": "4"
+  },
+  "permissions": {
+    "defaultMode": "default",
+    "disableBypassPermissionsMode": "disable",
+    "disableAutoMode": "disable",
+    "allow": [
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git branch *)",
+      "Bash(npm test *)",
+      "Bash(npm run test *)",
+      "Bash(npm run lint *)",
+      "Bash(pnpm test *)",
+      "Bash(pnpm run test *)",
+      "Bash(pnpm run lint *)",
+      "Bash(yarn test *)",
+      "Bash(yarn lint *)"
+    ],
+    "ask": [
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(gh pr create *)",
+      "Bash(gh pr edit *)",
+      "Bash(rm *)",
+      "Bash(docker *)",
+      "Bash(kubectl *)",
+      "Bash(terraform *)",
+      "Bash(aws *)",
+      "Bash(gcloud *)",
+      "Bash(az *)"
+    ],
+    "deny": [
+      "Read(.env)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(secrets/**)",
+      "Read(secret/**)",
+      "Read(**/*secret*)",
+      "Read(**/*credential*)",
+      "Read(~/.aws/**)",
+      "Read(~/.ssh/**)",
+      "Read(~/.gnupg/**)",
+      "Read(~/.kube/**)",
+      "Read(~/.docker/config.json)",
+      "Read(~/.npmrc)",
+      "Read(~/.pypirc)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Read(**/*.p12)",
+      "Read(**/*.pfx)",
+      "Edit(.git/**)",
+      "Edit(.claude/**)",
+      "Edit(.vscode/**)",
+      "Edit(.idea/**)",
+      "Edit(.husky/**)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(nc *)",
+      "Bash(ncat *)",
+      "Bash(netcat *)",
+      "Bash(ssh *)",
+      "Bash(scp *)",
+      "Bash(rsync *)",
+      "Bash(sudo)",
+      "Bash(sudo *)",
+      "Bash(su)",
+      "Bash(su *)",
+      "Bash(rm -rf *)",
+      "Bash(rm -fr *)",
+      "Bash(git push *)",
+      "Bash(kubectl delete *)",
+      "Bash(kubectl apply *)",
+      "Bash(terraform apply *)",
+      "Bash(terraform destroy *)",
+      "WebFetch",
+      "WebSearch"
+    ]
+  },
+  "allowManagedPermissionRulesOnly": true,
+  "sandbox": {
+    "enabled": true,
+    "failIfUnavailable": true,
+    "autoAllowBashIfSandboxed": false,
+    "allowUnsandboxedCommands": false,
+    "excludedCommands": [],
+    "filesystem": {
+      "denyRead": [
+        "~/.aws",
+        "~/.ssh",
+        "~/.gnupg",
+        "~/.kube",
+        "~/.docker",
+        "~/.npmrc",
+        "~/.pypirc",
+        "~/.config/gh",
+        "~/.config/gcloud",
+        "~/.azure",
+        "~/.claude.json"
+      ],
+      "denyWrite": [
+        "~/.aws",
+        "~/.ssh",
+        "~/.gnupg",
+        "~/.kube",
+        "~/.docker",
+        "/etc",
+        "/usr/local/bin",
+        "/usr/bin",
+        "/bin",
+        "/sbin",
+        "/var/run",
+        "~/.bashrc",
+        "~/.zshrc",
+        "~/.profile"
+      ],
+      "allowWrite": [],
+      "allowManagedReadPathsOnly": true
+    },
+    "network": {
+      "allowedDomains": [
+        "github.example.com",
+        "registry.npmjs.example.com",
+        "pypi.example.com"
+      ],
+      "deniedDomains": [],
+      "allowManagedDomainsOnly": true,
+      "allowAllUnixSockets": false,
+      "allowLocalBinding": false
+    }
+  },
+  "allowedHttpHookUrls": [],
+  "httpHookAllowedEnvVars": [],
+  "allowManagedHooksOnly": true,
+  "disableAllHooks": true,
+  "disableSkillShellExecution": true,
+  "allowedMcpServers": [],
+  "deniedMcpServers": [],
+  "allowManagedMcpServersOnly": true,
+  "strictKnownMarketplaces": [],
+  "strictPluginOnlyCustomization": true,
+  "channelsEnabled": false,
+  "allowedChannelPlugins": [],
+  "disableAgentView": true,
+  "disableRemoteControl": true,
+  "disableDeepLinkRegistration": "disable"
+}</code></pre>
+      </div>
+
+      <div class="callout warning">
+        <div class="ico">!</div>
+        <div>
+          <div class="label">Windows / PowerShell について</div>
+          <p>上記の Bash ルールは PowerShell ツール（<code>CLAUDE_CODE_USE_POWERSHELL_TOOL=1</code> または <code>defaultShell: "powershell"</code> で有効化）には適用されない。Windows で PowerShell ツールを使う場合は、別途 <code>PowerShell(Invoke-WebRequest *)</code>、<code>PowerShell(Invoke-RestMethod *)</code>、<code>PowerShell(iwr *)</code>、<code>PowerShell(irm *)</code>、<code>PowerShell(curl *)</code>、<code>PowerShell(ssh *)</code>、<code>PowerShell(scp *)</code>、<code>PowerShell(Remove-Item -Recurse *)</code>、<code>PowerShell(Start-Process *)</code>、<code>PowerShell(Set-ExecutionPolicy *)</code> 等を <code>deny</code> に追加する。PowerShell ツールを有効化しないなら、これらのルールは不要。</p>
+        </div>
+      </div>
+
+      <div class="callout tip">
+        <div class="ico">+</div>
+        <div>
+          <div class="label">高機密向けの追加（任意）</div>
+          <p><code>"CLAUDE_CODE_SKIP_PROMPT_HISTORY": "1"</code>（プロンプト履歴・transcript をディスクに書かない）。自社配布バイナリで更新を完全に止めるなら <code>"DISABLE_UPDATES": "1"</code>。<code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1</code> は自動更新も止めるため、telemetry だけ止めたい場合は代わりに <code>DISABLE_TELEMETRY=1</code> ＋ <code>DISABLE_ERROR_REPORTING=1</code>（＋ <code>CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1</code>）を使うと更新機構を壊さずに済む。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ 6 ════════ -->
+    <section class="sec" id="s6">
+      <header class="sec-head"><span class="sec-no">06</span><h2>設定項目ごとの推奨理由</h2></header>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:22%">領域</th><th style="width:30%">推奨設定</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr><td>Managed settings</td><td>使用必須</td><td>管理者が配布し、他のどのレイヤーよりも優先される（上書き不可）。</td></tr>
+            <tr><td class="col-key">allowManagedPermissionRulesOnly</td><td><code>true</code></td><td>ユーザー・プロジェクトが独自の <code>allow</code> / <code>ask</code> / <code>deny</code> を定義して権限を広げることを防ぐ。</td></tr>
+            <tr><td class="col-key">permissions.disableBypassPermissionsMode</td><td><code>"disable"</code></td><td><code>--dangerously-skip-permissions</code> / bypassPermissions を無効化。全権限プロンプトをスキップする危険モードを封じる。</td></tr>
+            <tr><td class="col-key">permissions.disableAutoMode</td><td><code>"disable"</code></td><td>auto mode（自動承認系）を無効化。<code>Shift+Tab</code> の選択肢からも外れ、<code>--permission-mode auto</code> も拒否される。</td></tr>
+            <tr><td class="col-key">permissions.defaultMode</td><td><code>"default"</code></td><td>既定の権限モード。高機密では <code>"plan"</code>（読み取り・計画のみで編集に承認が必要）も検討。</td></tr>
+            <tr><td class="col-key">sandbox.enabled</td><td><code>true</code></td><td>Bash と子プロセスに OS レベルの filesystem / network 制約をかける。</td></tr>
+            <tr><td class="col-key">sandbox.failIfUnavailable</td><td><code>true</code></td><td>sandbox を起動できない端末で、警告だけ出して unsandboxed 実行されることを防ぐ（fail-closed）。</td></tr>
+            <tr><td class="col-key">sandbox.allowUnsandboxedCommands</td><td><code>false</code></td><td><code>dangerouslyDisableSandbox</code> による sandbox 回避を完全に封じる。</td></tr>
+            <tr><td class="col-key">sandbox.filesystem.allowManagedReadPathsOnly</td><td><code>true</code></td><td>ユーザー・プロジェクト側の read 緩和（<code>allowRead</code>）を無効化。</td></tr>
+            <tr><td class="col-key">sandbox.network.allowManagedDomainsOnly</td><td><code>true</code></td><td>ユーザー・プロジェクト側の domain allowlist 追加を無効化。</td></tr>
+            <tr><td class="col-key">allowedMcpServers / allowManagedMcpServersOnly</td><td><code>[]</code> ＋ <code>true</code></td><td>MCP は強力な拡張点。審査済みサーバーだけを許可する。<code>deniedMcpServers</code> は全スコープから常にマージされ、allowlist より優先。</td></tr>
+            <tr><td class="col-key">disableAllHooks / allowManagedHooksOnly</td><td><code>true</code></td><td>hooks はコマンド実行・HTTP 送信経路になり得る。必要なものだけ managed hooks ＋ URL/env allowlist で許可。</td></tr>
+            <tr><td class="col-key">strictKnownMarketplaces</td><td><code>[]</code></td><td>plugin サプライチェーンを社内審査済み marketplace に限定する準備ができるまで禁止。</td></tr>
+            <tr><td class="col-key">strictPluginOnlyCustomization</td><td><code>true</code></td><td>skills / agents / hooks / MCP をユーザー・プロジェクト由来で読み込ませない（plugin・managed のみ）。</td></tr>
+            <tr><td class="col-key">disableRemoteControl</td><td><code>true</code></td><td>端末のローカル filesystem に接続する機能。初期は無効化し、必要時のみ解放（v2.1.128+）。</td></tr>
+            <tr><td class="col-key">disableAgentView</td><td><code>true</code></td><td>バックグラウンドエージェント／agent view（<code>--bg</code> 等）を無効化。</td></tr>
+            <tr><td class="col-key">disableDeepLinkRegistration</td><td><code>"disable"</code></td><td><code>claude-cli://</code> プロトコルハンドラ登録を防ぐ。</td></tr>
+            <tr><td class="col-key">channelsEnabled</td><td><code>false</code></td><td>channels（外部メッセージ push）を無効化。</td></tr>
+            <tr><td class="col-key">claudeMd（managed）</td><td>セキュリティ指示を注入</td><td><code>companyAnnouncements</code>（起動時バナーのみ）と異なり、組織管理のメモリとしてモデルの文脈に常時注入される。user/project からは無視される。</td></tr>
+            <tr><td class="col-key">CLAUDE_CODE_SUBPROCESS_ENV_SCRUB</td><td><code>=1</code></td><td>Anthropic / クラウドプロバイダの資格情報を Bash・hooks・MCP stdio などの子プロセスに渡さない。prompt injection 対策として重要。</td></tr>
+            <tr><td class="col-key">CLAUDE_CODE_MCP_ALLOWLIST_ENV</td><td><code>=1</code></td><td>MCP サーバーへ渡す環境変数の allowlist フィルタを有効化（既定は local-agent entrypoint のみ有効）。</td></tr>
+            <tr><td class="col-key">CLAUDE_CODE_DISABLE_AUTO_MEMORY</td><td><code>=1</code></td><td>自動メモリの読み書きを止め、機密の意図せぬ永続化を防ぐ（<code>autoMemoryEnabled: false</code> と併用）。</td></tr>
+            <tr><td class="col-key">CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</td><td><code>=1</code>（要検討）</td><td>telemetry / error reporting / feedback / 自動更新などの非必須通信をまとめて停止。<strong>自動更新も止まる</strong>ため、MDM / package manager 等で別途更新管理が必要。</td></tr>
+            <tr><td class="col-key">CLAUDE_CODE_CERT_STORE</td><td><code>system</code> 等</td><td>信頼する CA ストアを指定（<code>bundled</code> / <code>system</code> のカンマ区切り）。社内 CA を使う環境向け。</td></tr>
+            <tr><td class="col-key">BASH_*_TIMEOUT_MS / BASH_MAX_OUTPUT_LENGTH / MAX_TOOL_USE_CONCURRENCY</td><td>任意（運用調整）</td><td>実行時間・出力長・並列度の上限。暴走・過剰出力の抑制。</td></tr>
+            <tr><td class="col-key">cleanupPeriodDays</td><td><code>7</code>（既定 30）</td><td>セッションファイルの保持期間を短縮（最小 1、<code>0</code> は不可）。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ════════ 7 ════════ -->
+    <section class="sec" id="s7">
+      <header class="sec-head"><span class="sec-no">07</span><h2>MCP を完全に止める場合</h2></header>
+
+      <p>managed settings に以下を入れる。</p>
+
+      <div class="code-block">
+        <header>
+          <div class="dots"><span></span><span></span><span></span></div>
+          <span class="filename">managed-settings.json (抜粋)</span>
+        </header>
+<pre class="language-json"><code>{
+  "allowedMcpServers": [],
+  "allowManagedMcpServersOnly": true
+}</code></pre>
+      </div>
+
+      <p>さらに、端末に <code>managed-mcp.json</code> を空の server map で配布する。</p>
+
+      <div class="code-block">
+        <header>
+          <div class="dots"><span></span><span></span><span></span></div>
+          <span class="filename">managed-mcp.json</span>
+        </header>
+<pre class="language-json"><code>{ "mcpServers": {} }</code></pre>
+      </div>
+
+      <p><code>managed-mcp.json</code> が存在する場合、Claude Code はそのファイルで定義されたサーバーだけを読み込む。空配布で MCP は読み込まれず、ユーザーの <code>claude mcp add</code> も企業ポリシーで拒否される。配置先は §3.4 の managed settings と同じディレクトリ。</p>
+
+      <div class="callout note">
+        <div class="ico">i</div>
+        <div>
+          <div class="label">部分許可の場合</div>
+          <p>特定サーバーだけ許可する場合は <code>allowedMcpServers: [{ "serverName": "github" }]</code> のように列挙する（公式 <code>serverName</code> 形式）。<code>deniedMcpServers</code> は全スコープから常にマージされ、allowlist より優先される。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ 8 ════════ -->
+    <section class="sec" id="s8">
+      <header class="sec-head"><span class="sec-no">08</span><h2>settings.json の外側で会社が追加すべき対策</h2></header>
+      <p>設定ファイルだけでは「何を禁止するか」しか決められない。以下を併せて設計する。</p>
+
+      <h3><span class="h3num">8.1</span>商用利用（Team / Enterprise / API / Bedrock / Vertex / Foundry）</h3>
+      <p>Free / Pro / Max の consumer 前提ではなく、商用条件下で利用する。商用条件では、Claude Code に送られたコード・プロンプトを生成モデルの学習に使わない方針。Enterprise では Zero Data Retention（ZDR）も利用可能。</p>
+
+      <h3><span class="h3num">8.2</span>SSO / domain capture / role-based permissions</h3>
+      <p>Claude for Enterprise では SSO、domain capture、role ベース権限、Compliance API、managed policy が提供される。個別 API キーの野放図な配布より IdP 連携と集中管理を優先する方が、オフボーディング・監査の面で優れる。<code>forceLoginMethod</code> / <code>forceLoginOrgUUID</code>（managed settings）で個人アカウントや別組織での利用をブロックできる。<code>forceLoginOrgUUID</code> に空配列を入れると fail-closed でログイン不可になる点に注意。</p>
+
+      <h3><span class="h3num">8.3</span>プロキシ / CA / mTLS</h3>
+      <p><code>HTTPS_PROXY</code> / <code>HTTP_PROXY</code>、<code>NODE_EXTRA_CA_CERTS</code>、<code>CLAUDE_CODE_CLIENT_CERT</code> / <code>CLAUDE_CODE_CLIENT_KEY</code> などで企業プロキシ・社内 CA・mTLS に対応できる。出口を corporate proxy に統一し、必要ドメインのみ許可する。<code>NO_PROXY</code> の扱いはバージョンにより異なるため、利用バージョンの corporate-proxy ドキュメントで確認すること。</p>
+
+      <h3><span class="h3num">8.4</span>subprocess への資格情報引き渡し防止</h3>
+      <p><code>CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1</code> を設定すると、Anthropic / クラウドプロバイダの資格情報が Bash・hooks・MCP stdio サーバーなどの子プロセスに渡らなくなる（§5・§6 で baseline に組み込み済み）。</p>
+
+      <h3><span class="h3num">8.5</span>履歴・痕跡の削減</h3>
+      <p><code>cleanupPeriodDays</code> の短縮に加え、必要に応じて <code>CLAUDE_CODE_SKIP_PROMPT_HISTORY=1</code> でセッション履歴・transcript をディスクに書かせない。高機密リポジトリ・CI・短命環境で有効。</p>
+
+      <h3><span class="h3num">8.6</span>アップデート統制</h3>
+      <p>自社配布バイナリを使う場合、<code>DISABLE_UPDATES=1</code>（管理者級、<code>DISABLE_AUTOUPDATER</code> より優先）で勝手な更新を止め、検証済みバージョンだけを展開する。<code>minimumVersion</code> で下限を固定。</p>
+
+      <h3><span class="h3num">8.7</span>監査ログ / OpenTelemetry</h3>
+      <p>OpenTelemetry ベースの監視で、tool decision、permission mode 変更、hook block、認証イベント、MCP 接続、plugin install、コマンド実行・ファイル操作などを収集できる。「何を禁止するか」だけでなく「何が起きたか」を見る体制を作る。詳細ログ（<code>OTEL_LOG_USER_PROMPTS</code>、<code>OTEL_LOG_TOOL_CONTENT</code> など）は機微情報を含み得るため、初期はメタデータ中心で始め、必要に応じて段階的に詳細化する。</p>
+
+      <h3><span class="h3num">8.8</span>高度な managed 制御</h3>
+      <ul>
+        <li><code>forceRemoteSettingsRefresh: true</code>（managed-only）: server-managed settings を新規取得できるまで CLI 起動をブロックし、取得失敗時は fail-closed。起動直後に managed なしで動く「すき間」を塞ぐ。</li>
+        <li><code>policyHelper</code>（v2.1.136+、MDM / system ファイルのみ）: 端末の状態・ID・リモートサービスから managed settings を起動時に動的算出する executable を指定。</li>
+        <li><code>parentSettingsBehavior</code>（v2.1.133+）: Claude Desktop / IDE 拡張など埋め込みホストが SDK 経由で供給する managed settings の扱い。既定 <code>"first-wins"</code>（admin tier があれば破棄）、<code>"merge"</code> にすると admin tier の下でポリシーを「厳しくする方向にのみ」適用可能。</li>
+      </ul>
+    </section>
+
+    <!-- ════════ 9 ════════ -->
+    <section class="sec" id="s9">
+      <header class="sec-head"><span class="sec-no">09</span><h2>導入時のチェックリスト</h2></header>
+
+      <h3><span class="h3num">9.1</span>事前設計</h3>
+      <ul class="checklist">
+        <li>Claude for Team / Enterprise、Console API、Bedrock、Vertex AI、Microsoft Foundry のどれを使うか決める。</li>
+        <li>配布方式を決める（server-managed / MDM・OS ポリシー / file-based managed settings ＋ <code>managed-settings.d/</code>）。複数の managed 階層はマージされず最上位のみ採用される点に注意。</li>
+        <li>Windows / WSL の取り扱いを決める。Windows の admin 級 managed settings を WSL に継承させたい場合は <code>wslInheritsWindowsSettings: true</code> を検討（HKLM か <code>C:\Program Files\ClaudeCode\managed-settings.json</code> に設定、HKCU を WSL に効かせるには HKCU にも設定が必要）。</li>
+        <li><code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1</code> を使う場合、自動更新の代替手段を用意する。</li>
+        <li>チーム分担が必要なら <code>managed-settings.d/</code> のファイル命名規約（数値プレフィックス）を決める。</li>
+      </ul>
+
+      <h3><span class="h3num">9.2</span>ポリシー設計</h3>
+      <ul class="checklist">
+        <li><code>permissions.allow</code> は読み取り・テスト・lint など低リスク操作に限定。</li>
+        <li><code>permissions.ask</code> に git commit、PR 作成、Docker、Kubernetes、Terraform、cloud CLI などを入れる。</li>
+        <li><code>permissions.deny</code> に credential 読み取り、破壊的コマンド、外部送信、WebFetch / WebSearch を入れる。</li>
+        <li>sandbox の <code>filesystem.denyRead</code> / <code>denyWrite</code> に credential・shell profile・system path を入れる（permission の Read deny と二重に）。</li>
+        <li><code>sandbox.network.allowedDomains</code> を社内許可ドメインだけに限定し、<code>allowManagedDomainsOnly: true</code>。</li>
+        <li>MCP / hooks / plugin は初期禁止、必要なものだけ審査後に allowlist 化。</li>
+        <li><code>CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1</code> を設定。</li>
+      </ul>
+
+      <h3><span class="h3num">9.3</span>検証</h3>
+      <ul class="checklist">
+        <li>JSON schema（<code>https://json.schemastore.org/claude-code-settings.json</code>）で構文確認。公開 schema は最新キーに追随しないことがあるため、検証警告＝設定不正とは限らない。</li>
+        <li><code>/status</code> で managed settings の読み込み元・配信チャネル（<code>(remote)</code>/<code>(plist)</code>/<code>(HKLM)</code>/<code>(HKCU)</code>/<code>(file)</code>）を確認。</li>
+        <li><code>/permissions</code> で権限ルールの適用状況を確認。<code>/doctor</code>・<code>claude debug</code> 系で設定の有効性を確認。</li>
+        <li><code>.env</code>、<code>~/.ssh</code>、<code>~/.aws</code>、<code>~/.kube</code> が（Read ツール・Bash subprocess の両方から）読めないことを確認。</li>
+        <li><code>curl</code> / <code>wget</code> / WebFetch / WebSearch がポリシー通り拒否されることを確認。</li>
+        <li><code>kubectl apply</code>、<code>terraform apply</code>、<code>git push</code> が ask または deny されることを確認。</li>
+        <li>sandbox 未対応・依存不足端末で <code>failIfUnavailable</code> が fail-closed することを確認。</li>
+        <li><code>claude mcp list</code> / <code>claude mcp add</code> で MCP 制限が有効であることを確認。</li>
+        <li><code>--dangerously-skip-permissions</code> が拒否されることを確認。</li>
+      </ul>
+    </section>
+
+    <!-- ════════ 10 ════════ -->
+    <section class="sec" id="s10">
+      <header class="sec-head"><span class="sec-no">10</span><h2>レビュー時の論点</h2></header>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>論点</th><th>推奨初期判断</th><th>レビュー観点</th></tr></thead>
+          <tbody>
+            <tr><td>WebFetch / WebSearch</td><td><span class="pill deny">deny</span></td><td>社内 proxy / allowlist 経由で必要か。必要なら <code>WebFetch(domain:...)</code> で限定。</td></tr>
+            <tr><td>Bash ネットワーク</td><td><code>curl</code> / <code>wget</code> 等 <span class="pill deny">deny</span></td><td>package download を社内 mirror に限定できるか。</td></tr>
+            <tr><td>Git push</td><td><span class="pill deny">deny</span> または <span class="pill ask">ask</span></td><td>Claude Code から直接 push させる運用を許すか。</td></tr>
+            <tr><td>Kubernetes / Terraform</td><td><span class="pill ask">ask</span> または <span class="pill deny">deny</span></td><td>dev / staging / prod で分けるか。</td></tr>
+            <tr><td>Docker</td><td><span class="pill ask">ask</span></td><td>Docker socket 経由でホスト権限に近づくため、利用シナリオを限定するか。<code>sandbox.excludedCommands</code> で扱う必要があるか。</td></tr>
+            <tr><td>MCP</td><td>初期は <span class="pill deny">禁止</span></td><td>社内審査済み MCP catalog を作るか。</td></tr>
+            <tr><td>hooks</td><td>初期は <span class="pill deny">禁止</span></td><td>監査・ログ出力など managed hooks として必要なものがあるか。</td></tr>
+            <tr><td>plugin</td><td>初期は <span class="pill deny">禁止</span></td><td>社内 marketplace を用意するか。</td></tr>
+            <tr><td>Remote Control / agent view</td><td>初期は <span class="pill deny">禁止</span></td><td>Team / Enterprise 管理画面と端末側 managed settings の両方で扱うか。</td></tr>
+            <tr><td>auto mode</td><td>初期は <span class="pill deny">禁止</span></td><td>検証済みリポジトリ・隔離環境だけで許可するか。</td></tr>
+            <tr><td>defaultMode</td><td><code>default</code></td><td>高機密で <code>plan</code> にするか。<code>dontAsk</code> / <code>acceptEdits</code> / <code>auto</code> の挙動を確認したか。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ════════ 11 ════════ -->
+    <section class="sec" id="s11">
+      <header class="sec-head"><span class="sec-no">11</span><h2>元レポートからの主な修正・検証結果</h2></header>
+
+      <p>本統合版で、元の 2 レポートに対して行った主な修正・確認は以下のとおり。</p>
+
+      <h3><span class="h3num">11.1</span>修正した誤り</h3>
+      <ul>
+        <li><strong>環境変数 <code>CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY</code> を削除。</strong> Claude Code バイナリ（v2.1.118）の環境変数一覧に存在せず、実在しない可能性が高い。PowerShell 制御の実在メカニズムは <code>CLAUDE_CODE_USE_POWERSHELL_TOOL</code>（ツール有効化）、<code>defaultShell: "powershell"</code>、<code>CLAUDE_CODE_PWSH_PARSE_TIMEOUT_MS</code> であり、PowerShell コマンドの制限は <code>PowerShell(...)</code> permission ルールで行う（§5 の Windows 注記参照）。</li>
+        <li><strong>ドキュメント URL を現行の <code>code.claude.com/docs/en/...</code> に統一。</strong> 一方のレポートが使っていた <code>docs.anthropic.com/en/docs/claude-code/...</code> は旧パス（リダイレクトはされるが正準ではない）。</li>
+      </ul>
+
+      <h3><span class="h3num">11.2</span>検証して「正しい」と確認した主な項目</h3>
+      <ul>
+        <li>設定優先順位（Managed &gt; CLI 引数 &gt; Local &gt; Project &gt; User）と配列のマージ挙動。</li>
+        <li>managed settings 配置先（macOS / Linux・WSL / Windows）。<strong>Windows は <code>C:\Program Files\ClaudeCode\</code> が正しく、<code>C:\ProgramData\...</code> は v2.1.75 で廃止</strong>（両レポートとも正しく記載）。</li>
+        <li>検証で実在を確認した設定キー: <code>allowManagedPermissionRulesOnly</code>、<code>disableBypassPermissionsMode</code>、<code>disableAutoMode</code>、<code>allowManagedHooksOnly</code>、<code>disableAllHooks</code>、<code>disableSkillShellExecution</code>、<code>allowedMcpServers</code>/<code>deniedMcpServers</code>/<code>allowManagedMcpServersOnly</code>、<code>strictKnownMarketplaces</code>、<code>strictPluginOnlyCustomization</code>、<code>channelsEnabled</code>/<code>allowedChannelPlugins</code>、<code>disableAgentView</code>、<code>disableRemoteControl</code>、<code>disableDeepLinkRegistration</code>、<code>forceLoginMethod</code>/<code>forceLoginOrgUUID</code>/<code>forceRemoteSettingsRefresh</code>、<code>wslInheritsWindowsSettings</code>、<code>allowedHttpHookUrls</code>/<code>httpHookAllowedEnvVars</code>、sandbox 一式。</li>
+        <li>検証で実在を確認した環境変数: <code>CLAUDE_CODE_SUBPROCESS_ENV_SCRUB</code>、<code>CLAUDE_CODE_MCP_ALLOWLIST_ENV</code>、<code>CLAUDE_CODE_DISABLE_AUTO_MEMORY</code>、<code>CLAUDE_CODE_DISABLE_BACKGROUND_TASKS</code>、<code>CLAUDE_CODE_DISABLE_CRON</code>、<code>CLAUDE_CODE_DISABLE_1M_CONTEXT</code>、<code>CLAUDE_CODE_CERT_STORE</code>、<code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code>、<code>CLAUDE_CODE_SKIP_PROMPT_HISTORY</code>、<code>DISABLE_UPDATES</code>、<code>CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY</code>（既定 10）。</li>
+        <li>公式サンプル <code>settings-strict.json</code> / <code>settings-bash-sandbox.json</code> / <code>settings-lax.json</code> は実在し、関連キーを含むことを確認（ただし公式が「コミュニティ管理・不正確の可能性あり」と免責している点に留意）。</li>
+      </ul>
+
+      <h3><span class="h3num">11.3</span>要確認（バージョン依存・公式一覧に未掲載）</h3>
+      <ul>
+        <li><code>BASH_DEFAULT_TIMEOUT_MS</code> / <code>BASH_MAX_TIMEOUT_MS</code>: 長く文書化されてきた変数だが、参照したバイナリ抽出一覧（v2.1.118）には <code>BASH_MAX_OUTPUT_LENGTH</code> のみ確認できた。利用バージョンの env-vars ドキュメントで再確認すること。</li>
+        <li><code>NO_PROXY</code> のサポート: corporate-proxy ドキュメントとバイナリ抽出で記述が食い違う（バージョン依存の可能性）。利用バージョンで確認すること。</li>
+      </ul>
+
+      <h3><span class="h3num">11.4</span>両レポートが見落としていた重要項目（本版で追加）</h3>
+      <ul>
+        <li>Managed 階層内部の優先順位と first-source-wins（§3.2）。</li>
+        <li><code>managed-settings.d/</code> ドロップインディレクトリ（§3.3、v2.1.83+）。</li>
+        <li>資格情報の二重防御（permission の Read deny ＋ sandbox の denyRead、§4.3）。</li>
+        <li>sandbox が Bash 専用で Read/WebFetch/MCP/hooks には効かないという範囲の明確化（§4.2）。</li>
+        <li><code>CLAUDE_CODE_SUBPROCESS_ENV_SCRUB</code>（一方のレポートのみ言及→ baseline に統合、§5）。</li>
+        <li>信頼できないリポジトリを脅威モデルに含める観点と関連設計（§4.6）。</li>
+        <li><code>claudeMd</code>（managed memory）、<code>policyHelper</code>、<code>parentSettingsBehavior</code>、<code>forceRemoteSettingsRefresh</code> などの高度な managed 制御（§6・§8.8）。</li>
+      </ul>
+    </section>
+
+    <!-- ════════ 12 ════════ -->
+    <section class="sec" id="s12">
+      <header class="sec-head"><span class="sec-no">12</span><h2>実務上の推奨プロファイル</h2></header>
+
+      <div class="profile-cards">
+        <div class="profile-card standard">
+          <div class="pc-tag">Profile A</div>
+          <h3>標準開発端末</h3>
+          <ul>
+            <li>Managed settings を必須化。<code>CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1</code>。</li>
+            <li>sandbox を有効化し、社内 Git / package mirror / artifact repository だけネットワーク許可。</li>
+            <li>WebFetch / WebSearch と Bash 外部通信は原則 deny。</li>
+            <li>Git commit / PR 作成は ask、Git push は deny または ask。</li>
+          </ul>
+        </div>
+
+        <div class="profile-card secure">
+          <div class="pc-tag">Profile B</div>
+          <h3>セキュア開発端末 / 高機密リポジトリ</h3>
+          <ul>
+            <li><code>sandbox.network.allowedDomains</code> を空または社内ドメインのみ。</li>
+            <li>Docker / kubectl / terraform / cloud CLI は deny。</li>
+            <li>MCP / hooks / plugin / Remote Control / agent view は完全禁止。</li>
+            <li><code>defaultMode: "plan"</code>、<code>CLAUDE_CODE_SKIP_PROMPT_HISTORY=1</code>、Enterprise の ZDR、監査強化を併用。</li>
+            <li>必要に応じて dev container / VM などの追加隔離。</li>
+          </ul>
+        </div>
+
+        <div class="profile-card champion">
+          <div class="pc-tag">Profile C</div>
+          <h3>AI champion / 高度利用者</h3>
+          <ul>
+            <li>標準より広い <code>ask</code> を許可（<code>allow</code> は広げない。必要なものもまず <code>ask</code> から）。</li>
+            <li>MCP / plugin は審査済みのみ許可し、<code>allowManagedMcpServersOnly</code> と <code>strictKnownMarketplaces</code> は維持。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ 13 ════════ -->
+    <section class="sec" id="s13">
+      <header class="sec-head"><span class="sec-no">13</span><h2>最終結論（上司レビュー向け一言）</h2></header>
+
+      <div class="final-quote">
+        <div class="fq-eyebrow">Bottom line</div>
+        <p>Claude Code を会社で展開する際、<b>${HOME}/.claude/settings.json</b> の統一は補助策としては有効だが、<strong>セキュリティの本命は managed settings による強制配布</strong>である。</p>
+        <p>さらに、Bash sandbox（fail-closed）、資格情報の二重防御、MCP / hooks / plugin の allowlist、subprocess 環境スクラブ、ログイン強制（SSO）、プロキシ / CA / mTLS、履歴削減、更新統制、監査ログ（OpenTelemetry）まで含めて設計して初めて、企業利用に耐える安全性に近づく。</p>
+        <p>設定キー・環境変数は流動的なため、<strong>展開前に検証済みバージョンの公式ドキュメントで再確認</strong>し、<code style="background:rgba(255,255,255,.08);color:#E89766;border-color:rgba(255,255,255,.15)">managed-settings.d/</code> と検証コマンド（<code style="background:rgba(255,255,255,.08);color:#E89766;border-color:rgba(255,255,255,.15)">/status</code> / <code style="background:rgba(255,255,255,.08);color:#E89766;border-color:rgba(255,255,255,.15)">/permissions</code> / <code style="background:rgba(255,255,255,.08);color:#E89766;border-color:rgba(255,255,255,.15)">/doctor</code>）で実機確認すること。</p>
+      </div>
+    </section>
+
+    <!-- ════════ 14 ════════ -->
+    <section class="sec" id="s14">
+      <header class="sec-head"><span class="sec-no">14</span><h2>参考資料</h2></header>
+
+      <ul class="refs">
+        <li><a class="ref-title" href="https://code.claude.com/docs/en/settings">Claude Code settings</a><span class="ref-url">code.claude.com/docs/en/settings</span><span style="color:var(--ink-3);font-size:12px">設定スコープ・優先順位・配置先・全設定キー</span></li>
+        <li><a class="ref-title" href="https://code.claude.com/docs/en/permissions">Configure permissions</a><span class="ref-url">code.claude.com/docs/en/permissions</span><span style="color:var(--ink-3);font-size:12px">permission system・managed-only settings</span></li>
+        <li><a class="ref-title" href="https://code.claude.com/docs/en/sandboxing">Sandboxing</a><span class="ref-url">code.claude.com/docs/en/sandboxing</span><span style="color:var(--ink-3);font-size:12px">Seatbelt / bubblewrap・filesystem / network</span></li>
+        <li><a class="ref-title" href="https://code.claude.com/docs/en/env-vars">Environment variables</a><span class="ref-url">code.claude.com/docs/en/env-vars</span><span style="color:var(--ink-3);font-size:12px">全環境変数一覧</span></li>
+        <li><a class="ref-title" href="https://code.claude.com/docs/en/server-managed-settings">Server-managed settings</a><span class="ref-url">code.claude.com/docs/en/server-managed-settings</span><span style="color:var(--ink-3);font-size:12px">fail-closed startup・リモート配信</span></li>
+        <li><a class="ref-title" href="https://code.claude.com/docs/en/managed-mcp">Control MCP server access</a><span class="ref-url">code.claude.com/docs/en/managed-mcp</span><span style="color:var(--ink-3);font-size:12px">managed-mcp.json の配置と書式</span></li>
+        <li><a class="ref-title" href="https://code.claude.com/docs/en/plugin-marketplaces">Managed marketplace restrictions</a><span class="ref-url">code.claude.com/docs/en/plugin-marketplaces</span><span style="color:var(--ink-3);font-size:12px">strictKnownMarketplaces</span></li>
+        <li><a class="ref-title" href="https://code.claude.com/docs/en/hooks">Hooks</a><span class="ref-url">code.claude.com/docs/en/hooks</span><span style="color:var(--ink-3);font-size:12px">hook イベント・managed hooks</span></li>
+        <li><a class="ref-title" href="https://code.claude.com/docs/en/corporate-proxy">Corporate proxy</a><span class="ref-url">code.claude.com/docs/en/corporate-proxy</span><span style="color:var(--ink-3);font-size:12px">HTTPS_PROXY / CA / mTLS</span></li>
+        <li><a class="ref-title" href="https://code.claude.com/docs/en/monitoring-usage">Monitoring usage（OpenTelemetry）</a><span class="ref-url">code.claude.com/docs/en/monitoring-usage</span><span style="color:var(--ink-3);font-size:12px">監査ログ・メトリクス</span></li>
+        <li><a class="ref-title" href="https://code.claude.com/docs/en/data-usage">Data usage</a><span class="ref-url">code.claude.com/docs/en/data-usage</span><span style="color:var(--ink-3);font-size:12px">学習利用・ZDR</span></li>
+        <li><a class="ref-title" href="https://code.claude.com/docs/en/admin-setup">Set up Claude Code for your organization</a><span class="ref-url">code.claude.com/docs/en/admin-setup</span><span style="color:var(--ink-3);font-size:12px">管理者向け配布</span></li>
+        <li><a class="ref-title" href="https://github.com/anthropics/claude-code/tree/main/examples/settings">公式サンプル（settings）</a><span class="ref-url">github.com/anthropics/claude-code/.../examples/settings</span><span style="color:var(--ink-3);font-size:12px">settings-strict / bash-sandbox / lax</span></li>
+        <li><a class="ref-title" href="https://github.com/anthropics/claude-code/tree/main/examples/mdm">公式 MDM 配布テンプレート</a><span class="ref-url">github.com/anthropics/claude-code/.../examples/mdm</span><span style="color:var(--ink-3);font-size:12px">Jamf / Kandji / Intune / GPO</span></li>
+        <li><a class="ref-title" href="https://json.schemastore.org/claude-code-settings.json">JSON Schema (settings.json)</a><span class="ref-url">json.schemastore.org/claude-code-settings.json</span><span style="color:var(--ink-3);font-size:12px">構文検証用（最新追随しないことがある）</span></li>
+      </ul>
+
+      <div class="callout note">
+        <div class="ico">i</div>
+        <div>
+          <div class="label">補助参照</div>
+          <p>検証の補助として、Claude Code バイナリから抽出された環境変数一覧（コミュニティ）も参照した。<code>CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY</code> の非実在判定はこの一覧（v2.1.118）に基づく。<strong>設定の正準は常に公式ドキュメントとし、本レポートの値は展開前に必ず再確認すること。</strong></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="foot">
+  <div class="fb-row">
+    <div><strong>Claude Code 企業展開 settings.json 推奨レポート</strong> <span class="mono">/ v3 統合・検証版</span></div>
+    <div class="mono">2026-05-25 · ja · 全 14 セクション</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+<script>
+  // ─── Scrollspy ───────────────────────────────────────────────
+  (function() {
+    const links = Array.from(document.querySelectorAll('aside.toc a'));
+    const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    if (!('IntersectionObserver' in window)) return;
+
+    const map = new Map();
+    sections.forEach((s, i) => map.set(s, links[i]));
+
+    let lastActive = null;
+    const visible = new Set();
+
+    const obs = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) visible.add(e.target);
+        else visible.delete(e.target);
+      }
+      // Pick topmost visible section (smallest top within viewport)
+      let best = null, bestTop = Infinity;
+      visible.forEach(el => {
+        const r = el.getBoundingClientRect();
+        if (r.top < bestTop) { bestTop = r.top; best = el; }
+      });
+      if (!best) {
+        // fall back: nearest above viewport top
+        let nearest = null, nearestDist = Infinity;
+        for (const s of sections) {
+          const r = s.getBoundingClientRect();
+          if (r.top <= 80 && Math.abs(r.top) < nearestDist) { nearestDist = Math.abs(r.top); nearest = s; }
+        }
+        best = nearest || sections[0];
+      }
+      const link = map.get(best);
+      if (link && link !== lastActive) {
+        if (lastActive) lastActive.classList.remove('active');
+        link.classList.add('active');
+        lastActive = link;
+      }
+    }, { rootMargin: '-80px 0px -60% 0px', threshold: [0, 0.1, 0.5, 1] });
+
+    sections.forEach(s => obs.observe(s));
+
+    // initial highlight
+    if (links[0]) { links[0].classList.add('active'); lastActive = links[0]; }
+  })();
+</script>
+
+</body>
+</html>
