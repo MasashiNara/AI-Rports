@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2026-05-25" />
+  <title>Claude Code 企業展開向け settings.json / managed settings 推奨レポート</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <style>
+    :root { --fg: #1f2937; --muted: #4b5563; --border: #d1d5db; --bg: #ffffff; --soft: #f9fafb; --code: #111827; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif; color: var(--fg); background: var(--bg); line-height: 1.72; max-width: 1080px; margin: 0 auto; padding: 48px 32px; }
+    h1, h2, h3 { line-height: 1.35; margin-top: 2.2em; }
+    h1 { border-bottom: 2px solid var(--fg); padding-bottom: 0.35em; margin-top: 0; }
+    h2 { border-bottom: 1px solid var(--border); padding-bottom: 0.25em; }
+    table { border-collapse: collapse; width: 100%; margin: 1.2em 0; font-size: 0.95em; }
+    th, td { border: 1px solid var(--border); padding: 0.6em 0.75em; vertical-align: top; }
+    th { background: var(--soft); font-weight: 700; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; color: var(--code); background: #f3f4f6; padding: 0.12em 0.28em; border-radius: 4px; }
+    pre { background: #f3f4f6; border: 1px solid var(--border); border-radius: 8px; padding: 1em; overflow-x: auto; line-height: 1.48; }
+    pre code { background: transparent; padding: 0; }
+    blockquote { border-left: 4px solid var(--border); color: var(--muted); margin: 1.2em 0; padding: 0.2em 1em; background: var(--soft); }
+    a { color: #0f4c81; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 2em 0; }
+    .footnotes, section.footnotes { font-size: 0.9em; color: var(--muted); }
+    @media print { body { max-width: none; padding: 24px; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Claude Code 企業展開向け settings.json / managed
+settings 推奨レポート</h1>
+<p class="date">2026-05-25</p>
+</header>
+<h1
+id="claude-code-企業展開向け-settings.json-managed-settings-推奨レポート">Claude
+Code 企業展開向け settings.json / managed settings 推奨レポート</h1>
+<p><strong>作成日:</strong> 2026-05-25<br />
+<strong>目的:</strong> Claude Code
+を社内展開する際に、<code>${HOME}/.claude/settings.json</code> および
+managed settings
+の役割を整理し、なるべくセキュアな標準設定案をレビュー可能な形で提示する。</p>
+<hr />
+<h2 id="エグゼクティブサマリー">1. エグゼクティブサマリー</h2>
+<p><code>${HOME}/.claude/settings.json</code>
+の事前配布だけでは、企業セキュリティポリシーの強制手段としては不十分である。Claude
+Code の設定優先順位では <strong>Managed settings
+が最上位</strong>であり、ユーザー設定・プロジェクト設定・ローカルプロジェクト設定より優先される。組織として強制したい制御は、<code>managed-settings.json</code>、MDM
+/ OS ポリシー、または Claude.ai 管理コンソールの server-managed settings
+に置くべきである。<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a><a href="#fn2" class="footnote-ref"
+id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<p>推奨方針は以下の 2 層構成である。</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>レイヤー</th>
+<th>配置先</th>
+<th>目的</th>
+<th>強制力</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Managed settings</td>
+<td>macOS:
+<code>/Library/Application Support/ClaudeCode/managed-settings.json</code><br>Linux
+/ WSL: <code>/etc/claude-code/managed-settings.json</code><br>Windows:
+<code>C:\Program Files\ClaudeCode\managed-settings.json</code><br>または
+Claude.ai 管理コンソール</td>
+<td>権限、sandbox、MCP、hooks、plugin、モデル、Remote Control
+などの統制</td>
+<td>高い</td>
+</tr>
+<tr class="even">
+<td>User settings</td>
+<td><code>${HOME}/.claude/settings.json</code></td>
+<td>言語、表示、軽い既定値、個人の利便性</td>
+<td>低い</td>
+</tr>
+</tbody>
+</table>
+<p>本レポートの結論として、会社標準では次を強く推奨する。</p>
+<ol type="1">
+<li><strong>権限・sandbox・MCP・hooks・plugin は managed settings
+で統制する。</strong><br />
+</li>
+<li><strong><code>allowManagedPermissionRulesOnly: true</code>
+を使い、ユーザー・プロジェクト側で権限ルールを広げられないようにする。</strong><br />
+</li>
+<li><strong><code>permissions.disableBypassPermissionsMode: "disable"</code>
+と <code>permissions.disableAutoMode: "disable"</code>
+を設定する。</strong><br />
+</li>
+<li><strong>Bash sandbox を有効化し、失敗時は fail-closed
+にする。</strong><br />
+</li>
+<li><strong>MCP / hooks / plugin
+は初期状態では原則禁止し、審査済みのものだけ許可する。</strong><br />
+</li>
+<li><strong>WebFetch / WebSearch と Bash 経由の <code>curl</code> /
+<code>wget</code> を別々に制御する。WebFetch を止めても Bash
+経由の外向き通信は残る。</strong><a href="#fn3" class="footnote-ref"
+id="fnref3" role="doc-noteref"><sup>3</sup></a><a href="#fn4"
+class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a></li>
+</ol>
+<hr />
+<h2 id="前提とスコープ">2. 前提とスコープ</h2>
+<p>本レポートは、Claude Code の CLI 利用を主対象とする。IDE 拡張、Claude
+Desktop、Claude Code on the web、Remote Control
+などは関連機能として扱うが、端末上の Claude Code CLI
+における設定配布・権限制御を中心に整理する。</p>
+<p>想定するセキュリティ目標は以下である。</p>
+<ul>
+<li>認証情報、秘密鍵、<code>.env</code>、クラウド認証情報、Kubernetes
+設定などを Claude Code や subprocess から読み取らせない。</li>
+<li>破壊的コマンド、外部送信、CI/CD・本番操作を最小権限にする。</li>
+<li>ユーザーやプロジェクトが独自に権限・MCP・hooks・plugin
+を広げることを防ぐ。</li>
+<li>管理者が設定を監査・検証できる配布方式にする。</li>
+</ul>
+<hr />
+<h2 id="重要な設計判断">3. 重要な設計判断</h2>
+<h3
+id="home.claudesettings.json-は標準初期値であり強制ポリシーではない">3.1
+<code>${HOME}/.claude/settings.json</code>
+は「標準初期値」であり「強制ポリシー」ではない</h3>
+<p>Claude Code の設定優先順位は、Managed
+settings、コマンドライン引数、Local project settings、Project
+settings、User settings の順である。User settings である
+<code>${HOME}/.claude/settings.json</code>
+は最下位に位置するため、プロジェクト側の
+<code>.claude/settings.json</code> や
+<code>.claude/settings.local.json</code>
+によって多くの値が変更・追加され得る。配列型の設定は置換ではなく連結・重複排除されるため、権限や
+sandbox の allowlist をユーザー設定だけで完全統制するのは難しい。<a
+href="#fn5" class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a></p>
+<h3 id="権限ルールと-sandbox-は役割が違う">3.2 権限ルールと sandbox
+は役割が違う</h3>
+<p>権限ルールは Claude Code のツール利用を制御する。一方、sandbox は
+Bash とその子プロセスに対して OS
+レベルのファイルシステム・ネットワーク境界を作る。したがって、<code>Read(...)</code>
+や <code>WebFetch(...)</code> の deny だけでは、Python / Node / shell
+script などの subprocess
+が直接ファイルやネットワークへアクセスする経路を完全には塞げない。防御層として、<strong>permissions
+と sandbox の両方</strong>を使うべきである。<a href="#fn6"
+class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a><a
+href="#fn7" class="footnote-ref" id="fnref7"
+role="doc-noteref"><sup>7</sup></a></p>
+<h3 id="webfetch-と-bash-ネットワークは別経路">3.3 WebFetch と Bash
+ネットワークは別経路</h3>
+<p><code>WebFetch</code> を deny しても、Bash が許可されていれば
+<code>curl</code>、<code>wget</code>、<code>python -c</code>、<code>node</code>
+などの外向き通信経路が残る。Claude Code の公式ドキュメントでも、WebFetch
+単独ではネットワークアクセスを防げず、Bash ネットワークツールや sandbox
+のネットワーク制御を組み合わせるべきと説明されている。<a href="#fn8"
+class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
+<h3 id="mcp-は最初は閉じるのが安全">3.4 MCP は最初は閉じるのが安全</h3>
+<p>MCP サーバーは Claude Code
+に外部ツール連携を追加する強力な拡張点である。公式ディレクトリ掲載はセキュリティ監査や管理を意味しないため、企業展開では「何でも追加可」ではなく、<code>managed-mcp.json</code>
+による固定配布、または <code>allowedMcpServers</code> と
+<code>allowManagedMcpServersOnly</code> による allowlist
+運用を推奨する。<a href="#fn9" class="footnote-ref" id="fnref9"
+role="doc-noteref"><sup>9</sup></a></p>
+<hr />
+<h2 id="推奨-managed-settings-ベースライン">4. 推奨 managed settings
+ベースライン</h2>
+<p>以下は、社内標準としてレビューしやすい「堅め」の baseline
+である。<code>github.example.com</code>、<code>registry.npmjs.example.com</code>、<code>pypi.example.com</code>
+は社内 Git、社内 npm mirror、社内 PyPI mirror などに置き換える。</p>
+<blockquote>
+<p>注意: <code>minimumVersion</code>
+は運用開始時点の検証済みバージョンに置き換えること。ここでは、本レポート作成時点で公式ドキュメントに記載のある
+v2.1.143 以降の設定群を前提にしている。</p>
+</blockquote>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;$schema&quot;</span><span class="fu">:</span> <span class="st">&quot;https://json.schemastore.org/claude-code-settings.json&quot;</span><span class="fu">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;minimumVersion&quot;</span><span class="fu">:</span> <span class="st">&quot;2.1.143&quot;</span><span class="fu">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;language&quot;</span><span class="fu">:</span> <span class="st">&quot;japanese&quot;</span><span class="fu">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;autoUpdatesChannel&quot;</span><span class="fu">:</span> <span class="st">&quot;stable&quot;</span><span class="fu">,</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;model&quot;</span><span class="fu">:</span> <span class="st">&quot;sonnet&quot;</span><span class="fu">,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;availableModels&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;sonnet&quot;</span><span class="ot">,</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;haiku&quot;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;cleanupPeriodDays&quot;</span><span class="fu">:</span> <span class="dv">7</span><span class="fu">,</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;autoMemoryEnabled&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;respectGitignore&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;feedbackSurveyRate&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;companyAnnouncements&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Claude Code は社内セキュリティポリシーに従って利用してください。秘密情報、個人情報、認証情報をプロンプトやリポジトリに含めないでください。&quot;</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;env&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC&quot;</span><span class="fu">:</span> <span class="st">&quot;1&quot;</span><span class="fu">,</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;CLAUDE_CODE_MCP_ALLOWLIST_ENV&quot;</span><span class="fu">:</span> <span class="st">&quot;1&quot;</span><span class="fu">,</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;CLAUDE_CODE_DISABLE_AUTO_MEMORY&quot;</span><span class="fu">:</span> <span class="st">&quot;1&quot;</span><span class="fu">,</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;CLAUDE_CODE_DISABLE_BACKGROUND_TASKS&quot;</span><span class="fu">:</span> <span class="st">&quot;1&quot;</span><span class="fu">,</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;CLAUDE_CODE_DISABLE_CRON&quot;</span><span class="fu">:</span> <span class="st">&quot;1&quot;</span><span class="fu">,</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;CLAUDE_CODE_DISABLE_1M_CONTEXT&quot;</span><span class="fu">:</span> <span class="st">&quot;1&quot;</span><span class="fu">,</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;CLAUDE_CODE_CERT_STORE&quot;</span><span class="fu">:</span> <span class="st">&quot;system&quot;</span><span class="fu">,</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY&quot;</span><span class="fu">:</span> <span class="st">&quot;1&quot;</span><span class="fu">,</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;BASH_DEFAULT_TIMEOUT_MS&quot;</span><span class="fu">:</span> <span class="st">&quot;120000&quot;</span><span class="fu">,</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;BASH_MAX_TIMEOUT_MS&quot;</span><span class="fu">:</span> <span class="st">&quot;300000&quot;</span><span class="fu">,</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;BASH_MAX_OUTPUT_LENGTH&quot;</span><span class="fu">:</span> <span class="st">&quot;20000&quot;</span><span class="fu">,</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY&quot;</span><span class="fu">:</span> <span class="st">&quot;4&quot;</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;permissions&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;defaultMode&quot;</span><span class="fu">:</span> <span class="st">&quot;default&quot;</span><span class="fu">,</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;disableBypassPermissionsMode&quot;</span><span class="fu">:</span> <span class="st">&quot;disable&quot;</span><span class="fu">,</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;disableAutoMode&quot;</span><span class="fu">:</span> <span class="st">&quot;disable&quot;</span><span class="fu">,</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;allow&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(git status)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(git diff *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(git log *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(git branch *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(npm test *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(npm run test *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(npm run lint *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(pnpm test *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(pnpm run test *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(pnpm run lint *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(yarn test *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(yarn lint *)&quot;</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;ask&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(git add *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(git commit *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(gh pr create *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(gh pr edit *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(rm *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(docker *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(kubectl *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(terraform *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(aws *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(gcloud *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(az *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;PowerShell(git add *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;PowerShell(git commit *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;PowerShell(docker *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;PowerShell(kubectl *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;PowerShell(terraform *)&quot;</span></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;deny&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(.env)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(**/.env)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(**/.env.*)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(secrets/**)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(secret/**)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(**/*secret*)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(**/*credential*)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(~/.aws/**)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(~/.ssh/**)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(~/.gnupg/**)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(~/.kube/**)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(~/.docker/config.json)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(~/.npmrc)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(~/.pypirc)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(**/*.pem)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(**/*.key)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(**/*.p12)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(**/*.pfx)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Edit(.git/**)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Edit(.claude/**)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Edit(.vscode/**)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Edit(.idea/**)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Edit(.husky/**)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(curl *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(wget *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(nc *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(ncat *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(netcat *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(ssh *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(scp *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(rsync *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(sudo)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(sudo *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(su)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(su *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(rm -rf *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(rm -fr *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(git push *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(kubectl delete *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(kubectl apply *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(terraform apply *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(terraform destroy *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;PowerShell(Invoke-WebRequest *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;PowerShell(Invoke-RestMethod *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;PowerShell(iwr *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;PowerShell(irm *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;PowerShell(curl *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;PowerShell(ssh *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;PowerShell(scp *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;PowerShell(Remove-Item -Recurse *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;PowerShell(Start-Process *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;PowerShell(Set-ExecutionPolicy *)&quot;</span><span class="ot">,</span></span>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;WebFetch&quot;</span><span class="ot">,</span></span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;WebSearch&quot;</span></span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;allowManagedPermissionRulesOnly&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;sandbox&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;enabled&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;failIfUnavailable&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;autoAllowBashIfSandboxed&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;allowUnsandboxedCommands&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;filesystem&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;denyRead&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.aws&quot;</span><span class="ot">,</span></span>
+<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.ssh&quot;</span><span class="ot">,</span></span>
+<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.gnupg&quot;</span><span class="ot">,</span></span>
+<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.kube&quot;</span><span class="ot">,</span></span>
+<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.docker&quot;</span><span class="ot">,</span></span>
+<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.npmrc&quot;</span><span class="ot">,</span></span>
+<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.pypirc&quot;</span><span class="ot">,</span></span>
+<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.config/gh&quot;</span><span class="ot">,</span></span>
+<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.config/gcloud&quot;</span><span class="ot">,</span></span>
+<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.azure&quot;</span><span class="ot">,</span></span>
+<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.claude.json&quot;</span></span>
+<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;denyWrite&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.aws&quot;</span><span class="ot">,</span></span>
+<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.ssh&quot;</span><span class="ot">,</span></span>
+<span id="cb1-148"><a href="#cb1-148" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.gnupg&quot;</span><span class="ot">,</span></span>
+<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.kube&quot;</span><span class="ot">,</span></span>
+<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.docker&quot;</span><span class="ot">,</span></span>
+<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;/etc&quot;</span><span class="ot">,</span></span>
+<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;/usr/local/bin&quot;</span><span class="ot">,</span></span>
+<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;/usr/bin&quot;</span><span class="ot">,</span></span>
+<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;/bin&quot;</span><span class="ot">,</span></span>
+<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;/sbin&quot;</span><span class="ot">,</span></span>
+<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;/var/run&quot;</span><span class="ot">,</span></span>
+<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.bashrc&quot;</span><span class="ot">,</span></span>
+<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.zshrc&quot;</span><span class="ot">,</span></span>
+<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;~/.profile&quot;</span></span>
+<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;allowWrite&quot;</span><span class="fu">:</span> <span class="ot">[]</span><span class="fu">,</span></span>
+<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;allowManagedReadPathsOnly&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb1-164"><a href="#cb1-164" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;network&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;allowedDomains&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;github.example.com&quot;</span><span class="ot">,</span></span>
+<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;registry.npmjs.example.com&quot;</span><span class="ot">,</span></span>
+<span id="cb1-168"><a href="#cb1-168" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;pypi.example.com&quot;</span></span>
+<span id="cb1-169"><a href="#cb1-169" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;deniedDomains&quot;</span><span class="fu">:</span> <span class="ot">[]</span><span class="fu">,</span></span>
+<span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;allowManagedDomainsOnly&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;allowAllUnixSockets&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;allowLocalBinding&quot;</span><span class="fu">:</span> <span class="kw">false</span></span>
+<span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb1-175"><a href="#cb1-175" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb1-176"><a href="#cb1-176" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;allowedHttpHookUrls&quot;</span><span class="fu">:</span> <span class="ot">[]</span><span class="fu">,</span></span>
+<span id="cb1-177"><a href="#cb1-177" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;httpHookAllowedEnvVars&quot;</span><span class="fu">:</span> <span class="ot">[]</span><span class="fu">,</span></span>
+<span id="cb1-178"><a href="#cb1-178" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;allowManagedHooksOnly&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb1-179"><a href="#cb1-179" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;disableAllHooks&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb1-180"><a href="#cb1-180" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;disableSkillShellExecution&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb1-181"><a href="#cb1-181" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;allowedMcpServers&quot;</span><span class="fu">:</span> <span class="ot">[]</span><span class="fu">,</span></span>
+<span id="cb1-182"><a href="#cb1-182" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;deniedMcpServers&quot;</span><span class="fu">:</span> <span class="ot">[]</span><span class="fu">,</span></span>
+<span id="cb1-183"><a href="#cb1-183" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;allowManagedMcpServersOnly&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb1-184"><a href="#cb1-184" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;strictKnownMarketplaces&quot;</span><span class="fu">:</span> <span class="ot">[]</span><span class="fu">,</span></span>
+<span id="cb1-185"><a href="#cb1-185" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;strictPluginOnlyCustomization&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb1-186"><a href="#cb1-186" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;channelsEnabled&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb1-187"><a href="#cb1-187" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;allowedChannelPlugins&quot;</span><span class="fu">:</span> <span class="ot">[]</span><span class="fu">,</span></span>
+<span id="cb1-188"><a href="#cb1-188" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;disableAgentView&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb1-189"><a href="#cb1-189" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;disableRemoteControl&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb1-190"><a href="#cb1-190" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;disableDeepLinkRegistration&quot;</span><span class="fu">:</span> <span class="st">&quot;disable&quot;</span></span>
+<span id="cb1-191"><a href="#cb1-191" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="設定項目ごとの推奨理由">5. 設定項目ごとの推奨理由</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>領域</th>
+<th>推奨設定</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Managed settings</td>
+<td>使用必須</td>
+<td>管理者が配布し、ユーザー・プロジェクト設定より優先される。</td>
+</tr>
+<tr class="even">
+<td><code>allowManagedPermissionRulesOnly</code></td>
+<td><code>true</code></td>
+<td>ユーザー・プロジェクトが独自の <code>allow</code> / <code>ask</code>
+/ <code>deny</code> を定義して権限を広げることを防ぐ。</td>
+</tr>
+<tr class="odd">
+<td><code>permissions.disableBypassPermissionsMode</code></td>
+<td><code>"disable"</code></td>
+<td><code>--dangerously-skip-permissions</code> / bypassPermissions
+の利用を防ぐ。bypassPermissions
+はすべての権限プロンプトをスキップするため、通常端末では禁止すべき。</td>
+</tr>
+<tr class="even">
+<td><code>permissions.disableAutoMode</code></td>
+<td><code>"disable"</code></td>
+<td>auto mode
+は自動承認系の動作になるため、初期展開では禁止または限定展開が望ましい。</td>
+</tr>
+<tr class="odd">
+<td><code>sandbox.enabled</code></td>
+<td><code>true</code></td>
+<td>Bash と子プロセスに OS レベルの filesystem / network
+制約をかける。</td>
+</tr>
+<tr class="even">
+<td><code>sandbox.failIfUnavailable</code></td>
+<td><code>true</code></td>
+<td>sandbox が起動できない端末で、警告だけ出して unsandboxed
+実行されることを防ぐ。</td>
+</tr>
+<tr class="odd">
+<td><code>sandbox.allowUnsandboxedCommands</code></td>
+<td><code>false</code></td>
+<td><code>dangerouslyDisableSandbox</code> による sandbox
+回避を閉じる。</td>
+</tr>
+<tr class="even">
+<td><code>sandbox.network.allowManagedDomainsOnly</code></td>
+<td><code>true</code></td>
+<td>ユーザーやプロジェクト側の domain allowlist 追加を無効化する。</td>
+</tr>
+<tr class="odd">
+<td><code>allowedMcpServers: []</code> +
+<code>allowManagedMcpServersOnly: true</code></td>
+<td>初期は MCP 禁止</td>
+<td>MCP は強力な拡張点であり、審査済みサーバーだけを許可すべき。</td>
+</tr>
+<tr class="even">
+<td><code>disableAllHooks</code> +
+<code>allowManagedHooksOnly</code></td>
+<td>初期は hooks 禁止</td>
+<td>hooks はコマンド実行・HTTP 送信経路になり得る。必要な場合だけ
+managed hooks と URL allowlist で許可する。</td>
+</tr>
+<tr class="odd">
+<td><code>strictKnownMarketplaces: []</code></td>
+<td>初期は plugin marketplace 禁止</td>
+<td>plugin サプライチェーンを社内審査済み marketplace
+に限定する準備ができるまで禁止する。</td>
+</tr>
+<tr class="even">
+<td><code>strictPluginOnlyCustomization</code></td>
+<td><code>true</code></td>
+<td>skills、agents、hooks、MCP
+をユーザー・プロジェクト由来で読み込ませない。</td>
+</tr>
+<tr class="odd">
+<td><code>disableRemoteControl</code></td>
+<td><code>true</code></td>
+<td>端末上のローカル filesystem
+に接続する機能であるため、初期展開では無効化し、必要時だけ管理者設定で解放する。</td>
+</tr>
+<tr class="even">
+<td><code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code></td>
+<td><code>1</code></td>
+<td>非必須通信を抑える。ただし自動更新も止まるため、MDM / package
+manager 等で別途更新管理が必要。<a href="#fn10" class="footnote-ref"
+id="fnref10" role="doc-noteref"><sup>10</sup></a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="home.claudesettings.json-として配布する場合の最小例">6.
+<code>${HOME}/.claude/settings.json</code>
+として配布する場合の最小例</h2>
+<p>ユーザー設定は強制力が低いため、セキュリティ制御の主戦場にしない。配布するなら、主に
+UX と軽い既定値に限定する。</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;$schema&quot;</span><span class="fu">:</span> <span class="st">&quot;https://json.schemastore.org/claude-code-settings.json&quot;</span><span class="fu">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;language&quot;</span><span class="fu">:</span> <span class="st">&quot;japanese&quot;</span><span class="fu">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;model&quot;</span><span class="fu">:</span> <span class="st">&quot;sonnet&quot;</span><span class="fu">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;autoUpdatesChannel&quot;</span><span class="fu">:</span> <span class="st">&quot;stable&quot;</span><span class="fu">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;cleanupPeriodDays&quot;</span><span class="fu">:</span> <span class="dv">7</span><span class="fu">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;autoMemoryEnabled&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;respectGitignore&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;permissions&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;defaultMode&quot;</span><span class="fu">:</span> <span class="st">&quot;default&quot;</span><span class="fu">,</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;disableBypassPermissionsMode&quot;</span><span class="fu">:</span> <span class="st">&quot;disable&quot;</span><span class="fu">,</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;disableAutoMode&quot;</span><span class="fu">:</span> <span class="st">&quot;disable&quot;</span><span class="fu">,</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;deny&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(.env)&quot;</span><span class="ot">,</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(**/.env)&quot;</span><span class="ot">,</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(**/.env.*)&quot;</span><span class="ot">,</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(secrets/**)&quot;</span><span class="ot">,</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(**/*secret*)&quot;</span><span class="ot">,</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(**/*credential*)&quot;</span><span class="ot">,</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(~/.aws/**)&quot;</span><span class="ot">,</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Read(~/.ssh/**)&quot;</span><span class="ot">,</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;WebFetch&quot;</span><span class="ot">,</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;WebSearch&quot;</span><span class="ot">,</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(curl *)&quot;</span><span class="ot">,</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Bash(wget *)&quot;</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;env&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;CLAUDE_CODE_DISABLE_AUTO_MEMORY&quot;</span><span class="fu">:</span> <span class="st">&quot;1&quot;</span><span class="fu">,</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;BASH_DEFAULT_TIMEOUT_MS&quot;</span><span class="fu">:</span> <span class="st">&quot;120000&quot;</span><span class="fu">,</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;BASH_MAX_OUTPUT_LENGTH&quot;</span><span class="fu">:</span> <span class="st">&quot;20000&quot;</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>ただし、このファイルはユーザーが書き換えられる。また、プロジェクト設定やローカル設定とマージされるため、企業統制としては
+managed settings を併用する。</p>
+<hr />
+<h2 id="mcp-を完全に止める場合">7. MCP を完全に止める場合</h2>
+<p>MCP を完全に停止したい場合、<code>managed-settings.json</code>
+側で以下を入れる。</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;allowedMcpServers&quot;</span><span class="fu">:</span> <span class="ot">[]</span><span class="fu">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;allowManagedMcpServersOnly&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>さらに、端末に <code>managed-mcp.json</code> を配布して空 server map
+にする。</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;mcpServers&quot;</span><span class="fu">:</span> <span class="fu">{}</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><code>managed-mcp.json</code> が存在する場合、Claude Code
+はそのファイルで定義されたサーバーだけを読み込む。空の
+<code>mcpServers</code> を配布すると、MCP
+サーバーは読み込まれず、ユーザーによる <code>claude mcp add</code>
+も企業ポリシーにより拒否される。<a href="#fn11" class="footnote-ref"
+id="fnref11" role="doc-noteref"><sup>11</sup></a></p>
+<p>配置先は以下である。</p>
+<table>
+<thead>
+<tr class="header">
+<th>OS</th>
+<th><code>managed-mcp.json</code> 配置先</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>macOS</td>
+<td><code>/Library/Application Support/ClaudeCode/managed-mcp.json</code></td>
+</tr>
+<tr class="even">
+<td>Linux / WSL</td>
+<td><code>/etc/claude-code/managed-mcp.json</code></td>
+</tr>
+<tr class="odd">
+<td>Windows</td>
+<td><code>C:\Program Files\ClaudeCode\managed-mcp.json</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="claude.ai-team-enterprise-で組織ログインを固定する場合">8.
+Claude.ai Team / Enterprise で組織ログインを固定する場合</h2>
+<p>Claude.ai Team / Enterprise
+を利用し、個人アカウントや別組織での利用を避けたい場合、managed settings
+に以下を追加することを検討する。</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;forceLoginMethod&quot;</span><span class="fu">:</span> <span class="st">&quot;claudeai&quot;</span><span class="fu">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;forceLoginOrgUUID&quot;</span><span class="fu">:</span> <span class="st">&quot;YOUR_ORG_UUID&quot;</span><span class="fu">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;forceRemoteSettingsRefresh&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><code>forceRemoteSettingsRefresh</code> は、リモート managed settings
+を新規取得できるまで CLI 起動をブロックし、取得失敗時に fail-closed
+するための managed-only 設定である。<a href="#fn12" class="footnote-ref"
+id="fnref12" role="doc-noteref"><sup>12</sup></a></p>
+<hr />
+<h2 id="導入時のチェックリスト">9. 導入時のチェックリスト</h2>
+<h3 id="事前設計">9.1 事前設計</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Claude for Teams /
+Enterprise、Console API、Bedrock、Vertex AI、Microsoft Foundry
+のどれを使うか決める。</label></li>
+<li><label><input type="checkbox" />端末配布方式を決める。候補は
+server-managed settings、MDM / OS-level policy、file-based managed
+settings。</label></li>
+<li><label><input type="checkbox" />Windows / WSL
+の取り扱いを決める。Windows の admin-only managed settings を WSL
+に継承させたい場合は <code>wslInheritsWindowsSettings</code>
+を検討する。</label></li>
+<li><label><input
+type="checkbox" /><code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1</code>
+を使う場合、自動更新の代替手段を用意する。</label></li>
+</ul>
+<h3 id="ポリシー設計">9.2 ポリシー設計</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><code>permissions.allow</code>
+は読み取り・テスト・lint など低リスク操作に限定する。</label></li>
+<li><label><input type="checkbox" /><code>permissions.ask</code> に git
+commit、PR 作成、Docker、Kubernetes、Terraform、cloud CLI
+などを入れる。</label></li>
+<li><label><input type="checkbox" /><code>permissions.deny</code> に
+credential 読み取り、破壊的コマンド、外部送信、WebFetch / WebSearch
+を入れる。</label></li>
+<li><label><input type="checkbox" />sandbox の <code>denyRead</code> /
+<code>denyWrite</code> に credential、shell profile、system path
+を入れる。</label></li>
+<li><label><input
+type="checkbox" /><code>sandbox.network.allowedDomains</code>
+を社内許可ドメインだけに限定する。</label></li>
+<li><label><input type="checkbox" />MCP、hooks、plugin
+は初期状態では禁止し、必要なものだけ審査後に allowlist
+化する。</label></li>
+</ul>
+<h3 id="検証">9.3 検証</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />JSON schema による構文確認を行う。<a
+href="#fn13" class="footnote-ref" id="fnref13"
+role="doc-noteref"><sup>13</sup></a></label></li>
+<li><label><input type="checkbox" />Claude Code 起動後に
+<code>/status</code> で managed settings
+の読み込み元を確認する。</label></li>
+<li><label><input type="checkbox" /><code>/permissions</code>
+で権限ルールの適用状況を確認する。</label></li>
+<li><label><input
+type="checkbox" /><code>.env</code>、<code>~/.ssh</code>、<code>~/.aws</code>、<code>~/.kube</code>
+が読めないことを確認する。</label></li>
+<li><label><input type="checkbox" /><code>curl</code> /
+<code>wget</code> / WebFetch / WebSearch
+がポリシー通りに拒否されることを確認する。</label></li>
+<li><label><input
+type="checkbox" /><code>kubectl apply</code>、<code>terraform apply</code>、<code>git push</code>
+がポリシー通りに ask または deny されることを確認する。</label></li>
+<li><label><input type="checkbox" />sandbox 未対応・依存不足端末で
+<code>failIfUnavailable</code> が fail-closed
+することを確認する。</label></li>
+<li><label><input type="checkbox" /><code>claude mcp list</code> と
+<code>claude mcp add</code> で MCP
+制限が有効であることを確認する。</label></li>
+</ul>
+<hr />
+<h2 id="レビュー時の論点">10. レビュー時の論点</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>論点</th>
+<th>推奨初期判断</th>
+<th>レビュー観点</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>WebFetch / WebSearch</td>
+<td>原則 deny</td>
+<td>社内 proxy / allowlist 経由で必要か。必要なら domain
+単位で許可するか。</td>
+</tr>
+<tr class="even">
+<td>Bash ネットワーク</td>
+<td><code>curl</code> / <code>wget</code> 等は deny</td>
+<td>開発時の package download を社内 mirror に限定できるか。</td>
+</tr>
+<tr class="odd">
+<td>Git push</td>
+<td>原則 deny または ask</td>
+<td>Claude Code から直接 push させる運用を許すか。</td>
+</tr>
+<tr class="even">
+<td>Kubernetes / Terraform</td>
+<td>原則 ask または deny</td>
+<td>dev / staging / prod で分ける必要があるか。</td>
+</tr>
+<tr class="odd">
+<td>Docker</td>
+<td>ask</td>
+<td>Docker socket
+経由でホスト権限へ近づくため、利用シナリオを限定するか。</td>
+</tr>
+<tr class="even">
+<td>MCP</td>
+<td>初期は禁止</td>
+<td>社内審査済み MCP サーバーの catalog を作るか。</td>
+</tr>
+<tr class="odd">
+<td>hooks</td>
+<td>初期は禁止</td>
+<td>セキュリティ監査・ログ出力など、managed hooks
+として必要なものがあるか。</td>
+</tr>
+<tr class="even">
+<td>plugin</td>
+<td>初期は禁止</td>
+<td>社内 marketplace を用意するか。</td>
+</tr>
+<tr class="odd">
+<td>Remote Control</td>
+<td>初期は禁止</td>
+<td>Team / Enterprise 管理画面と端末側 managed settings
+の両方で扱うか。</td>
+</tr>
+<tr class="even">
+<td>auto mode</td>
+<td>初期は禁止</td>
+<td>検証済みリポジトリ・隔離環境だけで許可するか。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="実務上の推奨プロファイル">11. 実務上の推奨プロファイル</h2>
+<h3 id="標準開発端末">標準開発端末</h3>
+<ul>
+<li>Managed settings を必須化。</li>
+<li>sandbox を有効化し、社内 Git / package mirror / artifact repository
+だけネットワーク許可。</li>
+<li>WebFetch / WebSearch と Bash 外部通信は原則 deny。</li>
+<li>Git commit / PR 作成は ask、Git push は deny または ask。</li>
+</ul>
+<h3 id="セキュア開発端末-高機密リポジトリ">セキュア開発端末 /
+高機密リポジトリ</h3>
+<ul>
+<li><code>sandbox.network.allowedDomains</code>
+を空または社内ドメインのみにする。</li>
+<li>Docker、kubectl、terraform、cloud CLI は deny。</li>
+<li>MCP、hooks、plugin、Remote Control は完全禁止。</li>
+<li>必要に応じて dev container / VM などの追加隔離を使う。</li>
+</ul>
+<h3 id="ai-champion-高度利用者">AI champion / 高度利用者</h3>
+<ul>
+<li>標準より広い <code>ask</code> を許可する。</li>
+<li><code>allow</code> は広げず、必要なものもまず <code>ask</code>
+から始める。</li>
+<li>MCP / plugin
+は審査済みのみ許可し、<code>allowManagedMcpServersOnly</code> と
+<code>strictKnownMarketplaces</code> は維持する。</li>
+</ul>
+<hr />
+<h2 id="参考資料">12. 参考資料</h2>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Claude Code Docs, “Claude Code の設定”,
+設定スコープ・設定ファイル・managed settings
+配置先。https://code.claude.com/docs/ja/settings<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Claude Code Docs, “Set up Claude Code for your
+organization”, managed settings
+の配布方式と優先順位。https://code.claude.com/docs/en/admin-setup<a
+href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Claude Code Docs, “Set up Claude Code for your
+organization”, tools / sandbox / MCP / plugin / hooks の enforcement
+surface。https://code.claude.com/docs/en/admin-setup<a href="#fnref3"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Claude Code Docs, “Configure permissions”, WebFetch と
+Bash network tool
+の制御上の注意。https://code.claude.com/docs/en/permissions<a
+href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Claude Code Docs, “Claude Code settings”, settings
+precedence と array merge。https://code.claude.com/docs/en/settings<a
+href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Claude Code Docs, “Configure permissions”, permissions
+と sandbox の関係。https://code.claude.com/docs/en/permissions<a
+href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Claude Code Docs, “Claude Code settings”, sandbox
+settings。https://code.claude.com/docs/en/settings#sandbox-settings<a
+href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>Claude Code Docs, “Configure permissions”, WebFetch と
+Bash network tool
+の制御上の注意。https://code.claude.com/docs/en/permissions<a
+href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>Claude Code Docs, “Control MCP server access for your
+organization”。https://code.claude.com/docs/en/managed-mcp<a
+href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>Claude Code Docs, “Environment
+variables”。https://code.claude.com/docs/en/env-vars<a href="#fnref10"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>Claude Code Docs, “Control MCP server access for your
+organization”, <code>managed-mcp.json</code> empty server map による MCP
+無効化。https://code.claude.com/docs/en/managed-mcp<a href="#fnref11"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn12"><p>Claude Code Docs, “Configure permissions”, managed-only
+settings; “Claude Code settings”,
+<code>forceRemoteSettingsRefresh</code>。https://code.claude.com/docs/en/permissions<a
+href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn13"><p>JSON Schema Store, Claude Code settings
+schema。https://json.schemastore.org/claude-code-settings.json<a
+href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>

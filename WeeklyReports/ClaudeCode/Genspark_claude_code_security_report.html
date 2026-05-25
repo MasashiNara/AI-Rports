@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Claude Code 企業展開セキュリティ調査レポート</title>
+  <style>
+    :root { --bg:#f6f8fb; --card:#fff; --text:#1f2937; --muted:#5b6472; --accent:#2563eb; --border:#dbe3ef; --codebg:#0f172a; }
+    html, body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Yu Gothic UI', sans-serif; line-height:1.75; }
+    .wrap { max-width:980px; margin:40px auto; padding:0 20px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:18px; box-shadow:0 10px 30px rgba(15,23,42,.06); padding:44px; }
+    h1,h2,h3,h4 { line-height:1.35; color:#0f172a; }
+    h1 { font-size:2.1rem; margin-top:0; }
+    h2 { font-size:1.45rem; margin-top:2.2rem; padding-bottom:.35rem; border-bottom:1px solid var(--border); }
+    h3 { font-size:1.15rem; margin-top:1.6rem; }
+    a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
+    code { background:#eef2ff; padding:.15rem .35rem; border-radius:6px; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:.92em; }
+    pre { background:var(--codebg); color:#e5eefc; padding:18px; overflow:auto; border-radius:12px; } pre code { background:transparent; color:inherit; padding:0; }
+    table { width:100%; border-collapse:collapse; margin:1rem 0; } th, td { border:1px solid var(--border); padding:10px 12px; text-align:left; vertical-align:top; } th { background:#f8fafc; }
+    blockquote { margin:1rem 0; padding:.8rem 1rem; border-left:4px solid var(--accent); background:#eff6ff; border-radius:8px; }
+    ul, ol { padding-left:1.4rem; } .footer { margin-top:2rem; font-size:.92rem; color:var(--muted); }
+  </style>
+</head>
+<body><div class="wrap"><div class="card"><h1 id="claude-code">Claude Code 企業展開セキュリティ調査レポート</h1>
+<p>作成日: 2026-05-25</p>
+<h2 id="1">1. エグゼクティブサマリー</h2>
+<p>Claude Code を会社で安全に展開するうえで、<code>${HOME}/.claude/settings.json</code> の統一は有用ですが、それだけでは十分ではありません。Claude Code の設定優先順位では <strong>Managed &gt; CLI 引数 &gt; Local &gt; Project &gt; User</strong> の順で評価されるため、<code>~/.claude/settings.json</code> は最下位に近い「個人設定」です。したがって、組織として強制したいセキュリティ設定は <strong>managed settings</strong> で配布し、<code>~/.claude/settings.json</code> は補助的な既定値に留めるのが推奨です。 <a href="https://docs.anthropic.com/en/docs/claude-code/settings">Anthropic Docs</a></p>
+<p>Anthropic の公式サンプルでは、<code>settings-strict.json</code> と <code>settings-bash-sandbox.json</code> が組織配布向けの出発点として示されています。前者は bypass 権限の禁止、WebSearch/WebFetch の無効化、managed のみで permission rules / hooks を許可する構成で、後者は Bash を sandbox 内に閉じ込め、sandbox 外への退避実行も禁止する構成です。 <a href="https://github.com/anthropics/claude-code/tree/main/examples/settings">Anthropic GitHub Examples</a> <a href="https://raw.githubusercontent.com/anthropics/claude-code/main/examples/settings/settings-strict.json">strict example</a> <a href="https://raw.githubusercontent.com/anthropics/claude-code/main/examples/settings/settings-bash-sandbox.json">bash sandbox example</a></p>
+<h2 id="2">2. 結論</h2>
+<p>会社標準として本当に推奨されるのは、<strong><code>${HOME}/.claude/settings.json</code> を統一すること自体ではなく、managed settings を中核に据えること</strong>です。特に権限、Hooks、MCP、sandbox、ネットワーク制御、資格情報保護は user settings ではなく managed settings で統制するべきです。<code>~/.claude/settings.json</code> は、<code>$schema</code>、<code>cleanupPeriodDays</code>、軽い既定値のような「個人既定値」に留めるのが安全です。 <a href="https://docs.anthropic.com/en/docs/claude-code/settings">Anthropic Docs</a></p>
+<h2 id="3-claude-code">3. Claude Code の設定階層と意味</h2>
+<p>Claude Code の設定は、Managed、User、Project、Local の各スコープで管理され、同一キーが複数箇所にある場合は Managed が最優先されます。Managed 設定は、Claude.ai 管理コンソールの server-managed settings、MDM/OS ポリシー、または system ディレクトリ上の <code>managed-settings.json</code> として配布できます。ファイルベースの managed settings の配置場所は、macOS では <code>/Library/Application Support/ClaudeCode/</code>、Linux/WSL では <code>/etc/claude-code/</code>、Windows では <code>C:\Program Files\ClaudeCode\</code> です。 <a href="https://docs.anthropic.com/en/docs/claude-code/settings">Anthropic Docs</a></p>
+<p>server-managed settings は MDM がない環境でも使いやすい一方で、初回起動時に設定取得に失敗すると、一時的に managed settings なしで起動しうる点に注意が必要です。この brief window を避けたい場合は <code>forceRemoteSettingsRefresh: true</code> を使い、取得に失敗したら起動させない fail-closed 運用が推奨されます。 <a href="https://docs.anthropic.com/en/docs/claude-code/server-managed-settings">Anthropic Docs</a></p>
+<h2 id="4-homeclaudesettingsjson">4. <code>${HOME}/.claude/settings.json</code> に入れるべきもの／入れるべきでないもの</h2>
+<p><code>~/.claude/settings.json</code> に入れるべきなのは、主に個人既定値です。たとえば JSON schema、セッション履歴の保持期間短縮、軽微な UI や既定モード設定は候補になります。一方で、permission rules、Hooks、MCP allowlist、sandbox 強制などは project/local/CLI で影響を受けるため、user settings に置いても組織ポリシーとしては弱いです。 <a href="https://docs.anthropic.com/en/docs/claude-code/settings">Anthropic Docs</a></p>
+<h3 id="user-settings">推奨される user settings の最小例</h3>
+<pre><code class="language-json">{
+  &quot;$schema&quot;: &quot;https://json.schemastore.org/claude-code-settings.json&quot;,
+  &quot;cleanupPeriodDays&quot;: 7,
+  &quot;permissions&quot;: {
+    &quot;defaultMode&quot;: &quot;default&quot;
+  }
+}
+</code></pre>
+<p>この程度に留めることで、個人設定と組織ポリシーの責任分界が明確になります。 <a href="https://docs.anthropic.com/en/docs/claude-code/settings">Anthropic Docs</a></p>
+<h2 id="5-managed-settings">5. 組織配布で推奨される managed settings の方向性</h2>
+<p>Anthropic 公式サンプル <code>settings-strict.json</code> では、<code>disableBypassPermissionsMode</code> による bypass 禁止、<code>ask: ["Bash"]</code> による Bash 実行時確認、<code>deny: ["WebSearch", "WebFetch"]</code> による外部検索・取得の停止、<code>allowManagedPermissionRulesOnly: true</code> による managed 以外の権限ルール禁止、<code>allowManagedHooksOnly: true</code> による managed 以外の Hooks 禁止が採用されています。これは企業の堅めの初期ベースラインとして妥当です。 <a href="https://raw.githubusercontent.com/anthropics/claude-code/main/examples/settings/settings-strict.json">strict example</a></p>
+<p>同じく公式の <code>settings-bash-sandbox.json</code> は、<code>sandbox.enabled: true</code>、<code>autoAllowBashIfSandboxed: false</code>、<code>allowUnsandboxedCommands: false</code> を基本とし、Bash を sandbox 内で実行させつつ、sandbox 失敗時の外部再実行も禁止します。CLI 活用を許容しつつ OS レベルの境界も欲しい組織に向いています。 <a href="https://raw.githubusercontent.com/anthropics/claude-code/main/examples/settings/settings-bash-sandbox.json">bash sandbox example</a></p>
+<h3 id="_1">ベースラインとして推奨できる項目</h3>
+<ul>
+<li><code>permissions.disableBypassPermissionsMode: "disable"</code></li>
+<li>必要に応じて <code>disableAutoMode: "disable"</code></li>
+<li><code>allowManagedPermissionRulesOnly: true</code></li>
+<li><code>allowManagedHooksOnly: true</code></li>
+<li><code>allowedMcpServers</code> と <code>allowManagedMcpServersOnly: true</code></li>
+<li><code>sandbox.enabled: true</code></li>
+<li><code>sandbox.failIfUnavailable: true</code></li>
+<li><code>sandbox.allowUnsandboxedCommands: false</code></li>
+<li><code>sandbox.network.allowedDomains</code> の最小化</li>
+<li><code>allowManagedDomainsOnly: true</code> の検討</li>
+<li><code>sandbox.filesystem.denyRead</code> に <code>~/.aws</code>, <code>~/.ssh</code>, <code>~/.gnupg</code> などを追加</li>
+<li>必要なければ <code>disableRemoteControl: true</code></li>
+<li>必要に応じて <code>disableSkillShellExecution: true</code></li>
+<li><code>cleanupPeriodDays</code> の短縮</li>
+</ul>
+<p>これらは permissions・sandbox・MCP・Hooks・ネットワークの複数層でリスクを下げるための構成です。Anthropic も permissions と sandboxing の併用を defense-in-depth として推奨しています。 <a href="https://docs.anthropic.com/en/docs/claude-code/permissions">Anthropic Docs</a> <a href="https://docs.anthropic.com/en/docs/claude-code/sandboxing">Anthropic Docs</a></p>
+<h2 id="6">6. とくに重要なセキュリティ論点</h2>
+<h3 id="61-bypass-auto">6.1 bypass モードと auto モード</h3>
+<p><code>bypassPermissions</code> はほぼ全プロンプト確認を飛ばす強力なモードであり、企業環境では managed settings で無効化するのが妥当です。<code>auto</code> モードも存在しますが research preview と位置付けられているため、まずは固定的な permission rules と sandbox による統制を優先するのが無難です。 <a href="https://docs.anthropic.com/en/docs/claude-code/permissions">Anthropic Docs</a></p>
+<h3 id="62-hooks">6.2 Hooks</h3>
+<p>Hooks は PreToolUse などで危険な操作をブロックできる一方、任意の shell 実行ポイントでもあります。企業運用では <code>allowManagedHooksOnly: true</code> を基本とし、必要な Hooks だけを管理側で配布する方が安全です。設定変更の監視・抑止には <code>ConfigChange</code> hook も利用できます。 <a href="https://docs.anthropic.com/en/docs/claude-code/hooks">Anthropic Docs</a> <a href="https://docs.anthropic.com/en/docs/claude-code/security">Anthropic Docs</a></p>
+<h3 id="63-mcp">6.3 MCP</h3>
+<p>MCP は外部システム接続の拡張点なので、allowlist 管理が重要です。公式 docs では <code>allowedMcpServers</code> と <code>allowManagedMcpServersOnly: true</code> を組み合わせて、管理者が認めたサーバーのみ有効化する方式が推奨されています。denylist も併用できます。 <a href="https://docs.anthropic.com/en/docs/claude-code/managed-mcp">Anthropic Docs</a></p>
+<h3 id="64-bash-sandbox">6.4 Bash sandbox</h3>
+<p>Claude Code の sandbox は macOS では Seatbelt、Linux/WSL2 では bubblewrap を使い、Bash とその子プロセスに対して OS レベルの filesystem/network 制約をかけます。組織運用では <code>sandbox.enabled: true</code>、<code>failIfUnavailable: true</code>、<code>allowUnsandboxedCommands: false</code> の組み合わせが強く推奨されます。 <a href="https://docs.anthropic.com/en/docs/claude-code/sandboxing">Anthropic Docs</a></p>
+<h3 id="65">6.5 資格情報ファイルの保護</h3>
+<p>重要な注意点として、sandbox のデフォルト read は広く、<code>~/.aws/credentials</code> や <code>~/.ssh/</code> のような資格情報ファイルも明示 deny しない限り読めます。したがって、sandbox を有効にするだけでは不十分で、<code>sandbox.filesystem.denyRead</code> で明示的に資格情報ディレクトリを塞ぐ必要があります。 <a href="https://docs.anthropic.com/en/docs/claude-code/sandboxing">Anthropic Docs</a></p>
+<h2 id="7">7. 設定ファイル以外に、会社で追加すべきセキュリティ対策</h2>
+<h3 id="71-enterprise-team-api">7.1 Enterprise / Team / API 系を使う</h3>
+<p>会社利用では Free/Pro/Max の consumer 前提ではなく、Team / Enterprise / API / Bedrock / Vertex / Foundry など商用条件下での利用を優先するべきです。商用条件では、Anthropic は Claude Code に送られたコードやプロンプトを生成モデル学習に使わない方針です。Enterprise では Zero Data Retention も利用可能です。 <a href="https://docs.anthropic.com/en/docs/claude-code/data-usage">Anthropic Docs</a></p>
+<h3 id="72-sso-domain-capture-role-based-permissions">7.2 SSO / domain capture / role-based permissions</h3>
+<p>Claude for Enterprise では SSO、domain capture、role-based permissions、Compliance API、managed policy settings が提供されます。会社展開では、個別 API key の野放図な配布より、IdP 連携と集中管理を優先する方が offboarding や監査の面で優れます。 <a href="https://docs.anthropic.com/en/docs/claude-code/iam">Anthropic Docs</a> <a href="https://www.anthropic.com/product/enterprise">Anthropic Enterprise</a></p>
+<h3 id="73-camtls">7.3 プロキシ、CA、mTLS</h3>
+<p>Claude Code は <code>HTTPS_PROXY</code> / <code>HTTP_PROXY</code> / <code>NO_PROXY</code>、<code>NODE_EXTRA_CA_CERTS</code>、<code>CLAUDE_CODE_CLIENT_CERT</code> / <code>CLAUDE_CODE_CLIENT_KEY</code> などをサポートしており、企業プロキシや社内 CA、mTLS に対応できます。ネットワーク制御が必要な組織では、出口を corporate proxy に統一し、必要ドメインのみ allowlist 化することが推奨されます。 <a href="https://docs.anthropic.com/en/docs/claude-code/corporate-proxy">Anthropic Docs</a></p>
+<h3 id="74-subprocess">7.4 subprocess への認証情報引き渡しを防ぐ</h3>
+<p><code>CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1</code> を設定すると、Anthropic やクラウドプロバイダの資格情報が Bash、Hooks、MCP stdio サーバーなどの子プロセスに渡らなくなります。prompt injection や危険な subprocess 実行を考慮すると、企業運用で非常に重要な設定です。 <a href="https://docs.anthropic.com/en/docs/claude-code/env-vars">Anthropic Docs</a></p>
+<h3 id="75">7.5 履歴・痕跡の削減</h3>
+<p>ローカル保存リスクを下げるには、<code>cleanupPeriodDays</code> を短くするだけでなく、必要に応じて <code>CLAUDE_CODE_SKIP_PROMPT_HISTORY=1</code> を使い、セッション履歴や transcript をディスクに書かせない運用も有効です。高機密リポジトリや CI、短命環境では有力な選択肢です。 <a href="https://docs.anthropic.com/en/docs/claude-code/env-vars">Anthropic Docs</a> <a href="https://docs.anthropic.com/en/docs/claude-code/data-usage">Anthropic Docs</a></p>
+<h3 id="76">7.6 非本質的な外部通信の停止</h3>
+<p><code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1</code> を使うと、telemetry、error reporting、feedback、auto updater などの非本質的通信をまとめて停止できます。自社方針上、まずは最小通信にしたい場合の初期設定として有効です。 <a href="https://docs.anthropic.com/en/docs/claude-code/env-vars">Anthropic Docs</a> <a href="https://docs.anthropic.com/en/docs/claude-code/data-usage">Anthropic Docs</a></p>
+<h3 id="77">7.7 アップデート統制</h3>
+<p>自社配布バイナリを使う組織では、<code>DISABLE_UPDATES=1</code> により勝手な更新を止め、検証済みバージョンだけを展開する運用が可能です。 <a href="https://docs.anthropic.com/en/docs/claude-code/env-vars">Anthropic Docs</a></p>
+<h3 id="78-opentelemetry">7.8 監査ログ / OpenTelemetry</h3>
+<p>Claude Code には OpenTelemetry ベースの監視機構があり、tool decision、permission mode 変更、hook block、認証イベント、MCP 接続、plugin install、コマンド実行やファイル操作などを収集できます。企業展開では「何を禁止するか」だけでなく「何が起きたか」を見る体制も重要です。ただし詳細ログは機微情報を含みうるため、初期はメタデータ中心で始め、必要に応じて段階的に詳細化するのが安全です。 <a href="https://docs.anthropic.com/en/docs/claude-code/monitoring-usage">Anthropic Docs</a></p>
+<h2 id="8">8. 導入パターン別の推奨</h2>
+<h3 id="_2">標準業務端末向け</h3>
+<p>標準的な開発端末では、managed settings による bypass 禁止、managed-only の permission rules / hooks、MCP allowlist、sandbox 有効化、資格情報ディレクトリ denyRead、proxy 経由の通信、SSO、短めのローカル履歴保持を基本セットとするのが現実的です。 <a href="https://docs.anthropic.com/en/docs/claude-code/permissions">Anthropic Docs</a> <a href="https://docs.anthropic.com/en/docs/claude-code/sandboxing">Anthropic Docs</a></p>
+<h3 id="_3">高機密リポジトリ向け</h3>
+<p>高機密用途では、<code>WebSearch</code> / <code>WebFetch</code> の deny、必要最小限の <code>allowedDomains</code>、<code>defaultMode</code> を <code>dontAsk</code> または <code>plan</code> 寄りにする検討、<code>CLAUDE_CODE_SKIP_PROMPT_HISTORY=1</code>、Enterprise の ZDR、監査強化を組み合わせるのが妥当です。 <a href="https://docs.anthropic.com/en/docs/claude-code/permissions">Anthropic Docs</a> <a href="https://docs.anthropic.com/en/docs/claude-code/data-usage">Anthropic Docs</a></p>
+<h2 id="9">9. 推奨実装方針</h2>
+<h3 id="91">9.1 まず採用すべき運用原則</h3>
+<ol>
+<li><code>~/.claude/settings.json</code> は薄くする</li>
+<li>強制ポリシーは managed settings で配る</li>
+<li>Bash は sandbox 前提にする</li>
+<li>MCP と Hooks は allowlist 管理する</li>
+<li>認証情報ファイルと subprocess 環境を保護する</li>
+<li>監査・可視化まで含めて設計する</li>
+</ol>
+<h3 id="92-managed-settings">9.2 推奨度の高い managed settings サンプル</h3>
+<p>以下は、公式ドキュメント・公式サンプルの内容を踏まえた、企業向けの「叩き台」です。</p>
+<pre><code class="language-json">{
+  &quot;permissions&quot;: {
+    &quot;disableBypassPermissionsMode&quot;: &quot;disable&quot;,
+    &quot;deny&quot;: [
+      &quot;WebSearch&quot;,
+      &quot;WebFetch&quot;
+    ]
+  },
+  &quot;allowManagedPermissionRulesOnly&quot;: true,
+  &quot;allowManagedHooksOnly&quot;: true,
+  &quot;allowManagedMcpServersOnly&quot;: true,
+  &quot;allowedMcpServers&quot;: [
+    { &quot;serverName&quot;: &quot;github&quot; }
+  ],
+  &quot;sandbox&quot;: {
+    &quot;enabled&quot;: true,
+    &quot;failIfUnavailable&quot;: true,
+    &quot;allowUnsandboxedCommands&quot;: false,
+    &quot;filesystem&quot;: {
+      &quot;denyRead&quot;: [
+        &quot;~/.aws&quot;,
+        &quot;~/.ssh&quot;,
+        &quot;~/.gnupg&quot;
+      ]
+    },
+    &quot;network&quot;: {
+      &quot;allowedDomains&quot;: []
+    }
+  },
+  &quot;cleanupPeriodDays&quot;: 7,
+  &quot;disableRemoteControl&quot;: true,
+  &quot;disableSkillShellExecution&quot;: true
+}
+</code></pre>
+<p>実際には、利用部門、必要な MCP、外部通信先、CI の有無、クラウド基盤の方式に応じて調整が必要です。ただし思想としては、公式の <code>strict</code> と <code>bash-sandbox</code> を合わせて、MCP と資格情報保護を加えた形が組織運用の有力な出発点になります。 <a href="https://raw.githubusercontent.com/anthropics/claude-code/main/examples/settings/settings-strict.json">strict example</a> <a href="https://raw.githubusercontent.com/anthropics/claude-code/main/examples/settings/settings-bash-sandbox.json">bash sandbox example</a> <a href="https://docs.anthropic.com/en/docs/claude-code/managed-mcp">Anthropic Docs</a></p>
+<h2 id="10-mdm">10. 補足: MDM / エンタープライズ配布テンプレート</h2>
+<p>Anthropic 公式リポジトリには、Jamf / Kandji / Intune / Group Policy 向けの配布テンプレートが含まれています。macOS では <code>com.anthropic.claudecode</code> の managed preferences / mobileconfig、Windows では Group Policy 用 ADMX や PowerShell スクリプト、任意プラットフォーム向けの <code>managed-settings.json</code> サンプルが用意されています。 <a href="https://github.com/anthropics/claude-code/tree/main/examples/mdm">Anthropic GitHub MDM Examples</a> <a href="https://raw.githubusercontent.com/anthropics/claude-code/main/examples/mdm/managed-settings.json">managed-settings example</a></p>
+<h2 id="11">11. 最終結論</h2>
+<p>上司レビュー向けに一言でまとめると、<strong>Claude Code を会社で展開する際は、<code>${HOME}/.claude/settings.json</code> の統一は補助策としては有効だが、セキュリティの本命は managed settings による強制配布である</strong>、というのが結論です。さらに、sandbox、MCP allowlist、Hooks 制御、SSO、プロキシ/CA、subprocess 環境スクラブ、履歴削減、監査ログまで含めて設計して初めて、企業利用に耐える安全性に近づきます。 <a href="https://docs.anthropic.com/en/docs/claude-code/settings">Anthropic Docs</a> <a href="https://docs.anthropic.com/en/docs/claude-code/security">Anthropic Docs</a> <a href="https://www.anthropic.com/product/enterprise">Anthropic Enterprise</a></p>
+<h2 id="_4">参考文献</h2>
+<ul>
+<li>Claude Code settings: https://docs.anthropic.com/en/docs/claude-code/settings</li>
+<li>Claude Code permissions: https://docs.anthropic.com/en/docs/claude-code/permissions</li>
+<li>Claude Code security: https://docs.anthropic.com/en/docs/claude-code/security</li>
+<li>Claude Code sandboxing: https://docs.anthropic.com/en/docs/claude-code/sandboxing</li>
+<li>Claude Code server-managed settings: https://docs.anthropic.com/en/docs/claude-code/server-managed-settings</li>
+<li>Claude Code managed MCP: https://docs.anthropic.com/en/docs/claude-code/managed-mcp</li>
+<li>Claude Code env vars: https://docs.anthropic.com/en/docs/claude-code/env-vars</li>
+<li>Claude Code IAM: https://docs.anthropic.com/en/docs/claude-code/iam</li>
+<li>Claude Code corporate proxy: https://docs.anthropic.com/en/docs/claude-code/corporate-proxy</li>
+<li>Claude Code monitoring usage: https://docs.anthropic.com/en/docs/claude-code/monitoring-usage</li>
+<li>Claude Code data usage: https://docs.anthropic.com/en/docs/claude-code/data-usage</li>
+<li>Claude Code enterprise deployment overview: https://docs.anthropic.com/en/docs/claude-code/third-party-integrations</li>
+<li>Anthropic Enterprise product page: https://www.anthropic.com/product/enterprise</li>
+<li>Anthropic announcement on Claude Code for Team / Enterprise: https://www.anthropic.com/news/claude-code-on-team-and-enterprise</li>
+<li>Official GitHub examples/settings: https://github.com/anthropics/claude-code/tree/main/examples/settings</li>
+<li>Official GitHub examples/mdm: https://github.com/anthropics/claude-code/tree/main/examples/mdm</li>
+</ul><div class="footer">このHTMLはMarkdown版レポートを元に生成しています。</div></div></div><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body></html>
