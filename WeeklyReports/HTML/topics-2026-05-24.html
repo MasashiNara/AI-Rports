@@ -1,0 +1,1136 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>X ピックアップ｜2026.05.24</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#F2EDE0;
+    --paper-2:#EAE3D2;
+    --card:#FBF8EF;
+    --ink:#14110B;
+    --ink-2:#3D372C;
+    --ink-3:#6E6552;
+    --ink-4:#9E9582;
+    --rule:rgba(20,17,11,0.10);
+    --rule-strong:rgba(20,17,11,0.22);
+    --accent:#B43820;
+    --accent-soft:rgba(180,56,32,0.10);
+
+    --font-serif:'Shippori Mincho B1', 'Hiragino Mincho ProN','Yu Mincho',serif;
+    --font-sans:'Zen Kaku Gothic New','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;
+    --font-mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+    --gap:28px;
+    --post-pad:22px 26px;
+  }
+
+  /* themes */
+  html[data-theme="mono"]{
+    --paper:#F4F4F2;
+    --paper-2:#EBEBE7;
+    --card:#FFFFFF;
+    --ink:#0C0C0C;
+    --ink-2:#2D2D2D;
+    --ink-3:#5C5C5C;
+    --ink-4:#9A9A9A;
+    --rule:rgba(0,0,0,0.10);
+    --rule-strong:rgba(0,0,0,0.22);
+    --accent:#0C0C0C;
+    --accent-soft:rgba(0,0,0,0.06);
+  }
+  html[data-theme="dark"]{
+    --paper:#15140F;
+    --paper-2:#1D1B16;
+    --card:#1F1D17;
+    --ink:#F1ECDC;
+    --ink-2:#D7D0BD;
+    --ink-3:#A39A82;
+    --ink-4:#736B57;
+    --rule:rgba(241,236,220,0.10);
+    --rule-strong:rgba(241,236,220,0.22);
+    --accent:#E37A5F;
+    --accent-soft:rgba(227,122,95,0.14);
+  }
+
+  html[data-density="compact"]{
+    --gap:18px;
+    --post-pad:16px 20px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-sans);
+    font-feature-settings:"palt" 1;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.7;
+    font-size:15.5px;
+    letter-spacing:0.01em;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline;text-underline-offset:3px}
+  code{font-family:var(--font-mono);font-size:0.88em;background:var(--paper-2);padding:0.08em 0.4em;border-radius:4px;color:var(--ink-2)}
+
+  /* ── top bar ─────────────────────────── */
+  .topbar{
+    position:sticky; top:0; z-index:30;
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-bottom:1px solid var(--rule);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto;
+    padding:10px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:24px;
+    font-size:12.5px; color:var(--ink-3);
+    letter-spacing:0.08em;
+  }
+  .topbar .brand{
+    display:flex; align-items:center; gap:10px;
+    color:var(--ink); font-weight:700;
+  }
+  .topbar .brand .mark{
+    width:22px; height:22px; border-radius:6px;
+    background:var(--ink); color:var(--paper);
+    display:grid; place-items:center;
+    font-family:var(--font-serif); font-weight:700;
+    font-size:13px; line-height:1;
+  }
+  .topbar nav{display:flex; gap:18px; align-items:center}
+  .topbar nav a{color:var(--ink-3)}
+  .topbar nav a:hover{color:var(--ink); text-decoration:none}
+  .theme-switch{
+    display:inline-flex; align-items:center;
+    border:1px solid var(--rule); border-radius:999px;
+    padding:2px; gap:0;
+    background:var(--paper-2);
+  }
+  .theme-switch button{
+    appearance:none; border:none; background:transparent;
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:0.12em;
+    color:var(--ink-3);
+    padding:5px 10px;
+    border-radius:999px;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:background .15s, color .15s;
+  }
+  .theme-switch button:hover{ color:var(--ink) }
+  .theme-switch button[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+
+  /* ── page shell ──────────────────────── */
+  .page{
+    max-width:1180px; margin:0 auto;
+    padding:48px 28px 120px;
+  }
+
+  /* ── masthead ────────────────────────── */
+  .masthead{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    align-items:end;
+    gap:40px;
+    padding-bottom:36px;
+    border-bottom:1px solid var(--rule-strong);
+    margin-bottom:36px;
+  }
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:11.5px; letter-spacing:0.22em;
+    color:var(--accent);
+    text-transform:uppercase;
+    margin:0 0 18px;
+  }
+  .eyebrow::before{
+    content:""; display:inline-block; width:22px; height:1px;
+    background:var(--accent); vertical-align:middle;
+    margin-right:10px; transform:translateY(-2px);
+  }
+  h1.title{
+    font-family:var(--font-serif);
+    font-weight:700;
+    font-size:64px;
+    line-height:1.08;
+    letter-spacing:0.005em;
+    margin:0 0 18px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  h1.title em{
+    font-style:normal;
+    color:var(--ink-3);
+    font-weight:500;
+  }
+  .lede{
+    max-width:62ch;
+    color:var(--ink-2);
+    font-size:16.5px;
+    line-height:1.75;
+    margin:0;
+  }
+  .masthead .meta-card{
+    border:1px solid var(--rule-strong);
+    border-radius:2px;
+    padding:18px 22px;
+    min-width:240px;
+    background:var(--paper-2);
+  }
+  .masthead .meta-card dl{
+    margin:0; display:grid;
+    grid-template-columns: auto 1fr;
+    gap:4px 16px;
+    font-size:13px;
+  }
+  .masthead .meta-card dt{
+    color:var(--ink-3);
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    align-self:center;
+  }
+  .masthead .meta-card dd{
+    margin:0;
+    color:var(--ink);
+    font-weight:500;
+    font-feature-settings:"tnum" 1;
+  }
+  .masthead .meta-card dd b{
+    font-family:var(--font-serif);
+    font-weight:700;
+    font-size:22px;
+    margin-right:4px;
+  }
+
+  /* ── profile strip ───────────────────── */
+  .profile{
+    margin:0 0 44px;
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    align-items:start;
+  }
+  .profile h2{
+    font-family:var(--font-serif);
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+    line-height:1.4;
+  }
+  .profile h2 .ko{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .profile ul.tags{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-wrap:wrap; gap:8px;
+  }
+  .profile ul.tags li{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-left:3px solid var(--ink-2);
+    padding:8px 14px 8px 12px;
+    font-size:13.5px;
+    line-height:1.5;
+    color:var(--ink-2);
+    border-radius:2px;
+  }
+  .profile ul.tags li b{
+    color:var(--ink); font-weight:700;
+  }
+  .profile ul.tags li small{
+    color:var(--ink-3); font-size:12px; margin-left:6px;
+  }
+  html[data-show-profile="false"] .profile{display:none}
+
+  /* ── filter bar ──────────────────────── */
+  .filter-bar{
+    position:sticky;
+    top:43px; z-index:25;
+    margin:0 -28px 36px;
+    padding:14px 28px;
+    background:color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    display:flex; gap:6px; align-items:center;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .filter-bar::-webkit-scrollbar{display:none}
+  .filter-bar .label{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    text-transform:uppercase;
+    margin-right:8px;
+    white-space:nowrap;
+  }
+  .chip{
+    appearance:none; border:none; background:transparent;
+    font-family:var(--font-sans);
+    font-size:13.5px;
+    color:var(--ink-2);
+    padding:7px 13px 7px 11px;
+    border-radius:999px;
+    display:inline-flex; align-items:center; gap:8px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background .15s, color .15s;
+    line-height:1.2;
+  }
+  .chip:hover{ background:var(--paper-2) }
+  .chip .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--c, var(--ink-3));
+    flex-shrink:0;
+  }
+  .chip .n{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--ink-3);
+    font-feature-settings:"tnum" 1;
+  }
+  .chip[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .chip[aria-pressed="true"] .n{ color:color-mix(in srgb, var(--paper) 70%, transparent) }
+  .chip[aria-pressed="true"] .dot{ box-shadow:0 0 0 2px var(--ink) }
+
+  /* ── feed / category blocks ──────────── */
+  .feed{ display:flex; flex-direction:column; gap:64px }
+  .cat{
+    scroll-margin-top:120px;
+  }
+  .cat-header{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    margin-bottom:24px;
+    align-items:start;
+  }
+  .cat-marker{
+    display:flex; flex-direction:column; gap:8px;
+    position:sticky; top:120px;
+  }
+  .cat-num{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    text-transform:uppercase;
+  }
+  .cat-num .dot{
+    display:inline-block; width:8px; height:8px; border-radius:50%;
+    background:var(--c); margin-right:8px; vertical-align:middle;
+    transform:translateY(-1px);
+  }
+  .cat-count{
+    font-family:var(--font-serif);
+    font-size:38px;
+    font-weight:700;
+    line-height:1; color:var(--ink);
+    font-feature-settings:"tnum" 1;
+  }
+  .cat-count small{
+    font-family:var(--font-sans);
+    font-size:13px; font-weight:500; color:var(--ink-3);
+    margin-left:6px;
+  }
+  .cat-title-block h3{
+    font-family:var(--font-serif);
+    font-size:30px;
+    font-weight:700;
+    line-height:1.25;
+    margin:0 0 10px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  .cat-intro{
+    color:var(--ink-2);
+    font-size:14.5px;
+    line-height:1.7;
+    margin:0;
+    max-width:60ch;
+  }
+
+  /* ── post card ───────────────────────── */
+  .posts{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+  }
+  .posts > .spacer{} /* gutter visualization */
+  .post-list{
+    display:flex; flex-direction:column; gap:var(--gap);
+  }
+  .post{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:var(--post-pad);
+    position:relative;
+    transition:border-color .15s, transform .15s;
+  }
+  .post:hover{ border-color:var(--rule-strong) }
+  .post::before{
+    content:""; position:absolute; left:0; top:14px; bottom:14px;
+    width:2px; background:var(--c, var(--ink-3));
+    border-radius:2px;
+    opacity:0.85;
+  }
+  .post-head{
+    display:flex; align-items:center; gap:12px;
+    margin-bottom:14px;
+  }
+  .avatar{
+    width:34px; height:34px; border-radius:50%;
+    background:var(--av, var(--ink-3)); color:#fff;
+    font-family:var(--font-serif);
+    font-weight:700; font-size:15px;
+    display:grid; place-items:center;
+    flex-shrink:0;
+    letter-spacing:0;
+  }
+  .post-head .who{ display:flex; flex-direction:column; gap:1px; min-width:0 }
+  .post-head .handle{
+    font-size:14px; font-weight:700; color:var(--ink);
+    text-decoration:none;
+  }
+  .post-head .handle:hover{ color:var(--accent); text-decoration:none }
+  .post-head .handle.unknown{ color:var(--ink-3); font-weight:500 }
+  .post-head .handle.estimated{ color:var(--ink-3); font-weight:500 }
+  .post-head .handle.estimated::after{
+    content:"推定"; font-family:var(--font-mono);
+    font-size:9.5px; letter-spacing:0.1em;
+    background:var(--paper-2); color:var(--ink-3);
+    padding:1px 6px; border-radius:3px;
+    margin-left:8px; vertical-align:middle;
+  }
+  .post-head time{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-3);
+    font-feature-settings:"tnum" 1;
+    letter-spacing:0.04em;
+  }
+  .post-head .src{
+    margin-left:auto;
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-3);
+    padding:5px 10px;
+    border:1px solid var(--rule);
+    border-radius:999px;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:color .15s, border-color .15s, background .15s;
+  }
+  .post-head .src:hover{
+    color:var(--ink); border-color:var(--rule-strong);
+    background:var(--paper-2);
+    text-decoration:none;
+  }
+  .post-head .src svg{ width:11px; height:11px }
+
+  .post-body{
+    font-size:15.5px;
+    line-height:1.85;
+    color:var(--ink);
+    white-space:pre-wrap;
+    word-wrap:break-word;
+  }
+  html[data-density="compact"] .post-body{ font-size:14.5px; line-height:1.7 }
+
+  .post-body .quoted{
+    display:block;
+    margin-top:14px;
+    padding:10px 14px;
+    border-left:2px solid var(--rule-strong);
+    background:var(--paper-2);
+    color:var(--ink-2);
+    font-size:13.5px;
+    line-height:1.75;
+    border-radius:0 3px 3px 0;
+  }
+  .post-body .quoted .from{
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:0.14em;
+    color:var(--ink-3); text-transform:uppercase;
+    display:block; margin-bottom:4px;
+  }
+  .post-body ul{
+    margin:8px 0 0; padding-left:1.1em;
+  }
+  .post-body ul li{ margin:2px 0 }
+  .post-body a{ word-break:break-all }
+
+  /* hide filtered out */
+  .cat.hidden{ display:none }
+
+  /* ── footer notes ────────────────────── */
+  .notes{
+    margin-top:96px;
+    padding-top:36px;
+    border-top:1px solid var(--rule-strong);
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:36px;
+  }
+  .notes h2{
+    font-family:var(--font-serif);
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+  }
+  .notes h2 .ko{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .notes ul{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .notes li{
+    color:var(--ink-2);
+    font-size:13.5px;
+    line-height:1.75;
+    padding-left:22px;
+    position:relative;
+  }
+  .notes li::before{
+    content:"※"; position:absolute; left:0; top:0;
+    color:var(--ink-3); font-family:var(--font-serif);
+  }
+
+  /* ── colophon ────────────────────────── */
+  .colophon{
+    margin-top:72px;
+    padding-top:24px;
+    border-top:1px solid var(--rule);
+    display:flex; justify-content:space-between; align-items:baseline;
+    color:var(--ink-3); font-size:12px;
+    font-family:var(--font-mono);
+    letter-spacing:0.06em;
+  }
+
+  /* ── responsive ──────────────────────── */
+  @media (max-width: 900px){
+    .page{ padding:32px 18px 80px }
+    h1.title{ font-size:42px }
+    .masthead{ grid-template-columns:1fr; gap:24px; align-items:start }
+    .profile{ grid-template-columns:1fr; gap:14px }
+    .cat-header{ grid-template-columns:1fr; gap:8px }
+    .cat-marker{ position:static; flex-direction:row; align-items:baseline; gap:14px }
+    .posts{ grid-template-columns:1fr; gap:0 }
+    .notes{ grid-template-columns:1fr; gap:14px }
+    .filter-bar{ margin:0 -18px 24px; padding:12px 18px }
+    .cat-count{ font-size:28px }
+    .cat-title-block h3{ font-size:24px }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── top bar ─────────────────────────── -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="mark">X</span>
+      <span>Pickup Digest</span>
+    </div>
+    <nav>
+      <a href="#feed">記事</a>
+      <a href="#profile">プロファイル</a>
+      <a href="#notes">注意</a>
+      <div class="theme-switch" role="radiogroup" aria-label="テーマ">
+        <button data-theme="paper" aria-pressed="true">Paper</button>
+        <button data-theme="mono" aria-pressed="false">Mono</button>
+        <button data-theme="dark" aria-pressed="false">Dark</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- ─── masthead ──────────────────────── -->
+  <section class="masthead">
+    <div>
+      <p class="eyebrow">AI / LLM Daily Pickup</p>
+      <h1 class="title">いま読むべき<br>X の AI 関連投稿。<em>2026.05.24</em></h1>
+      <p class="lede">過去のブックマーク（3/25–5/20）から推定したあなたの興味プロファイルに基づき、xAI <code>x_search</code> 経由で 5/24（JST）の範囲から収集した 16 件を、カテゴリ別に整理しました。</p>
+    </div>
+    <aside class="meta-card" aria-label="このダイジェストの概要">
+      <dl>
+        <dt>Posts</dt>     <dd><b>16</b>件</dd>
+        <dt>Categories</dt><dd><b>6</b>領域</dd>
+        <dt>Authors</dt>   <dd><b>6</b>アカウント</dd>
+        <dt>Source</dt>    <dd>xAI x_search</dd>
+        <dt>Window</dt>    <dd>5/24 06:03 – 23:45 JST</dd>
+      </dl>
+    </aside>
+  </section>
+
+  <!-- ─── interest profile ─────────────── -->
+  <section class="profile" id="profile">
+    <h2><span class="ko">Interest Profile</span>推定された<br>興味プロファイル</h2>
+    <ul class="tags">
+      <li><b>Claude / Anthropic エコシステム</b><small>Code, Auto モード, MCP, Skills, Mythos</small></li>
+      <li><b>ローカル LLM / モデル評価</b><small>Qwen, Gemma, DGX Spark, 量子化, ベンチマーク</small></li>
+      <li><b>AI / LLM 研究・実用</b><small>論文紹介, マルチエージェント, ヘルスケア応用</small></li>
+      <li><b>AI エージェント / Hermes Agent / 自動化</b><small>NotebookLM 連携, SOUL.md, Routines</small></li>
+      <li><b>Google Gemini / Antigravity</b><small>3.5 Flash, Antigravity, Spark</small></li>
+      <li><b>セキュリティ・インフラ・ハードウェア</b><small>gigazine / pc_watch 系の速報</small></li>
+    </ul>
+  </section>
+
+  <!-- ─── filter bar ───────────────────── -->
+  <nav class="filter-bar" id="filters" aria-label="カテゴリフィルタ">
+    <span class="label">Filter</span>
+    <button class="chip" data-filter="all" aria-pressed="true"><span class="dot" style="--c:#14110B"></span>すべて<span class="n">16</span></button>
+    <button class="chip" data-filter="claude" aria-pressed="false"><span class="dot" style="--c:#C8552B"></span>Claude / Anthropic<span class="n">4</span></button>
+    <button class="chip" data-filter="models" aria-pressed="false"><span class="dot" style="--c:#5468B0"></span>ローカル LLM<span class="n">3</span></button>
+    <button class="chip" data-filter="research" aria-pressed="false"><span class="dot" style="--c:#A3793C"></span>研究 / 実用<span class="n">2</span></button>
+    <button class="chip" data-filter="agents" aria-pressed="false"><span class="dot" style="--c:#834BAB"></span>エージェント / Hermes<span class="n">2</span></button>
+    <button class="chip" data-filter="gemini" aria-pressed="false"><span class="dot" style="--c:#2B8C75"></span>Gemini / AI ニュース<span class="n">3</span></button>
+    <button class="chip" data-filter="security" aria-pressed="false"><span class="dot" style="--c:#6E6552"></span>セキュリティ<span class="n">2</span></button>
+  </nav>
+
+  <!-- ─── feed ─────────────────────────── -->
+  <main class="feed" id="feed">
+
+    <!-- Claude -->
+    <section class="cat" data-cat="claude" id="cat-claude" style="--c:#C8552B">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>01 · Claude</span>
+          <span class="cat-count">4<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>Claude Code / Anthropic エコシステム</h3>
+          <p class="cat-intro">@bcherny（Claude Code チーム）の「最大のコツは <code>auto mode</code>＝権限プロンプト廃止で multi-clauding の起点」宣言と「Opus 4.7 はもう Plan Mode 不要」論、Claude Desktop の Changelog 表示／ウィンドウ分離、そして「Claude Code がなかった時代 vs ある時代」のバズ投稿。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">b</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/bcherny">@bcherny</a>
+                <time>05/24 21:20 JST</time>
+              </div>
+              <a class="src" href="https://x.com/bcherny/status/2058523623665627193" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Opus 4.7 is intelligent enough that it no longer needs Plan Mode for most tasks. I often just jump in, and Claude will ask me questions if it needs to</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">b</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/bcherny">@bcherny</a>
+                <time>05/24 21:05 JST</time>
+              </div>
+              <a class="src" href="https://x.com/bcherny/status/2058519809214607704" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">People often ask what my biggest tip is for getting the most out of Claude Code.
+
+These days my #1 tip is: use auto mode
+
+Auto mode means no more permission prompts. It is the key building block for multi-clauding: start a session, then while it runs, work on another session in parallel.<span class="quoted"><span class="from">引用元 @ClaudeDevs</span>Two updates to auto mode: · Now available on the Pro plan · Sonnet 4.6 is now supported, alongside Opus 4.7 Shift+tab, and let Claude run.</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">o</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/oikon48">@oikon48</a>
+                <time>05/24 19:22 JST</time>
+              </div>
+              <a class="src" href="https://x.com/oikon48/status/2058493885643653579" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Claude Desktop版のChangelogが見れるようになってた😆
+
+- ドラッグ＆ドロップ (or Cmd + クリック)によるウィンドウ分離
+- AutoモードのProプランの解禁。Sonnet 4.6のAutoモードのサポート</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">m</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/masahirochaen">@masahirochaen</a>
+                <time>05/24 15:51 JST</time>
+              </div>
+              <a class="src" href="https://x.com/masahirochaen/status/2058440819171078202" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Claude Codeがなかった時代 vs ある時代
+
+（画像2枚での比較ネタ投稿。76万 view 超のバズ。リプ欄では「閉じてもスリープさせない」常時稼働 Tips が多数）</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Models -->
+    <section class="cat" data-cat="models" id="cat-models" style="--c:#5468B0">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>02 · Models</span>
+          <span class="cat-count">3<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>ローカル LLM / モデル評価</h3>
+          <p class="cat-intro">AMD の旧世代 GPU を 2 枚挿しして VRAM 48GB を作る格安ローカル LLM 構築術、Qwen 3.7-Max が空間推論で GPT-5.5 超えとされる件、Gemma ベースの軽量 uncensored モデル G4-MeroMero-26B。いずれも @ai_hakase_ 発の紹介。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">a</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ai_hakase_">@ai_hakase_</a>
+                <time>05/24 21:05 JST</time>
+              </div>
+              <a class="src" href="https://x.com/ai_hakase_/status/2058519640557396293" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">【AMD2枚挿しでVRAM 48GB！格安最強ローカルLLM環境】
+
+AMDのグラボを組み合わせてVRAM 48GBを実現する、コスパ最強のローカルLLM構築術です！
+
+💡 ここがポイント
+・RTX 4090を使わずに巨大モデルを動かす構成
+・Vulkan活用で異なる世代のグラボを安定認識
+・Docker環境によりOSを汚さずスマートに構築
+・Qwen 3.6 35Bなどの最新AIもローカルでサクサク動作
+
+月額サブスクやAPI費用を気にせず、24時間自分専用の高性能AIをフル活用できます！🚀
+
+#LLM #AMD</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">a</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ai_hakase_">@ai_hakase_</a>
+                <time>05/24 19:07 JST</time>
+              </div>
+              <a class="src" href="https://x.com/ai_hakase_/status/2058489937767305344" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">【次世代AIの衝撃】Qwen 3.7-MaxがGPT-5.5超えの快挙！
+👉 <a href="https://t.co/Bz4XZri0i1">https://t.co/Bz4XZri0i1</a>
+Qwen 3.7-Maxがわずか1ヶ月で劇的な進化を遂げ、主要AIモデルを上回るスコアを記録しました！🚀
+
+注目のポイントは圧倒的な「空間推論能力」です。3次元構造を正確に捉え、サッカー選手の身体比率やボールの質感を驚くほどリアルに描写。映像制作のプロトタイプ作成や、製造・ECでの高度な画像解析など、ビジネスへの即戦力として期待が高まります。
+
+また、Gemini 3.5 Flashが処理速度でトップに立つなど、スピード面でも革命が起きています。最高品質と低コストを両立するAI活用が、今後のビジネス戦略の鍵となりそうです！✨
+
+#AI #Qwen</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">a</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ai_hakase_">@ai_hakase_</a>
+                <time>05/24 19:06 JST</time>
+              </div>
+              <a class="src" href="https://x.com/ai_hakase_/status/2058489690743800029" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">【検閲なしの超軽量モデル！G4-MeroMero登場】
+
+Gemmaベースの待望の「26B-A4B」版がついにリリースされました！
+以前のモデルより軽快で、少ないVRAM環境でもサクサク動くのが最大の魅力です。🚀
+
+・元の賢さを維持する驚異の低KLD数値
+・拒絶率はわずか12/100でAIに断られるストレスを激減
+・Heretic手法により制限を排除しAI本来の力を解放
+
+GGUF形式も対応しており、自由な創作や物語執筆の最高のパートナーになります！✨
+
+#生成AI #LocalLLM</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Research -->
+    <section class="cat" data-cat="research" id="cat-research" style="--c:#A3793C">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>03 · Research</span>
+          <span class="cat-count">2<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>AI / LLM 研究・実用・基礎</h3>
+          <p class="cat-intro">報酬を「ベクトル」で扱い速度や可読性など複数軸を同時学習する新強化学習 VPO（GRPO と置換可能）、海外でバズった「2026年に理解すべき AI 概念20選」。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">a</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ai_hakase_">@ai_hakase_</a>
+                <time>05/24 14:03 JST</time>
+              </div>
+              <a class="src" href="https://x.com/ai_hakase_/status/2058413438250975504" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">【次世代の強化学習『VPO』でLLMが「多様な正解」を習得！】
+
+報酬を「ベクトル」で扱う画期的な強化学習アルゴリズムが登場しました！🚀
+正確性だけでなく、速度や可読性といった複数の評価軸を同時に学習できます。
+既存のGRPOとそのまま置き換え可能で、ビジネス活用の幅を大きく広げる注目の技術です！✨
+
+#LLM #VPO</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">m</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/masahirochaen">@masahirochaen</a>
+                <time>05/24 06:03 JST</time>
+              </div>
+              <a class="src" href="https://x.com/masahirochaen/status/2058428743216226733" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">海外でバズっていた「2026年に理解すべきAI概念20選」
+
+AIエージェントの利用者は増えていますが、仕組みまで理解している人はまだ少ないと思います。
+
+AI業界にいるなら、最低限この20個は説明できるレベルになっておきたいところ。
+
+1. ニューラルネットワーク
+2. トークン化
+3. 埋め込み
+4. Attention
+5. Transformer
+6. LLM
+7. コンテキストウィンドウ
+8. Temperature
+9. ハルシネーション
+10. プロンプト設計
+11. 転移学習
+12. ファインチューニング
+13. RLHF
+14. LoRA
+15. 量子化
+16. RAG
+17. ベクトルDB
+18. AIエージェント
+19. Chain of Thought
+20. Diffusion
+
+AIを使えるだけでなく、「なぜ動くのか」まで理解している人が、次の差別化になる。</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Agents -->
+    <section class="cat" data-cat="agents" id="cat-agents" style="--c:#834BAB">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>04 · Agents</span>
+          <span class="cat-count">2<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>AI エージェント / Hermes Agent / 自動化</h3>
+          <p class="cat-intro">Hermes Agent を Claude Code/Codex から呼び出して X リサーチ→URL 付き抽出→Excel 化する「最小構成」の薦め（X Premium 月額980円で完結）、コミュニティ事例集「276 Use Cases of Hermes Agent」。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">t</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/tetumemo">@tetumemo</a>
+                <time>05/24 18:43 JST</time>
+              </div>
+              <a class="src" href="https://x.com/tetumemo/status/2058484041595363388" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">📝Hermes Agentって実際どんな風に使われているの？そして今後どのように使われて社会的なインパクトをもたらしそうなの？？という疑問に答えてくれる記事
+
+「276 Use Cases of Hermes Agent — 2026年、コミュニティは何を作っているのか」
+
+核心テーマ：AIは「自律的なデジタルワーカー」へ進化している
+
+・AIは、単なるチャットボットを超えて、自律的なデジタルワーカーとして機能できるようになっている。
+・Hermes Agentを使うことで、コード作成、ビジネスオペレーション、コンテンツ生成の自動化が可能。
+・AIは、文脈を記憶し、環境を観察し、必要なアクションを起動する能力を備えている。
+・AIはインフラとして発展しており、開発の自動化と業務効率の向上を促進している。
+・将来的な体験として、クリエイティブ作業やビジネス運営のあり方を大きく変革する可能性がある。
+
+詳しくはリプ欄の要約ノートへ　↓</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">t</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/tetumemo">@tetumemo</a>
+                <time>05/24 09:47 JST</time>
+              </div>
+              <a class="src" href="https://x.com/tetumemo/status/2058349006535958977" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">📝何かHermes Agentって難しい！って感じるかもしれませんが、シンプルにClaude CodeやCodexから呼び出してXのリサーチをする方法だけでも十分価値アリです
+
+X Premium（月額980円）の方はサブスク内で動かせる
+
+■Claude Codeから
+Xリサーチ
+↓
+URL付きで抽出
+↓
+Excelにまとめる
+
+これができる<span class="quoted"><span class="from">引用元 @tetumemo</span>最近のお気に入り構成 ■IDE→Google Antigravity ■拡張機能→Codex/Claude Code ■ターミナル→Hermes Agent。ここから NotebookLM を自由自在に操作でき、Deep Research も NotebookLM に任せればトークン消費を削減できる</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Gemini -->
+    <section class="cat" data-cat="gemini" id="cat-gemini" style="--c:#2B8C75">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>05 · Gemini</span>
+          <span class="cat-count">3<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>Google Gemini / AI ニュース</h3>
+          <p class="cat-intro">Gemini Spark（24時間稼働の自律エージェント）ベータ公開などを含む 5/24 の AI トレンドまとめ、Gemini 3.5 Flash が金融特化ベンチで世界1位（GPT-5.5 超え）との主張、Google Colab の Gemini 完全統合。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">t</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/tetumemo">@tetumemo</a>
+                <time>05/24 22:56 JST</time>
+              </div>
+              <a class="src" href="https://x.com/tetumemo/status/2058547796471587076" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">📰5/24  AI業界24時間トレンドニュース
+
+・OpenAIのモデルが80年来の数学難問を自律解決（AI推論の歴史的マイルストーン）
+・Google「Gemini Spark」24時間稼働の自律型AIエージェントがベータ公開へ
+・AI首輪「PettiChat」がペットの鳴き声を言葉に翻訳（118ドル）
+・NVIDIA Q1決算816億ドルの過去最高、ゲーミング部門は除外
+・Anthropic評価額9,000億ドルで300億ドル調達へ
+
+※要約記事とインフォグラフィックプロンプトはリプ欄へ　↓</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">a</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ai_hakase_">@ai_hakase_</a>
+                <time>05/24 22:02 JST</time>
+              </div>
+              <a class="src" href="https://x.com/ai_hakase_/status/2058533980597526792" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">【驚愕】Gemini 3.5 Flashが金融AIで世界1位！GPT-5.5を超える性能を記録
+👉 <a href="https://t.co/nWof0JMuTx">https://t.co/nWof0JMuTx</a>
+Googleの最新モデル「Gemini 3.5 Flash」が、金融特化型ベンチマークにてGPT-5.5を6ポイント上回り、堂々の首位を獲得しました！
+
+軽量・高速な『Flash』モデルが最高峰の知能を凌駕する、圧倒的な進化を遂げています。金融データの自律的な解析能力（エージェント機能）において世界トップの評価を得ており、ビジネス実務への適応力は抜群です。
+
+画像やグラフを統合して理解するマルチモーダル能力も世界トップ3圏内と隙がありません。この高いコストパフォーマンスにより、24時間止まらない「金融分析AIエージェント」の構築が極めて現実的になりました！🚀
+
+#Gemini #AIエージェント</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">a</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ai_hakase_">@ai_hakase_</a>
+                <time>05/24 20:02 JST</time>
+              </div>
+              <a class="src" href="https://x.com/ai_hakase_/status/2058503781923410155" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">【Google ColabがGemini統合でAI-firstへ劇的進化！】
+👉 <a href="https://t.co/arWAq6ItDD">https://t.co/arWAq6ItDD</a>
+Google Colabに最新AI「Gemini」が完全統合されました！データ分析の常識が塗り替えられます。
+
+✅ コード生成とデータ探索
+プロンプトを入力するだけでPythonコードを自動生成。専門知識がなくても高度なデータ分析が可能です！
+
+✅ リアルタイムのエラー修正
+実行中のエラーをAIがその場で検知して自動修正。デバッグの作業を止めずにスムーズに開発を進められます。
+
+✅ 一貫したワークフロー実行
+分析プランの提案から実際の処理まで、最初から最後までAIに丸投げできる驚きの進化です！
+
+今まで外注していた集計やレポート作成が自分一人で、しかも数分で完結します。ビジネスのスピードを加速させる最強のツールですね！✨
+
+#GoogleColab #Gemini</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Security -->
+    <section class="cat" data-cat="security" id="cat-security" style="--c:#6E6552">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>06 · Security</span>
+          <span class="cat-count">2<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>セキュリティ・インフラ</h3>
+          <p class="cat-intro">GIGAZINE の再掲枠。X が「いいね」欄を非公開化（プライバシー観点）、RAR 圧縮形式が誕生30年でついに Windows ネイティブ対応。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">G</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/gigazine">@gigazine</a>
+                <time>05/24 23:45 JST</time>
+              </div>
+              <a class="src" href="https://x.com/gigazine/status/2058559901731848474" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">X(旧Twitter)が誰でもチェックできた「いいね」欄を非公開に、何に「いいね」したか誰でもチェックできるのは間違った行動を助長するため(2024)</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">G</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/gigazine">@gigazine</a>
+                <time>05/24 21:30 JST</time>
+              </div>
+              <a class="src" href="https://x.com/gigazine/status/2058525929043832867" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">RAR圧縮形式が誕生から30年を経てWindowsでネイティブサポートされることに、7z・tar・gzも追加(2023)</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── notes ────────────────────────── -->
+  <footer class="notes" id="notes">
+    <h2><span class="ko">Editor's Notes</span>収集・編集上の<br>注意</h2>
+    <ul>
+      <li>出典の本文は <code>xsearch --url</code> で取得した「Grok の引用」です。X の生 API ではないため、まれにパラフレーズや取り違えがあります。本文に違和感があれば原 URL を直接開いて確認してください。</li>
+      <li>対象は 5/24（JST）の終日。インデックス反映の都合で、取得できた投稿は昼〜深夜帯（JST 14:00 以降）に集中しています。</li>
+      <li>論文紹介系の <code>@ai_database</code> はこの日 5/24 分がインデックスに出なかったため、ローカル LLM・研究枠は <code>@ai_hakase_</code> の発信で補完しています。同アカウントは情報まとめ／プロモ寄りで誇張気味の表現があるため、ベンチ「世界1位」「GPT-5.5 超え」等の主張は原典・元ソースで裏取りしてください。</li>
+      <li>Codex / OpenAI 単独の話題は 5/24（JST）の収集では目立ったものがなく、本日は枠を割愛しました。</li>
+    </ul>
+  </footer>
+
+  <div class="colophon">
+    <span>X PICKUP DIGEST · No. 2026-05-24</span>
+    <span>compiled via xAI x_search</span>
+  </div>
+
+</div>
+
+<!-- Theme switch -->
+<script>
+(function(){
+  const KEY = 'xpickup-theme';
+  const html = document.documentElement;
+  const buttons = document.querySelectorAll('.theme-switch button');
+
+  function setTheme(name){
+    html.setAttribute('data-theme', name);
+    try { localStorage.setItem(KEY, name); } catch(_){}
+    buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.theme === name)));
+  }
+
+  // restore
+  let initial = 'paper';
+  try { initial = localStorage.getItem(KEY) || 'paper'; } catch(_){}
+  setTheme(initial);
+
+  buttons.forEach(b => b.addEventListener('click', () => setTheme(b.dataset.theme)));
+})();
+</script>
+
+<!-- Filtering + scrollspy -->
+<script>
+(function(){
+  const chips = document.querySelectorAll('.chip');
+  const cats  = document.querySelectorAll('.cat');
+
+  function setFilter(f){
+    chips.forEach(c=>c.setAttribute('aria-pressed', String(c.dataset.filter === f)));
+    cats.forEach(s=>{
+      const show = (f === 'all') || (s.dataset.cat === f);
+      s.classList.toggle('hidden', !show);
+    });
+    if (f !== 'all'){
+      const target = document.getElementById('cat-' + f);
+      if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }
+
+  chips.forEach(c=>{
+    c.addEventListener('click', ()=>setFilter(c.dataset.filter));
+  });
+
+})();
+</script>
+
+</body>
+</html>

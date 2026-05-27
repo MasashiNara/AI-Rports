@@ -1,0 +1,1202 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>X ピックアップ｜2026.05.21 – 05.23</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#F2EDE0;
+    --paper-2:#EAE3D2;
+    --card:#FBF8EF;
+    --ink:#14110B;
+    --ink-2:#3D372C;
+    --ink-3:#6E6552;
+    --ink-4:#9E9582;
+    --rule:rgba(20,17,11,0.10);
+    --rule-strong:rgba(20,17,11,0.22);
+    --accent:#B43820;
+    --accent-soft:rgba(180,56,32,0.10);
+
+    --font-serif:'Shippori Mincho B1', 'Hiragino Mincho ProN','Yu Mincho',serif;
+    --font-sans:'Zen Kaku Gothic New','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;
+    --font-mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+    --gap:28px;
+    --post-pad:22px 26px;
+  }
+
+  /* themes */
+  html[data-theme="mono"]{
+    --paper:#F4F4F2;
+    --paper-2:#EBEBE7;
+    --card:#FFFFFF;
+    --ink:#0C0C0C;
+    --ink-2:#2D2D2D;
+    --ink-3:#5C5C5C;
+    --ink-4:#9A9A9A;
+    --rule:rgba(0,0,0,0.10);
+    --rule-strong:rgba(0,0,0,0.22);
+    --accent:#0C0C0C;
+    --accent-soft:rgba(0,0,0,0.06);
+  }
+  html[data-theme="dark"]{
+    --paper:#15140F;
+    --paper-2:#1D1B16;
+    --card:#1F1D17;
+    --ink:#F1ECDC;
+    --ink-2:#D7D0BD;
+    --ink-3:#A39A82;
+    --ink-4:#736B57;
+    --rule:rgba(241,236,220,0.10);
+    --rule-strong:rgba(241,236,220,0.22);
+    --accent:#E37A5F;
+    --accent-soft:rgba(227,122,95,0.14);
+  }
+
+  html[data-density="compact"]{
+    --gap:18px;
+    --post-pad:16px 20px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-sans);
+    font-feature-settings:"palt" 1;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.7;
+    font-size:15.5px;
+    letter-spacing:0.01em;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline;text-underline-offset:3px}
+  code{font-family:var(--font-mono);font-size:0.88em;background:var(--paper-2);padding:0.08em 0.4em;border-radius:4px;color:var(--ink-2)}
+
+  /* ── top bar ─────────────────────────── */
+  .topbar{
+    position:sticky; top:0; z-index:30;
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-bottom:1px solid var(--rule);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto;
+    padding:10px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:24px;
+    font-size:12.5px; color:var(--ink-3);
+    letter-spacing:0.08em;
+  }
+  .topbar .brand{
+    display:flex; align-items:center; gap:10px;
+    color:var(--ink); font-weight:700;
+  }
+  .topbar .brand .mark{
+    width:22px; height:22px; border-radius:6px;
+    background:var(--ink); color:var(--paper);
+    display:grid; place-items:center;
+    font-family:var(--font-serif); font-weight:700;
+    font-size:13px; line-height:1;
+  }
+  .topbar nav{display:flex; gap:18px; align-items:center}
+  .topbar nav a{color:var(--ink-3)}
+  .topbar nav a:hover{color:var(--ink); text-decoration:none}
+  .theme-switch{
+    display:inline-flex; align-items:center;
+    border:1px solid var(--rule); border-radius:999px;
+    padding:2px; gap:0;
+    background:var(--paper-2);
+  }
+  .theme-switch button{
+    appearance:none; border:none; background:transparent;
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:0.12em;
+    color:var(--ink-3);
+    padding:5px 10px;
+    border-radius:999px;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:background .15s, color .15s;
+  }
+  .theme-switch button:hover{ color:var(--ink) }
+  .theme-switch button[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+
+  /* ── page shell ──────────────────────── */
+  .page{
+    max-width:1180px; margin:0 auto;
+    padding:48px 28px 120px;
+  }
+
+  /* ── masthead ────────────────────────── */
+  .masthead{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    align-items:end;
+    gap:40px;
+    padding-bottom:36px;
+    border-bottom:1px solid var(--rule-strong);
+    margin-bottom:36px;
+  }
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:11.5px; letter-spacing:0.22em;
+    color:var(--accent);
+    text-transform:uppercase;
+    margin:0 0 18px;
+  }
+  .eyebrow::before{
+    content:""; display:inline-block; width:22px; height:1px;
+    background:var(--accent); vertical-align:middle;
+    margin-right:10px; transform:translateY(-2px);
+  }
+  h1.title{
+    font-family:var(--font-serif);
+    font-weight:700;
+    font-size:64px;
+    line-height:1.08;
+    letter-spacing:0.005em;
+    margin:0 0 18px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  h1.title em{
+    font-style:normal;
+    color:var(--ink-3);
+    font-weight:500;
+  }
+  .lede{
+    max-width:62ch;
+    color:var(--ink-2);
+    font-size:16.5px;
+    line-height:1.75;
+    margin:0;
+  }
+  .masthead .meta-card{
+    border:1px solid var(--rule-strong);
+    border-radius:2px;
+    padding:18px 22px;
+    min-width:240px;
+    background:var(--paper-2);
+  }
+  .masthead .meta-card dl{
+    margin:0; display:grid;
+    grid-template-columns: auto 1fr;
+    gap:4px 16px;
+    font-size:13px;
+  }
+  .masthead .meta-card dt{
+    color:var(--ink-3);
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    align-self:center;
+  }
+  .masthead .meta-card dd{
+    margin:0;
+    color:var(--ink);
+    font-weight:500;
+    font-feature-settings:"tnum" 1;
+  }
+  .masthead .meta-card dd b{
+    font-family:var(--font-serif);
+    font-weight:700;
+    font-size:22px;
+    margin-right:4px;
+  }
+
+  /* ── profile strip ───────────────────── */
+  .profile{
+    margin:0 0 44px;
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    align-items:start;
+  }
+  .profile h2{
+    font-family:var(--font-serif);
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+    line-height:1.4;
+  }
+  .profile h2 .ko{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .profile ul.tags{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-wrap:wrap; gap:8px;
+  }
+  .profile ul.tags li{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-left:3px solid var(--ink-2);
+    padding:8px 14px 8px 12px;
+    font-size:13.5px;
+    line-height:1.5;
+    color:var(--ink-2);
+    border-radius:2px;
+  }
+  .profile ul.tags li b{
+    color:var(--ink); font-weight:700;
+  }
+  .profile ul.tags li small{
+    color:var(--ink-3); font-size:12px; margin-left:6px;
+  }
+  html[data-show-profile="false"] .profile{display:none}
+
+  /* ── filter bar ──────────────────────── */
+  .filter-bar{
+    position:sticky;
+    top:43px; z-index:25;
+    margin:0 -28px 36px;
+    padding:14px 28px;
+    background:color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    display:flex; gap:6px; align-items:center;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .filter-bar::-webkit-scrollbar{display:none}
+  .filter-bar .label{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    text-transform:uppercase;
+    margin-right:8px;
+    white-space:nowrap;
+  }
+  .chip{
+    appearance:none; border:none; background:transparent;
+    font-family:var(--font-sans);
+    font-size:13.5px;
+    color:var(--ink-2);
+    padding:7px 13px 7px 11px;
+    border-radius:999px;
+    display:inline-flex; align-items:center; gap:8px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background .15s, color .15s;
+    line-height:1.2;
+  }
+  .chip:hover{ background:var(--paper-2) }
+  .chip .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--c, var(--ink-3));
+    flex-shrink:0;
+  }
+  .chip .n{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--ink-3);
+    font-feature-settings:"tnum" 1;
+  }
+  .chip[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .chip[aria-pressed="true"] .n{ color:color-mix(in srgb, var(--paper) 70%, transparent) }
+  .chip[aria-pressed="true"] .dot{ box-shadow:0 0 0 2px var(--ink) }
+
+  /* ── feed / category blocks ──────────── */
+  .feed{ display:flex; flex-direction:column; gap:64px }
+  .cat{
+    scroll-margin-top:120px;
+  }
+  .cat-header{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    margin-bottom:24px;
+    align-items:start;
+  }
+  .cat-marker{
+    display:flex; flex-direction:column; gap:8px;
+    position:sticky; top:120px;
+  }
+  .cat-num{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    text-transform:uppercase;
+  }
+  .cat-num .dot{
+    display:inline-block; width:8px; height:8px; border-radius:50%;
+    background:var(--c); margin-right:8px; vertical-align:middle;
+    transform:translateY(-1px);
+  }
+  .cat-count{
+    font-family:var(--font-serif);
+    font-size:38px;
+    font-weight:700;
+    line-height:1; color:var(--ink);
+    font-feature-settings:"tnum" 1;
+  }
+  .cat-count small{
+    font-family:var(--font-sans);
+    font-size:13px; font-weight:500; color:var(--ink-3);
+    margin-left:6px;
+  }
+  .cat-title-block h3{
+    font-family:var(--font-serif);
+    font-size:30px;
+    font-weight:700;
+    line-height:1.25;
+    margin:0 0 10px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  .cat-intro{
+    color:var(--ink-2);
+    font-size:14.5px;
+    line-height:1.7;
+    margin:0;
+    max-width:60ch;
+  }
+
+  /* ── post card ───────────────────────── */
+  .posts{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+  }
+  .posts > .spacer{} /* gutter visualization */
+  .post-list{
+    display:flex; flex-direction:column; gap:var(--gap);
+  }
+  .post{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:var(--post-pad);
+    position:relative;
+    transition:border-color .15s, transform .15s;
+  }
+  .post:hover{ border-color:var(--rule-strong) }
+  .post::before{
+    content:""; position:absolute; left:0; top:14px; bottom:14px;
+    width:2px; background:var(--c, var(--ink-3));
+    border-radius:2px;
+    opacity:0.85;
+  }
+  .post-head{
+    display:flex; align-items:center; gap:12px;
+    margin-bottom:14px;
+  }
+  .avatar{
+    width:34px; height:34px; border-radius:50%;
+    background:var(--av, var(--ink-3)); color:#fff;
+    font-family:var(--font-serif);
+    font-weight:700; font-size:15px;
+    display:grid; place-items:center;
+    flex-shrink:0;
+    letter-spacing:0;
+  }
+  .post-head .who{ display:flex; flex-direction:column; gap:1px; min-width:0 }
+  .post-head .handle{
+    font-size:14px; font-weight:700; color:var(--ink);
+    text-decoration:none;
+  }
+  .post-head .handle:hover{ color:var(--accent); text-decoration:none }
+  .post-head .handle.unknown{ color:var(--ink-3); font-weight:500 }
+  .post-head .handle.estimated{ color:var(--ink-3); font-weight:500 }
+  .post-head .handle.estimated::after{
+    content:"推定"; font-family:var(--font-mono);
+    font-size:9.5px; letter-spacing:0.1em;
+    background:var(--paper-2); color:var(--ink-3);
+    padding:1px 6px; border-radius:3px;
+    margin-left:8px; vertical-align:middle;
+  }
+  .post-head time{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-3);
+    font-feature-settings:"tnum" 1;
+    letter-spacing:0.04em;
+  }
+  .post-head .src{
+    margin-left:auto;
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-3);
+    padding:5px 10px;
+    border:1px solid var(--rule);
+    border-radius:999px;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:color .15s, border-color .15s, background .15s;
+  }
+  .post-head .src:hover{
+    color:var(--ink); border-color:var(--rule-strong);
+    background:var(--paper-2);
+    text-decoration:none;
+  }
+  .post-head .src svg{ width:11px; height:11px }
+
+  .post-body{
+    font-size:15.5px;
+    line-height:1.85;
+    color:var(--ink);
+    white-space:pre-wrap;
+    word-wrap:break-word;
+  }
+  html[data-density="compact"] .post-body{ font-size:14.5px; line-height:1.7 }
+
+  .post-body .quoted{
+    display:block;
+    margin-top:14px;
+    padding:10px 14px;
+    border-left:2px solid var(--rule-strong);
+    background:var(--paper-2);
+    color:var(--ink-2);
+    font-size:13.5px;
+    line-height:1.75;
+    border-radius:0 3px 3px 0;
+  }
+  .post-body .quoted .from{
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:0.14em;
+    color:var(--ink-3); text-transform:uppercase;
+    display:block; margin-bottom:4px;
+  }
+  .post-body ul{
+    margin:8px 0 0; padding-left:1.1em;
+  }
+  .post-body ul li{ margin:2px 0 }
+  .post-body a{ word-break:break-all }
+
+  /* hide filtered out */
+  .cat.hidden{ display:none }
+
+  /* ── footer notes ────────────────────── */
+  .notes{
+    margin-top:96px;
+    padding-top:36px;
+    border-top:1px solid var(--rule-strong);
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:36px;
+  }
+  .notes h2{
+    font-family:var(--font-serif);
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+  }
+  .notes h2 .ko{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .notes ul{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .notes li{
+    color:var(--ink-2);
+    font-size:13.5px;
+    line-height:1.75;
+    padding-left:22px;
+    position:relative;
+  }
+  .notes li::before{
+    content:"※"; position:absolute; left:0; top:0;
+    color:var(--ink-3); font-family:var(--font-serif);
+  }
+
+  /* ── colophon ────────────────────────── */
+  .colophon{
+    margin-top:72px;
+    padding-top:24px;
+    border-top:1px solid var(--rule);
+    display:flex; justify-content:space-between; align-items:baseline;
+    color:var(--ink-3); font-size:12px;
+    font-family:var(--font-mono);
+    letter-spacing:0.06em;
+  }
+
+  /* ── responsive ──────────────────────── */
+  @media (max-width: 900px){
+    .page{ padding:32px 18px 80px }
+    h1.title{ font-size:42px }
+    .masthead{ grid-template-columns:1fr; gap:24px; align-items:start }
+    .profile{ grid-template-columns:1fr; gap:14px }
+    .cat-header{ grid-template-columns:1fr; gap:8px }
+    .cat-marker{ position:static; flex-direction:row; align-items:baseline; gap:14px }
+    .posts{ grid-template-columns:1fr; gap:0 }
+    .notes{ grid-template-columns:1fr; gap:14px }
+    .filter-bar{ margin:0 -18px 24px; padding:12px 18px }
+    .cat-count{ font-size:28px }
+    .cat-title-block h3{ font-size:24px }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── top bar ─────────────────────────── -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="mark">X</span>
+      <span>Pickup Digest</span>
+    </div>
+    <nav>
+      <a href="#feed">記事</a>
+      <a href="#profile">プロファイル</a>
+      <a href="#notes">注意</a>
+      <div class="theme-switch" role="radiogroup" aria-label="テーマ">
+        <button data-theme="paper" aria-pressed="true">Paper</button>
+        <button data-theme="mono" aria-pressed="false">Mono</button>
+        <button data-theme="dark" aria-pressed="false">Dark</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- ─── masthead ──────────────────────── -->
+  <section class="masthead">
+    <div>
+      <p class="eyebrow">AI / LLM Daily Pickup</p>
+      <h1 class="title">いま読むべき<br>X の AI 関連投稿。<em>2026.05.21 – 05.23</em></h1>
+      <p class="lede">過去のブックマーク（3/25–5/18）から推定したあなたの興味プロファイルに基づき、xAI <code>x_search</code> 経由で 5/21–5/23（JST）の範囲から収集した 25 件を、カテゴリ別に整理しました。</p>
+    </div>
+    <aside class="meta-card" aria-label="このダイジェストの概要">
+      <dl>
+        <dt>Posts</dt>     <dd><b>25</b>件</dd>
+        <dt>Categories</dt><dd><b>6</b>領域</dd>
+        <dt>Authors</dt>   <dd><b>16</b>アカウント</dd>
+        <dt>Source</dt>    <dd>xAI x_search</dd>
+        <dt>Window</dt>    <dd>5/21 12:00 – 5/23 09:00 JST</dd>
+      </dl>
+    </aside>
+  </section>
+
+  <!-- ─── interest profile ─────────────── -->
+  <section class="profile" id="profile">
+    <h2><span class="ko">Interest Profile</span>推定された<br>興味プロファイル</h2>
+    <ul class="tags">
+      <li><b>Claude / Anthropic エコシステム</b><small>Code, Codex, MCP, Skills, Sub-agents</small></li>
+      <li><b>LLM モデルと評価</b><small>Qwen, Gemma, Llama.cpp, 量子化, ベンチマーク</small></li>
+      <li><b>AI エージェント / 自動化</b><small>hermes-agent, Routines, /goal</small></li>
+      <li><b>個人開発・SaaS・API コスト最適化</b><small>さくら AI Engine, ローカル LLM, AITuberKit</small></li>
+      <li><b>OpenAI 最新動向</b><small>GPT-5.5, Codex の Computer Use / Goal mode</small></li>
+      <li><b>セキュリティ・インフラ・ハードウェア</b><small>gigazine / pc_watch 系の速報</small></li>
+    </ul>
+  </section>
+
+  <!-- ─── filter bar ───────────────────── -->
+  <nav class="filter-bar" id="filters" aria-label="カテゴリフィルタ">
+    <span class="label">Filter</span>
+    <button class="chip" data-filter="all" aria-pressed="true"><span class="dot" style="--c:#14110B"></span>すべて<span class="n">25</span></button>
+    <button class="chip" data-filter="claude" aria-pressed="false"><span class="dot" style="--c:#C8552B"></span>Claude / Anthropic<span class="n">5</span></button>
+    <button class="chip" data-filter="openai" aria-pressed="false"><span class="dot" style="--c:#2B8C75"></span>OpenAI / Codex<span class="n">2</span></button>
+    <button class="chip" data-filter="models" aria-pressed="false"><span class="dot" style="--c:#5468B0"></span>LLM モデル<span class="n">3</span></button>
+    <button class="chip" data-filter="agents" aria-pressed="false"><span class="dot" style="--c:#834BAB"></span>エージェント / MCP<span class="n">5</span></button>
+    <button class="chip" data-filter="practice" aria-pressed="false"><span class="dot" style="--c:#A3793C"></span>個人開発 / 実務<span class="n">4</span></button>
+    <button class="chip" data-filter="security" aria-pressed="false"><span class="dot" style="--c:#6E6552"></span>セキュリティ<span class="n">6</span></button>
+  </nav>
+
+  <!-- ─── feed ─────────────────────────── -->
+  <main class="feed" id="feed">
+
+    <!-- Claude -->
+    <section class="cat" data-cat="claude" id="cat-claude" style="--c:#C8552B">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>01 · Claude</span>
+          <span class="cat-count">5<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>Claude Code / Anthropic エコシステム</h3>
+          <p class="cat-intro">Claude Code 関連の最新動向。v2.1.147 / 148 で <code>/simplify</code> が <code>/code-review</code> に改名、<code>/usage</code> でトークン内訳可視化、MCP 連携が中心トピック。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">?</div>
+              <div class="who">
+                <span class="handle unknown">著者不明</span>
+                <time>05/23 00:13 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057842235182637425" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Claude Desktop + Claude Code MCP は古のネタですね🤣
+懐かしい</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">o</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/oikon48">@oikon48</a>
+                <time>05/22 23:53 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057837299547947168" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Claude Code が 1 年前の Code with Claude で一躍有名になった日が、昨年の 5 月 22 日です！
+
+昨年の Claude Code の記事を改めて読んでみると、まだ一年なのかと思います。
+
+<a href="https://oikon48.dev/ja/blog/claude-code-june-2025-viral/">oikon48.dev/ja/blog/claude-code-june-2025-viral</a></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">o</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/oikon48">@oikon48</a>
+                <time>05/22 16:49 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057730469299699795" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body"><code>"claude code install"</code> で検索かけると、Claude for Desktop と Codex App の検索が並んで出てくるの、バチバチでいいね。</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">o</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/oikon48">@oikon48</a>
+                <time>05/22 10:39 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057637329968504833" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body"><code>/simplify</code> の記述が今日もあるのは、2.1.146 の変更の一部が 2.1.147 に吸収されたせいですね
+
+<a href="https://github.com/anthropics/claude-code/commit/15b5d57170e0b10a50ecc2c2866efadac2a46d22">github.com/anthropics/claude-code/commit/15b5d57</a></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">b</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/bcherny">@bcherny</a>
+                <time>05/22 00:01 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057476878110261587" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">In the next version of Claude Code: run <code>/usage</code> to see a breakdown of which <strong>Skills, Agents, MCPs, and Plugins</strong> are using your tokens
+
+CLI today, coming to Desktop next</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- OpenAI -->
+    <section class="cat" data-cat="openai" id="cat-openai" style="--c:#2B8C75">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>02 · OpenAI</span>
+          <span class="cat-count">2<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>OpenAI / Codex / GPT-5.5</h3>
+          <p class="cat-intro">GPT-5.5 を 2 週間タスク単位で動かして Linux iGPU ドライバ修正に成功した報告、Codex の <code>/goal</code> 正式開放・チームプラグイン共有など。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">n</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/nukonuko">@nukonuko</a>
+                <time>05/22 03:56 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057535981730021880" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">他のアップデートとしては
+<ul>
+<li><code>/goal</code> が実験期間を終えて、Codex App や IDE、CLI などすべての Codex にて使えるように</li>
+<li>チーム間プラグイン共有機能が追加、ビジネスあるいはエンタープライズプランにて（後者は申請必須）</li>
+<li>ビジネスあるいはエンタープライズプランの Analytics 機能を改善</li>
+</ul></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">i</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/izutorishima">@izutorishima</a>
+                <time>05/21 12:13 JST</time>
+              </div>
+              <a class="src" href="https://x.com/izutorishima/status/2057298693037154393" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">最近 $200 にも関わらず減りが早いかな？と思うことはある
+でも GPT-5.5 を 2 週間タスク単位で動かして修正を試行錯誤させてた（Linux 版 Intel iGPU ドライバが特定世代の特定機能で確率的にフリーズする問題、今日やっと完全に修正できた！）+ 別で毎日動かしてるけど、未だ制限引っかかったことない</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Models -->
+    <section class="cat" data-cat="models" id="cat-models" style="--c:#5468B0">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>03 · Models</span>
+          <span class="cat-count">3<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>LLM モデル・評価・運用</h3>
+          <p class="cat-intro">業務領域別のモデル得手不得手（科学 GPT・教育 Gemini・商業 Qwen・運輸 Claude）、DeepSeek V4 値下げの永続化、マルチエージェント運用知見。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">u</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/umiyuki_ai">@umiyuki_ai</a>
+                <time>05/23 02:35 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057877919238857031" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">なんか前バージョンから値上がったし大して性能も良くないのでスルーされてた Deepseek V4 の API がしょうがねえから大幅値引きセールやってたのが <strong>もうなんかセール価格で永続化した</strong> という。最初からこうだったらもっと注目されてたかも</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">a</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ai_database">@ai_database</a>
+                <time>05/22 17:02 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057733894015963208" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">関連記事
+
+会話メモやマニュアルをワークフロー化する LLM マルチエージェントシステムの仕組み
+<a href="https://ai-data-base.com/archives/87661">ai-data-base.com/archives/87661</a></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">a</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ai_database">@ai_database</a>
+                <time>05/21 15:10 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057343163094970503" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">科学は <strong>GPT</strong>、教育は <strong>Gemini</strong>、商業は <strong>Qwen</strong>、運輸は <strong>Claude</strong> が得意。
+このように、業務領域ごとに強いモデルは違います。
+そのため世間で言われている最強モデルと、自分にとっての最強モデルは異なります。
+<a href="https://ai-data-base.com/archives/108473">ai-data-base.com/archives/108473</a></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Agents -->
+    <section class="cat" data-cat="agents" id="cat-agents" style="--c:#834BAB">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>04 · Agents</span>
+          <span class="cat-count">5<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>AI エージェント / MCP / 自動化</h3>
+          <p class="cat-intro">MCP（Model Context Protocol）の本質と実装パターン、Hermes Agent の Goals / Swarm Mode、Claude Code → Slack 連携の最短ルートなど。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">J</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/JulianGoldieSEO">@JulianGoldieSEO</a>
+                <time>05/23 08:53 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057973256280522936" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body"><strong>Hermes: This Free AI SEO Super Agent is Insane</strong>
+
+Hermes Agent just got 2 free updates that make it the most powerful AI SEO tool. ⚡
+
+→ <strong>Goals (<code>/goal</code>):</strong> Set one big SEO task. AI judge keeps it running until done.
+→ <strong>Swarm Mode:</strong> 12 agents in parallel on one goal. Free. 🐝
+
+What it autonomously does:
+<ul>
+<li>90-day content calendar + keyword clusters</li>
+<li>Competitor gap analysis</li>
+<li>Site architecture + internal linking</li>
+<li>Link-building strategy (Reddit, Discord, PR)</li>
+<li>Writes + deploys to Netlify</li>
+<li>Daily scheduled SEO tasks</li>
+</ul>
+Goal-based AI SEO that actually finishes the job. 🎯</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">S</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/SlyyGuy_">@SlyyGuy_</a>
+                <time>05/23 08:37 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057969190951096383" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Not really. <strong>Hermes is the agent. Mneme is infrastructure</strong> the agent could use.
+
+Hermes already supports MCP. Mneme already exposes an MCP database server. So Mneme could give Hermes a persistent external database without modifying Hermes core. Is my understanding.</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">P</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/Piste_AI_BOSS">@Piste_AI_BOSS</a>
+                <time>05/23 07:56 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057958706122306011" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Claude Code から Slack に通知を送る。
+これ、MCP を使えば <strong>10 分で設定できます</strong>。
+
+MCP とは「Model Context Protocol」の略。
+Claude Code と外部ツールをつなぐ公式の仕組みです。
+
+連携できるツール（一部）：
+<ul>
+<li>Slack → メッセージ送信、チャンネル管理</li>
+<li>Google Drive → ファイル読み書き</li>
+<li>Notion → データベース操作</li>
+<li>GitHub → リポジトリ管理</li>
+</ul>
+設定方法はたった 2 ステップ：
+① MCP 設定ファイルにツールの接続情報を書く
+② Claude Code を再起動する
+
+これだけ。
+
+「毎朝 9 時に Slack に売上レポートを送って」と指示すれば、自動で実行される。
+コード不要。全部日本語。</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">c</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/codingandcatss">@codingandcatss</a>
+                <time>05/22 23:41 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057834181158178963" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body"><strong>What is a MCP server?</strong>
+
+An MCP server is an implementation of the Model Context Protocol, an open standard (originally introduced by Anthropic in late 2024) that lets AI assistants like Claude connect to external tools, data sources, and services in a consistent way.</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">y</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/yachty66">@yachty66</a>
+                <time>05/21 19:52 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057414317381648671" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Build a skill for my Hermes Agent that sends me a daily recap of my posts along with stats and a summary of how to improve them. I am currently using <strong>Claude Opus 4.6</strong> for the summary, X pay-per-use API and Hermes Agent setup via Telegram</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Practice -->
+    <section class="cat" data-cat="practice" id="cat-practice" style="--c:#A3793C">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>05 · Practice</span>
+          <span class="cat-count">4<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>個人開発 / API コスト / プロンプト実務</h3>
+          <p class="cat-intro">Reasoning モデル普及で API トークン消費が爆増しコスト最適化が課題。否定形プロンプトが効くようになった LLM の実務 Tips、AI 関連の毎日ニュース要約。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">?</div>
+              <div class="who">
+                <span class="handle unknown">著者不明</span>
+                <time>05/23 08:48 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057971999084040582" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">スライド資料を作るとき、
+GPT には『装飾的な胡散臭い文章表現を使うな。ただただフラットに説明しろ。恣意的に強いメッセージを使うときはこちらが指示をするから、勝手にメッセージ性の強い表現とか示唆を述べるな』とするし、
+Claude には『この原稿は外部のプロに高額なフィーを払って作らせたものだから、お前ごときがスライド化にあたって内容を勝手に改変するな』としてる。
+
+昔と違って、今の LLM は <strong>否定形の指示がちゃんと効くから楽</strong>。</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">s</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/super_bonochin">@super_bonochin</a>
+                <time>05/22 21:55 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057807647311868266" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">トークン単価は下がっていく筈だったんだけど、Reasoning モデルが出てきた時点で推論トークンをアホほど消費するのにそれをゴリゴリに回すエージェントが一気に普及したことでそもそものトークン消費量が爆増して <strong>リソース逼迫しまくって単価も下がりにくくなってきた</strong>、その間もエージェントは普及し続けるからコストが馬鹿にならなくなってきた、みたいな感じ？</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">n</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/nemumusitocha">@nemumusitocha</a>
+                <time>05/22 05:31 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057559822531469708" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">2026 年 05 月 22 日
+<strong>毎日 AI しとちゃニュースなのだ！！</strong>
+
+今日の朝版は、AI を仕事に置いた後の「運用しやすさ」が動いたニュースを 6 件まとめました。
+<ul>
+<li>OpenAI Developers: Codex Analytics の内訳と Analytics API 更新</li>
+<li>xAI: Grok Build モデルが opencode で利用可能に</li>
+<li>Runway: Aleph 2.0 と Edit Studio で単一フレーム編集を動画全体へ反映</li>
+<li>ElevenLabs: ElevenReader を本格展開、20 万以上の作品と AI 音声</li>
+<li>LangChain: Deep Agents に Interpreter を追加</li>
+<li>NVIDIA: Verified Agent Skills でスキルカード、スキャン、署名</li>
+</ul>
+便利さの前に、誰が何を動かすかを見る回です。</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">m</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/masahirochaen">@masahirochaen</a>
+                <time>05/21 15:18 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057345184229437466" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Google 本社のエンジニアの方に直接話を伺ったところ、社内には <strong>まだ外部公開されていない上位モデルが存在していそうな雰囲気</strong> がありました。（もちろん、直接的な明言は避けられていましたが、これはフロンティアモデル開発企業ではある程度よくある話だとも感じます。）
+
+また、Google I/O に合わせて、各チームがかなり無理をしてプロダクトを間に合わせにいっている印象もありました。（その影響もあってか、I/O 当日のオフィスはかなり閑散としており、Day off を取っている方も多かったようです。）
+
+総論として、今回の I/O で発表された内容は、まだすべてのパーツが完全にカチッと噛み合っているわけではないかもしれませんが、これまで分散していた Google のプロダクト群が、徐々に AI を軸に統一されて、パワーアップしようとしている動きは強く感じます。</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Security -->
+    <section class="cat" data-cat="security" id="cat-security" style="--c:#6E6552">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>06 · Security</span>
+          <span class="cat-count">6<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>セキュリティ・インフラ・ハードウェア</h3>
+          <p class="cat-intro">npm の段階的リリース導入、GitHub 内部情報流出 + VS Code 拡張経由で 3,800 リポジトリ侵害、BitLocker バイパス、Google API キーが削除後 23 分有効など。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">G</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/gigazine">@gigazine</a>
+                <time>05/22 23:30 JST</time>
+              </div>
+              <a class="src" href="https://x.com/gigazine/status/2057831357607276831" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">ASML と TSMC は中国の台湾侵攻に備えて半導体製造装置に「<strong>リモートで無効化する機能</strong>」を搭載しているとの指摘 (2024)</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">G</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/gigazine">@gigazine</a>
+                <time>05/22 20:00 JST</time>
+              </div>
+              <a class="src" href="https://x.com/gigazine/status/2057778583351828989" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">漏洩した Google API キーは <strong>削除後も約 23 分間使える</strong> 可能性があると研究者が確認
+<a href="https://gigazine.net/news/20260522-google-api-key-remain-live/">gigazine.net/news/20260522-google-api-key-remain-live</a></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">G</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/gigazine">@gigazine</a>
+                <time>05/22 11:22 JST</time>
+              </div>
+              <a class="src" href="https://x.com/gigazine/status/2057648221246156993" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">度重なるサプライチェーン攻撃を受け <strong>npm が「段階的リリース」を導入</strong>、流出したトークンだけではパッケージを公開できない仕組みを追加
+
+<a href="https://gigazine.net/news/20260522-npm-staged-publishing/">gigazine.net/news/20260522-npm-staged-publishing</a></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">P</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/pc_watch">@pc_watch</a>
+                <time>05/22 11:16 JST</time>
+              </div>
+              <a class="src" href="https://x.com/pc_watch/status/2057646650970296445" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">BitLocker すり抜けに緩和策。Microsoft は非難するも発見者は「<strong>名誉毀損</strong>」訴え
+<a href="https://pc.watch.impress.co.jp/docs/news/2110824.html">pc.watch.impress.co.jp/docs/news/2110824.html</a></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">P</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/pc_watch">@pc_watch</a>
+                <time>05/21 23:00 JST</time>
+              </div>
+              <a class="src" href="https://x.com/pc_watch/status/2057461435089965467" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">【今日の人気記事】メモリ <strong>192GB</strong> の「Ryzen AI Max PRO 400」。<strong>3 千億パラメータの LLM</strong> も実行可能に
+<a href="https://pc.watch.impress.co.jp/docs/news/2110347.html">pc.watch.impress.co.jp/docs/news/2110347.html</a></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">G</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/gigazine">@gigazine</a>
+                <time>05/21 14:10 JST</time>
+              </div>
+              <a class="src" href="https://x.com/gigazine/status/2057328112942068102" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">GitHub の内部情報が流出、Visual Studio Code の拡張機能経由で <strong>約 3,800 のリポジトリ</strong> に不正アクセスされる
+<a href="https://gigazine.net/news/20260521-github-unauthorized-access/">gigazine.net/news/20260521-github-unauthorized-access</a></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── notes ────────────────────────── -->
+  <footer class="notes" id="notes">
+    <h2><span class="ko">Editor's Notes</span>収集・編集上の<br>注意</h2>
+    <ul>
+      <li>出典の本文は <code>xsearch --url</code> で取得した「Grok の引用」です。X の生 API ではないため、まれにパラフレーズや取り違えがあります。本文に違和感があれば原 URL を直接開いて確認してください。</li>
+      <li><code>/i/status/</code> のリンク形式では Grok が著者ハンドルを <code>@i</code> と返すため、本文中の言及や返信先・引用元から実際のハンドルを再構成しています。識別できなかったポストは「著者不明」と表示しています。</li>
+    </ul>
+  </footer>
+
+  <div class="colophon">
+    <span>X PICKUP DIGEST · No. 2026-05-21/23</span>
+    <span>compiled via xAI x_search</span>
+  </div>
+
+</div>
+
+<!-- Theme switch -->
+<script>
+(function(){
+  const KEY = 'xpickup-theme';
+  const html = document.documentElement;
+  const buttons = document.querySelectorAll('.theme-switch button');
+
+  function setTheme(name){
+    html.setAttribute('data-theme', name);
+    try { localStorage.setItem(KEY, name); } catch(_){}
+    buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.theme === name)));
+  }
+
+  // restore
+  let initial = 'paper';
+  try { initial = localStorage.getItem(KEY) || 'paper'; } catch(_){}
+  setTheme(initial);
+
+  buttons.forEach(b => b.addEventListener('click', () => setTheme(b.dataset.theme)));
+})();
+</script>
+
+<!-- Filtering + scrollspy -->
+<script>
+(function(){
+  const chips = document.querySelectorAll('.chip');
+  const cats  = document.querySelectorAll('.cat');
+
+  function setFilter(f){
+    chips.forEach(c=>c.setAttribute('aria-pressed', String(c.dataset.filter === f)));
+    cats.forEach(s=>{
+      const show = (f === 'all') || (s.dataset.cat === f);
+      s.classList.toggle('hidden', !show);
+    });
+    if (f !== 'all'){
+      const target = document.getElementById('cat-' + f);
+      if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }
+
+  chips.forEach(c=>{
+    c.addEventListener('click', ()=>setFilter(c.dataset.filter));
+  });
+
+})();
+</script>
+
+</body>
+</html>

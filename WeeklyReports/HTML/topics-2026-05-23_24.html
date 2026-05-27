@@ -1,0 +1,1224 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>X ピックアップ｜2026.05.23 – 05.24</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#F2EDE0;
+    --paper-2:#EAE3D2;
+    --card:#FBF8EF;
+    --ink:#14110B;
+    --ink-2:#3D372C;
+    --ink-3:#6E6552;
+    --ink-4:#9E9582;
+    --rule:rgba(20,17,11,0.10);
+    --rule-strong:rgba(20,17,11,0.22);
+    --accent:#B43820;
+    --accent-soft:rgba(180,56,32,0.10);
+
+    --font-serif:'Shippori Mincho B1', 'Hiragino Mincho ProN','Yu Mincho',serif;
+    --font-sans:'Zen Kaku Gothic New','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;
+    --font-mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+    --gap:28px;
+    --post-pad:22px 26px;
+  }
+
+  /* themes */
+  html[data-theme="mono"]{
+    --paper:#F4F4F2;
+    --paper-2:#EBEBE7;
+    --card:#FFFFFF;
+    --ink:#0C0C0C;
+    --ink-2:#2D2D2D;
+    --ink-3:#5C5C5C;
+    --ink-4:#9A9A9A;
+    --rule:rgba(0,0,0,0.10);
+    --rule-strong:rgba(0,0,0,0.22);
+    --accent:#0C0C0C;
+    --accent-soft:rgba(0,0,0,0.06);
+  }
+  html[data-theme="dark"]{
+    --paper:#15140F;
+    --paper-2:#1D1B16;
+    --card:#1F1D17;
+    --ink:#F1ECDC;
+    --ink-2:#D7D0BD;
+    --ink-3:#A39A82;
+    --ink-4:#736B57;
+    --rule:rgba(241,236,220,0.10);
+    --rule-strong:rgba(241,236,220,0.22);
+    --accent:#E37A5F;
+    --accent-soft:rgba(227,122,95,0.14);
+  }
+
+  html[data-density="compact"]{
+    --gap:18px;
+    --post-pad:16px 20px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-sans);
+    font-feature-settings:"palt" 1;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.7;
+    font-size:15.5px;
+    letter-spacing:0.01em;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline;text-underline-offset:3px}
+  code{font-family:var(--font-mono);font-size:0.88em;background:var(--paper-2);padding:0.08em 0.4em;border-radius:4px;color:var(--ink-2)}
+
+  /* ── top bar ─────────────────────────── */
+  .topbar{
+    position:sticky; top:0; z-index:30;
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-bottom:1px solid var(--rule);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto;
+    padding:10px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:24px;
+    font-size:12.5px; color:var(--ink-3);
+    letter-spacing:0.08em;
+  }
+  .topbar .brand{
+    display:flex; align-items:center; gap:10px;
+    color:var(--ink); font-weight:700;
+  }
+  .topbar .brand .mark{
+    width:22px; height:22px; border-radius:6px;
+    background:var(--ink); color:var(--paper);
+    display:grid; place-items:center;
+    font-family:var(--font-serif); font-weight:700;
+    font-size:13px; line-height:1;
+  }
+  .topbar nav{display:flex; gap:18px; align-items:center}
+  .topbar nav a{color:var(--ink-3)}
+  .topbar nav a:hover{color:var(--ink); text-decoration:none}
+  .theme-switch{
+    display:inline-flex; align-items:center;
+    border:1px solid var(--rule); border-radius:999px;
+    padding:2px; gap:0;
+    background:var(--paper-2);
+  }
+  .theme-switch button{
+    appearance:none; border:none; background:transparent;
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:0.12em;
+    color:var(--ink-3);
+    padding:5px 10px;
+    border-radius:999px;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:background .15s, color .15s;
+  }
+  .theme-switch button:hover{ color:var(--ink) }
+  .theme-switch button[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+
+  /* ── page shell ──────────────────────── */
+  .page{
+    max-width:1180px; margin:0 auto;
+    padding:48px 28px 120px;
+  }
+
+  /* ── masthead ────────────────────────── */
+  .masthead{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    align-items:end;
+    gap:40px;
+    padding-bottom:36px;
+    border-bottom:1px solid var(--rule-strong);
+    margin-bottom:36px;
+  }
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:11.5px; letter-spacing:0.22em;
+    color:var(--accent);
+    text-transform:uppercase;
+    margin:0 0 18px;
+  }
+  .eyebrow::before{
+    content:""; display:inline-block; width:22px; height:1px;
+    background:var(--accent); vertical-align:middle;
+    margin-right:10px; transform:translateY(-2px);
+  }
+  h1.title{
+    font-family:var(--font-serif);
+    font-weight:700;
+    font-size:64px;
+    line-height:1.08;
+    letter-spacing:0.005em;
+    margin:0 0 18px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  h1.title em{
+    font-style:normal;
+    color:var(--ink-3);
+    font-weight:500;
+  }
+  .lede{
+    max-width:62ch;
+    color:var(--ink-2);
+    font-size:16.5px;
+    line-height:1.75;
+    margin:0;
+  }
+  .masthead .meta-card{
+    border:1px solid var(--rule-strong);
+    border-radius:2px;
+    padding:18px 22px;
+    min-width:240px;
+    background:var(--paper-2);
+  }
+  .masthead .meta-card dl{
+    margin:0; display:grid;
+    grid-template-columns: auto 1fr;
+    gap:4px 16px;
+    font-size:13px;
+  }
+  .masthead .meta-card dt{
+    color:var(--ink-3);
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    align-self:center;
+  }
+  .masthead .meta-card dd{
+    margin:0;
+    color:var(--ink);
+    font-weight:500;
+    font-feature-settings:"tnum" 1;
+  }
+  .masthead .meta-card dd b{
+    font-family:var(--font-serif);
+    font-weight:700;
+    font-size:22px;
+    margin-right:4px;
+  }
+
+  /* ── profile strip ───────────────────── */
+  .profile{
+    margin:0 0 44px;
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    align-items:start;
+  }
+  .profile h2{
+    font-family:var(--font-serif);
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+    line-height:1.4;
+  }
+  .profile h2 .ko{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .profile ul.tags{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-wrap:wrap; gap:8px;
+  }
+  .profile ul.tags li{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-left:3px solid var(--ink-2);
+    padding:8px 14px 8px 12px;
+    font-size:13.5px;
+    line-height:1.5;
+    color:var(--ink-2);
+    border-radius:2px;
+  }
+  .profile ul.tags li b{
+    color:var(--ink); font-weight:700;
+  }
+  .profile ul.tags li small{
+    color:var(--ink-3); font-size:12px; margin-left:6px;
+  }
+  html[data-show-profile="false"] .profile{display:none}
+
+  /* ── filter bar ──────────────────────── */
+  .filter-bar{
+    position:sticky;
+    top:43px; z-index:25;
+    margin:0 -28px 36px;
+    padding:14px 28px;
+    background:color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    display:flex; gap:6px; align-items:center;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .filter-bar::-webkit-scrollbar{display:none}
+  .filter-bar .label{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    text-transform:uppercase;
+    margin-right:8px;
+    white-space:nowrap;
+  }
+  .chip{
+    appearance:none; border:none; background:transparent;
+    font-family:var(--font-sans);
+    font-size:13.5px;
+    color:var(--ink-2);
+    padding:7px 13px 7px 11px;
+    border-radius:999px;
+    display:inline-flex; align-items:center; gap:8px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background .15s, color .15s;
+    line-height:1.2;
+  }
+  .chip:hover{ background:var(--paper-2) }
+  .chip .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--c, var(--ink-3));
+    flex-shrink:0;
+  }
+  .chip .n{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--ink-3);
+    font-feature-settings:"tnum" 1;
+  }
+  .chip[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .chip[aria-pressed="true"] .n{ color:color-mix(in srgb, var(--paper) 70%, transparent) }
+  .chip[aria-pressed="true"] .dot{ box-shadow:0 0 0 2px var(--ink) }
+
+  /* ── feed / category blocks ──────────── */
+  .feed{ display:flex; flex-direction:column; gap:64px }
+  .cat{
+    scroll-margin-top:120px;
+  }
+  .cat-header{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    margin-bottom:24px;
+    align-items:start;
+  }
+  .cat-marker{
+    display:flex; flex-direction:column; gap:8px;
+    position:sticky; top:120px;
+  }
+  .cat-num{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    text-transform:uppercase;
+  }
+  .cat-num .dot{
+    display:inline-block; width:8px; height:8px; border-radius:50%;
+    background:var(--c); margin-right:8px; vertical-align:middle;
+    transform:translateY(-1px);
+  }
+  .cat-count{
+    font-family:var(--font-serif);
+    font-size:38px;
+    font-weight:700;
+    line-height:1; color:var(--ink);
+    font-feature-settings:"tnum" 1;
+  }
+  .cat-count small{
+    font-family:var(--font-sans);
+    font-size:13px; font-weight:500; color:var(--ink-3);
+    margin-left:6px;
+  }
+  .cat-title-block h3{
+    font-family:var(--font-serif);
+    font-size:30px;
+    font-weight:700;
+    line-height:1.25;
+    margin:0 0 10px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  .cat-intro{
+    color:var(--ink-2);
+    font-size:14.5px;
+    line-height:1.7;
+    margin:0;
+    max-width:60ch;
+  }
+
+  /* ── post card ───────────────────────── */
+  .posts{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+  }
+  .posts > .spacer{} /* gutter visualization */
+  .post-list{
+    display:flex; flex-direction:column; gap:var(--gap);
+  }
+  .post{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:var(--post-pad);
+    position:relative;
+    transition:border-color .15s, transform .15s;
+  }
+  .post:hover{ border-color:var(--rule-strong) }
+  .post::before{
+    content:""; position:absolute; left:0; top:14px; bottom:14px;
+    width:2px; background:var(--c, var(--ink-3));
+    border-radius:2px;
+    opacity:0.85;
+  }
+  .post-head{
+    display:flex; align-items:center; gap:12px;
+    margin-bottom:14px;
+  }
+  .avatar{
+    width:34px; height:34px; border-radius:50%;
+    background:var(--av, var(--ink-3)); color:#fff;
+    font-family:var(--font-serif);
+    font-weight:700; font-size:15px;
+    display:grid; place-items:center;
+    flex-shrink:0;
+    letter-spacing:0;
+  }
+  .post-head .who{ display:flex; flex-direction:column; gap:1px; min-width:0 }
+  .post-head .handle{
+    font-size:14px; font-weight:700; color:var(--ink);
+    text-decoration:none;
+  }
+  .post-head .handle:hover{ color:var(--accent); text-decoration:none }
+  .post-head .handle.estimated{ color:var(--ink-3); font-weight:500 }
+  .post-head .handle.estimated::after{
+    content:"推定"; font-family:var(--font-mono);
+    font-size:9.5px; letter-spacing:0.1em;
+    background:var(--paper-2); color:var(--ink-3);
+    padding:1px 6px; border-radius:3px;
+    margin-left:8px; vertical-align:middle;
+  }
+  .post-head time{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-3);
+    font-feature-settings:"tnum" 1;
+    letter-spacing:0.04em;
+  }
+  .post-head .src{
+    margin-left:auto;
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-3);
+    padding:5px 10px;
+    border:1px solid var(--rule);
+    border-radius:999px;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:color .15s, border-color .15s, background .15s;
+  }
+  .post-head .src:hover{
+    color:var(--ink); border-color:var(--rule-strong);
+    background:var(--paper-2);
+    text-decoration:none;
+  }
+  .post-head .src svg{ width:11px; height:11px }
+
+  .post-body{
+    font-size:15.5px;
+    line-height:1.85;
+    color:var(--ink);
+    white-space:pre-wrap;
+    word-wrap:break-word;
+  }
+  html[data-density="compact"] .post-body{ font-size:14.5px; line-height:1.7 }
+
+  .post-body .quoted{
+    display:block;
+    margin-top:14px;
+    padding:10px 14px;
+    border-left:2px solid var(--rule-strong);
+    background:var(--paper-2);
+    color:var(--ink-2);
+    font-size:13.5px;
+    line-height:1.75;
+    border-radius:0 3px 3px 0;
+  }
+  .post-body .quoted .from{
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:0.14em;
+    color:var(--ink-3); text-transform:uppercase;
+    display:block; margin-bottom:4px;
+  }
+  .post-body ul{
+    margin:8px 0 0; padding-left:1.1em;
+  }
+  .post-body ul li{ margin:2px 0 }
+  .post-body a{ word-break:break-all }
+
+  /* hide filtered out */
+  .cat.hidden{ display:none }
+
+  /* ── footer notes ────────────────────── */
+  .notes{
+    margin-top:96px;
+    padding-top:36px;
+    border-top:1px solid var(--rule-strong);
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:36px;
+  }
+  .notes h2{
+    font-family:var(--font-serif);
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+  }
+  .notes h2 .ko{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .notes ul{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .notes li{
+    color:var(--ink-2);
+    font-size:13.5px;
+    line-height:1.75;
+    padding-left:22px;
+    position:relative;
+  }
+  .notes li::before{
+    content:"※"; position:absolute; left:0; top:0;
+    color:var(--ink-3); font-family:var(--font-serif);
+  }
+
+  /* ── colophon ────────────────────────── */
+  .colophon{
+    margin-top:72px;
+    padding-top:24px;
+    border-top:1px solid var(--rule);
+    display:flex; justify-content:space-between; align-items:baseline;
+    color:var(--ink-3); font-size:12px;
+    font-family:var(--font-mono);
+    letter-spacing:0.06em;
+  }
+
+  /* ── responsive ──────────────────────── */
+  @media (max-width: 900px){
+    .page{ padding:32px 18px 80px }
+    h1.title{ font-size:42px }
+    .masthead{ grid-template-columns:1fr; gap:24px; align-items:start }
+    .profile{ grid-template-columns:1fr; gap:14px }
+    .cat-header{ grid-template-columns:1fr; gap:8px }
+    .cat-marker{ position:static; flex-direction:row; align-items:baseline; gap:14px }
+    .posts{ grid-template-columns:1fr; gap:0 }
+    .notes{ grid-template-columns:1fr; gap:14px }
+    .filter-bar{ margin:0 -18px 24px; padding:12px 18px }
+    .cat-count{ font-size:28px }
+    .cat-title-block h3{ font-size:24px }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── top bar ─────────────────────────── -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="mark">X</span>
+      <span>Pickup Digest</span>
+    </div>
+    <nav>
+      <a href="#feed">記事</a>
+      <a href="#profile">プロファイル</a>
+      <a href="#notes">注意</a>
+      <div class="theme-switch" role="radiogroup" aria-label="テーマ">
+        <button data-theme="paper" aria-pressed="true">Paper</button>
+        <button data-theme="mono" aria-pressed="false">Mono</button>
+        <button data-theme="dark" aria-pressed="false">Dark</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- ─── masthead ──────────────────────── -->
+  <section class="masthead">
+    <div>
+      <p class="eyebrow">AI / LLM Daily Pickup</p>
+      <h1 class="title">いま読むべき<br>X の AI 関連投稿。<em>2026.05.23 – 05.24</em></h1>
+      <p class="lede">過去のブックマーク（3/25–5/20）から推定したあなたの興味プロファイルに基づき、xAI <code>x_search</code> 経由で 5/23–5/24（JST）の範囲から収集した 26 件を、カテゴリ別に整理しました。</p>
+    </div>
+    <aside class="meta-card" aria-label="このダイジェストの概要">
+      <dl>
+        <dt>Posts</dt>     <dd><b>26</b>件</dd>
+        <dt>Categories</dt><dd><b>7</b>領域</dd>
+        <dt>Authors</dt>   <dd><b>9</b>アカウント</dd>
+        <dt>Source</dt>    <dd>xAI x_search</dd>
+        <dt>Window</dt>    <dd>5/23 00:00 – 5/24 09:00 JST</dd>
+      </dl>
+    </aside>
+  </section>
+
+  <!-- ─── interest profile ─────────────── -->
+  <section class="profile" id="profile">
+    <h2><span class="ko">Interest Profile</span>推定された<br>興味プロファイル</h2>
+    <ul class="tags">
+      <li><b>Claude / Anthropic エコシステム</b><small>Code, Auto, Skills, MCP, Sub-agents, Mythos</small></li>
+      <li><b>OpenAI / Codex / GPT-5.5</b><small>速度, /goal モード, Computer Use</small></li>
+      <li><b>ローカル LLM / モデル評価</b><small>Qwen, Gemma, DeepSeek, llama.cpp, DGX Spark</small></li>
+      <li><b>AI / LLM 研究・実用</b><small>論文紹介, マルチエージェント, ヘルスケア</small></li>
+      <li><b>AI エージェント / 自動化</b><small>Hermes, NotebookLM 連携, SOUL.md</small></li>
+      <li><b>Google Gemini / Antigravity</b><small>3.5 Flash, Antigravity 2.0, Spark</small></li>
+      <li><b>セキュリティ・インフラ・HW</b><small>gigazine / pc_watch 系の速報</small></li>
+    </ul>
+  </section>
+
+  <!-- ─── filter bar ───────────────────── -->
+  <nav class="filter-bar" id="filters" aria-label="カテゴリフィルタ">
+    <span class="label">Filter</span>
+    <button class="chip" data-filter="all" aria-pressed="true"><span class="dot" style="--c:#14110B"></span>すべて<span class="n">26</span></button>
+    <button class="chip" data-filter="claude" aria-pressed="false"><span class="dot" style="--c:#C8552B"></span>Claude / Anthropic<span class="n">3</span></button>
+    <button class="chip" data-filter="openai" aria-pressed="false"><span class="dot" style="--c:#2B8C75"></span>OpenAI / Codex<span class="n">1</span></button>
+    <button class="chip" data-filter="local" aria-pressed="false"><span class="dot" style="--c:#5468B0"></span>ローカル LLM<span class="n">6</span></button>
+    <button class="chip" data-filter="research" aria-pressed="false"><span class="dot" style="--c:#A3793C"></span>研究・実用<span class="n">4</span></button>
+    <button class="chip" data-filter="agents" aria-pressed="false"><span class="dot" style="--c:#834BAB"></span>エージェント / Hermes<span class="n">5</span></button>
+    <button class="chip" data-filter="gemini" aria-pressed="false"><span class="dot" style="--c:#3D7DB0"></span>Gemini / Antigravity<span class="n">5</span></button>
+    <button class="chip" data-filter="security" aria-pressed="false"><span class="dot" style="--c:#6E6552"></span>セキュリティ<span class="n">2</span></button>
+  </nav>
+
+  <!-- ─── feed ─────────────────────────── -->
+  <main class="feed" id="feed">
+
+    <!-- Claude -->
+    <section class="cat" data-cat="claude" id="cat-claude" style="--c:#C8552B">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>01 · Claude</span>
+          <span class="cat-count">3<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>Claude Code / Anthropic エコシステム</h3>
+          <p class="cat-intro">Auto モードが Pro プランへ解禁＆ Sonnet 4.6 が Opus 4.7 と併用可能に、Mythos Preview の OSS スキャンで 23,019 件の脆弱性を発見、CLI と Desktop 版の統合議論など。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">o</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/oikon48">@oikon48</a>
+                <time>05/23 15:26 JST</time>
+              </div>
+              <a class="src" href="https://x.com/oikon48/status/2058072055229329847" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Claude CodeのCLIを内部エンジンとしてうまく使って、デスクトップ版を充実できると良いなと思いますね。
+
+現状のClaudeのプロダクトはまとまりのない印象なので。<div class="quoted"><span class="from">引用元 @nuits_jp</span>そういう点が、完全にCodex Appに負けてる気がする。Claude CodeがCLIだったのは、本人たちも口にしてたように、立ち上げ時の事情が大きかったはずだけど、成功しすぎた事で、ブランドを捨てられなくなってるんじゃないのかな？ GitHub もApp出してきてるし、品質の低下も目に余るし、それこそ作り直しても良いんじゃないのかね。</div></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">o</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/oikon48">@oikon48</a>
+                <time>05/23 11:03 JST</time>
+              </div>
+              <a class="src" href="https://x.com/oikon48/status/2058005886849937786" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Claude CodeのAutoモードについて
+
+・Proプランで利用可能に
+・Sonnet 4.6がサポートされるように<div class="quoted"><span class="from">引用元 @ClaudeDevs</span>Two updates to auto mode: · Now available on the Pro plan · Sonnet 4.6 is now supported, alongside Opus 4.7  Shift+tab, and let Claude run.</div></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">o</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/oikon48">@oikon48</a>
+                <time>05/23 11:02 JST</time>
+              </div>
+              <a class="src" href="https://x.com/oikon48/status/2058005677726179412" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Claude Mythos Preview のセキュリティプロジェクト（Project Glasswing）にて、推定で <strong>6,202 件</strong> の High または Critical な重大度の脆弱性を発見、合計 <strong>23,019 件</strong> もの脆弱性を主要な OSS をスキャンして見つけたとのこと
+
+<a href="https://www.anthropic.com/research/glasswing-initial-update">anthropic.com/research/glasswing-initial-update</a></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- OpenAI -->
+    <section class="cat" data-cat="openai" id="cat-openai" style="--c:#2B8C75">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>02 · OpenAI</span>
+          <span class="cat-count">1<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>OpenAI / Codex</h3>
+          <p class="cat-intro">Codex の速度向上で「Claude Code が遅く感じる」ようになった、という温度感の高い証言。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">i</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/izutorishima">@izutorishima</a>
+                <time>05/23 12:13 JST</time>
+              </div>
+              <a class="src" href="https://x.com/izutorishima/status/2058023611605389599" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Codex が遅かった時代を想像できないくらいに爆速で CC の遅さにイライラするようになってしまった　人は一度「上」を知ってしまうと戻れないんだなあ・・・</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Local LLM -->
+    <section class="cat" data-cat="local" id="cat-local" style="--c:#5468B0">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>03 · Local LLM</span>
+          <span class="cat-count">6<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>ローカル LLM / モデル評価</h3>
+          <p class="cat-intro">Qwen3.7-Max が Opus 4.6 をベンチで圧倒（ただし非オープン）、Heretic が Meta から法的通知、DGX Spark の家庭内ローカル LLM 活用、ダンジョンベンチ系の評価ツール、LTX2.3 系の LoRA 動向。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">u</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/umiyuki_ai">@umiyuki_ai</a>
+                <time>05/23 22:37 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2058180428494930136" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">LTX2.3 のスケベ版 Sulphur2 の新バージョンが LoRA としてリリースされてる
+<a href="https://www.reddit.com/r/StableDiffusion/comments/1tkus7j/sulphur_released_as_lora_for_ltx23/">reddit.com/r/StableDiffusion · Sulphur released as LoRA for LTX2.3</a></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">r</div>
+              <div class="who">
+                <span class="handle estimated">@robustonian</span>
+                <time>05/23 22:31 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2058179022727917901" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">URL はこちら（現状音声とかはなく、AI がプレイできることに重点を置いて開発してます）
+<a href="https://llm-dungeon-bench.robustonian.com/">llm-dungeon-bench.robustonian.com</a></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">u</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/umiyuki_ai">@umiyuki_ai</a>
+                <time>05/23 22:24 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2058177298608926803" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Qwen3.7-Max がリリースされて、ベンチスコアで Opus 4.6 を圧倒してるらしいが、オープンじゃないし、どこまでベンチマックスか分からんのでまだ食いつけない<div class="quoted"><span class="from">引用元 @Alibaba_Qwen</span>Qwen3.7-Max 公式アナウンス（coding / productivity / long-horizon autonomy 対応、API・Qwen Studio・blog で公開）</div></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">u</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/umiyuki_ai">@umiyuki_ai</a>
+                <time>05/23 22:18 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2058175827326685581" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">LLM 言いなり催眠ツールでお馴染みの Heretic がメタから法的通知を食らう。「Llama の言いなり催眠バージョンを勝手に作ってアップロードするのは利用規約違反だから消せ！」との事。Heretic は素直に削除。我々としては別に Llama なんかそもそも性能的に微妙だから Heretic バージョンも要らんくて Qwen や Gemma があれば十分なのでまったく困らない</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">g</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/gosrum">@gosrum</a>
+                <time>05/23 16:29 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2058088030590616000" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">生成 AI なんでも展示会に向けて開発した「不思議のダンジョンベンチ」のその後について
+
+展示会が終わった後、公開に向けて引き続き開発を続けていたが、ようやく Web アプリとして遊べる環境が構築ができた
+
+現状 LLM のベンチマークとして使うにはまだ改善が必要だけど、人間がプレイしたり戦術を登録して AI に自動プレイさせることはできそう</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">k</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/karaage0703">@karaage0703</a>
+                <time>05/23 14:13 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2058053701697417223" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">諸事情と言うか、子どもが生成 AI サービス使いたいけど、どこのサービスも年齢制限で使えないらしいので、<strong>DGX Spark のローカル LLM を LINE から使えるようにしました。</strong>
+
+一応ワークスペース側で、簡単な安全フィルタを用意して使っています（xangi では特に制限していないです）</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Research -->
+    <section class="cat" data-cat="research" id="cat-research" style="--c:#A3793C">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>04 · Research</span>
+          <span class="cat-count">4<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>AI / LLM 研究・実用</h3>
+          <p class="cat-intro"><code>@ai_database</code> が紹介する論文系。ウェアラブル × LLM の汎用基盤、AI を「メンタル相談相手」にするときのセラピスト役効果、スマホセンサーデータの LLM 分析など。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">a</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ai_database">@ai_database</a>
+                <time>05/23 18:52 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2058123904208752740" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">関連記事
+
+スマートフォンで取れる日常のセンサーデータを LLM で分析し、生活を自然言語で記録する
+<a href="https://ai-data-base.com/archives/81453">ai-data-base.com/archives/81453</a></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">a</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ai_database">@ai_database</a>
+                <time>05/23 16:00 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2058080535709376562" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Google が <strong>500 万人・1 兆分</strong>ぶんのウェアラブルデータで学習した汎用基盤モデルを開発。
+心血管・代謝・睡眠・メンタルヘルスなど 35 種類の健康指標を精度よく予測できることを示しています。
+
+これを LLM に組み込むことで、臨床医評価で有意に優れた健康アドバイスが出来るようになったそうです。
+
+面白いことに、5 種類の Gemini を「生徒」役として競争・協調させながら 3 万回もの実験を自動で回す“教室”方式で、各健康指標を予測する小型モデルを AI 自身に設計させているとのこと。
+
+さらに、ウェアラブル由来の予測値をエージェントに渡した場合と、実際の血液検査の正解値を渡した場合とで臨床医評価が同等で、ウェアラブルデータの AI 分析が今後“検査”として機能しうる可能性を示しています。</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">a</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ai_database">@ai_database</a>
+                <time>05/23 14:18 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2058054973922165010" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">関連記事
+
+LLM を「人間の心のケア」を行うカウンセリング AI として実行するためのプロンプト手法
+<a href="https://ai-data-base.com/archives/74185">ai-data-base.com/archives/74185</a></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">a</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ai_database">@ai_database</a>
+                <time>05/23 10:06 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057991432879890621" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">ChatGPT などを中心に、AI を「メンタルの相談相手にする」使い方が急速に普及しています。
+しかし、そうした AI はユーザーに寄り添ってくれる一方で、決めつけや怒りをそのまま肯定して感情をかえって燃え上がらせてしまう傾向が懸念されています。
+心理学でいう<strong>共同反すう</strong>（友人同士でネガティブな話を延々と掘り下げて互いに悪化させる現象）と似た構造が起きています。
+
+そこで、研究者らは AI の「役割」でユーザーへの影響が変わるのではないかと考え、「役割を特に与えないデフォルト」「友達役」「セラピスト役」とふるまいを分けて実験しました。
+
+すると、AI が「友達役」でふるまうときはユーザーへの煽りが明確に強く出てしまいがちでした。
+一方で、「セラピスト役」でふるまわせると、共感を保ったまま煽りは減り、しかもユーザーの満足度は高いままであることが示唆されました。
+
+普通に使っていると、一般的なユーザーは AI に煽りを受けていると気づくことは難しいそうです。
+AI に愚痴を聞いてもらうときは、ときには AI のふるまいを明示的に変更するのも一つの知恵かもしれません。</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Agents -->
+    <section class="cat" data-cat="agents" id="cat-agents" style="--c:#834BAB">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>05 · Agents</span>
+          <span class="cat-count">5<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>AI エージェント / Hermes / 自動化</h3>
+          <p class="cat-intro">Hermes Agent の <code>SOUL.md</code> / <code>/personality</code> / <code>MEMORY.md</code> といった「隠れ機能」紹介、NotebookLM を Codex / Claude Code / Hermes から操作して Deep Research トークンを節約する設計パターン。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">t</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/tetumemo">@tetumemo</a>
+                <time>05/24 08:59 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2058337160571523400" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body"><strong>Hermes Agent Is What Everyone Thought AI Agents Would Become</strong>
+<ul>
+<li>Hermes Agent はセッションごとに学習リセットしない設計。</li>
+<li>経験からスキルを学習し、記憶を跨いで保持。</li>
+<li>これにより、時間とともに能力が向上する AI システムを実現。</li>
+<li>インフラストラクチャネイティブでマルチモデル対応。</li>
+<li>自律インフラを誰でも利用可能にし、AI の未来を変える可能性。</li>
+</ul></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">t</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/tetumemo">@tetumemo</a>
+                <time>05/24 08:24 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2058328271801246089" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">はい、NotebookLM かなり便利です。
+それから NotebookLM で <strong>Deep Research</strong> もできてしまいますので、Codex や Claude Code 側の調査トークンを一切消費せず調査可能になりますよ！
+
+詳しくは引用元の記事で解説しています！</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">t</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/tetumemo">@tetumemo</a>
+                <time>05/23 21:04 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2058157025385914374" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body"><strong>📝 15 Hermes Agent features you've never touched</strong>
+<ul>
+<li>Hermes は永続的な記憶や多機能なスキルを持つ AI エージェント。</li>
+<li>セッションの分岐やマルチプラットフォーム対応も可能。</li>
+<li><code>/personality</code> でエージェントの個性設定できる。</li>
+<li><code>MEMORY.md</code> と <code>USER.md</code> で長期記憶を活用できる。</li>
+<li>これらの機能でインタラクションと作業効率が向上。</li>
+</ul></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">t</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/tetumemo">@tetumemo</a>
+                <time>05/23 21:04 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2058157022357692911" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">📝海外を中心に話題の Hermes Agent ですが、隠れコマンド機能を知るだけでも Claude Code や Codex とひと味違う思想がわかります
+
+特に面白いのは OpenClaw のように人格を設定する <code>SOUL.md</code> で口調を固定できる
+さらに、人格を複数設定できて、簡単切り替えも可能だから◯◯の専門家をすぐに召喚可能</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">t</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/tetumemo">@tetumemo</a>
+                <time>05/23 09:01 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2057975176109933001" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">NotebookLM は、NotebookLM にアクセスして使うだけじゃモッタイナイ！
+
+Codex、Claude Code、Hermes Agent などで操作することで <strong>数倍使い勝手が変わります</strong></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Gemini -->
+    <section class="cat" data-cat="gemini" id="cat-gemini" style="--c:#3D7DB0">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>06 · Gemini</span>
+          <span class="cat-count">5<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>Google Gemini / Antigravity</h3>
+          <p class="cat-intro">Antigravity 2.0 アップデート起因の IDE 破壊事件＋ Logan Kilpatrick の謝罪と週次制限リセット、IDE 経由の NotebookLM 操作テク、Gemini Spark 待望論。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#3D7DB0">t</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/tetumemo">@tetumemo</a>
+                <time>05/23 18:46 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2058122268954571205" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">📝 Gemini 包囲網がジワジワと来てますね
+Claude Cowork のような <strong>Gemini Spark</strong> を早く使いたい！
+<ul>
+<li>Gemini はパーソナルでプロアクティブな AI アシスタントに進化。</li>
+<li>新 UI の Neural Expressive は直感的で視覚的な体験を提供。</li>
+<li>Gemini 3.5 Flash は高速処理で多様なタスクをサポート。</li>
+<li>Gemini Omni はテキスト、画像、動画の入力を統合。</li>
+<li>Gemini Spark は 24 時間稼働し、タスク自動化を実現。</li>
+</ul>
+要約ノートはリプ欄へ ↓</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#3D7DB0">t</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/tetumemo">@tetumemo</a>
+                <time>05/23 13:06 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2058036806730625238" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">【Google Antigravity】クレジット消費ゼロで実現する「<strong>1 テーマ → 10 コンテンツ</strong>」自動生成<div class="quoted"><span class="from">引用元 @tetumemo</span>「魔法のメタプロンプトで変わるコンテンツ制作の新常識」のニュースレター告知</div></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#3D7DB0">t</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/tetumemo">@tetumemo</a>
+                <time>05/23 13:06 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2058036804859863363" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Google Antigravity の IDE があれば、NotebookLM を操作して色々できるから便利　↓<div class="quoted"><span class="from">引用元 @tetumemo</span>Google Antigravity から NotebookLM 操作の Skills を呼び出し → ニュースまとめ取得 → ソースとして投げる → インフォグラフィック作成 → Spotify 用音声生成 の自動化手順</div></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#3D7DB0">t</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/tetumemo">@tetumemo</a>
+                <time>05/23 13:06 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2058036801026359360" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Google Antigravity 問題は修正されているっぽいけど、しばらく怖くて無理<div class="quoted"><span class="from">引用元 @OfficialLoganK</span>PSA: the IDE in Antigravity 2.0 is alive and well, we just landed an update to the UI which makes it more clear (see top right). Sorry for the confusion on this (pls keep feedback coming), we also just reset everyone's weekly limits. Enjoy the weekend : )</div></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#3D7DB0">t</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/tetumemo">@tetumemo</a>
+                <time>05/23 13:06 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2058036798774014386" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">📝 Google が粗相をしちゃった Google Antigravity 事件ですが、不具合を修正し、「ごめんなさい」ということで週間制限がリセットされています
+
+でも、私は IDE しか利用しないのでしばらくアプデしません。
+
+デスクトップアプリ系は Codex、Claude Code で今のところ十分
+
+<strong>Windows 民は特に⚠</strong></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Security -->
+    <section class="cat" data-cat="security" id="cat-security" style="--c:#6E6552">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>07 · Security</span>
+          <span class="cat-count">2<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>セキュリティ・インフラ</h3>
+          <p class="cat-intro">GIGAZINE の再掲枠。指紋認証総当たり攻撃 BrutePrint（2023）と、ホテルチェックイン PC のスパイウェア事案（2024）が再アップされている。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">G</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/gigazine">@gigazine</a>
+                <time>05/23 23:45 JST</time>
+              </div>
+              <a class="src" href="https://x.com/gigazine/status/2058197516345114740" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">ホテルのチェックイン用コンピューターでスパイウェアが見つかる、宿泊客の情報がスクリーンショットで撮影されインターネット上に流出 (2024)</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">G</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/gigazine">@gigazine</a>
+                <time>05/23 15:30 JST</time>
+              </div>
+              <a class="src" href="https://x.com/gigazine/status/2058072945960899066" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">スマホの指紋認証を回数無制限かつ機械的に実行できる攻撃手法「<strong>BrutePrint</strong>」が開発される、材料費はわずか 2,000 円で Android には効果抜群も iPhone なら防御可能 (2023)</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── notes ────────────────────────── -->
+  <footer class="notes" id="notes">
+    <h2><span class="ko">Editor's Notes</span>収集・編集上の<br>注意</h2>
+    <ul>
+      <li>出典の本文は <code>xsearch --url</code> で取得した「Grok の引用」です。X の生 API ではないため、まれにパラフレーズや取り違えがあります。本文に違和感があれば原 URL を直接開いて確認してください。</li>
+      <li><code>/i/status/</code> のリンク形式では Grok が著者ハンドルを <code>@i</code> と返すため、本文中の言及や返信先・引用元から実際のハンドルを再構成しています（「推定」マーク付き）。</li>
+      <li>5/24（JST）分は 5/23 23:00 UTC 以降のポスト（JST 5/24 08:00 以降）を対象に含めました。</li>
+    </ul>
+  </footer>
+
+  <div class="colophon">
+    <span>X PICKUP DIGEST · No. 2026-05-23/24</span>
+    <span>compiled via xAI x_search</span>
+  </div>
+
+</div>
+
+<!-- Theme switch -->
+<script>
+(function(){
+  const KEY = 'xpickup-theme';
+  const html = document.documentElement;
+  const buttons = document.querySelectorAll('.theme-switch button');
+
+  function setTheme(name){
+    html.setAttribute('data-theme', name);
+    try { localStorage.setItem(KEY, name); } catch(_){}
+    buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.theme === name)));
+  }
+
+  // restore
+  let initial = 'paper';
+  try { initial = localStorage.getItem(KEY) || 'paper'; } catch(_){}
+  setTheme(initial);
+
+  buttons.forEach(b => b.addEventListener('click', () => setTheme(b.dataset.theme)));
+})();
+</script>
+
+<!-- Filtering + scrollspy -->
+<script>
+(function(){
+  const chips = document.querySelectorAll('.chip');
+  const cats  = document.querySelectorAll('.cat');
+
+  function setFilter(f){
+    chips.forEach(c=>c.setAttribute('aria-pressed', String(c.dataset.filter === f)));
+    cats.forEach(s=>{
+      const show = (f === 'all') || (s.dataset.cat === f);
+      s.classList.toggle('hidden', !show);
+    });
+    if (f !== 'all'){
+      const target = document.getElementById('cat-' + f);
+      if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }
+
+  chips.forEach(c=>{
+    c.addEventListener('click', ()=>setFilter(c.dataset.filter));
+  });
+
+})();
+</script>
+
+</body>
+</html>
