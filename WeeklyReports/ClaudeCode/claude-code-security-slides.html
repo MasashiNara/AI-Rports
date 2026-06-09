@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code を安全に使うための 3 つの約束</title>
+<style>
+  :root{
+    --ink:#0d1b2a;
+    --paper:#f3efe6;
+    --line:#cfc7b6;
+    --accent:#c2410c;      /* burnt amber */
+    --accent2:#1d4d4f;     /* deep teal */
+    --muted:#5b6470;
+    --code-bg:#10202b;
+    --code-ink:#dfe7ec;
+    --code-amber:#f2a65a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",system-ui,sans-serif;
+    background:#1a1714;
+    color:var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    min-height:100vh;
+  }
+
+  /* ---- Deck frame ---- */
+  .stage{
+    width:100%;
+    max-width:1280px;
+  }
+  .slide{
+    position:relative;
+    width:100%;
+    aspect-ratio:16/9;
+    background:var(--paper);
+    overflow:hidden;
+    display:none;
+    box-shadow:0 24px 60px rgba(0,0,0,.45);
+  }
+  .slide.active{display:block;}
+
+  /* hairline grid backdrop */
+  .slide::before{
+    content:"";position:absolute;inset:0;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px);
+    background-size:100% 7.6%;
+    opacity:.18;pointer-events:none;
+  }
+
+  .pad{
+    position:absolute;inset:0;
+    padding:5.2% 6%;
+    display:flex;flex-direction:column;
+  }
+
+  /* ---- Eyebrow / numbering ---- */
+  .eyebrow{
+    display:flex;align-items:baseline;gap:1.2rem;
+    font-size:.95rem;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:1.4rem;
+  }
+  .eyebrow .num{
+    font-family:"Georgia",serif;
+    font-size:1.05rem;font-weight:700;letter-spacing:.05em;
+    color:var(--accent);
+  }
+  .eyebrow .tag{font-size:.78rem;color:var(--muted);}
+
+  h1.title{
+    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+    font-weight:700;
+    line-height:1.18;
+    color:var(--ink);
+    letter-spacing:.01em;
+  }
+  .slide h1.title{font-size:2.5rem;}
+  .lead{
+    font-size:1.18rem;color:var(--accent2);font-weight:600;
+    margin-top:.9rem;line-height:1.55;
+  }
+  .body{margin-top:auto;}
+
+  /* ---- COVER ---- */
+  .cover{background:var(--paper);}
+  .cover .pad{justify-content:center;border-left:8px solid var(--accent);}
+  .cover .kicker{
+    color:var(--accent);letter-spacing:.4em;text-transform:uppercase;
+    font-size:.95rem;margin-bottom:1.6rem;
+  }
+  .cover h1{
+    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+    color:var(--ink);font-size:3.5rem;line-height:1.22;font-weight:700;
+  }
+  .cover h1 .hl{color:var(--accent);}
+  .cover .sub{
+    color:var(--muted);font-size:1.25rem;margin-top:1.8rem;line-height:1.7;
+    max-width:60ch;
+  }
+  .cover .three{
+    display:flex;gap:.7rem;margin-top:2.4rem;flex-wrap:wrap;
+  }
+  .cover .pill{
+    border:1px solid var(--accent2);
+    color:var(--accent2);
+    padding:.5rem 1.2rem;border-radius:2rem;
+    font-size:1rem;letter-spacing:.05em;
+  }
+
+  /* ---- generic content blocks ---- */
+  .quote{
+    border-left:4px solid var(--accent);
+    padding:.4rem 0 .4rem 1.3rem;
+    font-size:1.45rem;line-height:1.5;font-weight:600;color:var(--ink);
+    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+  }
+  p.note{font-size:1.12rem;line-height:1.8;color:var(--muted);max-width:74ch;}
+  p.note + p.note{margin-top:.9rem;}
+  p.src{font-size:.82rem;color:var(--muted);margin-top:1rem;font-family:"SFMono-Regular",Consolas,monospace;opacity:.8;}
+  p.src-tr{position:absolute;bottom:9%;right:6%;margin:0;text-align:right;}
+  .em{color:var(--accent);font-weight:700;}
+  .em2{color:var(--accent2);font-weight:700;}
+
+  /* three-layer cards */
+  .layers{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin-top:.4rem;}
+  .lcard{
+    background:#fff;border:1px solid var(--line);
+    border-top:5px solid var(--accent);
+    padding:1.4rem 1.3rem;display:flex;flex-direction:column;
+  }
+  .lcard:nth-child(2){border-top-color:var(--accent2);}
+  .lcard:nth-child(3){border-top-color:#7a5c00;}
+  .lcard .ln{font-family:Georgia,serif;color:var(--muted);font-size:.95rem;}
+  .lcard h3{font-size:1.3rem;margin:.4rem 0 .7rem;color:var(--ink);}
+  .lcard p{font-size:1rem;line-height:1.65;color:var(--muted);}
+  .lcard .tags{display:flex;flex-direction:column;gap:.4rem;margin-top:.9rem;}
+  .lcard .tg{
+    font-size:.82rem;line-height:1.3;color:var(--accent2);
+    background:#f0ece1;border:1px solid var(--line);
+    padding:.28rem .55rem;border-radius:4px;align-self:flex-start;
+  }
+  .lcard:nth-child(1) .tg{color:var(--accent);}
+  .lcard code{
+    font-family:"SFMono-Regular",Consolas,monospace;font-size:.86rem;
+    background:#f0ece1;color:var(--accent2);padding:.1rem .35rem;border-radius:3px;
+  }
+
+  /* numbered rules list */
+  .rules{display:grid;grid-template-columns:1fr 1fr;gap:.8rem 2.4rem;margin-top:.4rem;}
+  .rule{display:flex;gap:1rem;align-items:flex-start;}
+  .rule .rn{
+    font-family:Georgia,serif;font-size:1.5rem;font-weight:700;color:var(--accent);
+    line-height:1;min-width:1.6rem;
+  }
+  .rule .rt{font-size:1.15rem;line-height:1.45;color:var(--ink);padding-top:.15rem;}
+  .rule .rt code{font-family:Consolas,monospace;font-size:.95rem;background:#e9e3d6;padding:.05rem .3rem;border-radius:3px;color:var(--accent2);}
+
+  /* code block */
+  .code{
+    background:var(--code-bg);color:var(--code-ink);
+    border-radius:8px;padding:1.2rem 1.4rem;
+    font-family:"SFMono-Regular",Consolas,"Courier New",monospace;
+    font-size:.92rem;line-height:1.7;white-space:pre;overflow:auto;
+    box-shadow:0 6px 18px rgba(0,0,0,.18);
+  }
+  .code .c{color:#7d8d97;}
+  .code .k{color:var(--code-amber);}
+  .code .s{color:#9ad1b8;}
+
+  .twocol{display:grid;grid-template-columns:1.05fr 1fr;gap:2rem;align-items:start;}
+  .twocol.code-right{grid-template-columns:1fr 1.15fr;}
+
+  .timing{list-style:none;margin-top:.4rem;}
+  .timing li{
+    display:flex;gap:.9rem;align-items:flex-start;
+    padding:.55rem 0;border-bottom:1px solid var(--line);font-size:1.1rem;color:var(--ink);
+  }
+  .timing li .t{color:var(--accent);font-weight:700;min-width:9.5rem;}
+  .callout{
+    margin-top:1.1rem;background:#fbeee4;border:1px solid #e8c4ab;
+    border-radius:6px;padding:.9rem 1.1rem;font-size:1.05rem;color:#8a3309;line-height:1.55;
+  }
+
+  /* sandbox comparison table */
+  table.cmp{width:100%;border-collapse:collapse;margin-top:.4rem;font-size:1.08rem;}
+  table.cmp th,table.cmp td{text-align:left;padding:.85rem 1rem;border-bottom:1px solid var(--line);}
+  table.cmp thead th{color:var(--muted);font-size:.92rem;letter-spacing:.05em;text-transform:uppercase;border-bottom:2px solid var(--ink);}
+  table.cmp td.scope{color:var(--accent2);font-weight:700;}
+  table.cmp tbody tr:nth-child(2) td.scope{color:var(--accent);}
+  table.cmp td.name{font-family:Consolas,monospace;font-weight:600;}
+
+  .closing{background:var(--paper);}
+  .closing .pad{justify-content:center;border-left:8px solid var(--accent2);}
+  .closing .kicker{color:var(--accent2);letter-spacing:.35em;text-transform:uppercase;font-size:.9rem;margin-bottom:1.4rem;}
+  .closing h1{font-family:"Hiragino Mincho ProN",serif;color:var(--ink);font-size:2.6rem;line-height:1.45;font-weight:700;}
+  .closing h1 .u{border-bottom:3px solid var(--accent);padding-bottom:.1rem;}
+  .closing .three{display:flex;gap:1rem;margin-top:2.4rem;}
+  .closing .pill{background:#fff;border:1px solid var(--accent2);color:var(--accent2);padding:.6rem 1.4rem;border-radius:2rem;font-size:1.15rem;font-family:Consolas,monospace;}
+
+  .foot{
+    position:absolute;bottom:2.6%;left:6%;right:6%;
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:.78rem;color:var(--muted);letter-spacing:.04em;
+    border-top:1px solid var(--line);padding-top:.6rem;
+  }
+  .closing .foot{border-top-color:var(--line);color:var(--muted);}
+
+  /* ---- controls ---- */
+  .controls{
+    position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+    display:flex;align-items:center;gap:14px;
+    background:rgba(13,27,42,.9);padding:8px 16px;border-radius:30px;
+    color:#fff;font-size:.85rem;z-index:50;backdrop-filter:blur(6px);
+  }
+  .controls button{
+    background:#c2410c;border:none;color:#fff;width:34px;height:34px;
+    border-radius:50%;font-size:1.1rem;cursor:pointer;line-height:1;
+  }
+  .controls button:disabled{opacity:.35;cursor:default;}
+  .controls .count{font-variant-numeric:tabular-nums;min-width:48px;text-align:center;}
+  @media print{
+    body{background:#fff;}
+    .controls{display:none;}
+    .slide{display:block !important;page-break-after:always;box-shadow:none;}
+  }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+  <!-- 0 COVER -->
+  <section class="slide cover active">
+    <div class="pad">
+      <div class="kicker">Claude Code · Security 10‑min Brief</div>
+      <h1>Claude Code を安全に使うための<br><span class="hl">3 つの約束</span></h1>
+      <p class="sub">Claude Code はコードを読む・書く・コマンドを実行できる強力な開発エージェントです。だからこそ「レビューする・権限を絞る・隔離環境で動かす」を守って使います。</p>
+      <div class="three">
+        <span class="pill">レビューする</span>
+        <span class="pill">権限を絞る</span>
+        <span class="pill">隔離する</span>
+      </div>
+      <div class="foot"><span>社内向け セキュリティ紹介</span><span>2026</span></div>
+    </div>
+  </section>
+
+  <!-- 1 WHY -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow"><span class="num">01</span><span>なぜセキュリティが必要か</span><span class="tag">0:00–0:45</span></div>
+      <h1 class="title">Claude Code は「チャット」ではなく<br>開発作業を実行するエージェント</h1>
+      <p class="lead">AI に任せる範囲が広がるほど、アクセス権と実行権を絞る必要があります。</p>
+      <div class="body">
+        <p class="note">コードベースの読み取り、ファイルの書き換え、テストやビルドなどの<span class="em2">コマンド実行</span>ができます。便利な反面、<span class="em">誤った変更・秘密情報の読み取り・危険なコマンド実行・外部通信による情報流出</span>といったリスクを伴います。</p>
+        <p class="note">公式の best practices でも、提案された変更のレビュー、機密リポジトリ向けの権限設定、Dev Container による追加隔離、<code>/permissions</code> の定期確認が推奨されています。</p>
+        <p class="src">出典: https://code.claude.com/docs/en/security</p>
+      </div>
+      <div class="foot"><span>Claude Code Security</span><span>01 / 07</span></div>
+    </div>
+  </section>
+
+  <!-- 2 THREE LAYERS -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow"><span class="num">02</span><span>守るべき 3 つのレイヤー</span><span class="tag">0:45–1:45</span></div>
+      <h1 class="title">安全対策は 1 個ではなく、3 層で考える</h1>
+      <div class="body" style="margin-top:1.6rem;">
+        <div class="layers">
+          <div class="lcard">
+            <span class="ln">Layer 01</span>
+            <h3>レビュー層</h3>
+            <p>問題を<b>見つける</b>仕組み。</p>
+            <div class="tags">
+              <span class="tg">security-guidance プラグイン</span>
+              <span class="tg">PR レビュー</span>
+              <span class="tg">CI・静的解析ツール</span>
+            </div>
+          </div>
+          <div class="lcard">
+            <span class="ln">Layer 02</span>
+            <h3>権限制御層</h3>
+            <p><b>触れる範囲</b>を絞る。</p>
+            <div class="tags">
+              <span class="tg">/permissions</span>
+              <span class="tg">permissions.deny</span>
+              <span class="tg">secret ファイルの read 禁止</span>
+            </div>
+          </div>
+          <div class="lcard">
+            <span class="ln">Layer 03</span>
+            <h3>隔離層</h3>
+            <p><b>アクセスを制限</b>する仕組み。</p>
+            <div class="tags">
+              <span class="tg">built-in sandbox</span>
+              <span class="tg">DevContainer / Docker</span>
+              <span class="tg">VM</span>
+            </div>
+          </div>
+        </div>
+        <div class="callout">レビューは「見つける仕組み」で、権限と sandbox は「行動を制限する仕組み」です。役割が違います。</div>
+      </div>
+      <div class="foot"><span>Claude Code Security</span><span>02 / 07</span></div>
+    </div>
+  </section>
+
+  <!-- 3 SECURITY-GUIDANCE -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow"><span class="num">03</span><span>security-guidance プラグイン</span><span class="tag">1:45–3:00</span></div>
+      <h1 class="title">Claude が書いたコードを、その場でレビュー</h1>
+      <div class="body twocol code-right" style="margin-top:1.4rem;">
+        <div>
+          <ul class="timing">
+            <li><span class="t">ファイル編集時</span><span>危険パターンを高速チェック（モデル呼び出しなし）</span></li>
+            <li><span class="t">ターン終了時</span><span>変更 diff を別 Claude がレビュー</span></li>
+            <li><span class="t">commit / push 時</span><span>周辺コードも含めた深いレビュー</span></li>
+          </ul>
+          <div class="callout">これは<b>自動ブロッカーではない</b>。見逃しもあるため defense‑in‑depth の一層。最後の砦ではなく、早めに気づく安全ネット。</div>
+        </div>
+        <div class="code"><span class="c"># 公式マーケットプレイスを追加</span>
+<span class="k">/plugin</span> marketplace add anthropics/claude-plugins-official
+<span class="c"># プラグインを導入</span>
+<span class="k">/plugin</span> install security-guidance@claude-plugins-official
+<span class="k">/reload-plugins</span>
+
+<span class="c"># 検出対象の例</span>
+<span class="s">injection / 危険な deserialize</span>
+<span class="s">危険な DOM API / 認可バイパス</span>
+<span class="s">安全でない直接オブジェクト参照 / SSRF / 弱い暗号</span></div>
+      </div>
+      <p class="src src-tr">出典: https://code.claude.com/docs/en/security-guidance</p>
+      <div class="foot"><span>Claude Code Security</span><span>03 / 07</span></div>
+    </div>
+  </section>
+
+  <!-- 4 EMPLOYEE RULES -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow"><span class="num">04</span><span>利用者が守るルール</span><span class="tag">3:00–4:15</span></div>
+      <h1 class="title">開発者が守る 5 つのルール</h1>
+      <p class="lead">AI だから特別ではなく、新しい開発者に権限を渡す時と同じ慎重さで扱う。</p>
+      <div class="body" style="margin-top:1.4rem;">
+        <div class="rules">
+          <div class="rule"><span class="rn">1</span><span class="rt">Claude の提案をそのまま approve しない</span></div>
+          <div class="rule"><span class="rn">2</span><span class="rt"><code>git diff</code> を見てから承認する</span></div>
+          <div class="rule"><span class="rn">3</span><span class="rt"><code>.env</code>・秘密鍵・認証情報を読ませない</span></div>
+          <div class="rule"><span class="rn">4</span><span class="rt">よく分からない Bash コマンドは許可しない</span></div>
+          <div class="rule"><span class="rn">5</span><span class="rt">機密リポジトリでは sandbox / container を使う</span></div>
+        </div>
+        <div class="callout">Claude Code は<b>ユーザーが承認した範囲だけ</b>で動く。だから承認前のレビュー責任は利用者側にもある。</div>
+      </div>
+      <div class="foot"><span>Claude Code Security</span><span>04 / 07</span></div>
+    </div>
+  </section>
+
+  <!-- 5 STANDARD -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow"><span class="num">05</span><span>社内標準案</span><span class="tag">4:15–5:00</span></div>
+      <h1 class="title">初期設定の推奨案</h1>
+      <div class="body twocol code-right" style="margin-top:1.4rem;">
+        <div>
+          <ul class="timing">
+            <li><span class="t">プラグイン</span><span><code style="font-family:Consolas">security-guidance</code> を有効化</span></li>
+            <li><span class="t">read 禁止</span><span><code style="font-family:Consolas">.env</code> / <code style="font-family:Consolas">secrets/**</code> は deny</span></li>
+            <li><span class="t">外部通信</span><span>不明な <code style="font-family:Consolas">curl</code>/<code style="font-family:Consolas">wget</code> は原則確認</span></li>
+            <li><span class="t">隔離</span><span>機密リポジトリは Dev Container / Docker</span></li>
+            <li><span class="t">後段</span><span>PR / CI のレビューは継続</span></li>
+          </ul>
+          <div class="callout">「<b>security-guidance を入れれば安全</b>」とは言わない。in‑session の早期検知層であり、PR・CI・依存スキャンを置き換えるものではない。</div>
+        </div>
+        <div class="code"><span class="c">// managed-settings.json（抜粋）</span>
+{
+  <span class="k">"enabledPlugins"</span>: {
+    <span class="s">"security-guidance@...": true</span>
+  },
+  <span class="k">"permissions"</span>: {
+    <span class="k">"deny"</span>: [
+      <span class="s">"Read(./.env)"</span>,
+      <span class="s">"Read(./secrets/**)"</span>,
+      <span class="s">"Bash(curl *)"</span>
+    ],
+    <span class="k">"disableBypassPermissionsMode"</span>: <span class="s">"disable"</span>
+  }
+}</div>
+      </div>
+      <div class="foot"><span>Claude Code Security</span><span>05 / 07</span></div>
+    </div>
+  </section>
+
+  <!-- 6 DOCKER -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow"><span class="num">06</span><span>Docker / Dev Container の意味</span><span class="tag">5:00–6:00</span></div>
+      <h1 class="title">Docker 化の目的：Claude Code をホストから切り離す</h1>
+      <div class="body" style="margin-top:1.4rem;">
+        <table class="cmp">
+          <thead><tr><th>方式</th><th>守れる範囲</th><th>社員向けの説明</th></tr></thead>
+          <tbody>
+            <tr><td class="name">Built‑in Bash sandbox</td><td class="scope">Bash コマンド中心</td><td>コマンド実行の影響を絞る</td></tr>
+            <tr><td class="name">Dev Container / Docker</td><td class="scope">Claude Code 実行環境全体</td><td>ホストの秘密情報や環境を直接触らせない</td></tr>
+            <tr><td class="name">VM</td><td class="scope">OS 全体</td><td>より強い隔離が必要な場合</td></tr>
+          </tbody>
+        </table>
+        <div class="callout">Docker でも万能ではない。<b>writable mount のコードは変更でき、外部 egress があれば情報流出リスクは残る</b>。ネットワーク制限と mount 設計が鍵。</div>
+      </div>
+      <div class="foot"><span>Claude Code Security</span><span>06 / 07</span></div>
+    </div>
+  </section>
+
+  <!-- 7 IMPLEMENTATION -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow"><span class="num">07</span><span>実装イメージ</span><span class="tag">6:00–7:00</span></div>
+      <h1 class="title">最小構成：Dev Container に Claude Code を入れる</h1>
+      <div class="body twocol" style="margin-top:1.3rem;">
+        <div class="code"><span class="c">// .devcontainer/devcontainer.json</span>
+{
+  <span class="k">"name"</span>: <span class="s">"claude-code-sandbox"</span>,
+  <span class="k">"features"</span>: {
+    <span class="s">"...devcontainer-features/claude-code:1.0": {}</span>
+  },
+  <span class="k">"mounts"</span>: [
+    <span class="s">"source=claude-code-config-...,</span>
+<span class="s">     target=/home/vscode/.claude,type=volume"</span>
+  ],
+  <span class="k">"containerEnv"</span>: {
+    <span class="s">"CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"</span>
+  }
+}</div>
+        <div>
+          <ul class="timing">
+            <li><span class="t">秘密情報</span><span><code>~/.ssh</code>・<code>~/.aws</code>・<code>.env</code> を mount しない</span></li>
+            <li><span class="t">egress</span><span>必要な接続先だけを allowlist に</span></li>
+            <li><span class="t">bypass</span><span><code>--dangerously-skip-permissions</code> は隔離環境のみ</span></li>
+            <li><span class="t">標準化</span><span>強制には MDM / managed settings が別途必要</span></li>
+          </ul>
+          <div class="callout"><code>~/.claude</code> を named volume で mount すれば rebuild 後も認証維持。Linux では <code>/etc/claude-code/managed-settings.json</code> で組織ポリシーを適用。</div>
+        </div>
+      </div>
+      <div class="foot"><span>Claude Code Security</span><span>07 / 07</span></div>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <section class="slide closing">
+    <div class="pad">
+      <div class="kicker">まとめ</div>
+      <h1>Claude Code の安全運用は、AI を信用するかの話ではない。<br>通常の開発セキュリティを、<span class="u">AI エージェントにも適用する</span>という話。</h1>
+      <div class="three">
+        <span class="pill">security-guidance</span>
+        <span class="pill">permissions</span>
+        <span class="pill">sandbox / Docker</span>
+      </div>
+      <div class="foot"><span>今日覚えてほしい 3 点</span><span>Thank you</span></div>
+    </div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev" aria-label="前へ">‹</button>
+  <span class="count"><span id="cur">1</span> / <span id="tot">9</span></span>
+  <button id="next" aria-label="次へ">›</button>
+</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=0;
+  const cur=document.getElementById('cur');
+  const prev=document.getElementById('prev');
+  const next=document.getElementById('next');
+  document.getElementById('tot').textContent=slides.length;
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    cur.textContent=i+1;
+    prev.disabled=i===0;next.disabled=i===slides.length-1;
+  }
+  prev.onclick=()=>show(i-1);
+  next.onclick=()=>show(i+1);
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' ')show(i+1);
+    if(e.key==='ArrowLeft')show(i-1);
+  });
+  show(0);
+</script>
+</body>
+</html>
