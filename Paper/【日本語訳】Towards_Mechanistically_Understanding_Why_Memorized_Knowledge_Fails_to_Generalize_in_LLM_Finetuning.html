@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>記憶された知識がLLMのファインチューニングにおいて汎化しない理由の機構的理解に向けて</title>
+<style>
+  :root{
+    --bg: #faf8f5;
+    --ink: #1f2421;
+    --ink-soft: #4a5049;
+    --accent: #8a5a3b;
+    --accent-soft: #c9a98a;
+    --line: #d9d2c7;
+    --panel: #f1ece3;
+    --mem: #2f6690;
+    --gen: #b23a48;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+    line-height:1.9;
+    font-size:16px;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:64px 28px 120px;}
+  header.title-block{
+    border-bottom:2px solid var(--ink);
+    padding-bottom:28px;
+    margin-bottom:40px;
+  }
+  .eyebrow{
+    font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;
+    letter-spacing:.14em;
+    font-size:12px;
+    color:var(--accent);
+    text-transform:uppercase;
+    margin-bottom:14px;
+  }
+  h1.jp-title{
+    font-size:28px;
+    line-height:1.55;
+    margin:0 0 18px;
+    font-weight:700;
+  }
+  .authors{
+    font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;
+    font-size:14px;
+    color:var(--ink-soft);
+  }
+  .authors .aff{font-size:12.5px;color:var(--accent);margin-top:4px;}
+  .orig-title{
+    font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;
+    font-size:12.5px;
+    color:#8a8478;
+    margin-top:18px;
+    font-style:italic;
+  }
+  .abstract{
+    background:var(--panel);
+    border-left:4px solid var(--accent);
+    padding:22px 26px;
+    margin:36px 0 44px;
+    font-size:15px;
+  }
+  .abstract .label{
+    font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;
+    font-weight:700;
+    letter-spacing:.08em;
+    color:var(--accent);
+    margin-bottom:10px;
+    font-size:13px;
+  }
+  h2{
+    font-size:21px;
+    margin:56px 0 18px;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  h2 .num{color:var(--accent);font-family:"Hiragino Sans","Yu Gothic",sans-serif;font-size:16px;}
+  h3{
+    font-size:17px;
+    margin:34px 0 12px;
+    color:var(--ink);
+    font-weight:700;
+  }
+  h4{
+    font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;
+    font-size:14.5px;
+    font-weight:700;
+    color:var(--accent);
+    margin:24px 0 8px;
+  }
+  p{margin:0 0 16px;}
+  .note-box{
+    background:#f4f0ea;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:16px 20px;
+    font-size:14px;
+    color:var(--ink-soft);
+    margin:20px 0;
+  }
+  .fig{
+    margin:28px 0;
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+    background:#fff;
+  }
+  .fig-caption-bar{
+    background:var(--panel);
+    padding:12px 18px;
+    font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;
+    font-size:13px;
+    color:var(--ink-soft);
+    border-bottom:1px solid var(--line);
+  }
+  .fig-caption-bar b{color:var(--accent);}
+  .fig-body{padding:18px 20px;font-size:14.5px;}
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:18px 0 26px;
+    font-size:13.5px;
+    font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;
+  }
+  caption{
+    caption-side:top;
+    text-align:left;
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+    padding-bottom:6px;
+  }
+  th,td{
+    border:1px solid var(--line);
+    padding:7px 10px;
+    text-align:left;
+  }
+  th{background:var(--panel);font-weight:700;}
+  td.num, th.num{text-align:right;font-variant-numeric:tabular-nums;}
+  .example-card{
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:14px 18px;
+    margin:14px 0;
+    background:#fff;
+    font-size:14px;
+  }
+  .example-card .qa{
+    font-family:"Hiragino Sans","Yu Gothic",sans-serif;
+    font-size:13.5px;
+  }
+  .qa .q{color:var(--mem);}
+  .qa .a{color:var(--gen);font-weight:700;}
+  .tag-mem{
+    display:inline-block;
+    font-family:"Hiragino Sans","Yu Gothic",sans-serif;
+    font-size:11px;
+    background:var(--mem);
+    color:#fff;
+    padding:2px 8px;
+    border-radius:10px;
+    margin-bottom:6px;
+  }
+  .tag-gen{
+    display:inline-block;
+    font-family:"Hiragino Sans","Yu Gothic",sans-serif;
+    font-size:11px;
+    background:var(--gen);
+    color:#fff;
+    padding:2px 8px;
+    border-radius:10px;
+    margin-bottom:6px;
+  }
+  ul,ol{padding-left:1.4em;margin:0 0 16px;}
+  li{margin-bottom:8px;}
+  .equation{
+    text-align:center;
+    font-style:italic;
+    font-family:"Times New Roman",serif;
+    margin:20px 0;
+    font-size:16px;
+  }
+  .callout-hyp{
+    border:1px solid var(--accent-soft);
+    background:#fbf6f0;
+    border-radius:8px;
+    padding:18px 22px;
+    margin:22px 0;
+  }
+  .callout-hyp h4{margin-top:0;}
+  .toc{
+    font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;
+    font-size:13.5px;
+    background:var(--panel);
+    border-radius:8px;
+    padding:20px 26px;
+    margin-bottom:40px;
+  }
+  .toc a{color:var(--ink);text-decoration:none;border-bottom:1px dotted var(--accent-soft);}
+  .toc a:hover{color:var(--accent);}
+  .toc ol{padding-left:1.2em;}
+  .toc li{margin-bottom:6px;}
+  .refs{
+    font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    line-height:1.7;
+  }
+  .refs p{margin-bottom:10px;}
+  .divider{
+    text-align:center;
+    color:var(--accent-soft);
+    margin:48px 0;
+    letter-spacing:.6em;
+    font-size:12px;
+  }
+  .checklist-item{
+    border-bottom:1px solid var(--line);
+    padding:14px 0;
+    font-size:14px;
+  }
+  .checklist-item .qtxt{font-weight:700;margin-bottom:6px;}
+  .checklist-item .ans{
+    font-family:"Hiragino Sans","Yu Gothic",sans-serif;
+    font-size:12.5px;
+    display:inline-block;
+    background:var(--panel);
+    padding:2px 10px;
+    border-radius:10px;
+    margin-bottom:8px;
+  }
+  .translator-note{
+    font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;
+    font-size:12px;
+    color:#8a8478;
+    background:#f4f0ea;
+    border-radius:6px;
+    padding:12px 18px;
+    margin:16px 0 40px;
+  }
+  footer{
+    margin-top:80px;
+    padding-top:24px;
+    border-top:1px solid var(--line);
+    font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;
+    font-size:12px;
+    color:#8a8478;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="title-block">
+    <div class="eyebrow">Preprint · arXiv:2607.08393v1 [cs.AI] · 2026年7月9日 &nbsp;/&nbsp; 日本語訳</div>
+    <h1 class="jp-title">記憶された知識が大規模言語モデルのファインチューニングにおいて汎化しない理由の機構的理解に向けて</h1>
+    <div class="authors">
+      Lu Dai<sup>2,1</sup>　Ziyang Rao<sup>1</sup>　Yili Wang<sup>1</sup>　Hanqing Wang<sup>1</sup>　Hao Liu<sup>1,2</sup>　Hui Xiong<sup>1,2</sup>
+      <div class="aff">1: HKUST(GZ)　2: HKUST　連絡先: ldaiae@connect.ust.hk, {liuh, xionghui}@ust.hk</div>
+    </div>
+    <div class="orig-title">原題: Towards Mechanistically Understanding Why Memorized Knowledge Fails to Generalize in LLM Finetuning</div>
+  </header>
+
+  <div class="translator-note">
+    ※本稿は原論文（英語）の日本語訳です。図版はオリジナルのヒートマップ画像そのものではなく、内容説明とテキスト化した表で構成しています。参考文献リストは原文（英語表記）のまま収録しています。
+  </div>
+
+  <div class="abstract">
+    <div class="label">要旨</div>
+    <p>
+      新しい知識をLLMに注入するためにファインチューニングを行うと、重大な課題に直面する。LLMは新しい事実を素早く<b>記憶</b>できる一方で、それを下流の推論タスクに<b>使う</b>ことができないのである。本研究では、この失敗を「知る-使うギャップ（Knowing–Using Gap）」として定式化する。これは、記憶と汎化の間に生じる正解率のギャップと時間的なずれ（タイムラグ）によって特徴づけられる。
+    </p>
+    <p>
+      この現象を理解するため、未知の知識でLLMをファインチューニングし、<b>self-patching（自己パッチング）</b>と呼ぶ新しい介入手法を用いて、知識が内部でどのように空間的に浸透していくかを追跡した。self-patchingは、表現を再配置することで汎化に失敗していたケースが大幅に改善する「活性化の位置」を特定する。この結果は、<b>知識-回路の不整合（knowledge-circuit misalignment）仮説</b>と整合する。すなわち、記憶された表現はモデル内部に存在してはいるものの、計算上有効な層へと経路づけられていない可能性があるという仮説である。
+    </p>
+    <p>
+      この診断的知見の実用性を示すため、汎化失敗におけるオラクル（理想値）の改善余地の58〜75%を回復する簡便なヒューリスティック戦略を設計した。実験はこの知見の頑健性を確認するためドメイン横断で行っている。コードとデータは <span style="font-family:monospace">https://anonymous.4open.science/r/Mem2Gen-71FF</span> で公開されている。
+    </p>
+  </div>
+
+  <div class="toc">
+    <b>目次</b>
+    <ol>
+      <li><a href="#s1">はじめに</a></li>
+      <li><a href="#s2">関連研究</a></li>
+      <li><a href="#s3">データセットの構築</a></li>
+      <li><a href="#s4">現象：知る-使うギャップの特徴づけ</a></li>
+      <li><a href="#s5">知識-回路の不整合に関する機構的分析</a></li>
+      <li><a href="#s6">結論</a></li>
+      <li><a href="#appA">付録A: データセット詳細</a></li>
+      <li><a href="#appB">付録B: 実験設定の詳細</a></li>
+      <li><a href="#appC">付録C: クロスドメイン再現詳細（STaRK-MAG）</a></li>
+      <li><a href="#appD">付録D: 知る-使うギャップのスケーリング結果</a></li>
+      <li><a href="#appE">付録E: 知識-回路の不整合に関する追加結果</a></li>
+      <li><a href="#appF">付録F: 統計的有意性と信頼区間</a></li>
+      <li><a href="#appG">付録G: 浸透ダイナミクスの追加事例</a></li>
+      <li><a href="#appH">付録H: 限界と責任ある研究の詳細</a></li>
+    </ol>
+  </div>
+
+  <h2 id="s1"><span class="num">1</span>はじめに</h2>
+  <p>
+    大規模言語モデル（LLM）は多種多様なタスクに秀でているが、未知の情報への適応には大きな課題を抱えており、効果的な事後学習による知識更新の手法が必要とされている。検索拡張生成（RAG）や知識編集といったアプローチも存在するが（Meng et al.、Gupta et al. [2024]）、ファインチューニングは知識更新の基本的なパラダイムであり続けている。パラメトリックメモリをエンドツーエンドで操作するだけでなく、モデルの既存の推論能力によって再利用できる形で知識を注入できるためである。
+  </p>
+  <p>
+    十分な容量を持ってデータに適合できるにもかかわらず（Morris et al. [2025]、Allen-Zhu and Li）、LLMは「覚えているが使えない（remembering but not using）」という失敗パターンを示す（Ovadia et al. [2024]、Soudani et al. [2024]、Zhong et al. [2023]、Cohen et al. [2024]、Berglund et al.）。図1に示すように、モデルは新しい事実（例：「シドニーは[実体]に位置する」）を記憶できても、それを下流の推論（例：「シドニーが位置する国の首都は…」）に確実に用いることができない（Zhong et al. [2023]、Cohen et al. [2024]、Yao et al. [2025]）。これにより、単純な記憶と柔軟な汎化の間にギャップが生まれる。
+  </p>
+  <p>
+    我々はこの現象を「知る-使うギャップ（Knowing–Using Gap）」と呼び、2つの異なる乖離によって特徴づける。1) <b>正解率ギャップ</b>：汎化の正解率が記憶の正解率よりも著しく低い、2) <b>時間的ラグ</b>：汎化が記憶よりも著しく遅れて出現する。
+  </p>
+  <p>
+    この観察は、ファインチューニングの機構に関する根本的な研究課題を提起する。<i>ひとたび事実が記憶されたとき、それはいつ、なぜモデルの既存の推論回路にアクセス可能になるのか？</i>
+  </p>
+
+  <div class="fig">
+    <div class="fig-caption-bar"><b>図1</b>：知る-使うギャップの図解</div>
+    <div class="fig-body">
+      <p><b>(a) 知る-使うギャップ：</b> 実際のファインチューニングのダイナミクスでは、記憶（Memorization）とチェイニング（Chaining、連鎖推論）の間に、正解率のギャップと時間的なラグの両方が顕著に現れる。記憶の正解率は数エポックでほぼ天井（1.00）に到達する一方、チェイニングの正解率は長期間低いまま（約0.20程度）に留まり、その後勾配がほぼ消失する。</p>
+      <p><b>(b) 概念図：</b> 新しい知識「シドニーはオーストラリアに位置する（located in）」「オーストラリアの首都はキャンベラ（has capital）」という2つの新しい原子的事実をLLMはすぐに記憶する（Mem: 「オーストラリアの首都は？」「シドニーはどこに位置する？」に正答）が、これらを組み合わせた推論質問「シドニーが位置する国の首都は？」（Gen）には汎化できない。</p>
+      <p><b>(c) 飽和エポック：</b> 1000件のケースをファインチューニングした結果、1つ目の記憶が飽和するエポックは平均5.9±2.8、2つ目の記憶は10.1±2.8、チェイニングの汎化は15.2±4.7であり、記憶と汎化の間に明確な時間差があることを示す。</p>
+    </div>
+  </div>
+
+  <p>
+    これらの問いに取り組むため、我々は知識注入時のファインチューニングのダイナミクスをきめ細かく分析する。2つの実世界のドメイン知識ベースからデータセットを構築し、事前学習との重複を排除した。LLMが学習した知識をどのように汎化するかを評価するために、2種類の推論QAタスクを定義した。<b>チェイニングタスク（chaining task）</b>は最初のホップで橋渡しとなる実体（ブリッジエンティティ）を解決してから2つ目を解く必要があり、<b>交差タスク（intersection task）</b>は2つの実体に対する属性を取得し、必要な関係でフィルタリングする必要がある。これらのタスクは、注入された知識が単独で想起される以上に、推論へと伝播できるかどうかを明示的に検証する。
+  </p>
+  <p>
+    基盤にある機構を調べるため、我々は<b>self-patching（自己パッチング）</b>を導入する。これは活性化パッチング（activation patching、Ghandeharioun et al. [2024]、Zhang and Nanda）の一種であり、ソース実行における特定位置（アンカー）の隠れ層表現をコピーし、ターゲット実行の特定層に代入したうえで、正解の確率がどう変化するかを測定する。LLMの各層を丹念に走査し、ファインチューニングの過程を通じて行うことで、self-patchingは知識の浸透を示す時間発展的できめ細かい空間マップを生成し、どの層・どの位置の表現が、適切な位置に経路づけられれば正解を引き出せるようになるかを特定する。
+  </p>
+  <p>
+    この観察に基づき、我々は知る-使うギャップに関する<b>知識-回路の不整合（knowledge–circuit misalignment）</b>仮説を提案する。self-patchingにより、記憶が飽和した後、注入された情報は特定の層から取得可能ではあるものの、多段階推論に必要な計算に確実に統合されるわけではないことが明らかになる。記憶後もファインチューニングを継続すると、これらの利用可能な表現が中間層の計算に取り込まれることがあり、その場合汎化の出現と一致する。一方で、勾配が自然に消失した後も表現が取り残されたままとなり、失敗するケースもある。さらなる介入実験により、この仮説を支持する因果的介入の証拠が得られている。すなわち、記憶された表現を単に再配置するだけで、自然なファインチューニングの収束後であっても、モデルとタスクを横断して即座かつ大幅な向上が見られるのである。これは、注入された知識を汎化する能力が、ファインチューニング中に自然に出現しなくとも、人為的に活性化できることを示唆している。さらに、その向上幅はCoT（Chain-of-Thought）のようなプロンプティング手法や一般的な摂動制御を大きく上回っており、改善が表面的なデコーディング効果からではなく、知識関連の情報を推論の計算経路へ転送することから生じているという仮説を補強する。この知見の実用的価値を示すため、パッチ位置の構造を利用した簡便なヒューリスティック戦略が、オラクルの改善余地の58〜75%を回復できることを示し（§5.5）、純粋な診断から実践的な改善策へと貢献を発展させる。
+  </p>
+  <p>まとめると、本研究の貢献は以下の通りである。</p>
+  <ul>
+    <li>LLMのファインチューニング中に生じる<b>知る-使うギャップ</b>を特定し、定量化する。</li>
+    <li>注入された知識がどの層で因果的に利用可能になるかをマッピングする介入ベースの手法<b>self-patching</b>を導入する。これは汎化に失敗したケースにも適用可能である。</li>
+    <li><b>知識-回路の不整合仮説</b>を提案し、記憶された表現を手動で再配置することで汎化を回復できるという機構的証拠を示すとともに、オラクルの改善余地の58〜75%を回復する<b>固定的な非オラクル・ヒューリスティック</b>を設計することでその実用性を示す。この現象と結果は、複数のドメインとアーキテクチャを通じて頑健である。</li>
+    <li>注入知識に対する多段階推論を評価するための、専用の<b>記憶-汎化（Memorization-to-Generalization）データセット</b>を公開する。</li>
+  </ul>
+
+  <h2 id="s2"><span class="num">2</span>関連研究</h2>
+
+  <h4>機構的解釈可能性（Mechanistic interpretability）</h4>
+  <p>
+    機構的解釈可能性は、ニューラルネットワークを人間が理解可能な構成要素へと逆解析し、振る舞いの分析にとどまらずモデル内部の因果的説明へと踏み込むことを目指す。これまでの手法は、logit-lens（nostalgebraist [2020]、Wendler et al. [2024]）や線形プローブ（Alain and Bengio [2017]、Belinkov [2022]）、多義的な特徴を解きほぐすスパースオートエンコーダ（Huben et al. [2024]、Gao et al. [2025]）といった観察ベースの手法と、因果トレーシング（causal tracing、Meng et al. [2022]、Palit et al. [2023]）や活性化パッチング（Wang et al. [2023]）といった介入ベースの手法に大別できる。近年の研究は、個々のニューロンの分析から、特定の振る舞いを担うモデルの部分グラフである「回路（circuits）」の分析へと移行している（Yao et al. [2024]）。例えば、「誘導ヘッド（induction heads）」は文脈内学習（in-context learning）の主要な機構として特定されており（Olsson et al. [2022]）、他の研究では間接目的語同定を担う回路（Wang et al. [2023]）やエンティティ追跡を担う回路（Prakash et al. [2024]）がマッピングされている。しかし、これらの手法の多くは特徴や回路を探るために大規模なデータに依存しており、原子的な知識を特定・抽出するための実用的なツールは乏しいままである。
+  </p>
+
+  <h4>LLMにおける知識表現</h4>
+  <p>
+    「線形表現仮説（Linear Representation Hypothesis）」（Park et al. [2024]）と「キー・バリュー記憶（Key-Value Memory）」の枠組み（Gershman et al. [2025]）は、LLMが事実的知識（例：「AはBである」）を活性化空間内の線形方向としてエンコードし、多くの場合MLP層の重みの中に格納しているとする（Meng et al. [2022]、Dai et al. [2022]）。この局在性に基づき、ROME（Meng et al. [2022]）のようなモデル編集技術が、MLPの重みを直接更新することで特定の事実を更新する手法として開発された。しかし、これらのアプローチの重大な限界は、事実を格納することと、それを推論に利用することの間にあるギャップである（Gupta et al. [2024]）。MQuAKE（Zhong et al. [2023]）やRippleEdits（Cohen et al. [2024]）といった近年のベンチマークは、モデルが編集された事実を想起できる（高い記憶性能）一方で、その更新を多段階推論タスクへ伝播させることに失敗することを明らかにしている。
+  </p>
+
+  <h4>グロッキングと学習ダイナミクス</h4>
+  <p>
+    グロッキング（Grokking、Power et al. [2022]、Wang et al. [2024]、Liu et al. [2022]）とは、学習正解率が飽和してから長時間経過した後に、検証セットに対する汎化性能が突如として向上する現象を指す。もともとは小規模なアルゴリズム的タスクで観察されたが（Power et al. [2022]）、近年では大規模Transformerの事前学習・ファインチューニングにおいても確認されている（Li et al. [2025]、Nanda et al. [2023]、Wang et al. [2024]）。グロッキングがデータセットの根底にある新たな能力の出現に関わるのに対し、我々の設定は、単一の知識片が共通のロジックによって使用可能になるかどうかの汎化性に関わるものである。我々は、この汎化の失敗が新たな推論回路の学習不足からではなく、既存の回路との整合の失敗から生じていると考える。
+  </p>
+
+  <h2 id="s3"><span class="num">3</span>データセットの構築</h2>
+
+  <h3>3.1 準備</h3>
+  <p>
+    LLMにおける記憶と汎化のダイナミクスを調べるため、記憶QAタスクと汎化QAタスクの多様なペアからなるデータセットを構築した。記憶QAタスクはLLMが新しい知識を記憶するためのファインチューニング教材として機能し、汎化QAタスクは明示的には記憶されない形で、新たに獲得した知識を応用するLLMの能力を検証する。
+  </p>
+  <p>
+    データセットは、数百万のエンティティと多様な異種関係を含む実世界の半構造化知識ベースであるSTaRK（Wu et al. [2024]）から適応している。ドメイン横断での知見の頑健性を確保するため、生物医学分野のサブセット（STaRK-Prime）と学術分野のサブセット（STaRK-MAG）の両方を用いた。生成パイプラインの詳細は付録に記載する。
+  </p>
+
+  <h3>3.2 タスクの定義</h3>
+  <p>LLMがさまざまな状況で学習知識をどう汎化するかを評価するため、表1に示す2種類の汎化QAタスクを定義する。</p>
+  <p>
+    我々の設定における知識の原子単位は、事実トリプレット f = (n1, e12, n2) として定義される。ここで n1, n2 ∈ N は頭部・尾部エンティティ、e12は両者の関係を表す。例えば、事実トリプレット (MRE11, ppi, ATRX) は「タンパク質MRE11はタンパク質ATRXと相互作用する」という事実を示す。
+  </p>
+  <p>
+    各汎化タスクは、支持となる事実トリプレットの集合に基づいており、各事実に対応する1つの記憶タスクとペアになっている。LLMはまず記憶QAタスクのファインチューニングを通じてこれらの支持事実を学習し、その後、学習した知識の適用を要求する汎化タスクで評価される。
+  </p>
+
+  <h4>記憶タスク</h4>
+  <p>
+    各fに対して、対応する記憶QAタスク mem<sub>f</sub> がその知識を記憶するための教材として生成される。具体的には、このタスクは頭部エンティティn1と関係e12をクエリとして提示し、モデルに尾部エンティティn2を正解として予測させる。例：mem<sub>f</sub> = {Q: 「MRE11（n1）と相互作用する（e12）タンパク質は？」、A: 「ATRX（n2）。」}
+  </p>
+
+  <h4>汎化タスク</h4>
+  <p>
+    我々は表1に示すように、包括的なメタパスから2種類の汎化QAタスクを設計した。(1) <b>チェイニングタスク</b>：このタスクは2つの支持タスクに依存しており、モデルは最終的な回答を導出するために逐次的な推論を実行する必要がある。これはモデルの連鎖推論能力を評価する。(2) <b>交差タスク</b>：このタスクは複数の支持タスクに依存しており、モデルはノイズとなる交絡因子の中から、特定の関係を共有するエンティティを特定する必要がある。これはモデルの知識集合における交差処理能力を検証する。
+  </p>
+
+  <table>
+    <caption><b>表1</b>：タスク定義の概要。記憶タスクはファインチューニング用、汎化タスクは評価用。</caption>
+    <tr><th></th><th>記憶タスク（例）</th><th>汎化タスク（例）</th></tr>
+    <tr>
+      <td><b>チェイニング</b></td>
+      <td>
+        1. 胚で発現しているタンパク質はどれか？ → IGFBP3<br>
+        2. タンパク質IGFBP3を標的とする薬剤はどれか？ → Mecasermin
+      </td>
+      <td>
+        胚で発現しているタンパク質を標的とする薬剤はどれか？ → Mecasermin
+      </td>
+    </tr>
+    <tr>
+      <td><b>交差</b></td>
+      <td>
+        1. 神経膠腫（グリオーマ）に関連する曝露物質は？ → Trifluralin<br>
+        2. 甲状腺機能低下症に関連する曝露物質は？ → Trifluralin<br>
+        3.（ノイズ）神経膠腫に関連する遺伝子は？ → PLK1
+      </td>
+      <td>
+        疾患グリオーマと甲状腺機能低下症の両方に関連する曝露物質は？ → Trifluralin
+      </td>
+    </tr>
+  </table>
+
+  <h3>3.3 知識の新規性検証</h3>
+  <p>
+    注入する知識が真に新規であることを確認するため、まずファインチューニング前の事前学習済みモデルが、両ドメイン（STaRK-Prime、STaRK-MAG）から無作為抽出した1,000件の記憶タスクに対してゼロショットでどの程度の正解率を示すかを検証した（表2）。さらに、パッチング実験（§5）の際には、ベースモデルがすでに記憶または汎化の質問に答えられるインスタンスを明示的に除外し、データ漏洩の可能性を排除している。
+  </p>
+
+  <table>
+    <caption><b>表2</b>：データセットの新規性評価。ファインチューニング前の状態でも、両データセットにおいて全モデルが6%未満の正解率であり、注入知識が真に新規であることを裏付ける。</caption>
+    <tr><th>モデル</th><th class="num">STARK-PRIME (%)</th><th class="num">STARK-MAG (%)</th></tr>
+    <tr><td>Qwen-2.5-1.5B</td><td class="num">4.20</td><td class="num">5.50</td></tr>
+    <tr><td>Qwen-2.5-3B</td><td class="num">3.80</td><td class="num">6.00</td></tr>
+    <tr><td>Qwen-2.5-7B</td><td class="num">4.40</td><td class="num">5.80</td></tr>
+    <tr><td>LLaMA-3.2-1B</td><td class="num">4.90</td><td class="num">5.40</td></tr>
+    <tr><td>LLaMA-3.2-3B</td><td class="num">3.80</td><td class="num">5.00</td></tr>
+    <tr><td>LLaMA-3.1-8B</td><td class="num">4.80</td><td class="num">5.50</td></tr>
+  </table>
+
+  <p>
+    <b>評価の分離。</b> 記憶タスクと汎化タスクは構造上互いに素である。記憶タスクは単一ホップ（エンティティ、関係→エンティティ）のクエリを提示するのに対し、汎化タスクは学習時には見られなかった異なるクエリテンプレートに対する多段階推論を要求する。事実のエンティティのみが重複しうるが、これはチェイニングが本質的に共有のブリッジエンティティを必要とするためであり、構成的なクエリ構造自体は常に新規である。
+  </p>
+
+  <h2 id="s4"><span class="num">4</span>現象：知る-使うギャップの特徴づけ</h2>
+
+  <h3>4.1 知る-使うギャップの定式化</h3>
+  <p>
+    θ<sub>t</sub> を知識注入のt学習ステップ（またはエポック）後のモデルパラメータとし、注入された事実の集合を K = {f<sub>i</sub>}<sup>n</sup><sub>i=1</sub> とする。2つの時間依存する性能曲線を評価する：記憶正解率 A<sub>mem</sub>(t)（注入事実に対する直接想起クエリの性能。例：学習済みトリプレットの単一ホップ補完）と、汎化（利用）正解率 A<sub>gen</sub>(t; T)（注入された事実を用いた推論を要求する下流タスクTに対する性能）である。
+  </p>
+  <p>知る-使うギャップを、以下の2つの補完的な次元に沿って特徴づける。</p>
+  <p><b>正解率ギャップ。</b> 学習終了時 t = T<sub>max</sub> において、収束後の差を以下のように定義する。</p>
+  <div class="equation">ΔA(T) = A<sub>mem</sub>(T<sub>max</sub>) − A<sub>gen</sub>(T<sub>max</sub>; T)　　(1)</div>
+  <p><b>時間的ラグ。</b> 学習の変動に対する頑健性を確保するため、飽和時点を、性能が少なくともw連続エポックにわたって安定を維持する最も早い時点として定義する。具体的には、タスクTの飽和時刻は以下のように定義される。</p>
+  <div class="equation">T<sub>gen</sub>(T) = min{t : A<sub>gen</sub>(t′; T) = 1, ∀t′ ∈ [t, t + w]}　　(2)</div>
+  <p>
+    時間的ラグは ΔT(T) = T<sub>gen</sub>(T) − T<sub>mem</sub> と定義される。T<sub>gen</sub>(T) が、汎化可能な事実が確実に習得された時点を反映するよう、失敗ケースは除外している。
+  </p>
+
+  <h3>4.2 タスク横断で見る知る-使うギャップ</h3>
+  <p>
+    図1は、チェイニングにおける知る-使うギャップを示している。記憶は数エポックでほぼ天井の正解率に達するのに対し、下流での利用は長期間低いままである。
+  </p>
+
+  <table>
+    <caption><b>表3</b>：FFT（全パラメータファインチューニング）とLoRAの知る-使うギャップの比較</caption>
+    <tr><th>タスク</th><th class="num">T<sub>mem</sub></th><th class="num">T<sub>gen</sub></th><th class="num">ΔT</th><th class="num">A<sub>gen</sub></th></tr>
+    <tr><td colspan="5" style="background:var(--panel);font-weight:700;text-align:center;">LoRA</td></tr>
+    <tr><td>チェイニング</td><td class="num">10.4 ± 2.8</td><td class="num">15.0 ± 5.2</td><td class="num">4.6</td><td class="num">0.303</td></tr>
+    <tr><td>交差</td><td class="num">8.3 ± 2.1</td><td class="num">8.9 ± 8.0</td><td class="num">0.6</td><td class="num">0.910</td></tr>
+    <tr><td colspan="5" style="background:var(--panel);font-weight:700;text-align:center;">FFT</td></tr>
+    <tr><td>チェイニング</td><td class="num">2.4 ± 1.5</td><td class="num">7.9 ± 4.7</td><td class="num">5.5</td><td class="num">0.315</td></tr>
+    <tr><td>交差</td><td class="num">4.1 ± 1.9</td><td class="num">12.9 ± 9.7</td><td class="num">8.8</td><td class="num">0.852</td></tr>
+  </table>
+
+  <h4>タスク横断のパターン</h4>
+  <p>
+    表3は、この乖離が異なる下流推論タスクにおいて普遍的であることを示す。LoRAの下では、全タスクで記憶が急速に飽和する一方、下流利用は遅延した出現とタスク依存の上限（頭打ち）の両方を示す。交差タスクは「理想的」な状態に近く、後続の推論ステップを必要とせず、しばしば記憶の回答と一致するため、ラグは最小限で最終的な利用正解率も高い。複雑さはノイズをフィルタリングする点にある。対照的に、チェイニングは明確な二次元的ギャップを示す。使用可能になるまでに実質的に多くの学習が必要であり、記憶がほぼ完璧であるにもかかわらず、収束後も利用正解率が低いままである。中心的な発見は一貫している：記憶は早期に飽和するが、信頼できる下流利用は遅延し、収束時にも著しく低いままとなりうる。
+  </p>
+
+  <h4>全パラメータファインチューニング（FFT）対LoRA</h4>
+  <p>
+    表3が示すように、FFTは概してLoRAよりもタスク横断で著しく速く記憶するが、この優位性は下流利用の速さや質に一貫して結びつかない。チェイニングでは、FFTははるかに早く記憶に到達するが、ラグの大きさは同程度で、最終的な利用正解率もほぼ同じである。交差では、FFTはより早く記憶するが、信頼できる利用に到達するのは著しく遅く、より大きなラグとより低いA<sub>gen</sub>をもたらす。
+  </p>
+
+  <h4>モデルとデータのスケール</h4>
+  <p>
+    我々はまた、異なるモデル規模・データ規模を横断して知る-使うギャップを検証した。図2は、モデルサイズを増加させても時間的ラグΔTは解消されないことを示している。さらに、注入する事実の数を増やすと、直接想起が強いままであっても最終的な正解率ギャップΔA(T)が拡大する傾向があり、ストレージのスケーリングが推論における比例的な向上に直接つながるわけではないことを示している。
+  </p>
+
+  <div class="fig">
+    <div class="fig-caption-bar"><b>図2</b>：異なるデータ規模・モデル規模における知る-使うギャップの結果</div>
+    <div class="fig-body">
+      <p>左図：学習データ数（10〜10,000件）を横軸に、記憶（青）とチェイニング（オレンジ）の正解率を縦軸にプロットしたもの。記憶正解率はデータ規模によらずほぼ天井（1.0付近）で安定している一方、チェイニングの正解率は低いまま（0.2〜0.3程度）で推移する。</p>
+      <p>右図：モデルサイズ（1B・3B・8B）を横軸にした同様のプロット。モデルを大きくしても記憶正解率はほぼ天井のまま変化がなく、チェイニングの正解率も低いまま大きくは改善しない。</p>
+    </div>
+  </div>
+
+  <h2 id="s5"><span class="num">5</span>知識-回路の不整合に関する機構的分析</h2>
+  <p>
+    本節では、観察された知る-使うギャップを機構的解釈によって説明するため、知識-回路の不整合仮説を提案する。我々は、ファインチューニング後、回答に関連する表現は隠れ状態から回復可能であるが、常に計算上有効な層を通じて経路づけられているわけではないという仮説と整合する介入的証拠を提示する。この知識の格納と計算の不整合が汎化の失敗を引き起こすが、知識を正しい層へ手動で再配置することで、大部分回復可能である。
+  </p>
+
+  <div class="callout-hyp">
+    <h4>知識-回路の不整合仮説</h4>
+    <p>
+      知る-使うギャップは、知識の格納と推論回路の空間的な不整合によって引き起こされる。すなわち、ファインチューニングはまず新しい事実を、直接想起を支える「適合しやすい格納状態」（多くの場合、初期層または非常に後段の層）にエンコードするが、多段階推論に因果的に必要とされる有効な位置（先行研究および我々の実験（図5）が示すように、しばしば中間層の計算）へは確実には経路づけられない。
+    </p>
+    <p>
+      この仮説は以下を予測する。(1) 記憶が飽和した後、注入された情報をすでに含んでいるが、エンドツーエンドで正しい推論をもたらさない「経路外（off-path）」の表現が存在するはずである。(2) それらの表現を有効な位置へ明示的に再配置すると、下流の利用が即座に増加するはずである。我々は主にself-patchingを含む複数の因果的介入ツールを用いて、これらの予測を検証する。
+    </p>
+  </div>
+
+  <div class="fig">
+    <div class="fig-caption-bar"><b>図3</b>：手法の比較</div>
+    <div class="fig-body">
+      <p><b>(a) 因果トレーシング（Causal Tracing）：</b> クリーンなプロンプトとノイズを加えた（破損させた）プロンプトの2つの実行を比較する。破損した実行の各層に、クリーンな実行の活性化を復元して代入し、正解確率の変化（ΔP<sub>answer</sub>）を測定することで、因果的に関連する位置を特定する。</p>
+      <p><b>(b) PatchScope：</b> ある隠れ状態を自然言語にデコードすることで解釈する。例えば「OpenAIはChatGPTをリリースした」というソースプロンプトの文脈化埋め込みを、「AppleのCEOはTim Cookである。[MASK]のCEOは」という文脈内プローブに代入すると、「Sam Altman」のようにデコードされる。CEOプローブ・創業者プローブ・ミッションプローブなど複数のプローブにより、隠れ状態が表す意味を解釈する。</p>
+      <p><b>(c) Self-Patching（自己パッチング）：</b> 本研究の手法。1. 同じエンティティを別のプロンプトから、2. 同じエンティティを別の層から、それぞれ表現をコピーして代入し、正解率の変化（ΔAcc）を測定することで、内部表現を層・文脈をまたいでスワップし、有効な位置を検証する。</p>
+    </div>
+  </div>
+
+  <h3>5.1 Self-Patching（自己パッチング）</h3>
+  <p>
+    Self-patchingは、因果的介入を通じて知識-回路の整合性を検証する：ある事実がモデル内部のどこかにすでに表現されているとして、その表現が候補となる計算層に経路づけられたとき、ターゲットとなる推論プロンプトはそれを利用できるだろうか？
+  </p>
+  <p>
+    MをL層のTransformerとし、h<sup>l</sup><sub>t</sub>(P)をプロンプトPの層l・トークン位置tにおける残差ストリームの状態とする。アンカーとなる部分文字列E（例：頭部エンティティ）に対して、T(P, E)はそのトークン範囲を表す。ソースプロンプトP<sub>s</sub>とターゲットプロンプトP<sub>t</sub>が与えられたとき、self-patchingはソース層l<sub>s</sub>からのアンカー表現のみをターゲット層l<sub>t</sub>にコピーする（h̃<sup>lt</sup><sub>T(Pt,E)</sub> ← h<sup>ls</sup><sub>T(Ps,E)</sub>）。その後、ターゲットのフォワードパスを再開する。この介入の因果的効果は、指標関数I(・, y*)の変化として測定される。これは、生成された出力の正しさ（例：完全一致（Exact Match）や平均逆順位（Mean Reciprocal Rank）を用いる）をy*に対して評価するもので、ΔI = I(M̃(P<sub>t</sub>), y*) − I(M(P<sub>t</sub>), y*) となる。
+  </p>
+
+  <div class="fig">
+    <div class="fig-caption-bar"><b>アルゴリズム1</b>：Self-patchingスキャン</div>
+    <div class="fig-body">
+      <p><b>入力：</b> モデルM、プロンプトP<sub>s</sub>, P<sub>t</sub>、アンカーE、正解y*、スコアI。</p>
+      <p><b>各層ペア (l<sub>s</sub>, l<sub>t</sub>) について：</b></p>
+      <ul>
+        <li>アンカートークン T<sub>s</sub> = T(P<sub>s</sub>, E) および T<sub>t</sub> = T(P<sub>t</sub>, E) を特定する</li>
+        <li>ソース状態 z = h<sup>ls</sup><sub>Ts</sub>(P<sub>s</sub>) をキャッシュする</li>
+        <li>P<sub>t</sub>を実行し、h̃<sup>lt</sup><sub>Tt</sub> ← z に置換する</li>
+        <li>フォワードパスを続行し、M̃(P<sub>t</sub>)を得る</li>
+        <li>ΔI = I(M̃(P<sub>t</sub>), y*) − I(M(P<sub>t</sub>), y*) を記録する</li>
+      </ul>
+      <p><b>出力：</b> 層ペアマップ A[l<sub>s</sub>, l<sub>t</sub>] = ΔI</p>
+    </div>
+  </div>
+
+  <p>
+    ファインチューニング後、すべての層ペア (l<sub>s</sub>, l<sub>t</sub>) を走査する。セルの値が正（ΔI > 0）であることには具体的な解釈がある：層l<sub>s</sub>には、計算層l<sub>t</sub>に配置されたときに有用となる表現が含まれている、というものだ。これにより図4の浸透マップと表4の回復可能な改善余地が得られる。プロンプト固有のショートカットを排除するため、記憶プロンプトP<sub>mem</sub>から汎化プロンプトP<sub>gen</sub>への文脈をまたいだパッチングも行う。転送された状態は同じ層ペア構造を保持する（図6）。
+  </p>
+
+  <h4>類似手法との比較</h4>
+  <p>
+    図3で最も類似した因果的介入ベースの機構的解釈手法と比較する。因果トレーシングと異なり、self-patchingは「クリーンな」正しい軌跡を必要としないため、汎化に失敗したケースにも適用可能である。PatchScopeと異なり、補助的なデコーディングプロンプトを用いてソースプロンプトを解釈するのではなく、ターゲットプロンプトの正解率に焦点を当てる。つまり、モデルに経路づけられたときに、その表現が下流の計算を解き放てるかどうかを評価するのである。
+  </p>
+
+  <h3>5.2 ファインチューニングにおける知識のダイナミクス</h3>
+  <p>
+    我々はまず、事実が記憶された後、いつ・どこで・どのようにしてモデルの既存の推論ロジックにアクセス可能になるのかを理解するため、ファインチューニング中の2つの原子的知識の浸透を追跡する。各エポックでチェックポイントを保存し、P<sub>gen</sub>上の頭部エンティティ位置E<sub>head</sub>で層対層のself-patchingを実行し、各ステップで(l<sub>src</sub>, l<sub>tgt</sub>)のヒートマップを生成する。
+  </p>
+
+  <div class="fig">
+    <div class="fig-caption-bar"><b>図4</b>：ファインチューニング過程に沿った知る-使うの遷移における浸透ダイナミクス</div>
+    <div class="fig-body">
+      <p>
+        セル (l<sub>src</sub>, l<sub>tgt</sub>) は、頭部エンティティの表現をl<sub>src</sub>からl<sub>tgt</sub>へパッチすることで汎化正解率が向上するかどうかを表す。赤は完全な回復、青は効果なし、白は部分的な向上を示す。
+      </p>
+      <p>
+        <b>上段（自然な失敗事例）：</b> 記憶タスク「遺伝子・タンパク質ABCC11によって輸送される薬剤は？」→「Probenecid」、「Probenecidの副作用は？」→「Vertigo」を学習後、汎化タスク「ABCC11によって輸送される薬剤の副作用は？」への解答は失敗する。赤い領域（知識の格納位置）は浸透するものの、対角線に到達する前に止まってしまい、汎化の失敗を示している。
+      </p>
+      <p>
+        <b>下段（成功事例）：</b> 記憶タスク「遺伝子・タンパク質SLC30A8によって輸送される薬剤は？」→「Zinc chloride」、「Zinc chlorideの副作用は？」→「循環血中の銅濃度低下」を学習後、汎化タスク「SLC30A8によって輸送される薬剤の副作用は？」に正しく解答できる。この成功事例では、パッチが有効な領域が学習が安定する前に対角線を覆うまで拡大する。
+      </p>
+    </div>
+  </div>
+
+  <p>
+    記憶が生じる前は、全体が青のマップが示す通り、パッチングはほとんど役に立たない。注入された知識がまだ内部に一切利用可能でないため、スワップしても助けにならないのである。
+  </p>
+  <p>
+    学習曲線上で2つの事実が記憶された瞬間、図4に見られるように明確な「対角線外（off-diagonal）」の赤い領域が現れる。これは、必要な情報がすでに特定の層に格納されており、特定のターゲット層に経路づけられれば効果を発揮できることを示している。しかし、モデルは自然なファインチューニングの過程ではエンドツーエンドで依然として失敗する：対角線上のセルは青いまま（介入なしでは失敗）である。
+  </p>
+  <p>
+    ファインチューニングが継続するにつれ、赤い領域はヒートマップの対角線に向かってより広く拡大し、知識がより多くの層へ徐々に浸透していくことを示す。成功事例では、赤い領域が対角線を覆うようになり、これはファインチューニングからの汎化の自然な出現を意味する。失敗事例では、拡大は続くものの、赤い領域は対角線に到達する前に止まる。これは、記憶後にM(P)がy*と一致すると損失がすぐに減少し、内部変化を促すための勾配更新を駆動するには小さくなりすぎるというファインチューニングの性質による。モデルは行き詰まり、表現を手動で再配置しない限り汎化に失敗する（次節で示す）。この知識浸透ダイナミクスは、時間軸上での学習フェーズとよく整合しており、我々の仮説からの予測を裏付けている：知識は格納されているが、表現が推論計算にとって有効な位置で利用可能になるまでは使われないのである。
+  </p>
+
+  <table>
+    <caption><b>表4</b>：オラクルself-patchingは、モデル・アーキテクチャ・知識ドメインを横断して下流利用を回復する。「pat.」は最も効果的な層での頭部エンティティself-patchingを表し、1000件の注入事実にわたって平均化している。95%ウィルソンスコア信頼区間は付録12に記載。</caption>
+    <tr>
+      <th rowspan="2">モデル</th>
+      <th colspan="5">STaRK-Prime</th>
+      <th colspan="5">STaRK-MAG</th>
+    </tr>
+    <tr>
+      <th class="num">記憶</th><th colspan="2">チェイニング</th><th colspan="2">交差</th>
+      <th class="num">記憶</th><th colspan="2">チェイニング</th><th colspan="2">交差</th>
+    </tr>
+    <tr>
+      <th></th><th class="num">w/o</th><th class="num">pat.</th><th class="num">w/o</th><th class="num">pat.</th>
+      <th></th><th class="num">w/o</th><th class="num">pat.</th><th class="num">w/o</th><th class="num">pat.</th>
+    </tr>
+    <tr><td>Qwen-2.5-1.5B</td><td class="num">0.998</td><td class="num">0.078</td><td class="num">0.440</td><td class="num">0.793</td><td class="num">0.987</td><td class="num">0.991</td><td class="num">0.046</td><td class="num">0.286</td><td class="num">0.928</td><td class="num">0.994</td></tr>
+    <tr><td>Qwen-2.5-3B</td><td class="num">0.997</td><td class="num">0.114</td><td class="num">0.542</td><td class="num">0.798</td><td class="num">0.986</td><td class="num">0.986</td><td class="num">0.052</td><td class="num">0.288</td><td class="num">0.958</td><td class="num">0.994</td></tr>
+    <tr><td>Qwen-2.5-7B</td><td class="num">0.996</td><td class="num">0.124</td><td class="num">0.504</td><td class="num">0.774</td><td class="num">0.956</td><td class="num">0.982</td><td class="num">0.068</td><td class="num">0.310</td><td class="num">0.976</td><td class="num">0.994</td></tr>
+    <tr><td>LLaMA-3.2-1B</td><td class="num">0.994</td><td class="num">0.102</td><td class="num">0.316</td><td class="num">0.874</td><td class="num">0.975</td><td class="num">0.975</td><td class="num">0.082</td><td class="num">0.182</td><td class="num">0.982</td><td class="num">0.994</td></tr>
+    <tr><td>LLaMA-3.2-3B</td><td class="num">0.993</td><td class="num">0.126</td><td class="num">0.404</td><td class="num">0.815</td><td class="num">0.969</td><td class="num">0.974</td><td class="num">0.064</td><td class="num">0.240</td><td class="num">0.982</td><td class="num">1.000</td></tr>
+    <tr><td>LLaMA-3.1-8B</td><td class="num">0.986</td><td class="num">0.182</td><td class="num">0.458</td><td class="num">0.795</td><td class="num">0.921</td><td class="num">0.975</td><td class="num">0.072</td><td class="num">0.222</td><td class="num">0.982</td><td class="num">0.994</td></tr>
+  </table>
+
+  <h3>5.3 汎化を人為的に誘発する</h3>
+  <p>
+    次に、収束時に、表現を再配置することでどれだけの下流利用を活性化できるかという「オラクル上限」を定量化する。self-patchは新しい情報を注入するのではなく既存の表現を再配置するだけであるため、パッチング後の下流利用における実質的な向上は、汎化の失敗が知識の欠如ではなく、格納と計算の間の不整合によるものであることを示している。我々は異なるアーキテクチャ・規模・知識ドメインで体系的にファインチューニングを行い、収束時にself-patchingを実行して回復可能な改善余地を測定する。実験はランダム性を避けるため1,000サンプルで計算している（付録B参照）。
+  </p>
+  <p>
+    表4は、モデルとドメインを横断して記憶がほぼ完璧に飽和する一方、特にチェイニングでは介入なしの下流利用が低いままであることを示す。オラクルself-patchingは、すべてのアーキテクチャ・モデル規模・知識ドメインにわたって大きく一貫した向上をもたらす。チェイニングの正解率はすべてのセルで1.5〜6倍に向上し、交差におけるより小さな知る-使うギャップはほぼ解消される。この一様な向上は、ランダムな偶然ではなく構造的な起源を示しており、知識-回路の不整合仮説を裏付ける因果的証拠となっている。
+  </p>
+
+  <div class="fig">
+    <div class="fig-caption-bar"><b>図5</b>：効果的なパッチ位置は2つのクラスタに集中する</div>
+    <div class="fig-body">
+      <p>
+        6つのモデル（Qwen2.5-1.5B/3B/7B、LLaMA3.2-1B/3B、LLaMA3.1-8B）それぞれについて、チェイニング（上段・オレンジの点）と交差（下段・緑の点）の最も効果的なパッチ位置を、ソース層（縦軸）とターゲット層（横軸）の散布図として示している。点は明確に2つのクラスタに分かれる：1つは初期層からのソース、もう1つは後段層からのソースで、いずれも中間層のクラスタへとパッチされている。
+      </p>
+    </div>
+  </div>
+
+  <h4>最も効果的なパッチングの位置</h4>
+  <p>
+    さらに図5に、最も効果的なパッチングの空間的位置を示す。これは明確な2クラスタパターンを明らかにする：1つのクラスタは初期層のソース層、もう1つは後段層のクラスタであり、どちらも中間層のクラスタのターゲット層へとパッチされている。後者は直感的である（Ghandeharioun et al. [2024]、Biran et al. [2024]）。後段の表現を逆方向に移動させることは本質的により豊かな情報をもたらすからだ。しかし、もう一方のクラスタは意外である：初期層から中間層への移動も汎化能力を引き起こすのである。これは、必要な情報の出現が単に遅すぎるわけではないことを意味する。モデルはむしろ複数の層をスキップしても成功しうる。つまり、情報はすでに初期層と後段層の両方に格納されているが、中間層における計算との整合に失敗しており、それが利用のボトルネックとなっているのである。さらに、右側の空白領域が示す通り、後段層への再配置は無意味である。これは、推論のストリームが後段層で最後のトークンへと移動しているという先行研究の3段階理論によって説明できる（Geva et al. [2023]）。
+  </p>
+
+  <h3>5.4 アブレーションと健全性チェック</h3>
+  <p>位置・プロンプティング・摂動といった他の潜在的な説明を排除するため、いくつかのアブレーションを実施した。</p>
+
+  <h4>トークン位置のアブレーション</h4>
+  <p>
+    注入された事実情報は、位置に依存しないのではなく、エンティティの言及と密接に結びついていることを実験的に示す。表5は、頭部エンティティ位置でのパッチングが、ランダムや&lt;BOS&gt;を大きく上回る、最大かつ最も有意な向上をもたらすことを示す。&lt;EOS&gt;位置は二次的なシグナルを示し、これは生成に関連する情報を集約する後方位置と整合する。
+  </p>
+
+  <table>
+    <caption><b>表5</b>：トークン位置のアブレーション。ランダムベースラインに対する異なる位置でのパッチングのMcNemar検定</caption>
+    <tr><th>位置</th><th class="num">平均</th><th class="num">p値</th><th>有意性</th></tr>
+    <tr><td>ランダム</td><td class="num">0.1359</td><td class="num">—</td><td>—</td></tr>
+    <tr><td>&lt;BOS&gt;</td><td class="num">0.0485</td><td class="num">1.0000</td><td>n.s.</td></tr>
+    <tr><td>&lt;EOS&gt;</td><td class="num">0.4029</td><td class="num">0.0000</td><td>***</td></tr>
+    <tr><td>第1関係</td><td class="num">0.1990</td><td class="num">0.0235</td><td>*</td></tr>
+    <tr><td>第2関係</td><td class="num">0.1990</td><td class="num">0.0121</td><td>*</td></tr>
+    <tr><td>エンティティ</td><td class="num">0.6408</td><td class="num">0.0000</td><td>***</td></tr>
+  </table>
+
+  <h4>プロンプティングと摂動の対照実験</h4>
+  <p>
+    表6はプロンプティングと表現に関する2つの補完的なアブレーションを組み合わせている。CoTプロンプティングはチェイニングを改善するが、self-patchingには遠く及ばず、交差の性能を悪化させることさえある。また、無関係な事実の表現を用いた無関係パッチングは、正しい事実の表現をパッチした場合に大きく遅れをとる。
+  </p>
+
+  <table>
+    <caption><b>表6</b>：プロンプティングと摂動のアブレーション。直接生成（パッチなし）とself-patchingは共通の基準点であり、CoTはプロンプト効果を、無関係パッチングは一般的な活性化摂動を制御する</caption>
+    <tr>
+      <th rowspan="2">モデル</th>
+      <th colspan="4">チェイニング</th><th colspan="4">交差</th>
+    </tr>
+    <tr>
+      <th class="num">w/o pat.</th><th class="num">CoT</th><th class="num">無関係pat.</th><th class="num">Self pat.</th>
+      <th class="num">w/o pat.</th><th class="num">CoT</th><th class="num">無関係pat.</th><th class="num">Self pat.</th>
+    </tr>
+    <tr><td>Qwen-2.5-1.5B</td><td class="num">0.078</td><td class="num">0.132</td><td class="num">0.150</td><td class="num">0.440</td><td class="num">0.793</td><td class="num">0.243</td><td class="num">0.873</td><td class="num">0.987</td></tr>
+    <tr><td>Qwen-2.5-3B</td><td class="num">0.114</td><td class="num">0.288</td><td class="num">0.184</td><td class="num">0.542</td><td class="num">0.798</td><td class="num">0.387</td><td class="num">0.856</td><td class="num">0.986</td></tr>
+    <tr><td>Qwen-2.5-7B</td><td class="num">0.124</td><td class="num">0.390</td><td class="num">0.194</td><td class="num">0.504</td><td class="num">0.774</td><td class="num">0.398</td><td class="num">0.890</td><td class="num">0.956</td></tr>
+  </table>
+
+  <h4>知識の存在の検出</h4>
+  <p>
+    向上がプロンプトの人工的効果やノイズによって駆動されている可能性を排除するため、知識表現を含むP<sub>mem</sub>からのE<sub>head</sub>表現を、さらにP<sub>gen</sub>へと文脈をまたいでパッチングする。図6は、両方の文脈における効果的な層ペアのパターンに強い相関があることを示しており、self-patchingが未知のノイズではなく、P<sub>mem</sub>と類似した注入知識の表現を転送していることを裏付けている。
+  </p>
+
+  <div class="fig">
+    <div class="fig-caption-bar"><b>図6</b>：文脈をまたいだ一貫性</div>
+    <div class="fig-body">
+      <p>
+        上：self-patchingにおける層ペアの効果マップ。下：記憶された事実からのパッチングにおける効果マップ。両者の散布図（右）は強い相関を示しており、記憶プロンプトからパッチングした表現の効果パターンが、self-patchingの効果パターンと類似していることを裏付ける。
+      </p>
+    </div>
+  </div>
+
+  <h3>5.5 診断から実用的ヒューリスティックへ</h3>
+  <p>
+    オラクルself-patchingは大きな改善余地を示すが、それは実用的な手法というより診断的なツールである。自然な問いは、図5で見られた観察が実用的な戦略として利用できるかどうかである。
+  </p>
+
+  <h4>固定ヒューリスティック</h4>
+  <p>
+    効果的なパッチが2つのクラスタ（後段→中間、初期→中間）に集中していることに基づき、モデルアーキテクチャごとに事前に定めた2つの層ペアのみを用いる簡便な戦略を定義する：(i) ソースを ~0.8L、ターゲットを ~0.5L とするもの、(ii) ソースを ~0.1L、ターゲットを ~0.5L とするもの（Lは総層数）。これらのペアはインスタンスごとの探索を必要としない。
+  </p>
+
+  <h4>結果</h4>
+  <p>
+    表7は、固定ヒューリスティックが全モデル・全タスクにわたってオラクルの改善余地の58〜75%を回復することを示しており、知る-使うギャップが実用的な戦略によって部分的に埋められることを裏付けている。固定結果とオラクル結果の間に残るギャップは、知識がどこに格納されているかというインスタンス固有の変動を反映しており、適応的な整合手法に関する今後の研究を動機づけている。
+  </p>
+
+  <table>
+    <caption><b>表7</b>：固定ヒューリスティック対オラクルself-patching。「Fixed」はモデルアーキテクチャごとに2つの事前定義層ペア（後段→中間、初期→中間）を用い、インスタンスごとの探索を必要としない</caption>
+    <tr>
+      <th rowspan="2">モデル</th><th rowspan="2" class="num">記憶</th>
+      <th colspan="3">チェイニング</th><th colspan="3">交差</th>
+    </tr>
+    <tr>
+      <th class="num">No Pat.</th><th class="num">Fixed</th><th class="num">Oracle</th>
+      <th class="num">No Pat.</th><th class="num">Fixed</th><th class="num">Oracle</th>
+    </tr>
+    <tr><td>Qwen-2.5-1.5B</td><td class="num">0.998</td><td class="num">0.078</td><td class="num">0.349</td><td class="num">0.440</td><td class="num">0.793</td><td class="num">0.942</td><td class="num">0.987</td></tr>
+    <tr><td>Qwen-2.5-3B</td><td class="num">0.997</td><td class="num">0.114</td><td class="num">0.435</td><td class="num">0.542</td><td class="num">0.798</td><td class="num">0.943</td><td class="num">0.986</td></tr>
+    <tr><td>Qwen-2.5-7B</td><td class="num">0.996</td><td class="num">0.124</td><td class="num">0.409</td><td class="num">0.504</td><td class="num">0.774</td><td class="num">0.914</td><td class="num">0.956</td></tr>
+    <tr><td>LLaMA-3.2-1B</td><td class="num">0.994</td><td class="num">0.102</td><td class="num">0.252</td><td class="num">0.316</td><td class="num">0.874</td><td class="num">0.947</td><td class="num">0.975</td></tr>
+    <tr><td>LLaMA-3.2-3B</td><td class="num">0.993</td><td class="num">0.126</td><td class="num">0.321</td><td class="num">0.404</td><td class="num">0.815</td><td class="num">0.926</td><td class="num">0.969</td></tr>
+    <tr><td>LLaMA-3.1-8B</td><td class="num">0.986</td><td class="num">0.182</td><td class="num">0.375</td><td class="num">0.458</td><td class="num">0.795</td><td class="num">0.886</td><td class="num">0.921</td></tr>
+    <tr><td><i>平均</i></td><td class="num">—</td><td class="num">0.121</td><td class="num">0.357</td><td class="num">0.444</td><td class="num">0.808</td><td class="num">0.926</td><td class="num">0.966</td></tr>
+  </table>
+
+  <h2 id="s6"><span class="num">6</span>結論</h2>
+  <p>
+    我々は「知る-使うギャップ」を特定した：ファインチューニングされたLLMは注入された事実を記憶するが、それを多段階推論に用いることに失敗する。self-patchingを因果的診断として用いることで、我々はこの失敗を<b>知識-回路の不整合</b>にまで遡って追跡した。知識は格納志向の初期層または後段層にエンコードされるが、推論に必要な中間層の回路へは浸透しない。したがってこのギャップは、容量の問題ではなく経路づけの問題である。知識はモデルの中に存在しているが、推論が行われる場所には存在しないのだ。これはまた部分的に可逆でもある：あるヒューリスティックがオラクルの改善余地の58〜75%を回復し、その効果はモデル・規模・ドメインを横断して再現する。これらの結果を総合すると、ファインチューニングにおける汎化の失敗は扱いやすい整合性の問題として捉え直すことができ、整合性を意識した学習が、有望な今後の方向性であることを示している。
+  </p>
+
+  <div class="divider">· · ·</div>
+
+  <h2 style="border-bottom:none;">参考文献</h2>
+  <p class="note-box">参考文献リストは原文（英語）のまま掲載しています（書誌情報は翻訳の対象外とするのが通例のため）。</p>
+  <div class="refs">
+    <p>Alan Agresti and Brent A. Coull. Approximate is better than "exact" for interval estimation of binomial proportions. <i>The American Statistician</i>, 52(2):119–126, 1998.</p>
+    <p>Guillaume Alain and Yoshua Bengio. Understanding intermediate layers using linear classifier probes. ICLR 2017 Workshop Track.</p>
+    <p>Zeyuan Allen-Zhu and Yuanzhi Li. Physics of language models: Part 3.3, knowledge capacity scaling laws. ICLR.</p>
+    <p>Yonatan Belinkov. Probing classifiers: Promises, shortcomings, and advances. <i>Comput. Linguistics</i>, 48(1):207–219, 2022.</p>
+    <p>Lukas Berglund, Meg Tong, Maximilian Kaufmann, Mikita Balesni, Asa Cooper Stickland, Tomasz Korbak, and Owain Evans. The reversal curse: LLMs trained on "A is B" fail to learn "B is A". ICLR.</p>
+    <p>Eden Biran, Daniela Gottesman, Sohee Yang, Mor Geva, and Amir Globerson. Hopping too late: Exploring the limitations of large language models on multi-hop queries. EMNLP 2024, pages 14113–14130.</p>
+    <p>Roi Cohen, Eden Biran, Ori Yoran, Amir Globerson, and Mor Geva. Evaluating the ripple effects of knowledge editing in language models. <i>TACL</i>, 11:283–298, 2024.</p>
+    <p>Damai Dai, Li Dong, Yaru Hao, Zhifang Sui, Baobao Chang, and Furu Wei. Knowledge neurons in pretrained transformers. ACL 2022, pages 8493–8502.</p>
+    <p>Leo Gao, Tom Dupré la Tour, Henk Tillman, Gabriel Goh, Rajan Troll, Alec Radford, Ilya Sutskever, Jan Leike, and Jeffrey Wu. Scaling and evaluating sparse autoencoders. ICLR 2025.</p>
+    <p>Samuel J. Gershman, Ila Fiete, and Kazuki Irie. Key-value memory in the brain. <i>CoRR</i>, abs/2501.02950, 2025.</p>
+    <p>Mor Geva, Jasmijn Bastings, Katja Filippova, and Amir Globerson. Dissecting recall of factual associations in auto-regressive language models. EMNLP 2023, pages 12216–12235.</p>
+    <p>Asma Ghandeharioun, Avi Caciularu, Adam Pearce, Lucas Dixon, and Mor Geva. Patchscopes: A unifying framework for inspecting hidden representations of language models. ICML 2024, pages 15466–15490.</p>
+    <p>Akshat Gupta, Anurag Rao, and Gopala Anumanchipalli. Model editing at scale leads to gradual and catastrophic forgetting. Findings of ACL 2024, pages 15202–15232.</p>
+    <p>Robert Huben, Hoagy Cunningham, Logan Riggs Smith, Aidan Ewart, and Lee Sharkey. Sparse autoencoders find highly interpretable features in language models. ICLR 2024.</p>
+    <p>Ziyue Li, Chenrui Fan, and Tianyi Zhou. Where to find grokking in LLM pretraining? Monitor memorization-to-generalization without test. <i>CoRR</i>, abs/2506.21551, 2025.</p>
+    <p>Ziming Liu, Ouail Kitouni, Niklas Nolte, Eric J. Michaud, Max Tegmark, and Mike Williams. Towards understanding grokking: An effective theory of representation learning. NeurIPS 2022.</p>
+    <p>Kevin Meng, Arnab Sen Sharma, Alex J Andonian, Yonatan Belinkov, and David Bau. Mass-editing memory in a transformer. ICLR.</p>
+    <p>Kevin Meng, David Bau, Alex Andonian, and Yonatan Belinkov. Locating and editing factual associations in GPT. NeurIPS 2022.</p>
+    <p>John X Morris, Chawin Sitawarin, Chuan Guo, Narine Kokhlikyan, G Edward Suh, Alexander M Rush, Kamalika Chaudhuri, and Saeed Mahloujifar. How much do language models memorize? <i>arXiv preprint arXiv:2505.24832</i>, 2025.</p>
+    <p>Neel Nanda, Lawrence Chan, Tom Lieberum, Jess Smith, and Jacob Steinhardt. Progress measures for grokking via mechanistic interpretability. ICLR 2023.</p>
+    <p>nostalgebraist. Interpreting GPT: the logit lens, August 2020.</p>
+    <p>Catherine Olsson, Nelson Elhage, Neel Nanda, et al. In-context learning and induction heads. <i>CoRR</i>, abs/2209.11895, 2022.</p>
+    <p>Oded Ovadia, Menachem Brief, Moshik Mishaeli, and Oren Elisha. Fine-tuning or retrieval? Comparing knowledge injection in LLMs. EMNLP 2024, pages 237–250.</p>
+    <p>Vedant Palit, Rohan Pandey, Aryaman Arora, and Paul Pu Liang. Towards vision-language mechanistic interpretability: A causal tracing tool for BLIP. ICCV 2023 Workshops, pages 2848–2853.</p>
+    <p>Kiho Park, Yo Joong Choe, and Victor Veitch. The linear representation hypothesis and the geometry of large language models. ICML 2024.</p>
+    <p>Alethea Power, Yuri Burda, Harri Edwards, Igor Babuschkin, and Vedant Misra. Grokking: Generalization beyond overfitting on small algorithmic datasets. <i>arXiv preprint arXiv:2201.02177</i>, 2022.</p>
+    <p>Nikhil Prakash, Tamar Rott Shaham, Tal Haklay, Yonatan Belinkov, and David Bau. Fine-tuning enhances existing mechanisms: A case study on entity tracking. ICLR 2024.</p>
+    <p>Heydar Soudani, Evangelos Kanoulas, and Faegheh Hasibi. Fine tuning vs. retrieval augmented generation for less popular knowledge. SIGIR-AP 2024, pages 12–22.</p>
+    <p>Boshi Wang, Xiang Yue, Yu Su, and Huan Sun. Grokking of implicit reasoning in transformers: A mechanistic journey to the edge of generalization. NeurIPS 2024, 37:95238–95265.</p>
+    <p>Kevin Ro Wang, Alexandre Variengien, Arthur Conmy, Buck Shlegeris, and Jacob Steinhardt. Interpretability in the wild: a circuit for indirect object identification in GPT-2 small. ICLR 2023.</p>
+    <p>Chris Wendler, Veniamin Veselovsky, Giovanni Monea, and Robert West. Do llamas work in English? On the latent language of multilingual transformers. ACL 2024, pages 15366–15394.</p>
+    <p>Shirley Wu, Shiyu Zhao, Michihiro Yasunaga, et al. STaRK: Benchmarking LLM retrieval on textual and relational knowledge bases. NeurIPS 2024 Datasets and Benchmarks Track.</p>
+    <p>Yunzhi Yao, Ningyu Zhang, Zekun Xi, Mengru Wang, Ziwen Xu, Shumin Deng, and Huajun Chen. Knowledge circuits in pretrained transformers. NeurIPS 2024.</p>
+    <p>Yunzhi Yao, Jizhan Fang, Jia-Chen Gu, Ningyu Zhang, Shumin Deng, Huajun Chen, and Nanyun Peng. CaKE: Circuit-aware editing enables generalizable knowledge learners. <i>arXiv preprint arXiv:2503.16356</i>, 2025.</p>
+    <p>Fred Zhang and Neel Nanda. Towards best practices of activation patching in language models: Metrics and methods. ICLR.</p>
+    <p>Zexuan Zhong, Zhengxuan Wu, Christopher D Manning, Christopher Potts, and Danqi Chen. MQuAKE: Assessing knowledge editing in language models via multi-hop questions. EMNLP 2023, pages 15686–15702.</p>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <h2 id="appA" style="border-bottom:none;">付録A　データセット詳細</h2>
+
+  <h3>A.1 構築パイプライン</h3>
+  <p>
+    知識グラフから事実を抽出し、データセット用のQAペアを生成するための自動化パイプラインを構築した。生成プロセスには2つの異なる手法を用意している：言語的多様性を確保するLLMベースの手法と、構造的な一貫性を維持するテンプレートベースの手法である。手順は以下の通りである。
+  </p>
+  <ol>
+    <li><b>有効なパスをサンプリングする</b>：各汎化タスクの種類について、サンプリング過程を導き、意味のある妥当な問いを生成するための有効なメタパスのリストを手動で設計する。メタパスは、タスクの構造を概略するエンティティ種別と関係種別の系列を定義する。例えば、チェイニングタスクのメタパスは（解剖学的部位 → 発現している → 遺伝子/タンパク質 → 標的とする → 薬剤）のように表され、これに対応する具体的なパス（例：女性生殖器系 → 発現している → SLC12A6 → 標的とする → 塩化カリウム）が知識グラフから抽出される。</li>
+    <li><b>記憶タスクを生成する</b>：最初のステップで得られたメタパスに一致するパスを無作為に抽出し、それを事実トリプレットのリスト（本設定における知識の最小単位であり、LLMをファインチューニングするための教材）に分解する。各事実トリプレットについて、AIアシスタントへのプロンプトまたは事前定義したテンプレートを用いて記憶タスクを生成する。特に交差タスクでは、タスクの複雑さを増すために、両方の頭部エンティティに関連する追加のノイズ事実がリストに加えられる。</li>
+    <li><b>汎化タスクを生成する</b>：同じサンプリング済みパスについて、同様の手法を用いてAIアシスタントまたはテンプレートにより対応する汎化タスクの問いを生成する。</li>
+  </ol>
+  <p>
+    このパイプラインは自動化されており、効率的かつスケーラブルであり、QAペア生成に2つの代替手法を提供する。LLMベースの手法は多様で自然なQAペアを生み出す一方、テンプレートベースの手法は下流の解釈可能性研究のための一貫性と制御可能性を確保する。
+  </p>
+
+  <table>
+    <caption><b>表8</b>：patchscopeで用いたターゲットプロンプト</caption>
+    <tr><th>メタパス（キー）</th><th>文脈内プロンプト（値）</th></tr>
+    <tr><td>(疾患, 関連する, 遺伝子/タンパク質)</td><td>嚢胞性線維症→CFTR；鎌状赤血球症→HBB；デュシェンヌ型筋ジストロフィー→DMD；疾患名→</td></tr>
+    <tr><td>(表現型/表現形質, 関連する, 遺伝子/タンパク質)</td><td>PTC苦味感受性→TAS2R38；赤緑色覚異常→OPN1LW；乳糖不耐症でない体質（成人の乳糖消化）→LCT；表現型名→</td></tr>
+    <tr><td>(疾患, 禁忌である, 薬剤)</td><td>G6PD欠損症→プリマキン；喘息→プロプラノロール；パーキンソン病→メトクロプラミド；疾患名→</td></tr>
+  </table>
+
+  <h3>A.2 要件の検証</h3>
+  <p>
+    我々のデータセットが3.1節で述べた4つの要件をすべて満たしていることを検証する。<b>スケーラビリティ</b>は、STaRK-Prime知識グラフに含まれる800万件の異なる事実トリプレットによって保証されており、我々はこれらから直接データセットのサンプルを生成している。<b>タスクの多様性</b>については、支持事実を異なる形で組織化する3種類の汎化タスクを手動で設計し、10種のエンティティ種別と18種の関係種別をカバーする53種のメタパスから生成した。<b>実世界の知識</b>は生物医学的な知識グラフによって裏付けられている。<b>クロスドメイン検証</b>のため、著者-論文-研究分野の関係を用いた同一パイプラインにより、STaRK-MAG（学術知識グラフ）から類似のデータセットを追加構築し、12,000件のチェイニング項目と4,390件の交差項目を生成した。
+  </p>
+  <p>
+    データセットがLLMにとって事前知識をほとんど含んでいないことを検証するため、データセットから1,000件の事実とそれに対応する記憶タスクを無作為抽出し、ファインチューニングなしの事前学習済みLLMのゼロショット正解率を評価する実験を行った。表2に示す結果の通り、STARK-PRIMEとSTARK-MAGの両方で全モデルが約0.06以下のスコアであり、モデルがデータセットのサンプルについてほとんど事前知識を持たないことを示している。
+  </p>
+
+  <h2 id="appB" style="border-bottom:none;">付録B　実験設定の詳細</h2>
+  <p>
+    本節は、本文中の現象分析と機構的分析で用いた実験設定をまとめたものである。特に断りのない限り、実験はサンプリングノイズを減らすため注入事実1,000件の固定分割で実行される。より少ない件数は、タスク固有のフィルタリング後や、計算コストの都合で意図的に小さいサブセットで診断スキャンを行う場合にのみ生じる。
+  </p>
+
+  <h4>知識注入タスク</h4>
+  <p>
+    既定のドメインはSTARK-PRIMEであり、STARK-MAGはクロスドメインでの再現に用いる。チェイニング実験では、各インスタンスは2つの支持事実 E1 → r1 → E2 と E2 → r2 → E3 を含む。モデルは対応する記憶クエリでファインチューニングされ、ホールドアウトされた構成的クエリ E1 → r1 → r2 → ? で評価される。これはブリッジエンティティを回復してから最終的な回答を予測する必要がある。交差タスクも同様の記憶-利用の分離を用いるが、複数の支持事実とノイズ事実から共有エンティティを特定できるかを評価する。パッチング前には、ベースモデルが記憶または汎化のプロンプトのいずれかにすでに正しく解答できるインスタンスを除外し、測定された向上が既存の知識漏洩に起因しないようにしている。
+  </p>
+
+  <h4>知る-使うギャップの学習設定</h4>
+  <p>
+    4.2節における時間的ラグと正解率ギャップの測定のため、オープンウェイトのLLaMAとQwenモデルを、無作為抽出した知識注入タスクでファインチューニングし、各チェックポイントで記憶と下流利用の正解率を追跡する。LoRA実行ではweight decay 0.01のAdamWを使用し、実際の注入設定ではバッチサイズ10、学習率10<sup>-4</sup>、50エポック（直接的な記憶が飽和するのに十分な長さ）を用いる。全パラメータファインチューニングの比較には、LoRAの比較と同じタスク分割・評価プロトコルを用いる。モデル規模・データ規模の実験では、タスク構成は固定したまま、ベースモデルのサイズまたは注入する事実の数のいずれかを変化させ、最終的な正解率ギャップΔAと時間的ラグΔTの両方を報告する。
+  </p>
+
+  <h4>主要な複数事実実行のLoRAハイパーパラメータ</h4>
+  <p>
+    統合されたLoRA設定では、ランクr = 16、α = 32、ドロップアウト0.05を用い、対象モジュールはすべてのTransformerブロックにわたる{q, k, v, o, gate, up, down}<sub>proj</sub>である。AdamWのデフォルト設定（β1 = 0.9、β2 = 0.999、ε = 10<sup>-8</sup>）、weight decay 0.01、ウォームアップなし、貪欲法（greedy）デコーディングによる評価を用いる。再現用スクリプトでは学習率2×10<sup>-4</sup>、デバイスあたりバッチサイズ1、勾配累積8（実効バッチサイズ8）、fp32勾配、乱数シード42を使用する。主要な複数事実実行では、表に明示的にフィルタリング後の評価件数が記載されていない限り、固定された1,000件のデータ分割を用いる。
+  </p>
+
+  <h4>浸透ダイナミクス</h4>
+  <p>
+    5.2節の学習ダイナミクスのヒートマップについては、各エポックでチェックポイントを保存し、頭部エンティティのトークン位置E<sub>head</sub>で層対層のself-patchingを実行する。各チェックポイントについて、ソース層とターゲット層のペア(l<sub>src</sub>, l<sub>tgt</sub>)を走査し、ターゲットの残差ストリーム表現をソース表現に置き換えることが下流の回答を改善するかどうかを記録する。この診断スキャンは、パラメータ効率的なチューニングを用いて30エポックにわたる100件の無作為抽出したチェイニングタスクで実行され、記憶された表現がいつ因果的に利用可能になるかを可視化するのに十分である。
+  </p>
+
+  <h4>オラクルおよび固定self-patching</h4>
+  <p>
+    5.3節の収束時の回復可能な改善余地の結果については、各インスタンスは汎化プロンプトの頭部エンティティ位置で全層ペアを走査することで評価され、最も性能の良いペアがオラクル診断上限として報告される。5.5節の固定ヒューリスティックは、モデルごとに事前定義した2つのペアのみを用いる：⌊0.82L⌋, ⌊0.45L⌋ および ⌊0.10L⌋, ⌊0.45L⌋（Lはトランスフォーマー層数）。固定ヒューリスティックにはインスタンスごとの探索は用いない。STARK-MAGについては、STARK-PRIMEと同一の記憶・チェイニング・交差・フィルタリング・ファインチューニング・self-patchingのプロトコルに従う。パッチング評価には、フィルタリング後のMAGチェイニングインスタンス500件とMAG交差インスタンス166件を用いる（付録C参照）。
+  </p>
+
+  <h4>対照実験と統計報告</h4>
+  <p>
+    トークン位置のアブレーションは同じ収束済みチェックポイントを用いるが、パッチされる位置をランダム、&lt;BOS&gt;、&lt;EOS&gt;、関係トークン、エンティティトークンの間で変える。プロンプティングと摂動の対照実験は、同じ完全一致スコアリング規則の下で、直接生成、CoTプロンプティング、無関係事実パッチング、正しい事実表現によるself-patchingを比較する。すべての集計比率について、付録Fは95%ウィルソン信頼区間を報告し、対になった記憶-利用のギャップはMcNemar検定と不一致ペアに対する正確二項検定で検定され、時間的ラグの定義はτ, wの感度グリッドの下で検証される。
+  </p>
+
+  <h2 id="appC" style="border-bottom:none;">付録C　クロスドメイン再現詳細（STaRK-MAG）</h2>
+
+  <h3>C.1 ドメインの比較</h3>
+  <p>
+    表9は本研究で用いた2つの知識ドメインを比較している。STaRK-Primeは豊かな関係構造を持つ生物医学的エンティティ（疾患、遺伝子、薬剤）をカバーし、STaRK-MAGは学術出版物（著者、論文、研究分野）をカバーする。両ドメインは、エンティティの命名規則（簡潔な生物医学用語 対 冗長な論文タイトル）、関係種別、グラフの密度において異なっており、クロスドメインの汎用性に対する意味のある検証を提供する。
+  </p>
+
+  <table>
+    <caption><b>表9</b>：2つの知識ドメインの比較</caption>
+    <tr><th></th><th>STaRK-Prime</th><th>STaRK-MAG</th></tr>
+    <tr><td>出典</td><td>PrimeKG</td><td>Microsoft Academic</td></tr>
+    <tr><td>ドメイン</td><td>生物医学</td><td>学術</td></tr>
+    <tr><td>エンティティ種別</td><td>疾患、遺伝子、薬剤、解剖学的部位、表現型</td><td>著者、論文、研究分野</td></tr>
+    <tr><td>関係種別</td><td class="num">18</td><td class="num">5</td></tr>
+    <tr><td>エンティティ命名</td><td>簡潔な用語</td><td>冗長なタイトル</td></tr>
+    <tr><td>チェイニング項目数</td><td class="num">1,000</td><td class="num">12,000</td></tr>
+    <tr><td>交差項目数</td><td class="num">996</td><td class="num">4,390</td></tr>
+  </table>
+
+  <h3>C.2 学習ダイナミクス</h3>
+  <p>
+    図7は、Qwen MAG学習実行におけるエポックごとの記憶・生成正解率を示す。<b>チェイニング</b>は最も顕著な乖離を示す：記憶はエポック15までに0.95を超えるが、生成はその間ほぼゼロのままであり、このパターンはQwenの各モデル規模にわたって成り立ち、生物医学ドメインの結果を反映している。<b>交差</b>は記憶と生成が同時並行的に上昇し、最終的に同程度の高い値に達することを示しており、両ドメインで観察された小さなギャップと整合している。
+  </p>
+
+  <div class="fig">
+    <div class="fig-caption-bar"><b>図7</b>：タスク・モデル規模を横断したMAG学習ダイナミクス</div>
+    <div class="fig-body">
+      <p>
+        各パネルは、50学習エポックにわたる記憶（赤）と生成（青）の正解率を示し、網掛け領域が瞬間的な知る-使うギャップを表す。qwen2.5-1.5bおよびqwen2.5-3bについて、チェイニング（gap=0.945/0.934）・交差（gap=0.056/0.026）・fact_checking（gap=0.336/0.277）の3タスクを掲載。チェイニングは大きく持続的なギャップを示し、交差はほぼ並行する学習曲線を示す。
+      </p>
+    </div>
+  </div>
+
+  <h2 id="appD" style="border-bottom:none;">付録D　知る-使うギャップのスケーリング結果</h2>
+  <p>異なるモデル規模・データ規模にわたって知る-使うギャップを検証し、結果を付録に示す。</p>
+  <p>
+    図2は、モデルサイズを増加させても時間的ラグΔTは解消されないことを示す。さらに、注入する事実の数を増やすと、直接想起は強いままであっても最終的な正解率ギャップΔA(T)が拡大する傾向があり、ストレージのスケーリングが使用可能な推論における比例的な向上に直接つながるわけではないことを示している。表10はLLaMA-3.2-8Bにおけるチェイニングと交差の対応するラグ推定値を示している：チェイニングはより大きな遅延を示す一方、交差は記憶時刻に近いままである。
+  </p>
+
+  <table>
+    <caption><b>表10</b>：Llama-3.2-8Bにおけるタスク横断の時間的ラグ（ΔT）。値はエポック数（平均±標準偏差）</caption>
+    <tr><th>タスク</th><th class="num">T<sub>mem</sub></th><th class="num">T<sub>gen</sub></th><th class="num">ΔT（ラグ）</th></tr>
+    <tr><td>チェイニング</td><td class="num">7.23 ± 1.89</td><td class="num">11.83 ± 5.41</td><td class="num">+4.60</td></tr>
+    <tr><td>交差</td><td class="num">6.04 ± 1.32</td><td class="num">7.16 ± 6.96</td><td class="num">+1.12</td></tr>
+  </table>
+
+  <h2 id="appE" style="border-bottom:none;">付録E　知識-回路の不整合に関する追加結果</h2>
+  <p>
+    我々は記憶プロンプトにおける隠れ状態を解釈するためPatchScopeを用いる。表8に示す文脈内プロンプトを用い、頭部エンティティ位置を検証する。図8の結果は、初期層における知識格納について、LLaMAにおける検出可能な位置がQwenよりもモデル規模を通じて低い層にあることを示しており、LLaMAが初期層〜中間層に知識を格納する傾向があることを示唆している。
+  </p>
+
+  <div class="fig">
+    <div class="fig-caption-bar"><b>図8</b>：頭部エンティティ位置における記憶関連層のPatchscopeビュー</div>
+    <div class="fig-body">
+      <p>
+        LLaMA-3.2-1B/3B、LLaMA-3.1-8B、Qwen-2.5-1.5B/3B/7Bの各モデルについて、層（縦軸）ごとの検出強度をヒートマップの列として示し、赤枠で「知識が検出可能な層域」を強調している。LLaMAではこの層域がQwenに比べて低い（より初期の）層に位置する傾向が見られる。
+      </p>
+    </div>
+  </div>
+
+  <p>
+    また、本文と同一サイズのLLaMAアーキテクチャについて、self-patchingの対照実験を表11に示す。この対照実験は、self-patchingがチェイニング・交差の両方で最も強い回復をもたらす一方、無関係パッチングは知識固有の介入を下回ったままであることを裏付けている。
+  </p>
+
+  <table>
+    <caption><b>表11</b>：LLaMA-3.2-3bにおける対照パッチング実験</caption>
+    <tr><th></th><th class="num">チェイニング</th><th class="num">交差</th></tr>
+    <tr><td>パッチングなし</td><td class="num">0.126</td><td class="num">0.815</td></tr>
+    <tr><td>無関係パッチング</td><td class="num">0.207</td><td class="num">0.915</td></tr>
+    <tr><td>Self-Patching</td><td class="num">0.404</td><td class="num">0.969</td></tr>
+  </table>
+
+  <h2 id="appF" style="border-bottom:none;">付録F　統計的有意性と信頼区間</h2>
+  <p>
+    全ての主要な結果について95%ウィルソンスコア信頼区間を報告する。ウィルソン区間は、0または1に近い比率については正規近似よりも望ましいとされる（Agresti and Coull [1998]）。記憶は n = 1000 の事実で評価し、チェイニングと交差はそれぞれ n = 500 と n = 1000 で評価する。インスタンスごとの知る-使うギャップ（記憶−チェイニング）は、対になった0/1の結果に対するMcNemar検定の下で、すべてのモデルについて有意である（すべてのモデルで p &lt; 10<sup>-50</sup>）。ギャップの大きさは、記憶−チェイニングの比率の差によって完全に記述され、これはMcNemarの効果量統計そのものであり、右列に示されている。不一致ペアに対する正確二項検定はMcNemarと同じ結論を与える。モデルサイズとギャップの大きさとのスピアマン相関は r = −0.90、p = 0.015 である。時間的ラグの感度については、Qwen-2.5-3Bのチェイニングについて τ ∈ {0.9, 0.95, 1.0} と w ∈ {1, 2, 3} でΔTを再計算したところ、既定値（τ = 1.0、w = 2）の報告値から±1.0エポック以内に収まり、T<sub>use</sub> &gt; T<sub>mem</sub> という定性的パターンは9個すべてのグリッドセルで成立した。
+  </p>
+
+  <table>
+    <caption><b>表12</b>：表4に対する95%ウィルソンスコア信頼区間</caption>
+    <tr><th>モデル</th><th>記憶</th><th>チェイニング</th><th>交差</th><th class="num">ギャップ</th></tr>
+    <tr><td>Qwen-2.5-1.5B</td><td class="num">0.998<sup>+0.002</sup><sub>-0.004</sub></td><td class="num">0.078<sup>+0.025</sup><sub>-0.020</sub></td><td class="num">0.793<sup>+0.032</sup><sub>-0.038</sub></td><td class="num">0.920</td></tr>
+    <tr><td>Qwen-2.5-3B</td><td class="num">0.997<sup>+0.002</sup><sub>-0.004</sub></td><td class="num">0.114<sup>+0.030</sup><sub>-0.024</sub></td><td class="num">0.798<sup>+0.032</sup><sub>-0.037</sub></td><td class="num">0.883</td></tr>
+    <tr><td>Qwen-2.5-7B</td><td class="num">0.996<sup>+0.003</sup><sub>-0.005</sub></td><td class="num">0.124<sup>+0.031</sup><sub>-0.026</sub></td><td class="num">0.774<sup>+0.034</sup><sub>-0.039</sub></td><td class="num">0.872</td></tr>
+    <tr><td>LLaMA-3.2-1B</td><td class="num">0.994<sup>+0.004</sup><sub>-0.006</sub></td><td class="num">0.102<sup>+0.028</sup><sub>-0.023</sub></td><td class="num">0.874<sup>+0.026</sup><sub>-0.032</sub></td><td class="num">0.892</td></tr>
+    <tr><td>LLaMA-3.2-3B</td><td class="num">0.993<sup>+0.004</sup><sub>-0.006</sub></td><td class="num">0.126<sup>+0.031</sup><sub>-0.026</sub></td><td class="num">0.815<sup>+0.031</sup><sub>-0.036</sub></td><td class="num">0.867</td></tr>
+    <tr><td>LLaMA-3.1-8B</td><td class="num">0.986<sup>+0.006</sup><sub>-0.009</sub></td><td class="num">0.182<sup>+0.035</sup><sub>-0.031</sub></td><td class="num">0.795<sup>+0.032</sup><sub>-0.038</sub></td><td class="num">0.804</td></tr>
+  </table>
+
+  <h2 id="appG" style="border-bottom:none;">付録G　浸透ダイナミクスの追加事例</h2>
+  <p>
+    図9と図10は、LLaMA-3.1-8BおよびQwen-2.5-7Bにおける、記憶から汎化への遷移の浸透ダイナミクスの追加事例をそれぞれ示している。パターンは5.2節の結果と一貫しており、対角線を覆うパッチ有効領域が直接的な連鎖能力の出現を示している。
+  </p>
+
+  <div class="fig">
+    <div class="fig-caption-bar"><b>図9</b>：LLaMA-3.1-8Bにおける浸透ダイナミクスの追加事例</div>
+    <div class="fig-body">
+      <p>
+        (a) 成功事例：複数のヒートマップにおいて、赤い領域が学習の進行とともに拡大し対角線を覆うようになる過程が示されている。<br>
+        (b) 失敗事例：赤い領域は拡大するものの、対角線に到達する前に止まっており、汎化が生じないパターンが繰り返し確認される。
+      </p>
+    </div>
+  </div>
+
+  <div class="fig">
+    <div class="fig-caption-bar"><b>図10</b>：Qwen-2.5-7Bにおける浸透ダイナミクスの追加事例</div>
+    <div class="fig-body">
+      <p>
+        LLaMA-3.1-8Bと同様に、(a) 成功事例では赤い領域が対角線を覆うまで拡大し、(b) 失敗事例では拡大が対角線の手前で止まるというパターンがQwenアーキテクチャでも一貫して観察される。
+      </p>
+    </div>
+  </div>
+
+  <h2 id="appH" style="border-bottom:none;">付録H　限界と責任ある研究の詳細</h2>
+
+  <h3>H.1 限界</h3>
+  <p>
+    Self-patchingは意図的に制約されている：我々は固定されたアンカー位置で介入し、層をまたいで表現を移動させる。注入された知識は複数の位置に分散していたり、冗長にエンコードされていたりする可能性があるため、我々の推定値は回復可能な改善余地全体を過小評価している可能性がある。
+  </p>
+  <p>
+    我々のオラクル・ベストペアの結果は、診断的な上限として解釈されるべきである。5.5節の固定ヒューリスティックは実用的な実現可能性を示しているものの、完全に適応的な非オラクル整合戦略の開発は依然として重要な方向性である。
+  </p>
+  <p>
+    我々の機構は主に診断的である：不整合を事後的に特定し部分的に修復することはできるが、どの事実が汎化に失敗するかを予測する早期学習シグナルはまだ提供していない。そのような予測的指標を開発することで、ファインチューニング中の事前的な介入が可能になるだろう。
+  </p>
+  <p>
+    最後に、我々の機構的分析はトークン-層レベルで行われている。特定のアテンションヘッドやMLPサブレイヤーへのより細かい局在化により、知識-回路の不整合仮説をさらに精緻化し、より的を絞った介入に資することができるだろう。
+  </p>
+
+  <h3>H.2 再現性と計算資源</h3>
+  <p>
+    コード、データ、再現手順は匿名リリース（https://anonymous.4open.science/r/Mem2Gen-71FF）に含まれている。付録Bは、実験結果を再現するために用いた主要なデータ分割、フィルタリングプロトコル、ハイパーパラメータ、評価規則、統計検定を報告している。
+  </p>
+  <p>
+    実験は、それぞれ81,920 MiBのメモリを持つNVIDIA A800 GPU、Intel 128コアCPU、512 GBのシステムメモリを備えたサーバー上で実行された。主要な実験は通常8基のGPUを用いた。モデル規模や実験の種類に応じて、1回の実行にかかる実時間は約5時間から1日程度であった。
+  </p>
+
+  <h3>H.3 アセット・ライセンス・公開済みアーティファクト</h3>
+  <p>
+    本研究はSTARKベンチマーク（Wu et al. [2024]）、特にSTARK-PRIMEとSTARK-MAGを適応利用している。公開されているSTaRKリポジトリはMITライセンスの下で公開されている。オープンウェイトのQwen2.5モデルは、それぞれの公開ライセンスの下で使用している：Qwen2.5-1.5BとQwen2.5-7BはApache 2.0、Qwen2.5-3BはQwen Research/通義千問（Tongyi Qianwen）Researchの利用規約の下で使用している。LLaMA-3.1とLLaMA-3.2モデルはMeta Llama Community Licenseの利用規約の下で使用している。
+  </p>
+  <p>
+    我々は、導出した記憶-汎化QAデータおよび付随コードを、匿名リポジトリにおいてMITライセンスの下で新規アーティファクトとして公開する。公開データは知識グラフの事実とテンプレート、またはAI支援による文章表現から生成されており、本研究のために同意を要する人間の被験者データは収集していない。
+  </p>
+
+  <h3>H.4 倫理・広範な影響・保護措置</h3>
+  <p>
+    著者らはNeurIPS倫理規定を確認し、本研究がそれに準拠していると考えている。本研究はクラウドソーシング、人間の被験者実験、参加者への報酬、IRB（倫理審査委員会）方式の審査要件を伴わない。
+  </p>
+  <p>
+    <b>広範な影響：</b> 本研究のポジティブな影響として、LLMの知識注入における失敗を診断・緩和する能力の向上が挙げられる。一方でネガティブな影響としては、不正確・不安全・有害な事実への適応能力を向上させてしまう可能性が挙げられる。
+  </p>
+  <p>
+    <b>保護措置：</b> 本研究は学習済みモデルの重み、事前学習済み言語モデル、画像生成器、スクレイピングされた画像データセットは公開しておらず、コードと知識グラフ由来のQAデータのみを公開している。外部モデルの利用は、それぞれのモデル提供元のライセンスおよび利用規約に引き続き準拠する。
+  </p>
+
+  <footer>
+    日本語訳作成：Claude　｜　原論文: Lu Dai, Ziyang Rao, Yili Wang, Hanqing Wang, Hao Liu, Hui Xiong「Towards Mechanistically Understanding Why Memorized Knowledge Fails to Generalize in LLM Finetuning」（arXiv:2607.08393v1, 2026年7月9日）
+  </footer>
+
+</div>
+</body>
+</html>

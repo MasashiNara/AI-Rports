@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ルーティングはいつ意味を持つか？ ― 言語モデル社会における多様性とロバスト性</title>
+<style>
+  :root {
+    --text: #1a1a1a;
+    --text-light: #555;
+    --accent: #8e44ad;
+    --accent-light: #f4ecf9;
+    --border: #ddd;
+    --bg: #fdfdfd;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.9;
+    margin: 0;
+    padding: 0;
+  }
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 32px 96px;
+  }
+  header.title-block {
+    text-align: center;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 28px;
+    margin-bottom: 40px;
+  }
+  h1.main-title {
+    font-size: 1.65em;
+    line-height: 1.5;
+    margin: 0 0 6px;
+    color: var(--text);
+  }
+  h1.main-title .en {
+    display: block;
+    font-size: 0.62em;
+    color: var(--text-light);
+    font-weight: 400;
+    margin-top: 8px;
+  }
+  .authors {
+    margin-top: 18px;
+    font-size: 1.05em;
+  }
+  .affiliation {
+    color: var(--text-light);
+    font-size: 0.95em;
+    margin-top: 4px;
+  }
+  .arxiv-note {
+    font-size: 0.8em;
+    color: #999;
+    margin-top: 14px;
+  }
+  .translator-note {
+    background: var(--accent-light);
+    border-left: 4px solid var(--accent);
+    padding: 12px 18px;
+    font-size: 0.88em;
+    color: #555;
+    margin: 24px 0 40px;
+    border-radius: 0 4px 4px 0;
+  }
+  h2 {
+    font-size: 1.32em;
+    color: var(--accent);
+    border-bottom: 2px solid var(--accent-light);
+    padding-bottom: 8px;
+    margin-top: 52px;
+    margin-bottom: 20px;
+  }
+  h3 {
+    font-size: 1.1em;
+    color: #333;
+    margin-top: 34px;
+    margin-bottom: 14px;
+    border-left: 4px solid var(--accent);
+    padding-left: 10px;
+  }
+  h4 {
+    font-size: 1.0em;
+    color: #444;
+    margin-top: 22px;
+    margin-bottom: 8px;
+  }
+  p { margin: 0 0 16px; text-align: justify; }
+  .abstract-box {
+    background: var(--accent-light);
+    border-radius: 8px;
+    padding: 22px 26px;
+    margin-bottom: 8px;
+  }
+  .abstract-box h2 {
+    margin-top: 0;
+    border: none;
+    padding-bottom: 0;
+  }
+  .equation {
+    background: #f7f7f9;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 20px;
+    margin: 18px 0;
+    text-align: center;
+    font-family: "Cambria Math", "Latin Modern Math", Georgia, serif;
+    font-size: 1.05em;
+    overflow-x: auto;
+  }
+  .eq-num { float: right; color: var(--text-light); font-family: sans-serif; font-size: 0.85em; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 18px 0 28px;
+    font-size: 0.92em;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--accent-light);
+    color: var(--text);
+    font-weight: 700;
+  }
+  caption, .fig-caption, .tbl-caption {
+    caption-side: top;
+    text-align: left;
+    font-size: 0.88em;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    display: block;
+    font-weight: 600;
+  }
+  .figure-block {
+    background: #f7f7f9;
+    border: 1px dashed #bbb;
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 22px 0;
+    font-size: 0.9em;
+    color: var(--text-light);
+  }
+  .figure-block .fig-label {
+    font-weight: 700;
+    color: var(--accent);
+  }
+  ul, ol { margin: 0 0 16px; padding-left: 1.6em; }
+  li { margin-bottom: 6px; }
+  .prompt-box {
+    background: #2b2b33;
+    color: #eaeaea;
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 14px 0 22px;
+    font-size: 0.88em;
+    white-space: pre-wrap;
+    font-family: "SFMono-Regular", Consolas, monospace;
+    line-height: 1.7;
+  }
+  .prompt-box .label {
+    display: block;
+    color: #b39ddb;
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-family: sans-serif;
+  }
+  .example-box {
+    background: #fafafa;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 12px 0 20px;
+    font-size: 0.9em;
+  }
+  .example-box .orig { color: #444; }
+  .example-box .level { color: var(--accent); font-weight: 700; }
+  .refs {
+    font-size: 0.82em;
+    line-height: 1.7;
+    color: #555;
+    columns: 1;
+  }
+  .refs p { margin-bottom: 8px; text-align: left; }
+  .toc {
+    background: #f7f7f9;
+    border-radius: 8px;
+    padding: 20px 28px;
+    margin-bottom: 44px;
+    font-size: 0.92em;
+  }
+  .toc h2 { margin-top: 0; border: none; }
+  .toc ol { padding-left: 1.4em; }
+  .toc a { color: var(--text); text-decoration: none; }
+  .toc a:hover { color: var(--accent); }
+  .toc li { margin-bottom: 4px; }
+  footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 0.8em;
+    color: #999;
+    text-align: center;
+  }
+  strong.term { color: var(--accent); }
+  .small-note { font-size: 0.85em; color: var(--text-light); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="title-block">
+  <h1 class="main-title">
+    ルーティングはいつ意味を持つか？<br>言語モデル社会における多様性とロバスト性
+    <span class="en">When is Routing Meaningful? Diversity and Robustness in Language Model Societies</span>
+  </h1>
+  <div class="authors">Fantine Huot　Michael Kaisers　Mirella Lapata</div>
+  <div class="affiliation">Google DeepMind</div>
+  <div class="arxiv-note">arXiv:2607.09197v1 [cs.MA] 2026年7月10日</div>
+</header>
+
+<div class="translator-note">
+  本稿は原論文（英語）の日本語全訳です。数式・図表・付録を含む全文を翻訳しています。図（Figure）については元PDFの画像データが本文抽出に含まれていないため、キャプションのみを翻訳し、図の内容は本文中の説明で補っています。
+</div>
+
+<div class="toc">
+  <h2>目次</h2>
+  <ol>
+    <li><a href="#abstract">要旨</a></li>
+    <li><a href="#s1">1. 序論</a></li>
+    <li><a href="#s2">2. 関連研究</a></li>
+    <li><a href="#s3">3. 予備的定義</a></li>
+    <li><a href="#s4">4. 社会の多様性 (Society Diversity)</a></li>
+    <li><a href="#s5">5. ルーティングポリシーのロバスト性</a></li>
+    <li><a href="#s6">6. 実験設定</a></li>
+    <li><a href="#s7">7. 結果と分析</a></li>
+    <li><a href="#s8">8. 結論</a></li>
+    <li><a href="#s9">9. 限界</a></li>
+    <li><a href="#refs">参考文献</a></li>
+    <li><a href="#appA">付録A: ルーターベンチマークの詳細</a></li>
+    <li><a href="#appB">付録B: クエリ摂動</a></li>
+    <li><a href="#appC">付録C: プロンプトベースのルーターポリシー</a></li>
+    <li><a href="#appD">付録D: KNNルーターポリシー</a></li>
+    <li><a href="#appE">付録E: 距離指標とリンケージのHSEへの影響</a></li>
+    <li><a href="#appF">付録F: モデル選択基準の影響</a></li>
+  </ol>
+</div>
+
+<section id="abstract">
+<div class="abstract-box">
+<h2>要旨</h2>
+<p>マルチモデルシステムのためのルーティングポリシーは、ほぼタスク精度と推論コストのみによって評価されてきた。本論文では、性能とは直交する2つの性質が、ルーティングが意味を持つかどうかを決定づけると主張する。第一に、行為主体（アクター）から成る社会は<strong class="term">行動的に分化</strong>していなければならない。すべてのアクターが同一の応答をするならば、ルーティングは空虚である。第二に、ルーティングポリシーは<strong class="term">安定</strong>していなければならない。すなわち、クエリの表層的なバリエーションは同一のアクターに割り当てられるべきである。高いタスク精度はこの両方の性質への違反と両立し得る。ルーターは冗長な社会に対して動作したり、クエリを一貫性なく割り当てたりすることができ、これは性能の高低にかかわらず専門化を妨げてしまうためである。我々は階層的社会エントロピー（Hierarchic Social Entropy; HSE）を言語モデル社会に適応させるとともに、これらの失敗モードを診断するための摂動ベースのロバスト性指標を導入する。EmbedLLMとRouterBenchの2つのベンチマークに適用したところ、HSEは強い収穫逓減を示し、大規模なプールにおいて10体未満のエージェントから成る厳選されたサブセットが利用可能な多様性のほとんどを回復できることがわかった。これは社会設計のための実用的なコアセット・ヒューリスティックである。さらに、KNNルーターは専門家社会から精度を得る一方で摂動下ではロバスト性が崩壊するのに対し、プロンプトベースのルーティングはあらゆる摂動タイプにわたって安定していることを見出した。これは精度と「意味のあるルーティング」が大きく乖離しうることを示している。</p>
+</div>
+</section>
+
+<section id="s1">
+<h2>1. 序論</h2>
+<p>ルーティングは、複数の言語モデル・ツール・エージェントから構成されるシステムを協調させるための中心的な機構になりつつある (Wu et al., 2024; Hong et al., 2024; Li et al., 2023; Yue et al., 2025)。既存のLLMルーティング研究の多くは、ルーターをその下流での有用性――タスク精度を改善するか、コストを削減するか、クエリに対して最良のモデルを選択できるか――によって評価している (Chen et al., 2024; Ong et al., 2025; Hu et al., 2024; Jiang et al., 2023)。しかし、ルーターは単なるタスク性能の予測器ではない。それはまた、アクターから成る社会にどのように仕事を分配するかを決定する協調機構でもある。したがって、その有用性は2つの構造的性質に依存する。第一に、社会は<strong class="term">行動的に分化したアクター</strong>を含んでいなければならない。すべてのアクターが同一の応答をするならば、ルーティングは空虚である (Balch, 2000; Bettini et al., 2025)。第二に、ルーティングポリシーは表層的なバリエーションに対して<strong class="term">頑健（ロバスト）</strong>であるべきである。すなわち、意味的に等価なクエリのバリエーションは、綴り・構文・言い回しの違いだけを理由に異なるアクターへ送られるべきではない (Sclar et al., 2024)。この安定性がなければ、アクターは信頼をもって専門化することができない。</p>
+<p>ルーターに利用可能な選択肢の空間を特徴づけるため、我々は階層的社会エントロピー（Balch, 2000）を言語モデル社会に適応させ、パラメータではなくモデルの出力から行動的多様性を測定する (Stanley et al., 2019)。またルーターの選択の安定性を特徴づけるため、意味的に関連する入力が同一のアクターに割り当てられるかどうかを測定する摂動ベースのロバスト性指標を導入する。</p>
+<p>我々はHSEを2つのベンチマーク、EmbedLLM (Zhuang et al., 2025) とRouterBench (Hu et al., 2024) 上で検証し、実世界の言語モデルから成るデフォルトの社会と、役割と専門性の重なりが異なる目的設計された専門家の合成社会とを比較する。</p>
+<p>専門家社会は、同規模の実世界モデルのプールよりも実質的に高いHSEを達成することがわかった。これは、実運用されているモデルプールにおける行動的多様性が、一般に想定されているよりも低いことを示唆している。さらに、強い収穫逓減が観察される。EmbedLLMでは10体未満のエージェントで、RouterBenchでは4体のエージェントで、利用可能な多様性のほとんどを捕捉するのに十分であり、これは社会設計にとって実用的なヒューリスティックを与える。興味深いことに、HSEが高いことはロバスト性が高いことを意味しない。KNNルーターは専門家社会において最良の精度を達成する一方で、そこで最悪のロバスト性を示す。一方でプロンプトベースのルーティングは、あらゆるHSE水準・摂動タイプにわたって安定している。我々の貢献は以下のようにまとめられる。</p>
+<ul>
+  <li>LMルーティング分析のための最初の行動的多様性指標を導入する。階層的社会エントロピーを言語モデル社会に適応させ、ルーティングがいつ意味を持つかを特徴づける。</li>
+  <li>ルーティングポリシーが意味的に等価なクエリをどれだけ安定的に同一のアクターへ割り当てるかを定量化する摂動ベースの指標を導入し、摂動タイプ別のきめ細かい分析を可能にする5段階の摂動分類法を併せて提示する。</li>
+  <li>HSEが社会の規模に対して強い収穫逓減を示すことを明らかにする。大規模な実世界プールにおいて10体未満のエージェントから成る厳選されたサブセットが利用可能な多様性のほとんどを回復し、これは社会設計のための実用的なコアセット・ヒューリスティックとなる。</li>
+</ul>
+</section>
+
+<section id="s2">
+<h2>2. 関連研究</h2>
+
+<h3>LLMルーティングとモデル選択</h3>
+<p>異なる能力・コスト・レイテンシ特性を持つ言語モデルの中から選択する機構としてルーティングを研究する文献は増えつつある。この設定では、ルーターは一般に、タスク性能と推論コストのトレードオフをどれだけ改善できるかによって評価される。例えばFrugalGPT (Chen et al., 2024) は、LLMの利用をコスト感応的なカスケードとして定式化し、より安価なモデルをより高価なモデルより先に問い合わせることでタスク精度を維持しつつ推論コストを削減する。RouterBench (Hu et al., 2024) は、マルチLLMルーティングのためのベンチマークを提供し、ルーティングポリシーがタスクやモデルファミリーを横断してどれだけうまくモデルを選択できるかを評価する。RouteLLM (Ong et al., 2025) は、選好データからルーティングポリシーを学習し、応答品質を保ちながら高価なモデルの使用を減らすために、より強力なモデルとより弱いモデルの間でクエリをルーティングする。</p>
+<p>さらに最近では、MasRouter (Yue et al., 2025) がルーティングをマルチエージェント設定へと拡張し、協調モード・役割配分・モデル選択を同時に最適化しており、これはエージェントの役割と相互作用プロトコルが中心的な設計選択となるマルチエージェントLLMフレームワーク (Wu et al., 2024; Hong et al., 2024; Li et al., 2023) を基盤としている。</p>
+
+<h3>エージェントシステムのための多様性指標</h3>
+<p>マルチエージェントシステムにおける行動的多様性の測定は、主にロボティクスの分野で研究されてきた。Balch (2000) は、あらゆる分類学的スケールにわたる行動クラスタの数と相対的な大きさの両方を捉える、ロボット群の多様性に関する情報理論的指標として階層的社会エントロピー（HSE）を導入した。より最近では、Bettini et al. (2025) が、多変量のロボット方策の行動分布に対するワッサースタイン距離を用いるSystem Neural Diversity (SND) を提案している。SNDはすべてのエージェントが同一の行動空間上で確率を計算することを要求するため、異なるツールにアクセスする異質なLMエージェントへは翻訳できない。我々の研究はHSEをLMエージェント社会に適応させ、元のHSE定式化にあるユークリッド距離を行動ベクトル間のコサイン類似度に置き換えるものであり、こうした指標をLMルーティング分析に初めて適用する研究である。アンサンブル学習の文献もまた、多様性を設計目標として研究してきており (Krogh and Vedelsby, 1994)、質・多様性最適化 (Mouret and Clune, 2015) は高性能で多様な解の集合を明示的に探索する。</p>
+
+<h3>マルチエージェントシステムにおける専門化</h3>
+<p>関連する研究として、集団内で個々のアクターがいかにして安定した独自の役割を占めるようになるか――これはルーティングが時間の経過とともに意味を持つための前提条件である――を研究する系統がある。マルチロボットシステムでは、専門化はタスク精度ではなく役割の安定性によって測定されるのが一般的である。Labella et al. (2006) は、あるタスクを行う傾向（閾値）が、他のエージェントによってそのタスクが実行されるたびに減少する応答閾値モデルを導入している。専門化は、あるタスクに対するエージェントの閾値が持続的に低い状態にとどまるときに生じるとされる。Nitschke et al. (2008) はこれを異なる形で操作的に定義しており、Collective Neuro-Evolution (CONE) を通じて、専門化したエージェントを、その稼働寿命の50%を超えて特定の行動役割を担うエージェントとして定義している。</p>
+<p>我々のルーティングロバスト性指標は、この直観をLM社会向けに形式化するものであり、意味的に等価なクエリのバリエーションが安定して同一のアクターに割り当てられるかどうかを測定する――これは、これらのロボティクス研究が専門化の前提条件として同定する分布的一貫性に相当する。</p>
+
+<h3>プロンプト摂動に対するロバスト性</h3>
+<p>別系統の研究として、文字レベルのノイズ・語彙的置換・構文変換・パラフレーズなどの入力摂動に対する言語モデルのロバスト性を研究するものがある。共通の知見として、意味を保持する変更がモデルの規模や指示チューニングの有無にかかわらず、大きな精度の変動を引き起こしうることが挙げられる (Sclar et al., 2024)。先行研究は一般に、クリーンなプロンプトと摂動を受けたプロンプトの双方で一貫した出力を生成するようにモデルを訓練すること (Qiang et al., 2024)、あるいは評価において単一の点推定ではなく性能の幅を報告することを推奨すること (Sclar et al., 2024) によって、これに対応している。我々は異なるレベルでロバスト性を研究する。すなわち、最終的な回答が摂動下で安定しているかではなく、ルーティングの判断そのものが安定しているかを問う。</p>
+<p>摂動を受けたクエリが元のクエリと同一のアクターにルーティングされるかどうかを測定することで、我々はルーティングポリシーがアクターに対して安定したタスク分布を誘導するかどうかを評価する。</p>
+</section>
+
+<section id="s3">
+<h2>3. 予備的定義</h2>
+<p>本論文全体で用いる記法を導入し、我々が研究する2つの構造的性質を述べる。</p>
+<p>R = {r₁, r₂, …, r<sub>N</sub>} を、N体のアクターから成る社会とする。各アクターは、個別のモデル、プロンプト、ツール利用エージェント、あるいは役割に特化した設定に対応しうる。アクターはアーキテクチャ・規模・学習データ・システムプロンプトにおいて異なりうる。</p>
+<p>Q = {q₁, q₂, …, q<sub>n</sub>} をクエリの集合とする。ルーティングポリシー π: Q → R は各クエリをあるアクターに割り当てる。クエリ q<sub>i</sub> に割り当てられたアクターを a<sub>i</sub> = π(q<sub>i</sub>) と書く。Q<sub>k</sub> = {q<sub>i</sub> ∈ Q | a<sub>i</sub> = r<sub>k</sub>} を、アクター r<sub>k</sub> に割り当てられたクエリの集合とする。</p>
+<p>アクターはアーキテクチャやパラメータ化において異なりうるため、我々はそれらを重み空間で比較しない。代わりに、各アクター r<sub>k</sub> を評価セット E = {e₁, …, e<sub>L</sub>} 上で評価し、行動ベクトルを得る。</p>
+<div class="equation">b<sub>k</sub> = [ s(r<sub>k</sub>, e₁), s(r<sub>k</sub>, e₂), …, s(r<sub>k</sub>, e<sub>L</sub>) ] ∈ ℝ<sup>L</sup></div>
+<p>ここで s(r<sub>k</sub>, e<sub>l</sub>) ∈ [0, 1] は、プロンプト e<sub>l</sub> に対するアクター r<sub>k</sub> のスコアである。これらのベクトルを積み重ねることで行動行列 B ∈ ℝ<sup>N×L</sup> が得られ、そこからアクター間のペアワイズ距離がコサイン類似度によって計算される（4.2節）。パラメータ空間における違いは、必ずしも行動空間における違いに対応するとは限らない (Stanley et al., 2019)。したがって、モデルの重みではなく B から多様性を測定することは、より原理的かつ一般的であり、モデルバックボーンを共有しつつシステムプロンプトやツールアクセスが異なるエージェント社会にも自然に拡張できる。別個の評価セットが利用できない場合、E は Q と等しく設定してよい。</p>
+<p>社会 R とルーティングポリシー π が与えられたとき、我々はタスク精度とは直交する2つの性質を研究する。社会の多様性 HSE(R)（4節）は、行動行列 B 上で測定される、R 内のアクターがどれだけ行動的に分化しているかを定量化する。この性質は社会のみに対して定義され、使用されるルーティングポリシーとは独立である。HSE(R) ≈ 0 であれば、すべてのアクターは同様の応答をし、使用するポリシーにかかわらずルーティングは空虚である。ルーティングのロバスト性 ρ(π, Q)（5節）は、π が意味的に等価なクエリのバリエーションをどれだけ安定的に同一のアクターに割り当てるかを定量化する。この性質はポリシーに対して定義され、R には π が誘導するルーティングの決定を通じてのみ依存する。ρ(π, Q) ≈ 0 であれば、アクターは一貫性のないクエリ分布を受け取ることになり、専門化が生じうる条件が損なわれる。</p>
+<p>これら2つの性質を合わせることで、ルーティングがいつ意味を持つかが特徴づけられる。多様性はルーティングすべき非自明な対象があることを保証し、ロバスト性はルーティングの決定が専門化のための必要条件を満たすことを保証する。</p>
+</section>
+
+<section id="s4">
+<h2>4. 社会の多様性 (Society Diversity)</h2>
+<p>社会 R とその行動行列 B（3節）が与えられたとき、我々はアクターがどれだけ行動的に分化しているかを捉える単一のスカラー値を求める。有用な指標は、行動グループの数と、それらのグループがどの程度異なっているかの両方を反映すべきである。多様性は自然のシステムにおいて遍在しており (Kellert, 1996)、生態学者は生態系の存続における機能的多様性の役割を実証してきた (Cadotte et al., 2011)。連続的な多次元空間に分布する要素のクラスタを同定するという課題は、まさに生物学者が分類体系を構築する際に直面する問題であり、そこでは各次元がある生物を他の生物と区別する形態学的特徴を表す。我々はこれと同じ階層的なエントロピーの見方を採用し、生物学的特徴を b<sub>k</sub> の各成分に置き換える。</p>
+<p>具体的には、我々はもともとロボット群のために提案された情報理論的指標である階層的社会エントロピー（HSE; Balch 2000）をLMエージェント社会に適応させる。多様性が常に望ましいと主張するわけではない。タスクによっては、均質なチームの方が多様なチームより優れている場合もある。しかし、定量的な指標は社会間の統制された比較を可能にし、多様なチーム設計に情報を与える。</p>
+
+<h3>4.1 単純社会エントロピー (Simple Social Entropy)</h3>
+<p>単純社会エントロピーは、シャノンの情報エントロピー (Shannon, 1948) をマルチエージェント社会に適用し、アクターが行動的なサブセットの間にどのように分布しているかに基づいて行動的多様性を定量化する。</p>
+<p>C = {c₁, c₂, …, c<sub>M</sub>} を R の M 個の均質なサブセットへの分割とし、p<sub>i</sub> をサブセット c<sub>i</sub> に属するアクターの割合とする（Σ<sub>i=1</sub><sup>M</sup> p<sub>i</sub> = 1）。分割 C のもとでの社会 R の単純社会エントロピーは次のように定義される。</p>
+<div class="equation">H(R) = − Σ<sub>i=1</sub><sup>M</sup> p<sub>i</sub> log₂(p<sub>i</sub>) <span class="eq-num">(1)</span></div>
+<p>この指標は次の2つの基本的性質を満たす。(i) 均質性: H(R) = 0 となるのは、すべてのアクターが単一のサブセットに属する場合に限られる。(ii) 最大多様性: H(R) は、アクターがすべての M 個のサブセットに均等に分布しているとき（すべての i について p<sub>i</sub> = 1/M）に最大化される。図1は、クラスタ構造が異なる社会における単純社会エントロピーを図示している（アクターがより多くの等サイズの行動グループに分布するにつれ、左から右へエントロピーが増加する）。</p>
+<div class="figure-block"><span class="fig-label">図1:</span> 異なるクラスタ構造を持つ社会について計算された単純社会エントロピー。エントロピーは、エージェントが増加する数の等サイズの行動グループに分布するにつれて左から右へ増加する（値: 0.00, 0.41, 0.82, 1.00, 1.59, 2.00）。</div>
+
+<h3>4.2 アクター間の距離</h3>
+<p>R を行動的サブセットへ分割するには、アクター間のペアワイズ距離が必要である。3節で定義した行動ベクトル b<sub>k</sub> を用いて、アクター r<sub>j</sub> と r<sub>k</sub> の間の距離を、コサイン類似度を1から引いた値として測定する。</p>
+<div class="equation">d(r<sub>j</sub>, r<sub>k</sub>) = 1 − (b<sub>j</sub> · b<sub>k</sub>) / (‖b<sub>j</sub>‖ ‖b<sub>k</sub>‖) <span class="eq-num">(2)</span></div>
+<p>我々は、元のHSE定式化 (Balch, 2000) で用いられたユークリッド距離よりもコサイン類似度を選好する。なぜなら、エージェント全体の精度が異なる場合、行動ベクトルは大きさにおいて実質的に異なる可能性があり、我々は絶対的な性能水準ではなくプロファイルの類似性を捉えたいからである（付録E）。またSND (Bettini et al., 2025) で用いられているワッサースタイン距離よりもこれを選好する。なぜならその指標は完全な行動分布に対して定義されるが、それは言語モデルの出力に対しては直接利用可能ではないからである。</p>
+
+<h3>4.3 階層的社会エントロピー (Hierarchic Social Entropy)</h3>
+<p>単純社会エントロピー（式1）は、多様性の2つの側面――行動グループの数と、それらへのアクターの分布――を捉える。しかしそれは、グループ間の違いの<em>程度</em>を捉えない。図2はその帰結を示している。それぞれ3体の同一アクターと1体の外れ値アクターを含む2つの社会は、外れ値が主クラスタに近くても遠くても同一のスコア H = 0.811 を受け取る（d₁ ≪ d₂ であっても H は同一である）。この限界はルーティングにとって重要である。ルーターが、社会の他の部分とほとんど変わらない外れ値アクターにクエリを割り当てると仮定しよう。単純エントロピーはゼロでない多様性を記録するが、ルーティングの決定はほぼ空虚である。外れ値アクターはほとんど補完的な能力を提供しないからである。有用な多様性指標は、分離が存在するかどうかだけでなく、グループ間の行動的分離の程度にも敏感であるべきである。</p>
+<div class="figure-block"><span class="fig-label">図2:</span> 単純社会エントロピーは、両方の社会に同一の値（H = 0.811）を割り当てる。これはグループの比率のみに依存し、グループ間の距離には依存しないためである。外れ値エージェント（星印）は右パネルの方がクラスタからずっと離れている（d₁ ≪ d₂）にもかかわらず、H はこの違いに対して盲目である。階層的社会エントロピーは、すべての分類学的水準にわたってエントロピーを積分することでこれを解決する。</div>
+<p>単一の社会レベルのスコアを得るために、我々はペアワイズのアクター間距離（4.2節で定義）を集約する。Bettini et al. (2025) は、すべてのペアワイズ距離の平均を取ることで集約している。これは計算上は単純だが、非常に異なるクラスタ構造を持つ社会を混同してしまう。2つのタイトで十分に分離されたクラスタを持つ社会と、一様に散らばったアクターを持つ社会は、同じ平均距離を生み出しうるが、前者はルーティングにとってはるかに有用である。アクターが安定した識別可能なグループに収まるためである。Balch (2000) は代わりに、可能なあらゆる距離の閾値でアクターをクラスタリングし、各スケールでエントロピーを測定する。我々は同じ理由でこのアプローチを採用する。すなわち、平均的な広がりだけでなく、行動空間の階層構造に敏感であるためである。</p>
+<p>具体的には、我々は単一リンケージ（最近点アルゴリズム）による階層的クラスタリングを用いる。これは、2つのクラスタの最も近いメンバーが閾値 h 以内に収まった時点でそれらを併合するものである。これは、たとえ単一の行動的に異なるアクターであっても、それだけで独立したクラスタを正当化しうる我々の設定に適している。<sup>1</sup> h が変化するにつれて分割 C も変化するため、単純社会エントロピーは社会と h の両方の関数となり、H(R, h) と書かれる。我々はこの h を「分類学的水準（taxonomic level）」と呼ぶ。この用語はBalch (2000) から借用したものであり、同氏はさらに生物学的分類法に依拠している。生物学者が種のレベルでも属のレベルでも、どれだけ細かく区別したいかに応じて生物を分類できるのと同様に、h はどの解像度で社会を観察するかを制御する。h = 0 のとき、アクターは距離がちょうどゼロである場合にのみ併合され、行動的に異なるアクターはそれぞれ単独のクラスタを形成し、H(R, 0) = log₂ M（M ≤ N は異なる行動プロファイルの数）となる。h が増加するにつれて、類似したアクターが併合され、クラスタの数は減少していき、h → ∞ ですべてのアクターが1つのグループに収束し H(R, h) = 0 となる。</p>
+<p class="small-note">1 元のHSE定式化は、単一リンケージではなくユークリッド距離と重心リンケージを用いている。我々は付録Eで両方を比較する。</p>
+<p>階層的社会エントロピーは、すべての分類学的水準にわたって単純エントロピーを積分する。</p>
+<div class="equation">HSE(R) = ∫<sub>0</sub><sup>∞</sup> H(R, h) dh <span class="eq-num">(3)</span></div>
+<p>我々は、‖b<sub>j</sub>‖ = 0 または ‖b<sub>k</sub>‖ = 0 のとき（すなわちあるアクターがすべての評価プロンプトに失敗したとき）、d(r<sub>j</sub>, r<sub>k</sub>) = 1（最大距離）と定義する。HSEは絶対的なゼロ点（すべてのアクターが同一であるとき）を持つ連続的な比率尺度であり、「社会Aは社会Bの2倍多様である」といった主張や、その社会規模に対する達成可能な最大HSEで正規化した場合の異なる規模の社会間での完全な順序付けを可能にする。</p>
+
+<h3>4.4 HSEの検証</h3>
+<p>我々はHSEの特定の性質を分離する最小限の社会を構築し、大規模に適用する前に（7節参照）指標が期待通りに振る舞うことを確認する。表1は、すべてのアクターが同一の出力を生成する場合(a)、社会が最大限に均質であることを検証している。すなわちHSEはゼロであり、存在するアクターの数にかかわらずルーティングは空虚である。アクターが完全に直交している場合、すなわちそれぞれが他のアクターが失敗するプロンプトでのみ成功する場合(b)、HSEは最大化され、正規化HSEは1.0に等しくなる。重要なのは、この正規化された値が社会の規模に対して不変であり、異なる規模の社会間での公平な比較を可能にすることである。</p>
+
+<table>
+<caption>表1: HSEの健全性チェック。(a) 同一のモデルは多様性ゼロを生む。(b) 直交するモデルは（社会の規模にかかわらず）最大の多様性を達成する（正規化HSE = 1.0）。p1–p3 は異なるプロンプトを表す。</caption>
+<tr><th colspan="4">(a) 同一の3モデル</th></tr>
+<tr><th>プロンプト</th><th>A</th><th>B</th><th>C</th></tr>
+<tr><td>p1</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td>p2</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>p3</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td colspan="4">HSE: 0.0　　正規化: 0.0</td></tr>
+</table>
+
+<table>
+<tr><th colspan="4">(b) 直交する3モデル</th></tr>
+<tr><th>プロンプト</th><th>A</th><th>B</th><th>C</th></tr>
+<tr><td>p1</td><td>1</td><td>0</td><td>0</td></tr>
+<tr><td>p2</td><td>0</td><td>1</td><td>0</td></tr>
+<tr><td>p3</td><td>0</td><td>0</td><td>1</td></tr>
+<tr><td colspan="4">HSE: 1.585　　正規化: 1.0</td></tr>
+</table>
+
+<p>表2は、冗長な情報を追加してもHSEが人為的に膨張しないことを検証している。3体の行動的に異なるアクターから成る基本社会（ケースa）から出発し、2つの方法で拡張する。1つは、行動ベクトルがアクターCと同一である4番目のアクターを追加すること（ケースb）、もう1つは、p3の複製である4番目の評価プロンプトを追加すること（ケースc）である。両方のケースでHSEは増加するのではなくわずかに減少しており、この指標が冗長性に惑わされないことが確認される。この性質は実務上重要である。ルーティングシステムは、アクターが重複していたり評価セットに重複したクエリが含まれていたりするという理由だけで、より多様であるように見えるべきではないからである。最後に、図3はエージェントを追加していく際にHSEが単調に増加することを実証的に確認している。</p>
+
+<table>
+<caption>表2: 共通の基本行列を共有する3つの関連ケースにおけるHSE（斜線なしの3×3ブロック、ケースa）。網掛けの列は複製モデルD=Cで基本行列を拡張したもの（ケースb）、網掛けの行は複製プロンプトp4=p3で拡張したもの（ケースc）。複製を加えても多様性は増加しない。</caption>
+<tr><th>プロンプト</th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+<tr><td>p1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>p2</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td>p3</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+<tr><td>p4</td><td>1</td><td>0</td><td>1</td><td>―</td></tr>
+</table>
+<table>
+<tr><th>ケース</th><th>HSE</th><th>正規化HSE</th></tr>
+<tr><td>(a) 基本: 3つの異なるモデル</td><td>0.654</td><td>0.413</td></tr>
+<tr><td>(b) + 複製モデル (D = C)</td><td>0.607</td><td>0.405</td></tr>
+<tr><td>(c) + 複製プロンプト (p4 = p3)</td><td>0.610</td><td>0.385</td></tr>
+</table>
+
+<div class="figure-block"><span class="fig-label">図3:</span> EmbedLLMにおける、デフォルト（実世界）社会と合成社会について、コサイン距離と単一リンケージ（貪欲法によるエージェント選択）を用いた社会規模の関数としての正規化HSE。すべての社会は強い収穫逓減を示す。デフォルト社会はおよそ9体のエージェントで頭打ちになる。</div>
+</section>
+
+<section id="s5">
+<h2>5. ルーティングポリシーのロバスト性</h2>
+<p>社会の多様性（4節）は、ルーティングを非自明なものにするために十分に分化した能力を持つアクターを社会が含んでいるかどうかを特徴づける。しかし多様性だけでは十分ではない。専門化に関する文献（2節）が明らかにしているように、アクターは時間をかけて同じ種類のクエリを確実に受け取ることによってのみ、安定した役割を発展させることができる。</p>
+<p>我々はここで、この第二の構造的性質を直接に捉える指標を導入する。</p>
+<p>中心的な直観は、安定したクエリの割り当てが専門化が可能となるための必要条件であるということである。あるルーターがクエリ q<sub>i</sub> をアクター r<sub>k</sub> に割り当てながら、その表層形バリエーションを r<sub>j</sub> ≠ r<sub>k</sub> に割り当てるならば、下流でどのような学習ダイナミクスが働くかにかかわらず、この条件は違反されている。我々は、安定したルーティングが専門化を生み出すと主張しているわけではない。アクターが専門化された能力を発展させるかどうかは、本研究の範囲外の要因に依存する。しかし、不安定なルーティングは、構造上、それを不可能にする。したがって我々は、クエリの表層形バリエーションが同一のアクターに割り当てられる度合いとしてルーティングのロバスト性を測定する。</p>
+
+<h3>5.1 摂動の分類法</h3>
+<p>ロバスト性指標 ρ は、ある摂動レジームに対して相対的に定義される。同じルーターであっても、表層レベルのノイズには安定していながら意味的な言い換えには不安定でありうる。集約的な分析ときめ細かい分析の両方を支援するため、我々は元のクエリからの意味的距離が増加する順に5つの摂動クラスを定義する。これらは表3にまとめられている。</p>
+
+<table>
+<caption>表3: 元のクエリからの意味的距離が増加する順に並べた摂動の分類法。</caption>
+<tr><th>レベル</th><th>分類</th><th>例</th></tr>
+<tr><td>1</td><td>文字レベル</td><td>タイプミス、スペーシング、句読点</td></tr>
+<tr><td>2</td><td>単語レベル</td><td>同義語による置換</td></tr>
+<tr><td>3</td><td>構文レベル</td><td>受動態、節の並べ替え</td></tr>
+<tr><td>4</td><td>パラフレーズ</td><td>意味を保った全面的な書き換え</td></tr>
+<tr><td>5</td><td>ランブリング</td><td>無関係な文脈の追加</td></tr>
+</table>
+
+<p>レベル1〜3の摂動は元のクエリとの表層的な近さを保つが、レベル4〜5は、語彙を大きく変えたりノイズを加えたりする意味保存的な言い換えに対してルーターが敏感かどうかを試す。各摂動クラスを生成するために用いた完全な方法論とプロンプトテンプレートは付録B.1に記載する。ρ を各摂動クラスについて個別に計算することで、ルーティングポリシーがどこで破綻するかを特徴づけることができる。レベル4〜5でのみ劣化するルーターは、たとえ集約的な ρ スコアが類似していたとしても、レベル2で劣化するルーターより実務上ロバストである。</p>
+
+<h3>5.2 ルーティングロバスト性指標</h3>
+<p>ルーティングポリシー π とクエリ q<sub>i</sub> ∈ Q が与えられたとき、a<sub>i</sub> = π(q<sub>i</sub>) を元のクエリに割り当てられたアクターとする（3節）。q<sub>i</sub> の p 個の摂動 q<sub>i</sub><sup>1</sup>, q<sub>i</sub><sup>2</sup>, …, q<sub>i</sub><sup>p</sup> を生成する（摂動の分類法は5.1節を参照）。クエリごとのロバスト性は、元と同じアクターにルーティングされた摂動の割合である。</p>
+<div class="equation">ρ<sub>i</sub> = (1/p) Σ<sub>j=1</sub><sup>p</sup> 𝟙[ π(q<sub>i</sub><sup>j</sup>) = a<sub>i</sub> ] <span class="eq-num">(4)</span></div>
+<p>ここで 𝟙[·] は指示関数である。ρ<sub>i</sub> ∈ [0, 1] であり、すべての摂動が同一のアクターにルーティングされる場合 ρ<sub>i</sub> = 1、いずれも同一でない場合 ρ<sub>i</sub> = 0 となる。</p>
+<p>データセットレベルのロバスト性は、すべての n = |Q| 個のクエリについて平均を取ることで得られる。</p>
+<div class="equation">ρ(π, Q) = (1/n) Σ<sub>i=1</sub><sup>n</sup> ρ<sub>i</sub> <span class="eq-num">(5)</span></div>
+<p>この指標は、意味を保存する摂動がクエリに対して最も精度の高いアクターを変化させないという仮定に立脚している。すなわち、q<sub>i</sub> と q<sub>i</sub><sup>j</sup> が意味的に等価であれば、最適な割り当ては両者について同一であるべきである。この仮定のもとでは、ルーティングの決定の変化はすべて、クエリの難易度やアクターの適合性の変化への正当な応答ではなく、ポリシーの不安定性を反映していることになる。</p>
+<p>この指標には2つの境界的なケースがある。常に同じアクターを割り当てる固定ルーターは、すべての i について ρ<sub>i</sub> = 1 となり ρ = 1 となる。一方、一様ランダムなルーターは E[ρ] = 1/N となる。データセットレベルの集約値に加えて、我々はアクター r<sub>k</sub> に割り当てられたクエリ集合 Q<sub>k</sub> についてアクターごとのスコアも計算する。</p>
+<div class="equation">ρ<sup>(k)</sup>(π, Q) = (1/|Q<sub>k</sub>|) Σ<sub>q<sub>i</sub>∈Q<sub>k</sub></sub> ρ<sub>i</sub> <span class="eq-num">(6)</span></div>
+<p>ポリシー π のもとでアクター r<sub>k</sub> にクエリが割り当てられていない場合（すなわち |Q<sub>k</sub>| = 0 の場合）、我々は ρ<sup>(k)</sup>(π, Q) = 0 と定義する。低い ρ<sup>(k)</sup> は、名目上アクター r<sub>k</sub> に割り当てられたクエリが摂動下で不安定にルーティングされていることを示し、そのアクターの役割について専門化が生じるための必要条件が損なわれていることを示す。</p>
+</section>
+
+<section id="s6">
+<h2>6. 実験設定</h2>
+
+<h3>データセット</h3>
+<p>我々は2つのルーティングベンチマークで評価を行う。EmbedLLM (Zhuang et al., 2025) は、10個の推論・知識ベンチマーク（MMLU, GSM8K, GPQA, ASDiv など）にわたる112個のモデルの性能スコアを提供しており、合計36,054問から成る。RouterBench (Hu et al., 2024) は、8個のデータセットから抽出された36,497個のクエリにわたる11個のモデルの性能スコアを持つ、補完的なルーティングベンチマークである（詳細および学習・検証・テスト分割は付録Aを参照）。</p>
+
+<h3>社会</h3>
+<p>上記のベンチマークがデフォルトの社会を構成する。EmbedLLMでは、我々はデフォルトの社会（HSE = 1.62）を、モデルが特定領域の専門性を符号化する二値の性能指標を持つ合成専門家に置き換えた3つの合成社会と比較する。</p>
+<ul>
+  <li><strong>RD（推論の深さ）</strong>: 直接的な検索から複雑な多段階推論まで、認知的複雑性の5段階を網羅する、重複のない5体の専門家（HSE = 2.32）。</li>
+  <li><strong>SA（主題領域）</strong>: 高等数学、計算機科学、医学、常識推論など、それぞれ異なる学術的・実務的領域に特化した重複のない15体の専門家（HSE = 3.91）。</li>
+  <li><strong>RD+SA</strong>: 部分的に専門性が重なる、RDとSAの専門家20体を合わせたプール（HSE = 3.19）。</li>
+</ul>
+<p>専門家の分類ヒューリスティックは付録A.3に詳述する。各合成社会でのオラクル精度は、構成上、各クエリが正確に1体の専門家の領域に属するため1.0である。我々は各ベンチマークについて、固定された社会規模において正規化HSEを最大化する社会の部分集合（貪欲法で選択）を「最大HSEサブセット」として定義する。これは実世界のモデルプール内における高多様性の参照として機能する。RouterBenchでは、全社会とその最大HSEサブセットを比較する。</p>
+
+<h3>ルーティングポリシー</h3>
+<p>我々は5つのルーティングポリシーを評価する。<strong>random</strong> は各クエリを一様にサンプリングされたアクターに割り当てる。<strong>prompted</strong> は、各アクターの役割の自然言語による説明と少数ショットの例を用いてLLMにプロンプトを与え、最も適切なものを選択させる（付録C参照）。<strong>KNN-k</strong>（k ∈ {1, 3, 10}）は、埋め込み空間においてクエリのk近傍を検索し、それらの近傍において最も性能の良かったアクターを割り当てる（付録D）。</p>
+
+<h3>摂動</h3>
+<p>ルーティングロバスト性（5.2節）は、5.1節の5段階の摂動分類法にわたって測定される。各クエリについて、各レベルにつき1つの摂動を生成し、p = 5個のバリアントを得る（付録B.1）。我々はデータセットレベルのロバスト性 ρ(π, Q)（式5）およびレベル別の内訳を報告する。</p>
+</section>
+
+<section id="s7">
+<h2>7. 結果と分析</h2>
+
+<h4>専門家社会は実質的により多様である。</h4>
+<p>図3は、EmbedLLMにおける社会規模の関数としての正規化HSEを示している。どの規模においても、目的設計された専門家社会はデフォルトの実世界モデルプールよりも高いHSEを達成する。SA社会（HSE = 3.91）はデフォルト社会の2倍以上多様であり、RD+SAの結合プール（HSE = 3.19）も、総アクター数がはるかに少ないにもかかわらず同様にそれを上回る。これは、多数の実世界モデルが行動空間の類似した領域を占めていることを示している。規模だけでは多様性を意味しない。</p>
+<p>すべての社会にわたって、HSEは強い収穫逓減を示す。アクターを追加することによる限界的な利得は、最初の数体を過ぎると急激に低下する。デフォルト社会では、この曲線はおよそ9体のエージェントで頭打ちになる。合成専門家社会はさらに速く、RDとSAではおよそ4〜5体で頭打ちになる。これは、その行動プロファイルが構成上最大限に直交しているためである。小規模で注意深く厳選された社会は、はるかに大きなプールで利用可能な多様性のほとんどを回復でき、追加のモデルを収集することによる限界的な便益はわずかである。HSEはタスク精度と組み合わせて共同の選択基準として用いることもできる。付録FはHSEとタスク精度を共同で最大化することで選択されたサブセットの結果を報告しており、この共同基準が多様性を保ちながらより良いルーティングにつながることを示している。</p>
+
+<h4>KNNルーターは専門家社会から精度を得るが、ロバスト性が崩壊する。</h4>
+<p>図4(a)は、HSEが増加するにつれてKNNルーターのタスク精度が急激かつ単調に上昇することを示している。しかし、摂動を受けたクエリの精度は、どの専門家社会でもほぼランダムな水準まで崩壊する。パネル(b)は、クリーンなクエリでの精度が高いにもかかわらず、ロバスト性 ρ がHSEの全範囲にわたって低いままであることを確認している。専門家社会でのクリーンなクエリの正確なルーティングを容易にする鋭い行動的境界は、表層レベルの言い換えがクエリの埋め込みを領域の境界を越えて移動させたときに、それを誤ってルーティングすることも同様に容易にする。</p>
+<p>プロンプトベースのルーターは逆のパターンを示す。SAにおけるそのクリーン精度はKNN-10より低いが、摂動後の精度は近い値を保ち、その差は5ポイント未満である。決定的に、ロバスト性はHSEとともに単調に上昇し、どのKNNルーターも示さない形で社会の多様性を追跡する。プロンプトベースのルーティングは、クエリの埋め込み上の位置ではなく意味的な意図を捉えており、意味を保存する言い換えのもとで自然に安定している。</p>
+
+<div class="figure-block"><span class="fig-label">図4:</span> HSEでソートされたEmbedLLM社会にわたる、タスク精度(a)とロバスト性ρ(b)。実線は元のクエリ、(a)の破線は摂動後の結果を示す。KNNルーターは専門家社会で精度を得るがロバスト性を失う。プロンプトベースのルーターは両方を維持する。</div>
+
+<h4>最大HSEサブセットはプロンプトベースのロバスト性を改善するが、その効果はプール構造に依存する。</h4>
+<p>図5は、EmbedLLMとRouterBenchにおいて、全社会と最大HSEサブセットを比較している。プロンプトベースのルーターは一貫して改善し、EmbedLLMではロバスト性がおよそ倍増し、RouterBenchではより緩やかに改善する。KNNルーターはより複雑な様相を見せる。RouterBenchでは、最大HSEサブセットへの切り替えにより、あらゆるkの値でKNNのロバスト性が劇的に回復する。しかしEmbedLLMでは、KNN-1のロバスト性はむしろ低下し、KNN-3とKNN-10はわずかにしか改善しない。この対比は、それぞれの場合における最大HSEサブセットの性質を反映している。RouterBenchのサブセットは、滑らかで段階的な行動プロファイルを持つモデルから選択されるため、多様性の増加はアクターの区別を鮮明にするが、明確な領域境界は生じない。一方EmbedLLMのプールは、最大HSEにおいてもより構造化されていない行動的分離しか持たず、最近傍ルーティングをクエリの小さな表層バリエーションに対して敏感なままにする。</p>
+
+<div class="figure-block"><span class="fig-label">図5:</span> EmbedLLM(a)とRouterBench(b)における、デフォルト社会と最大HSEサブセットでのルーティングロバスト性ρ。最大HSEサブセットへの切り替えは両ベンチマークでプロンプトベースのルーターを改善し、RouterBenchではすべてのKNNルーターを実質的に改善する。EmbedLLMではKNN-1のロバスト性は低下する。</div>
+
+<h4>ロバスト性は摂動レベルにわたっておおむね一定である。</h4>
+<p>図6は、RouterBenchにおけるレベル別のロバスト性を示している。どのルーターも5つの水準すべてでおおよそ同じ ρ を生み出す。プロンプトベースのルーターは、全社会では0.589（パラフレーズ）から0.617（構文）の範囲であり、最大HSEサブセットでは0.663（パラフレーズ）から0.744（単語）の範囲である。摂動が意味的により深くなるにつれて一貫して低下するルーターは存在しない。ルーティングポリシーは、完全なパラフレーズに対しても文字レベルのタイプミスに対してもほぼ同程度にしか敏感でなく、これはルーティングの決定が、より高次の摂動が選択的に破壊するような表層的特徴に固定されているわけではないことを示唆している。水準に対する感度のわずかな兆候として唯一挙げられるのは、最大HSEサブセットにおけるプロンプトベースのルーターのパラフレーズでの落ち込み（0.663 対 他の水準でのおよそ0.73）であり、これはアクターの区別が鮮明であるとき、完全な書き換えがLLMベースのポリシーを不安定化させうることを示唆している。</p>
+
+<div class="figure-block"><span class="fig-label">図6:</span> RouterBenchにおける、全社会(a)と最大HSEサブセット(b)についての、摂動レベル別のルーティングロバスト性ρ。すべてのルーターは5つの水準にわたっておおむね一定であり、文字レベルのノイズから完全なパラフレーズやランブリングまで、一貫した劣化は見られない。</div>
+</section>
+
+<section id="s8">
+<h2>8. 結論</h2>
+<p>我々は、言語モデル社会におけるルーティングは、タスク精度を超えて2つの構造的な次元――行動的多様性と、クエリの表層形バリエーションのもとでのルーティングの安定性――に沿って評価されるべきであると論じてきた。多様性については、行動ベクトル間のコサイン類似度をアクター間距離として用い、階層的社会エントロピーを言語モデル社会に適応させた。ロバスト性については、表層形バリエーションが同一のアクターに割り当てられる割合を測定する摂動ベースの指標を導入した。</p>
+<p>EmbedLLMとRouterBenchに適用した我々の分析は、HSEが強い収穫逓減を示すことを明らかにしている。10体未満のエージェントが利用可能な多様性のほとんどを捕捉し、社会設計のための実用的なヒューリスティックを与える。加えて、ロバスト性と精度は急激にトレードオフの関係にある。KNNルーターは専門家社会において高い精度を達成するが摂動下で崩壊するのに対し、プロンプトベースのルーターは精度は劣るものの、摂動タイプや社会構成にわたってより安定している。</p>
+<p>HSEとルーティングロバスト性を合わせることで、ルーターが単に性能が良いかどうかだけでなく、ルーティングが意味を持つかどうか――すなわち、社会がルーティングの決定を正当化するのに十分に分化しているか、そしてポリシーが専門化のための必要条件を満たしているか――を問うことができる。</p>
+</section>
+
+<section id="s9">
+<h2>9. 限界</h2>
+<h4>測定上の仮定</h4>
+<p>HSEは固定された評価セット E 上で計算される。このセットが実際のクエリ分布を代表していない場合、行動ベクトルは運用時の挙動を反映しない可能性があり、多様性の推定は誤解を招く可能性がある。最大HSEサブセットは貪欲法で選択されており、これは与えられた規模における大域的な最適サブセットを保証するものではない。真の最適解を得るには指数関数的な探索が必要である。さらに我々の合成社会は、二値の性能指標を用いており、これは構成上最大限に鋭い行動的境界とオラクル精度1.0を生み出す。現実の専門家エージェントはより滑らかで重複したプロファイルを示すであろうし、我々が観察したKNNの脆弱性は実際にはより緩和される可能性がある。</p>
+<h4>ロバスト性指標の範囲</h4>
+<p>ルーティングロバスト性は、単一ターンのクエリに対する割り当てレベルで測定されており、安定したクエリ分布の結果としてアクターが実際に専門化された能力を発展させるかどうかは捉えていない。摂動が単一のクエリを通じてではなく状態を通じて伝播するマルチステップのエージェント設定へ指標を拡張することは自然な次のステップであり、均質な初期状態から多様な社会をブートストラップするための学習信号としてHSEを用いることも同様である。</p>
+</section>
+
+<section id="refs">
+<h2>参考文献</h2>
+<div class="refs">
+<p>Aida Amini, Saadia Gabriel, Shanchuan Lin, Rik Koncel-Kedziorski, Yejin Choi, and Hannaneh Hajishirzi. 2019. MathQA: Towards interpretable math word problem solving with operation-based formalisms. In Proceedings of NAACL-HLT, pages 2357–2367.</p>
+<p>Jacob Austin, Augustus Odena, Maxwell Nye, et al. 2021. Program synthesis with large language models. arXiv:2108.07732.</p>
+<p>Tucker Balch. 2000. Hierarchic social entropy: An information theoretic measure of robot group diversity. Autonomous Robots, 8(3):209–238.</p>
+<p>Matteo Bettini, Ajay Shankar, and Amanda Prorok. 2025. System neural diversity: Measuring behavioral heterogeneity in multi-agent learning. JMLR, 26(163):1–27.</p>
+<p>Yonatan Bisk, Rowan Zellers, Ronan Le Bras, Jianfeng Gao, and Yejin Choi. 2020. PIQA: Reasoning about physical commonsense in natural language. AAAI, 34:7432–7439.</p>
+<p>Marc W Cadotte, Kelly Carscadden, and Nicholas Mirotchnick. 2011. Beyond species: functional diversity and the maintenance of ecological processes and services. Journal of Applied Ecology, 48(5):1079–1087.</p>
+<p>Lingjiao Chen, Matei Zaharia, and James Zou. 2024. FrugalGPT: How to use large language models while reducing cost and improving performance. TMLR.</p>
+<p>Peter Clark, Isaac Cowhey, Oren Etzioni, et al. 2018. Think you have solved question answering? Try ARC. arXiv:1803.05457.</p>
+<p>Karl Cobbe, Vineet Kosaraju, Mohammad Bavarian, et al. 2021. Training verifiers to solve math word problems. arXiv:2110.14168.</p>
+<p>Dan Hendrycks, Collin Burns, Steven Basart, et al. 2021. Measuring massive multitask language understanding. ICLR.</p>
+<p>Sirui Hong, Mingchen Zhuge, Jonathan Chen, et al. 2024. MetaGPT: Meta programming for a multi-agent collaborative framework. ICLR.</p>
+<p>Qitian Jason Hu, Jacob Bieker, Xiuyu Li, et al. 2024. RouterBench: A benchmark for multi-LLM routing system. ICML Workshop on Agentic Markets.</p>
+<p>Dongfu Jiang, Xiang Ren, and Bill Yuchen Lin. 2023. LLM-Blender: Ensembling large language models with pairwise ranking and generative fusion. ACL, pages 14165–14178.</p>
+<p>Stephen R Kellert. 1996. The value of life: biological diversity and human society.</p>
+<p>Anders Krogh and Jesper Vedelsby. 1994. Neural network ensembles, cross validation, and active learning. NeurIPS, vol. 7.</p>
+<p>Thomas H Labella, Marco Dorigo, and Jean-Louis Deneubourg. 2006. Division of labor in a group of robots inspired by ants' foraging behavior. ACM TAAS, 1(1):4–25.</p>
+<p>Jinhyuk Lee, Feiyang Chen, Sahil Dua, et al. 2025. Gemini embedding: Generalizable embeddings from Gemini. arXiv:2503.07891.</p>
+<p>Guohao Li, Hasan Abed Al Kader Hammoud, Hani Itani, Dmitrii Khizbullin, and Bernard Ghanem. 2023. CAMEL: Communicative agents for "Mind" exploration of large language model society. NeurIPS, vol. 36.</p>
+<p>Stephanie Lin, Jacob Hilton, and Owain Evans. 2022. TruthfulQA: Measuring how models mimic human falsehoods. ACL, pages 3214–3252.</p>
+<p>Jian Liu, Leyang Cui, Hanmeng Liu, Dandan Huang, Yile Wang, and Yue Zhang. 2020. LogiQA: A challenge dataset for machine reading comprehension with logical reasoning. IJCAI, pages 3622–3628.</p>
+<p>Jean-Baptiste Mouret and Jeff Clune. 2015. Illuminating search spaces by mapping elites. arXiv:1504.04909.</p>
+<p>GS Nitschke, MC Schut, and AE Eiben. 2008. Emergent specialization in biologically inspired collective behavior systems. Intelligent Complex Adaptive Systems, pages 215–253.</p>
+<p>Isaac Ong, Amjad Almahairi, Vincent Wu, et al. 2025. RouteLLM: Learning to route LLMs from preference data. ICLR.</p>
+<p>Ankit Pal, Logesh Kumar Umapathi, and Malaikannan Sankarasubbu. 2022. MedMCQA: A large-scale multi-subject multi-choice dataset for medical domain question answering. CHIL, pages 248–260.</p>
+<p>Sundar Pichai, Demis Hassabis, and Koray Kavukcuoglu. 2025. A new era of intelligence with Gemini 3. Google.</p>
+<p>Yao Qiang, Subhrangshu Nandi, Ninareh Mehrabi, et al. 2024. Prompt perturbation consistency learning for robust language models. Findings of ACL: EACL, pages 1357–1370.</p>
+<p>David Rein, Betty Li Hou, Asa Cooper Stickland, et al. 2024. GPQA: A graduate-level Google-proof Q&A benchmark. COLM.</p>
+<p>Keisuke Sakaguchi, Ronan Le Bras, Chandra Bhagavatula, and Yejin Choi. 2021. WinoGrande: An adversarial Winograd schema challenge at scale. CACM, 64(9):99–106.</p>
+<p>Maarten Sap, Hannah Rashkin, Derek Chen, Ronan Le Bras, and Yejin Choi. 2019. Social IQA: Commonsense reasoning about social interactions. EMNLP, pages 4463–4473.</p>
+<p>Melanie Sclar, Yejin Choi, Yulia Tsvetkov, and Alane Suhr. 2024. Quantifying language models' sensitivity to spurious features in prompt design. ICLR.</p>
+<p>Claude Elwood Shannon. 1948. A mathematical theory of communication. Bell System Technical Journal, 27(3):379–423.</p>
+<p>Kenneth O Stanley, Jeff Clune, Joel Lehman, and Risto Miikkulainen. 2019. Designing neural networks through neuroevolution. Nature Machine Intelligence, 1(1):24–35.</p>
+<p>Qingyun Wu, Gagan Bansal, Jieyu Zhang, et al. 2024. AutoGen: Enabling next-gen LLM applications via multi-agent conversations. COLM.</p>
+<p>Yanwei Yue, Guibin Zhang, Boyang Liu, Guancheng Wan, Kun Wang, Dawei Cheng, and Yiyan Qi. 2025. MasRouter: Learning to route LLMs for multi-agent systems. ACL, pages 15549–15572.</p>
+<p>Shen yun Miao, Chao-Chun Liang, and Keh-Yih Su. 2020. A diverse corpus for evaluating and developing English math word problem solvers. ACL, pages 975–984.</p>
+<p>Rowan Zellers, Ari Holtzman, Yonatan Bisk, Ali Farhadi, and Yejin Choi. 2019. HellaSwag: Can a machine really finish your sentence? ACL, pages 4791–4800.</p>
+<p>Lianmin Zheng, Wei-Lin Chiang, Ying Sheng, et al. 2023. Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena. NeurIPS, vol. 36.</p>
+<p>Richard Zhuang, Tianhao Wu, Zhaojin Wen, Andrew Li, Jiantao Jiao, and Kannan Ramchandran. 2025. EmbedLLM: Learning compact representations of large language models. ICLR.</p>
+</div>
+</section>
+
+<section id="appA">
+<h2>付録A: ルーターベンチマークの詳細</h2>
+
+<h3>A.1 EmbedLLM</h3>
+<p>EmbedLLM (Zhuang et al., 2025) は、多様なサイズと専門性（汎用、コーディング、生物医学、物理学）を持つ112個のオープンソース言語モデルから収集された二値の性能ラベルの行列を中心に構築された、モデルルーティングおよび正答率予測のベンチマークである。各モデルは、表4にまとめた10個の確立されたベンチマークのテストセットから抽出された36,054問について評価された。モデル・質問のペアごとに、そのモデルが正しく回答したか（1）否か（0）を記録するラベルが付与され、正答行列 Y ∈ {0,1}<sup>112×36,054</sup> が得られる。一部の質問は、多肢選択の選択肢が提示される順序のみが異なる重複または準重複であったため、約3,000のプロンプトを除去した。残りの質問は、学習・検証・テストセットに80%/10%/10%（およそ26K/3.6K/3.6K問）で分割された。</p>
+<p>我々の研究では、各モデルをアクター r<sub>k</sub> ∈ R として扱い、Yの各行をそのアクターの行動ベクトル b<sub>k</sub>（3節）として扱う。112モデル全体がデフォルトの社会を構成し、最大HSEサブセットは、正規化HSE（6節）を最大化するように貪欲法で選択された9モデルのサブセットである。</p>
+
+<table>
+<caption>表4: EmbedLLM内の元となるベンチマークと対応する領域。</caption>
+<tr><th>ベンチマーク</th><th>領域</th></tr>
+<tr><td>MMLU (Hendrycks et al., 2021)</td><td>一般知識（57科目）</td></tr>
+<tr><td>TruthfulQA (Lin et al., 2022)</td><td>真実性・事実性</td></tr>
+<tr><td>SocialQA (Sap et al., 2019)</td><td>社会的常識推論</td></tr>
+<tr><td>PIQA (Bisk et al., 2020)</td><td>物理的常識推論</td></tr>
+<tr><td>MedMCQA (Pal et al., 2022)</td><td>医学知識</td></tr>
+<tr><td>MathQA (Amini et al., 2019)</td><td>数学的文章題</td></tr>
+<tr><td>LogiQA (Liu et al., 2020)</td><td>論理的推論</td></tr>
+<tr><td>GSM8K (Cobbe et al., 2021)</td><td>小学校レベルの数学的推論</td></tr>
+<tr><td>GPQA (Rein et al., 2024)</td><td>大学院レベルの科学（高難度）</td></tr>
+<tr><td>ASDiV (yun Miao et al., 2020)</td><td>算数の文章題</td></tr>
+</table>
+
+<h3>A.2 RouterBench</h3>
+<p>RouterBench (Hu et al., 2024) は、マルチLLMルーティングシステムを評価するための包括的なベンチマークであり、幅広いタスクと領域を網羅するよう設計されている。このデータセットには、11個のLLM――6個のオープンソースモデル（Llama-70B-chat, Mixtral-8x7B, Yi-34B-chat, Code Llama-34B, Mistral-7B-chat, WizardLM-13B）と5個の独自モデル（GPT-4, GPT-3.5-turbo, Claude-instant-v1, Claude-v1, Claude-v2）――から生成された405,467個の事前生成推論サンプルが含まれる。</p>
+<p>各サンプルは、モデルの応答、品質スコア、ドル建ての推論コストを記録しており、タスク性能と経済的コストの両方を同時に評価することを可能にする。ルーティング実験のために、このデータセットは学習・検証・テストセットに80%/10%/10%（およそ29K/3.6K/3.6Kプロンプト）で分割されている。</p>
+<p>我々の研究では、11個のモデルそれぞれをアクター r<sub>k</sub> ∈ R として扱い、二値の正答ラベルを行動行列 B（3節）のエントリとして用いる。11モデル全体がデフォルトの社会を構成し、最大HSEサブセットは、貪欲法で選択された正規化HSEを最大化する4モデルのサブセットである。</p>
+
+<table>
+<caption>表5: タスクカテゴリ別にグループ化した、RouterBenchに含まれるデータセット。MMLUは64タスク中57タスクを占め、残りの7個のデータセットはそれぞれ1タスクずつ寄与する。</caption>
+<tr><th>ベンチマーク</th><th>領域</th></tr>
+<tr><td>HellaSwag (Zellers et al., 2019)</td><td>常識推論</td></tr>
+<tr><td>Winogrande (Sakaguchi et al., 2021)</td><td>常識推論</td></tr>
+<tr><td>ARC Challenge (Clark et al., 2018)</td><td>常識推論</td></tr>
+<tr><td>MMLU (Hendrycks et al., 2021)</td><td>知識理解</td></tr>
+<tr><td>MT-Bench (Zheng et al., 2023)</td><td>対話</td></tr>
+<tr><td>GSM8K (Cobbe et al., 2021)</td><td>数学</td></tr>
+<tr><td>MBPP (Austin et al., 2021)</td><td>コーディング</td></tr>
+</table>
+
+<h3>A.3 合成社会</h3>
+<h4>主題領域クラスタリング (SA)</h4>
+<p>SA合成社会を構築するため、我々はEmbedLLMの67個の評価項目（57個のMMLU科目と10個の追加ベンチマーク: GSM8K, MathQA, ASDiv, LogiQA, GPQA, MedMCQA, TruthfulQA, SocialQA, PIQA）のそれぞれを、15個の相互排他的な主題領域クラスタのいずれかに割り当てる。割り当ての基準は学術的な領域、すなわち、必要とされる推論の量とは独立に、その項目が何についてのものであるかである。得られたクラスタを表6に示す。</p>
+<p>各合成SAエージェントには二値の性能ベクトルが割り当てられ、自分のクラスタ内のすべての項目に1のスコアを、その他すべてに0のスコアをつける。これは、完全だが狭くスコープされた専門性を持つスペシャリストをモデル化するものである。</p>
+
+<table>
+<caption>表6: EmbedLLMの67個の評価項目を15個のグループへ主題領域クラスタリングしたもの。「MMLU科目」列は各クラスタに割り当てられた57個の個々のMMLU科目を、「EmbedLLM」列は10個の追加ベンチマークを列挙する。各合成SA専門家は、自分のクラスタ内のすべての項目に1、その他に0のスコアをつける。HS = 高校 (High School)、CS = 計算機科学 (Computer Science)。</caption>
+<tr><th>ID</th><th>クラスタ</th><th>MMLU科目</th><th>EmbedLLM</th></tr>
+<tr><td>C01</td><td>初等・学校算数</td><td>初等数学、HS統計学</td><td>GSM8K, ASDiv</td></tr>
+<tr><td>C02</td><td>高等・大学数学</td><td>抽象代数学、大学数学、HS数学、計量経済学</td><td>MathQA</td></tr>
+<tr><td>C03</td><td>論理学・論証・形式的推論</td><td>形式論理学、論理的誤謬</td><td>LogiQA</td></tr>
+<tr><td>C04</td><td>物理学・天文学</td><td>天文学、大学物理学、概念物理学、HS物理学</td><td>―</td></tr>
+<tr><td>C05</td><td>化学・地球科学</td><td>大学化学、HS化学</td><td>GPQA</td></tr>
+<tr><td>C06</td><td>生物学・遺伝学・ウイルス学</td><td>大学生物学、HS生物学、医学遺伝学、ウイルス学</td><td>―</td></tr>
+<tr><td>C07</td><td>臨床医学・医療</td><td>解剖学、臨床知識、大学医学、加齢、人間の性、栄養学、医学予科、専門医学</td><td>MedMCQA</td></tr>
+<tr><td>C08</td><td>計算機科学・AI・サイバーセキュリティ</td><td>大学CS、コンピュータセキュリティ、電気工学、HS CS、機械学習</td><td>―</td></tr>
+<tr><td>C09</td><td>経済学・ビジネス・会計</td><td>HSマクロ経済学、HSミクロ経済学、経営学、マーケティング、専門会計、広報</td><td>―</td></tr>
+<tr><td>C10</td><td>法学・法的推論</td><td>企業倫理、国際法、法理学、法学予科、専門法学</td><td>―</td></tr>
+<tr><td>C11</td><td>倫理学・哲学・宗教</td><td>道徳的論争、道徳的シナリオ、哲学、世界の宗教</td><td>―</td></tr>
+<tr><td>C12</td><td>心理学・行動科学</td><td>HS心理学、専門心理学、社会学</td><td>SocialQA, TruthfulQA</td></tr>
+<tr><td>C13</td><td>政治学・国際関係・安全保障</td><td>HS政治学、安全保障研究、米国外交政策</td><td>―</td></tr>
+<tr><td>C14</td><td>歴史・地理・世界知識</td><td>世界の事実、HS欧州史、HS地理、HS米国史、HS世界史、その他</td><td>―</td></tr>
+<tr><td>C15</td><td>常識・物理的直観</td><td>―</td><td>PIQA</td></tr>
+</table>
+
+<p>いくつかの境界的な割り当てには注意が必要である。計量経済学は、その質問が経済理論よりも統計的モデリングと回帰に支配されているため、経済学ではなく高等数学に配置されている。GPQAは、その最も難しく特徴的な質問が大学院レベルの化学と物理科学にあるため、化学・地球科学に配置されている。TruthfulQAは、その核心――社会的に伝達される誤った信念に抵抗すること――が事実的な現象というより認識論的・心理学的な現象であるため、心理学・行動科学に配置されている。企業倫理は、そのMMLUの質問が哲学的な倫理というよりも主にコーポレートガバナンスと受託者責任を検証するため、法学・法的推論に配置されている。</p>
+
+<h4>推論深度クラスタリング (RD)</h4>
+<p>RD合成社会を構築するため、我々は同じ67個のEmbedLLM項目を、表層的な想起から敵対的な専門家レベルの推論まで厳密に順序づけられた尺度を形成する、5つの推論深度層のいずれかに割り当てる。割り当ての基準は、対象領域とは独立に、正しく回答するために必要な支配的な認知操作である。</p>
+<ul>
+  <li><strong>R1（直接検索）</strong>: 推論を一切要さず、単一の記憶された事実を検索するだけで回答可能な項目をカバーする。例えば歴史上の日付やウイルスの性質の想起（13項目）。</li>
+  <li><strong>R2（概念適用）</strong>: 規則・定義・原理を特定のケースに適用する、1つの推論ステップを要する項目をカバーする。PIQA, SocialQA, TruthfulQAを含む（21項目）。</li>
+  <li><strong>R3（多段階推論）</strong>: それぞれが前のステップの出力に依存する2つ以上の推論ステップを組み合わせることを要する項目をカバーする。GSM8K, MathQA, MedMCQAを含む（21項目）。</li>
+  <li><strong>R4（形式的・記号的推論）</strong>: 論理・代数・証明計算のような形式体系を機械的に適用することで解かれる項目をカバーする。LogiQAとASDivを含む（7項目）。</li>
+  <li><strong>R5（敵対的・専門家レベル）</strong>: 浅いヒューリスティックを打ち負かすよう特別に設計されており、深い領域専門性と、巧妙に作られた紛らわしい選択肢への耐性を要する項目をカバーする。GPQAと4つのMMLU専門科目を含む（5項目）。</li>
+</ul>
+<p>SAと同様に、各RDエージェントは自分の層内のすべての項目に1、それ以外に0のスコアをつける。主な境界的な判断としては以下が挙げられる。TruthfulQAは、個々の質問が推論の連鎖ではなく単一の評価的判断を要するため、R3ではなくR2に割り当てられている。LogiQAは、その公務員試験の問題が多段階の領域推論というより形式的な推論規則の適用を要するため、R3ではなくR4に割り当てられている。ASDivは、その設計目標が多様な算数構造にわたるロバスト性であり、想起ではなく規則の適用を試すため、R1ではなくR4に割り当てられている。GPQAは、非専門家がほぼチャンスレベルの成績しか出せず、専門家でさえ約65%にしか到達しない――しかも紛らわしい選択肢が一般的な専門家のヒューリスティックを悪用するよう作られている――ように明示的に設計されているため、R5に割り当てられている。</p>
+</section>
+
+<section id="appB">
+<h2>付録B: クエリ摂動</h2>
+
+<h3>B.1 摂動の生成</h3>
+<p>我々は、バックボーンモデルとしてGemini 3.1 Flash-Lite (Pichai et al., 2025) を用いてLMにプロンプトを与えることで、クエリの摂動を生成する。本節では、EmbedLLMとRouterBenchの評価セット内の各クエリの摂動を生成するために用いた5つのゼロショットプロンプト（5.1節）を記載する。各プロンプトは、入力クエリ {prompt} の10通りの書き換え（摂動）を、文字・単語・構文・パラフレーズ・ランブリングという各5水準の特定の摂動指示に従って生成するようモデルに指示する。モデルが時折重複するバリアントを生成することがあるため、必要数より多くの摂動を要求している。その後我々は出力を解析し、摂動カテゴリごとに5個のユニークなバリアントを選択する。</p>
+
+<div class="prompt-box"><span class="label">レベル1: 文字レベルの摂動</span>以下に示すプロンプトについて、隣接するキーを打ってしまうなど、ユーザーが素早くキーボードを打っているかのような、文字レベルの摂動を導入した10通りの異なる書き換え（摂動）を作成してください。文字を隣接するものに置き換える（例: 'hello' の代わりに 'gello'）、ランダムな文字を追加・削除する（例: 'thing' の代わりに 'thng'）、隣接する2文字を入れ替える（例: 'hello' の代わりに 'ehllo'）、あるいは似た見た目の文字を使う（例: 'best' の代わりに 'b3st'、'friend' の代わりに 'fríend'）などの手法を用いてください。
+
+出力形式
+各書き換えを 1., 2., 3. のように番号付けしてフォーマットしてください:
+1. 最初の書き換え
+2. 2番目の書き換え
+...
+
+プロンプト
+{prompt}</div>
+
+<div class="prompt-box"><span class="label">レベル2: 単語レベルの摂動</span>以下に示すプロンプトについて、元の意味（セマンティクス）を保ちながら、単語レベルの摂動を導入した10通りの異なる書き換え（摂動）を作成してください。例えば、キーワードを同義語に置き換える（例: 'best friend' の代わりに 'closest friend'）、特定の単語を誤字にするか音声表記にする、あるいは "the"、"is"、"of" のようなキーワードでない単語を削除するなどです。
+
+出力形式
+各書き換えを 1., 2., 3. のように番号付けしてフォーマットしてください:
+1. 最初の書き換え
+2. 2番目の書き換え
+...
+
+プロンプト
+{prompt}</div>
+
+<div class="prompt-box"><span class="label">レベル3: 構文レベルの摂動</span>以下に示すプロンプトについて、中核的な意味を変えることなく、プロンプトの構造や文法を変更する文レベルの摂動を導入した10通りの異なる書き換え（摂動）を作成してください。
+
+出力形式
+各書き換えを 1., 2., 3. のように番号付けしてフォーマットしてください:
+1. 最初の書き換え
+2. 2番目の書き換え
+...
+
+プロンプト
+{prompt}</div>
+
+<div class="prompt-box"><span class="label">レベル4: パラフレーズ摂動</span>以下に示すプロンプトについて、中核的な意味を変えることなく、例えば異なる語り口・文体・トーンでプロンプトを書き直すことによって言い換えた10通りの異なる書き換え（摂動）を作成してください。
+
+出力形式
+各書き換えを 1., 2., 3. のように番号付けしてフォーマットしてください:
+1. 最初の書き換え
+2. 2番目の書き換え
+...
+
+プロンプト
+{prompt}</div>
+
+<div class="prompt-box"><span class="label">レベル5: ランブリング摂動</span>以下に示すプロンプトについて、中核的な意味を変えることなく、プロンプトの前後に無関係なノイズを加えてプロンプト全体を書き直した10通りの異なる書き換え（摂動）を作成してください。
+
+出力形式
+各書き換えを 1., 2., 3. のように番号付けしてフォーマットしてください:
+1. 最初の書き換え
+2. 2番目の書き換え
+...
+
+プロンプト
+{prompt}</div>
+
+<h3>B.2 クエリ摂動の例</h3>
+<p>本節では、生成されたプロンプト摂動のいくつかの例を示す。</p>
+
+<div class="example-box">
+<p class="orig"><strong>EmbedLLM摂動例1</strong><br>元のプロンプト: 天然の物質で喉の痛みを和らげるにはどうすればよいか？</p>
+<p><span class="level">レベル1（文字）:</span> 天然の物質で喉の痛みを和ずげるにわどうすれば良いか</p>
+<p><span class="level">レベル2（単語）:</span> 自然な治療法を用いて喉の痛みを軽減するには</p>
+<p><span class="level">レベル3（構文）:</span> 喉の痛みを和らげるために天然の物質をどう使えるか？</p>
+<p><span class="level">レベル4（パラフレーズ）:</span> 喉の痛みを鎮めるために使える自然療法にはどのようなものがあるか？</p>
+<p><span class="level">レベル5（ランブリング）:</span> 今日は空が青い。質問: 天然の物質で喉の痛みを和らげるにはどうすればよいか？</p>
+</div>
+
+<div class="example-box">
+<p class="orig"><strong>EmbedLLM摂動例2</strong><br>元のプロンプト: 砂糖を摂らずに甘いものを食べるにはどうすればよいか？</p>
+<p><span class="level">レベル1（文字）:</span> 砂唐を摂らずに甘いのもを食べるにわどうすればよいか？</p>
+<p><span class="level">レベル2（単語）:</span> 砂糖を摂取せずに甘党を満たすには？</p>
+<p><span class="level">レベル3（構文）:</span> 砂糖を控えている場合、それでも甘いものを楽しむにはどうすればよいか？</p>
+<p><span class="level">レベル4（パラフレーズ）:</span> 砂糖を一切摂取せずに甘いものへの欲求を満たすにはどうすればよいか？</p>
+<p><span class="level">レベル5（ランブリング）:</span> システムステータス: オンライン。砂糖を摂らずに甘いものを食べるにはどうすればよいか？</p>
+</div>
+
+<div class="example-box">
+<p class="orig"><strong>RouterBench摂動例1</strong><br>元のプロンプト: n番目のリュカ数を求める関数を書いてください。</p>
+<p><span class="level">レベル1（文字）:</span> n番目のリユカ数を求める関数を書いてください。</p>
+<p><span class="level">レベル2（単語）:</span> n番目のリュカ数を求める関数を作成してください。</p>
+<p><span class="level">レベル3（構文）:</span> n番目のリュカ数を計算する関数を作成してください。</p>
+<p><span class="level">レベル4（パラフレーズ）:</span> インデックスnにおけるリュカ数を求めるコードを書いてください。</p>
+<p><span class="level">レベル5（ランブリング）:</span> 今日は長い一日だった。n番目のリュカ数を求める関数を書いてください。</p>
+</div>
+
+<div class="example-box">
+<p class="orig"><strong>RouterBench摂動例2</strong><br>元のプロンプト: 辞書が空かどうかを確認する関数を書いてください。</p>
+<p><span class="level">レベル1（文字）:</span> 字書が空かどうかを確認する関数を書いてください。</p>
+<p><span class="level">レベル2（単語）:</span> dictが空かどうかを検証する関数を作成してください。</p>
+<p><span class="level">レベル3（構文）:</span> 辞書が空であるかどうかを検証する関数を作成してください。</p>
+<p><span class="level">レベル4（パラフレーズ）:</span> 辞書が要素を1つも含んでいないかを判定する関数を作成してください。</p>
+<p><span class="level">レベル5（ランブリング）:</span> 今日はいい天気だ。辞書が空かどうかを確認する関数を書いてください。</p>
+</div>
+</section>
+
+<section id="appC">
+<h2>付録C: プロンプトベースのルーターポリシー</h2>
+<p>プロンプトベースのルーターポリシーには、バックボーンLMとしてGemini 3.1 Flash-Lite (Pichai et al., 2025) を用いた少数ショットのプロンプトテンプレートを使用する。このプロンプトは、(i) 利用可能な各アクターの自然言語による説明、および (ii) 学習分割から抽出された少数ショットの例文に条件づけて、あるクエリに対して最も適したアクターを選択するよう言語モデルに求める。</p>
+<p>C.1節ではテンプレート自体を、C.2節では少数ショットの例文の選び方を、C.3節ではEmbedLLMとRouterBenchのデータセットに対してテンプレートがどのようにインスタンス化されるかを示す。</p>
+
+<h3>C.1 プロンプトテンプレート</h3>
+<div class="prompt-box"><span class="label">少数ショット・ルーティングプロンプトテンプレート</span>指示
+与えられたプロンプトに対し、どのモデルが回答するのに最も適しているかを選択してください。
+回答は次のいずれかである必要があります: {actors}。
+
+文脈
+以下のモデルが利用可能です:
+{actors_description}
+
+少数ショットの例
+{few_shot_examples}
+
+プロンプト
+PROMPT: {prompt}
+このプロンプトに最も適したモデル:</div>
+
+<h3>C.2 少数ショット例文の選択</h3>
+<p>各アクターについて、そのアクターのスコアが他のすべてのアクターのスコアを少なくともマージン δ 以上上回っている、すなわちそのアクターが明確な勝者である学習プロンプトから k 個の例文をランダムにサンプリングする。我々は k=4、δ=0.4 を用いる。この基準を満たすプロンプトが k 個未満しかない稀なケースでは、社会内のすべてのアクターの中で（他のアクターと同点であってもよいので）最高スコアを達成した学習プロンプトからサンプリングするフォールバックを行う。</p>
+<p>例文は以下のようにフォーマットされ、すべてのスペシャリストにわたってシャッフルされる。</p>
+<div class="prompt-box">PROMPT: {exemplar_query}
+このプロンプトに最も適したモデル: {actor}</div>
+
+<h3>C.3 インスタンス化</h3>
+<p>EmbedLLMとRouterBenchについては、データセットで利用可能なすべてのLLMの名称（例: huggingfaceh4_zephyr_7b_beta）を {actors_description} フィールドに列挙する。</p>
+<p>合成社会については、各アクターが知識領域（主題領域）、推論深度、あるいはその両方に対応するため、以下の説明を {actors_description} プレースホルダに注入する。</p>
+
+<h4>EmbedLLM合成SA（主題領域）</h4>
+<ul>
+<li><strong>elementary_math</strong>: 小学校・中学校レベルの基礎的な数値演算と文章題のスペシャリスト</li>
+<li><strong>advanced_math</strong>: 記号操作、証明、あるいは複数領域にまたがる定量的推論を要する大学レベルの純粋・応用数学のスペシャリスト</li>
+<li><strong>logic</strong>: 形式論理規則の適用、妥当・不当な議論構造の識別、非形式的誤謬の検出のスペシャリスト</li>
+<li><strong>physics</strong>: 高校から大学院レベルの力学、電磁気学、熱力学、量子物理学、天体物理学の原理のスペシャリスト</li>
+<li><strong>chemistry</strong>: 化学量論と結合から有機反応、物理化学まで、および大学院レベルの自然科学的な幅広さを持つ化学原理のスペシャリスト</li>
+<li><strong>biology</strong>: 分子生物学、遺伝学、進化生物学、生態学、ウイルス学にわたる、学校から大学レベルの生命科学のスペシャリスト</li>
+<li><strong>medicine</strong>: 医学部および専門医免許レベルの臨床診断、患者管理、薬理学、医療実践のスペシャリスト</li>
+<li><strong>computer_science</strong>: アルゴリズム、データ構造、機械学習モデル、コンピュータシステム、セキュリティ――学校から大学院レベルの理論的・応用的CS――のスペシャリスト</li>
+<li><strong>economics</strong>: ミクロ・マクロ経済理論、経営学、マーケティング、広報、専門会計のスペシャリスト</li>
+<li><strong>law</strong>: 法学部入学および司法試験レベルの法理論、法学、国際法・国内法のスペシャリスト</li>
+<li><strong>philosophy</strong>: 規範倫理学、応用的な道徳的推論、心の哲学・認識論の哲学、比較宗教学のスペシャリスト</li>
+<li><strong>psychology</strong>: 認知・発達・臨床・社会心理学、および専門的な評価・治療実践のスペシャリスト</li>
+<li><strong>politics</strong>: 政治制度、政府、外交政策、国際安全保障、戦略研究のスペシャリスト</li>
+<li><strong>history</strong>: 歴史的な出来事や運動（欧州、米国、世界）、人文・自然地理学、幅広い国際的事実知識のスペシャリスト</li>
+<li><strong>commonsense</strong>: 物理世界がどう機能するか、人々がどう振る舞うかについての暗黙の日常知識のスペシャリスト</li>
+</ul>
+
+<h4>EmbedLLM合成RD（推論深度）</h4>
+<ul>
+<li><strong>direct_lookup</strong>: 推論・計算・推論連鎖を一切必要とせず、一段階で検索可能な記憶された事実に基づいて回答するモデル</li>
+<li><strong>concept_application</strong>: 概念、規則、定義を特定のケースに1つの推論ステップで適用するモデル。連鎖は不要だが、単純な想起を超えた理解を要する</li>
+<li><strong>multi_step</strong>: それぞれが前のステップの出力に依存する2つ以上の異なる推論ステップを組み合わせることで回答に到達するモデル</li>
+<li><strong>formal_symbolic</strong>: 明示的な構文規則に従って形式体系（論理、代数、証明）を適用することで回答を導出するモデル</li>
+<li><strong>adversarial</strong>: 浅いヒューリスティックを打ち負かすよう特別に設計された質問でテストされ、深い領域専門性、もっともらしい誤答選択肢への耐性、しばしばメタ認知的な気づきを要するモデル</li>
+</ul>
+
+<table>
+<caption>表7: HSEのみを最大化する基準、およびHSEとタスク精度を共同で最大化する基準という2つの基準のもとでEmbedLLM社会のサブセットについて選択された、異なるルーティングポリシーにわたるタスク精度と社会の多様性（正規化HSE）。</caption>
+<tr><th></th><th>n</th><th>HSE</th><th>random</th><th>KNN1</th><th>KNN3</th><th>KNN10</th><th>oracle</th></tr>
+<tr><td>デフォルト</td><td>112</td><td>0.24</td><td>0.43</td><td>0.52</td><td>0.57</td><td>0.65</td><td>0.97</td></tr>
+<tr><td colspan="8"><strong>HSEのみ</strong></td></tr>
+<tr><td></td><td>9</td><td>0.53</td><td>0.30</td><td>0.34</td><td>0.40</td><td>0.46</td><td>0.87</td></tr>
+<tr><td></td><td>12</td><td>0.49</td><td>0.30</td><td>0.35</td><td>0.41</td><td>0.46</td><td>0.89</td></tr>
+<tr><td></td><td>25</td><td>0.41</td><td>0.35</td><td>0.48</td><td>0.50</td><td>0.52</td><td>0.94</td></tr>
+<tr><td colspan="8"><strong>HSE + 精度</strong></td></tr>
+<tr><td></td><td>9</td><td>0.48</td><td>0.33</td><td>0.52</td><td>0.59</td><td>0.65</td><td>0.92</td></tr>
+<tr><td></td><td>12</td><td>0.47</td><td>0.34</td><td>0.52</td><td>0.58</td><td>0.65</td><td>0.93</td></tr>
+<tr><td></td><td>25</td><td>0.41</td><td>0.35</td><td>0.46</td><td>0.55</td><td>0.63</td><td>0.96</td></tr>
+</table>
+</section>
+
+<section id="appD">
+<h2>付録D: KNNルーターポリシー</h2>
+<p>KNNベースのルーターは、Gemini Embedding 2 (Lee et al., 2025) をバックボーンモデルとして用いてクエリの埋め込み e(q) を計算し、埋め込み空間におけるコサイン類似度を用いて学習セットから k 個の最近傍 N<sub>k</sub>(x) を検索する。そして、k個の最近傍において最高スコアを持つアクターを割り当てる。</p>
+</section>
+
+<section id="appE">
+<h2>付録E: 距離指標とリンケージのHSEへの影響</h2>
+<p>図7は、EmbedLLM上での貪欲法によるエージェント選択を用いて、距離指標（コサイン、相関、ユークリッド、マンハッタン）とリンケージ手法（単一、完全、平均）の12通りの組み合わせすべてについて、社会規模の関数としての正規化HSEを報告している。定性的なパターンはすべての設定にわたって一貫している。すなわち、専門家社会は高いHSEで急速に頭打ちになる一方、デフォルトの実世界プールは実質的に低い水準で頭打ちになる。これは、7節で報告された知見が距離やリンケージの選択に依存しないことを裏づけている。本文全体で用いられている単一リンケージによるコサイン距離は、デフォルト社会について最も保守的な多様性の推定値を生み出す。</p>
+<div class="figure-block"><span class="fig-label">図7:</span> 距離指標（行: コサイン、相関、ユークリッド、マンハッタン）とリンケージ手法（列: 単一、完全、平均）の全組み合わせにわたる、EmbedLLM上での貪欲法によるエージェント選択を用いた、社会規模の関数としての正規化HSE。コサインおよび相関パネルは達成可能な最大HSEで正規化されており、ユークリッドおよびマンハッタンパネルは生のHSE値を示す。専門家社会が高いHSEで急速に頭打ちになる一方でデフォルトの実世界プールが実質的に低い水準で頭打ちになるという定性的パターンは、12通りの設定すべてにわたって一貫している。</div>
+</section>
+
+<section id="appF">
+<h2>付録F: モデル選択基準の影響</h2>
+<p>表7は、HSEのみを最大化する基準と、HSEとタスク精度を共同で最大化する基準という2つの基準のもとで選択された、EmbedLLM社会のサブセットについてのタスク精度と社会の多様性を報告している。結果は多様性と精度の間のトレードオフを明らかにしている。HSEのみに基づいて選択されたサブセットは、どの規模でもより高い正規化HSEを達成するが、ルーティングタスクの精度はより低い。選択基準にタスク精度を加えることでルーティング性能は回復する――n=9では、KNN-10は112モデルの全社会と全く同じ精度（0.65）に一致し、オラクルは0.92に達する――が、その代償としてHSEは低下する（0.48 対 0.53）。n=9でのHSE+精度サブセットは、利用可能なモデルの10%未満を用いながら競争力のあるルーティング精度を達成しており、多様性と性能のバランスを取る実用的なコアセットを提供している。</p>
+</section>
+
+<footer>
+  本ページは arXiv:2607.09197v1 "When is Routing Meaningful? Diversity and Robustness in Language Model Societies" (Huot, Kaisers, and Lapata; Google DeepMind) の日本語全訳です。
+</footer>
+
+</div>
+</body>
+</html>
