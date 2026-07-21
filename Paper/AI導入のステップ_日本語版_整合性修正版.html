@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Boris ChernyによるSteps of AI Adoptionの日本語訳">
+  <title>AI導入のステップ</title>
+  <style>
+
+  :root {
+    --page-bg: #ffffff;
+    --text: #202124;
+    --muted: #5f5b54;
+    --header-bg: #d9704c;
+    --header-text: #ffffff;
+    --cream: #faf7ef;
+    --cell-bg: #ffffff;
+    --border: #cfc9bf;
+    --link: #1155cc;
+    --chip-bg: #efece6;
+    --unlock: #202124;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page-bg: #1d1b18;
+      --text: #e8e4dc;
+      --muted: #a89f92;
+      --header-bg: #b85a3c;
+      --header-text: #fdf6f2;
+      --cream: #282420;
+      --cell-bg: #211e1b;
+      --border: #45403a;
+      --link: #8ab4f8;
+      --chip-bg: #2e2a25;
+      --unlock: #f2ede4;
+    }
+  }
+  :root[data-theme="light"] {
+    --page-bg: #ffffff;
+    --text: #202124;
+    --muted: #5f5b54;
+    --header-bg: #d9704c;
+    --header-text: #ffffff;
+    --cream: #faf7ef;
+    --cell-bg: #ffffff;
+    --border: #cfc9bf;
+    --link: #1155cc;
+    --chip-bg: #efece6;
+    --unlock: #202124;
+  }
+  :root[data-theme="dark"] {
+    --page-bg: #1d1b18;
+    --text: #e8e4dc;
+    --muted: #a89f92;
+    --header-bg: #b85a3c;
+    --header-text: #fdf6f2;
+    --cream: #282420;
+    --cell-bg: #211e1b;
+    --border: #45403a;
+    --link: #8ab4f8;
+    --chip-bg: #2e2a25;
+    --unlock: #f2ede4;
+  }
+
+  body {
+    background: var(--page-bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+    margin: 0;
+    padding: 40px 28px 64px;
+  }
+  .doc {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .byline {
+    display: flex;
+    gap: 8px;
+    margin: -8px 0 20px;
+  }
+  .chip {
+    background: var(--chip-bg);
+    border-radius: 3px;
+    padding: 2px 8px;
+    font-size: 12.5px;
+    color: var(--text);
+  }
+  h1 {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0 0 14px;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  .table-scroll {
+    overflow-x: auto;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 1080px;
+    font-variant-numeric: tabular-nums;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    vertical-align: top;
+    text-align: left;
+  }
+  thead th {
+    background: var(--header-bg);
+    color: var(--header-text);
+    font-weight: 700;
+    font-size: 13px;
+  }
+  td {
+    background: var(--cell-bg);
+  }
+  td.step {
+    background: var(--cream);
+    width: 108px;
+  }
+  td.step strong { display: block; }
+  td.step em {
+    display: block;
+    margin-top: 2px;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--muted);
+  }
+  td.agents {
+    width: 62px;
+    font-weight: 700;
+    text-align: left;
+    white-space: nowrap;
+  }
+  col.c-looks   { width: 21%; }
+  col.c-bottleneck { width: 23%; }
+  col.c-products { width: 22%; }
+  col.c-guardrails { width: 24%; }
+
+  td p { margin: 0 0 10px; }
+  td p:last-child { margin-bottom: 0; }
+  .unlock strong { color: var(--unlock); }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    padding-left: 12px;
+    text-indent: -12px;
+    margin-bottom: 3px;
+  }
+  li::before { content: "- "; }
+  li:last-child { margin-bottom: 0; }
+
+  tr.transition td {
+    background: var(--cream);
+    font-size: 13.5px;
+    padding: 8px 12px;
+  }
+  tr.transition strong { font-weight: 700; }
+
+  a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  a:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 2px;
+  }
+
+  </style>
+</head>
+<body>
+
+<div class="doc">
+  <h1>AI導入のステップ</h1>
+  <div class="byline">
+    <span class="chip">Boris Cherny</span>
+    <span class="chip">2026年7月16日</span>
+  </div>
+
+  <div class="table-scroll">
+    <table>
+      <colgroup>
+        <col class="c-step"><col class="c-agents"><col class="c-looks"><col class="c-bottleneck"><col class="c-products"><col class="c-guardrails">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>ステップとあなたの役割</th>
+          <th>エージェント数</th>
+          <th>どのような状態か</th>
+          <th>ボトルネック</th>
+          <th>各ステップを支援する製品</th>
+          <th>ガードレール</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="step"><strong>0：利用制限</strong><em>Gated</em></td>
+          <td class="agents">0</td>
+          <td>
+            <p>承認されているのは、旧世代のモデル、または軽量・高速なモデルだけです。AIゲートウェイや独自認証を経由することで遅延が積み重なり、MCPのガバナンスもなく、社内でAIツールへアクセスするには制限があるか、煩雑な手続きが必要です。</p>
+            <p>Claudeが作成したコードやArtifactsをホスティングするためのIT基盤も承認経路もなく、成果物はローカル環境にしか存在しません。</p>
+          </td>
+          <td>
+            <p>従来型のセキュリティおよび承認プロセス、成果ではなくトークン単価の抑制に重点を置く判断、意思決定における真に技術を理解する人の声の不足です。</p>
+          </td>
+          <td>
+            <ul>
+              <li>Claude.aiのチャット</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li>SSO／SCIMとロールベースアクセス制御</li>
+              <li>組織単位の予算上限</li>
+              <li>既存の承認プロセスおよびIAMの中に導入</li>
+              <li>データガバナンス一式</li>
+            </ul>
+          </td>
+        </tr>
+
+        <tr class="transition">
+          <td colspan="6"><strong>ステップ0から1へ進む方法：</strong>経営層・購入決定者との認識合わせと、阻害要因のエスカレーション。Claudeを安全に導入するためのフレームワークを整備する。</td>
+        </tr>
+
+        <tr>
+          <td class="step"><strong>1：支援</strong><em>あなた＋エージェント（ペア）</em></td>
+          <td class="agents">約1</td>
+          <td>
+            <p>一人のエンジニアと一つのエージェントが、主に人間の監督下で動く高速なペアプログラマーです。一度に一つのセッションを実行し、マージ前にほぼすべての変更を確認します。</p>
+            <p class="unlock"><strong>解放される能力：</strong>以前は午後いっぱいかかっていた変更を、会議と会議の間に完了できるようになります。</p>
+          </td>
+          <td>
+            <p>あなたの注意力と、各応答およびコード編集を確認する必要性です。モデルの出力への信頼が低く、自己検証も不足しているため、すべてを読む必要があると感じ、目を離せません。</p>
+            <p>作業は同期的です。Claudeが作業している間、次のタスクへ進まず、座って見守ります。</p>
+          </td>
+          <td>
+            <ul>
+              <li>Desktop、CLI、IDEでのClaude Code</li>
+              <li>Claude Cowork、Claude Design</li>
+              <li>Anthropic API、Bedrock、Vertex、Microsoft Foundry経由での利用</li>
+              <li>Claude Code分析ダッシュボード＋Analytics API</li>
+              <li>Claude Enterprise向けCompliance API</li>
+              <li>編集前に意図を確認するPlan mode</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li>ユーザー単位の支出上限</li>
+              <li>中央管理されたモデル／effort設定</li>
+              <li>中央管理されたポリシー</li>
+              <li><a href="https://code.claude.com/docs/en/monitoring-usage" target="_blank" rel="noopener">OpenTelemetryエクスポート</a>を既存のSIEM／可観測性基盤へ統合</li>
+            </ul>
+          </td>
+        </tr>
+
+        <tr class="transition">
+          <td colspan="6"><strong>ステップ1から2へ進む方法：</strong>複数のエージェントを同時に実行する。信頼できる自己検証ループ（実際の開発環境を使ったテスト＋ビルド＋Lint＋E2Eテスト）を構築する。権限確認プロンプトで処理が止まらないようAuto modeを使う。コードレビューを自動化する。</td>
+        </tr>
+
+        <tr>
+          <td class="step"><strong>2：並列</strong><em>オーケストレーター</em></td>
+          <td class="agents">約10</td>
+          <td>
+            <p>一人のエンジニアが、一つずつ独立したworktreeまたはGitチェックアウトを使う5～10個のエージェントを同時に指揮し、それらを行き来します。Claudeは、あなたが確認する前に、テスト、ビルド、Lint、セキュリティスキャンで自身の作業を検証します。Auto modeは常時有効で、自動コードレビューと自動セキュリティレビューも既定で有効です。成果物の量が増え、キー入力の過程ではなく最終的な差分を確認するようになり、保守作業のバックログが減り始めます。コードの大部分をClaudeが書きます。</p>
+            <p class="unlock"><strong>解放される能力：</strong>以前はチームで数週間かかっていたバックログが、一人のエンジニアによる午後のオーケストレーションで進められるようになります。</p>
+          </td>
+          <td>
+            <p>成果物のレビューです。自分で書くコードは減る一方で、六つの作業ストリームを確認するようになり、レビューがより多くの時間を占めます。</p>
+            <p>複数のセッションを同時に扱いながら、モデルへプロンプトを与え、方向修正することも負荷になります。</p>
+          </td>
+          <td>
+            <ul>
+              <li><a href="https://code.claude.com/docs/en/auto-mode-config" target="_blank" rel="noopener">Auto mode</a></li>
+              <li><a href="https://code.claude.com/docs/en/agent-view" target="_blank" rel="noopener">Agent view</a></li>
+              <li><a href="https://code.claude.com/docs/en/code-review" target="_blank" rel="noopener">Claude Code Review</a></li>
+              <li><a href="https://github.com/anthropics/claude-code-security-review" target="_blank" rel="noopener">Claude Security Review</a></li>
+              <li>モバイル版Claude Code、Desktopでのクラウド実行</li>
+              <li>Claude TeamsまたはClaude Enterprise経由での利用</li>
+              <li>Claude Tag（単一タスクを実行）</li>
+              <li>CLIおよびDesktopでのworktree分離</li>
+              <li><a href="https://code.claude.com/docs/en/remote-control" target="_blank" rel="noopener">Remote control</a>により、スマートフォンからエージェントを監視</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li>チームの利用状況を監視する<a href="https://code.claude.com/docs/en/analytics" target="_blank" rel="noopener">Analytics</a></li>
+              <li>Lint、自動テスト、型チェックによるコード品質の自動強制</li>
+              <li>ClaudeによるE2E検証（例：<a href="https://code.claude.com/docs/en/chrome" target="_blank" rel="noopener">Claude Chrome拡張機能</a>またはiOS／AndroidシミュレーターMCPを使用）</li>
+              <li>人手によるコードレビュー、コードのマージ、セキュリティレビュー。人間が生成したコードとエージェントが生成したコードに同じ品質基準を適用する</li>
+              <li>一般的で安全なBashコマンドおよびMCPコマンドをsettings.jsonで事前承認する</li>
+            </ul>
+          </td>
+        </tr>
+
+        <tr class="transition">
+          <td colspan="6"><strong>ステップ2から3へ進む方法：</strong>Claudeが文脈を取得できるようにする（コード、Wiki、議論を読めるようにする）。エージェントの裁量とコードレビュー速度を高める（他チームが所有するコードに触れる可能性を含む）。仕事をループと定型処理に分解する。Claudeが別のClaudeを起動できるようにする。</td>
+        </tr>
+
+        <tr>
+          <td class="step"><strong>3：監督付き自律</strong><em>マネージャーを管理するマネージャー（組織ツリー）</em></td>
+          <td class="agents">約100</td>
+          <td>
+            <p>コードのすべて、またはほぼすべてをClaudeが書きます。「コードを読んだか」ではなく、「モデルにどの文脈が不足していたのか、次回に向けてどう解決するか」が問われるようになります。</p>
+            <p class="unlock"><strong>解放される能力：</strong>以前は人間が手動で開始していた作業を、Claudeが先回りして実行します。担当者が時間を確保するまで待っていた保守やクリーンアップが、バックグラウンドで継続的に動くようになります。</p>
+          </td>
+          <td>
+            <p>ループへの信頼と、チームの意思決定処理能力です。エージェントのツリーは深すぎて一つずつ見守れません。ループが広く信頼される前にエージェント数を増やすことが落とし穴になります。</p>
+            <p>利用量の増加に伴い、トークンが効率的に使われていることを保証する必要があります。OTelまたはAnalyticsによる監視と、社内ユースケースがPMF（プロダクト・マーケット・フィット）を得た後はコストを管理しつつ、実験を奨励する文化が必要です。「これは本来、エンジニアが行っていた仕事か」と自問します。</p>
+          </td>
+          <td>
+            <ul>
+              <li>worktree分離を備えたサブエージェント（並列エージェント同士の衝突を防止）</li>
+              <li>反復作業を並列展開するRoutines、/loop、/batch、/goal</li>
+              <li><a href="https://code.claude.com/docs/en/workflows" target="_blank" rel="noopener">Dynamic workflows</a></li>
+              <li>Claude Tag（チャンネルまたはデータソースを監視し、能動的にタスクを開始）</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li>自動コードレビュー</li>
+              <li>自動セキュリティレビュー</li>
+              <li><a href="https://code.claude.com/docs/en/sandboxing" target="_blank" rel="noopener">エージェントのサンドボックス化</a></li>
+              <li>標準をコード化するCLAUDE.mdとSkills</li>
+              <li>チームの利用状況に基づいて<a href="https://code.claude.com/docs/en/auto-mode-config" target="_blank" rel="noopener">Auto mode</a>の分類器を調整</li>
+              <li>モデル選択、advisors、LSP、<a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">CLAUDE.md</a>の遅延読み込みSkillsへの分割により、<a href="https://code.claude.com/docs/en/costs" target="_blank" rel="noopener">トークン使用量</a>を管理</li>
+            </ul>
+          </td>
+        </tr>
+
+        <tr class="transition">
+          <td colspan="6"><strong>ステップ3から4へ進む方法：</strong>ドメイン固有ユースケースの自動化を大規模化する（例：コード移行、ファジング、機能開発、フィードバックへの対応）。</td>
+        </tr>
+
+        <tr>
+          <td class="step"><strong>4：AIネイティブ</strong><em>意図によって方向づけるVP</em></td>
+          <td class="agents">約1,000以上</td>
+          <td>
+            <p>ループは完全に閉じており、ほとんどのエージェントをClaudeが起動します。数百から数千のエージェントが動き、人間は意図によって方向づけ、例外によって監視します。</p>
+            <p class="unlock"><strong>解放される能力：</strong>四半期いっぱいかかっていた移行作業が、開始して進捗を確認するワークフローになります。</p>
+          </td>
+          <td>
+            <p>仕事を大規模に特定して自動化し、仕事の種類ごとに適切なガードレールを適用することです。</p>
+          </td>
+          <td>
+            <ul>
+              <li>エージェントをプログラムから構築・スケジュールするClaude Agent SDK</li>
+              <li>Claude Tag（大部分のSlackチャンネルで稼働し、投稿へ自動応答）</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li>自動化のコスト管理</li>
+              <li>自動化に使用するモデルの選択</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>

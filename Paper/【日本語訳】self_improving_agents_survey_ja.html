@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>「Self-Improvements in Modern Agentic Systems: A Survey」日本語解説</title>
+<style>
+  :root {
+    --bg: #fafaf8;
+    --panel: #ffffff;
+    --ink: #1f2430;
+    --sub: #4a5568;
+    --accent: #2b5aa0;
+    --accent2: #b5651d;
+    --line: #e2e2df;
+    --code-bg: #f0f2f6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans JP", "Segoe UI", sans-serif;
+    line-height: 1.85;
+    font-size: 16px;
+  }
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 40px 24px 100px;
+  }
+  header.title-block {
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
+  header.title-block h1 {
+    font-size: 1.7rem;
+    margin: 0 0 8px;
+    color: var(--accent);
+    line-height: 1.5;
+  }
+  header.title-block .en-title {
+    font-size: 1rem;
+    color: var(--sub);
+    font-style: italic;
+    margin-bottom: 14px;
+  }
+  header.title-block .meta {
+    font-size: 0.92rem;
+    color: var(--sub);
+  }
+  header.title-block .meta span.tag {
+    display: inline-block;
+    background: #eef3fa;
+    color: var(--accent);
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-right: 6px;
+    font-size: 0.8rem;
+  }
+  nav.toc {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 40px;
+  }
+  nav.toc h2 {
+    margin-top: 0;
+    font-size: 1rem;
+    color: var(--sub);
+    letter-spacing: 0.05em;
+  }
+  nav.toc ol {
+    columns: 2;
+    -webkit-columns: 2;
+    padding-left: 1.2em;
+    margin: 0;
+    font-size: 0.94rem;
+  }
+  nav.toc li { margin-bottom: 6px; break-inside: avoid; }
+  nav.toc a { color: var(--ink); text-decoration: none; }
+  nav.toc a:hover { color: var(--accent); text-decoration: underline; }
+
+  section { margin-bottom: 46px; }
+  h2 {
+    font-size: 1.35rem;
+    color: var(--accent);
+    border-left: 6px solid var(--accent);
+    padding-left: 12px;
+    margin: 0 0 18px;
+  }
+  h3 {
+    font-size: 1.1rem;
+    color: #2c3e50;
+    margin: 26px 0 10px;
+    border-bottom: 1px dashed var(--line);
+    padding-bottom: 6px;
+  }
+  h4 {
+    font-size: 1rem;
+    color: var(--accent2);
+    margin: 18px 0 8px;
+  }
+  p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 14px; padding-left: 1.4em; }
+  li { margin-bottom: 6px; }
+
+  .box {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 16px 0;
+  }
+  .box.formula {
+    font-family: "Cambria Math", "Latin Modern Math", Georgia, serif;
+    font-size: 1.02rem;
+    background: var(--code-bg);
+    border-left-color: #6b7280;
+    text-align: center;
+  }
+  .box.takeaway {
+    background: #fff7ec;
+    border-left-color: var(--accent2);
+  }
+  .box.takeaway::before {
+    content: "💡 まとめ";
+    display: block;
+    font-weight: bold;
+    color: var(--accent2);
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+  .box.critique {
+    background: #f4f7f2;
+    border-left-color: #4a7c59;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.92rem;
+  }
+  th, td {
+    border: 1px solid var(--line);
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #eef3fa;
+    color: var(--accent);
+  }
+  tr:nth-child(even) td { background: #fafbfc; }
+
+  code, .mono {
+    font-family: "SFMono-Regular", Consolas, monospace;
+    background: var(--code-bg);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 0.92em;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 0.78rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-right: 6px;
+    color: #fff;
+  }
+  .badge.theta { background: #2b5aa0; }
+  .badge.sigma { background: #b5651d; }
+
+  footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    color: var(--sub);
+  }
+
+  a.back-to-top {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: var(--sub);
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="title-block">
+    <h1>自己改善型エージェント・サーベイ 日本語解説<br>「Self-Improvements in Modern Agentic Systems: A Survey」</h1>
+    <div class="en-title">Zhe Ren, Yimeng Chen, Dandan Guo, Guowei Rong, Tonghui Li, R.B. Xiong, Qingfeng Lan, Wenyi Wang, Li Nanbo, Yibo Yang, Mingchen Zhuge, Jürgen Schmidhuber</div>
+    <div class="meta">
+      <span class="tag">arXiv:2607.13104v1 [cs.AI]</span>
+      <span class="tag">2026年7月14日</span>
+      <span class="tag">Jilin University / KAUST / IDSIA・USI・SUPSI 他</span>
+    </div>
+    <p style="margin-top:14px; font-size:0.92rem; color:var(--sub);">
+      本ドキュメントは原論文(英語・全10章+付録の大規模サーベイ)の要旨・構成・各章の要点を日本語でまとめた解説です。
+      原文全体をそのまま逐語訳したものではなく、内容を整理・要約し、独自の言葉で説明しています。
+      正確な引用や細部が必要な場合は原論文(arXiv:2607.13104)をご参照ください。
+    </p>
+  </header>
+
+  <nav class="toc">
+    <h2>目次</h2>
+    <ol>
+      <li><a href="#abstract">0. アブストラクト要約</a></li>
+      <li><a href="#contrib">1. 論文の主要な貢献</a></li>
+      <li><a href="#history">2. 歴史的背景と理論的基盤</a></li>
+      <li><a href="#definition">3. 形式的定義:エージェントと自己改善</a></li>
+      <li><a href="#taxonomy">4. 分類体系の全体像</a></li>
+      <li><a href="#fm">5. 基盤モデル(θ)の改善</a></li>
+      <li><a href="#scaffold">6. スキャフォールディング(Σ)の改善</a></li>
+      <li><a href="#apps">7. 応用領域</a></li>
+      <li><a href="#eval">8. 評価方法論</a></li>
+      <li><a href="#discussion">9. 議論と今後の展望</a></li>
+      <li><a href="#conclusion">10. 結論</a></li>
+      <li><a href="#critique">11. 訳者による所見(批判的検討)</a></li>
+    </ol>
+  </nav>
+
+  <section id="abstract">
+    <h2>0. アブストラクト要約</h2>
+    <p>
+      自己改善するAIエージェントは、研究段階のプロトタイプから実運用システムへと移行しつつある。
+      その最終目標は「制御可能な進化」――すなわち人間の介入を最小限、あるいは一切必要とせずに、経験を積み重ねて能力を伸ばしていくことである。
+      本サーベイは、現代の自己改善エージェントを「経験を蓄積された能力向上へと変換する適応システム」として捉え直し、
+      基盤モデル(FM)と、プロンプト・メモリ・ツール・制御ロジックからなる「操作用の足場(スキャフォールディング)」を組み合わせた構成としてエージェントを定式化する、
+      システムレベルの統一的な枠組みを提示する。
+    </p>
+    <p>
+      この枠組みの中で、自己改善とは「モデルのパラメータ、またはスキャフォールディングの構成要素に対する更新を自ら取得し確定させる、自己誘発的な更新演算子」として形式化される。
+      著者らは既存研究を「何を更新するか」と「その更新を駆動する信号は何か」という2軸で整理し、応用領域・評価方法をレビューした上で、未解決の課題と今後の方向性を論じている。
+    </p>
+  </section>
+
+  <section id="contrib">
+    <h2>1. 論文の主要な貢献</h2>
+    <ul>
+      <li><strong>歴史的文脈の整理:</strong> 古典的AI(最小二乗法・ゲーデルの不完全性・自己複製オートマトン・EURISKO・自己参照学習・ゲーデルマシンなど)から現代の基盤モデルベースのエージェントに至るまでの系譜を辿り、自己改善という考え方がどのように継承・発展してきたかを示す。</li>
+      <li><strong>統一的な形式化と体系的分類:</strong> エージェントを <code>A<sub>t</sub> = (θ<sub>t</sub>, Σ<sub>t</sub>)</code> として定式化し、更新対象を「基盤モデルの改善(θ)」と「スキャフォールディングの改善(Σ:プロンプル最適化・メモリ進化・ツール統治・全体構造の再設計)」という2つの経路に分類する。</li>
+      <li><strong>応用領域・評価パラダイム・今後の課題の統合的整理:</strong> ソフトウェア工学・Web操作・科学的発見など具体的な応用領域と、既存の評価プロトコルを比較検討し、信頼性ある継続的自己改善を実現する上での安全性上の論点や課題を明らかにする。</li>
+    </ul>
+  </section>
+
+  <section id="history">
+    <h2>2. 歴史的背景と理論的基盤</h2>
+    <p>
+      著者らは、自己改善という概念が基盤モデル以前から存在するAIの根源的なテーマであることを強調し、5つの時代に分けて整理している。
+    </p>
+
+    <h3>2.1 黎明期の概念(1790年代〜1960年代)</h3>
+    <p>
+      ルジャンドルやガウスの最小二乗法は「誤差駆動の適応」の数学的起源であり、今日のニューラルネットワークの基礎となる考え方の一つである。
+      その後、ウィーナーのサイバネティクス、アシュビーの恒常性(ホメオスタシス)、チューリングの「子供の機械」といった概念が、フィードバックによる行動適応という発想を広めた。
+      一方でゲーデルは不完全性定理を通じて、プログラムが自己の計算について語れる形式的な枠組みを提示し、これが後の自己参照的な自己改善の理論的基盤となった。
+      グッド(1966)は「知能爆発(Intelligence Explosion)」という構想を提示したが、当時は具体的なアルゴリズムを伴わない思弁的な考えに留まっていた。
+    </p>
+
+    <h3>2.2 記号主義とヒューリスティックな自己修正(1960年代〜1980年代)</h3>
+    <p>
+      フォン・ノイマンの自己複製オートマトン理論やマイヒルの形式化により、記述を編集することで複雑さを増す後継システムを生成するという考え方が整理された。
+      記号的AIの領域では、レナットのAM(Automated Mathematician)やEURISKOが、ヒューリスティックそのものを操作可能なオブジェクトとして扱う先駆的な試みとなった。
+      ただし、これらのシステムの実際の成功は人間による外部評価に大きく依存しており、真に自律的なクレジット割当メカニズムは持っていなかった点が指摘されている。
+    </p>
+
+    <h3>2.3 コネクショニズムとメタ学習の萌芽(1980年代〜2000年代)</h3>
+    <p>
+      シュミットフーバー(1987)は、候補解だけでなくそれを生成する学習手続き自体を進化させる自己参照学習の枠組みを提示した。
+      また「高速重み(fast weights)」を用いたネットワーク――遅い学習器が勾配降下で高速重みをプログラムするという構造――は、後にTransformerの線形注意機構と数学的に等価であることが指摘されている(Schlagら, 2021)。
+      この時期には、AIXI(計算可能な環境における逐次意思決定の理論的上限)や、ゲーデルマシン(数学的に期待効用の改善を証明できる場合にのみ自己修正を行う、理論上最適な自己参照システム)も登場した。
+    </p>
+
+    <h3>2.4 形式的・アーキテクチャレベルの自己改善(2000年代〜2020年代)</h3>
+    <p>
+      この時期は「自己改善の理論的限界の分析」と「アーキテクチャ設計の自動化」という2つの流れに分かれる。
+      Orseau & Ring(2011)はエージェントが自己欺瞞や報酬改ざんといったリスクに直面しうることを形式的に指摘し、反射的オラクルや論理的帰納といった、自己言及的な不確実性下でも矛盾を生まない推論の枠組みが提案された。
+      工学面ではニューラルアーキテクチャサーチ(NAS)や自己対戦(self-play)による強化学習が成熟し、現代の自律的エージェントへの土台を築いた。
+    </p>
+
+    <h3>2.5 スケール可能な基盤モデルとエージェントシステム(2020年代〜現在)</h3>
+    <p>
+      基盤モデルの登場により、自己改善は「高速で訓練不要な適応(プロンプトやメモリのその場での書き換え)」と「持続的なパラメータ最適化」という2つの補完的なメカニズムへと分化した。
+      In-context learningはメタ学習の一形態として機能し、その仕組みはAttentionのKey-Valueキャッシュを介した連想記憶と見なせる。これは1991年の高速重みプログラマ(線形Transformerとして再解釈されるもの)との理論的な連続性を持つ。
+      一方でRLHFやConstitutional AI、ReAct・Reflexionのような手法は、実行時のエラーを自然言語での内省に変換し持続的なパラメータ更新へとつなげる、より遅い改善ループを実現している。
+    </p>
+  </section>
+
+  <section id="definition">
+    <h2>3. 形式的定義:エージェントと自己改善</h2>
+
+    <h3>3.1 エージェントの定式化</h3>
+    <p>
+      基盤モデルベースのエージェントの時刻 <code>t</code> における構成は、次のように定義される。
+    </p>
+    <div class="box formula">A<sub>t</sub> = (θ<sub>t</sub>, Σ<sub>t</sub>)</div>
+    <p>
+      ここで <code>θ<sub>t</sub></code> は基盤モデルのニューラルパラメータ、<code>Σ<sub>t</sub></code> はエージェントの動的な操作用スキャフォールディングを表す。スキャフォールディングはさらに次のように分解される。
+    </p>
+    <div class="box formula">Σ<sub>t</sub> := (p<sub>t</sub>, m<sub>t</sub>, T<sub>t</sub>, g<sub>t</sub>)</div>
+    <table>
+      <tr><th>記号</th><th>意味</th></tr>
+      <tr><td><code>p<sub>t</sub></code></td><td>構造化されたプロンプト・システム指示</td></tr>
+      <tr><td><code>m<sub>t</sub></code></td><td>メモリ機構(記憶の取得・更新方針を含む)</td></tr>
+      <tr><td><code>T<sub>t</sub></code></td><td>外部ツールの集合とその呼び出しインターフェース</td></tr>
+      <tr><td><code>g<sub>t</sub></code></td><td>ルーティング・スケジューリング・安全制約などの制御ロジック</td></tr>
+    </table>
+    <p>
+      エージェントは実行中、対話の一時的な文脈(KVキャッシュや中間的な計画など)を保持する実行状態 <code>X<sub>t</sub></code> を持つが、これは即座に破棄・リセットされ得るためエージェントの本質的な構成には含まれない。基盤モデルとスキャフォールディングの両方によって誘導される方策は <code>π<sub>θt,Σt</sub>(A<sub>t</sub> | X<sub>t</sub>)</code> と表される。
+    </p>
+
+    <h3>3.2 自己改善の形式的定義</h3>
+    <p>
+      自己改善は「自己誘発的な演算子 <code>U</code>」を通じて定式化され、実行フェーズと更新フェーズに分解される。
+    </p>
+    <div class="box formula">A<sub>t+1</sub> = U( A<sub>1:t</sub>, E(π<sub>θt,Σt</sub>; Σ<sub>t</sub>, C<sub>t</sub>) )</div>
+    <p>
+      ここで <code>E</code> は、誘導された方策をタスク文脈 <code>C<sub>t</sub></code>(タスク分布・ユーザとの対話・自己対戦環境など)に対して実行し、学習信号(相互作用の軌跡・内省・批評・提案された編集など)を生成する「エージェント自身が実行する手続き」である。
+    </p>
+    <p>
+      この枠組みでは2つの経路が定義される。
+    </p>
+    <div class="box formula">
+      基盤モデル改善: θ<sub>t+1</sub> = U<sub>θ</sub>(θ<sub>1:t</sub>, E(...)), Σ<sub>t+1</sub> = Σ<sub>t</sub><br>
+      スキャフォールディング改善: Σ<sub>t+1</sub> = U<sub>Σ</sub>(Σ<sub>1:t</sub>, E(...)), θ<sub>t+1</sub> = θ<sub>t</sub>
+    </div>
+    <p>
+      前者は自己生成された経験を通じて<strong>間接的に</strong>改善を誘導する(パラメータ空間での学習)。後者はエージェント自身の行動によってプロンプト・メモリ・ツール・制御ロジックを<strong>直接</strong>編集する(実行空間での自己修正)。
+      基盤モデル改善は時間スケールが長く計算コストが高いが安定した汎化をもたらし、スキャフォールディング改善は高速・可逆的だがより文脈依存的であるという対比が論文全体を貫く軸になっている。
+    </p>
+
+    <h4>スキルという横断的概念</h4>
+    <p>
+      著者らは「スキル」を、エージェントが保持し再利用する、自己誘発的更新演算子 <code>U</code> の再利用可能なインスタンスとして定義している。スキルの実体はツール・指示・メモリ項目・重み・制御ロジックのいずれにも格納され得るため、「更新対象の軸」とは直交する概念として位置づけられる。さらに、タスクや世界状態に作用する「オブジェクトレベルのスキル」と、エージェント自身の構成 <code>A<sub>t</sub></code> に作用する「メタレベルのスキル」を区別しており、後者こそが自己参照ループ(改善者自身が改善される)を生む鍵となる。
+    </p>
+
+    <h3>3.3 関連する学習パラダイムとの接続</h3>
+    <p>
+      著者らはSI-FMA(基盤モデルベースエージェントの自己改善)を、強化学習・オンライン学習・能動学習という3つの古典的枠組みと比較している。
+    </p>
+    <ul>
+      <li><strong>強化学習との関係:</strong> θの更新は固定された意思決定過程における標準的な方策最適化に対応する一方、Σの更新はMDP自体を作り替える点で標準的なRLの枠組みの外側にある。また自己生成された監督信号への依存も、外部スカラー報酬に頼る古典的RLとの相違点である。</li>
+      <li><strong>オンライン学習との関係:</strong> θの更新は非定常なストリーム下での仮説更新という古典的視点を継承し、破局的忘却や分布シフトといった課題を抱える。Σの更新はより明示的で検査可能なコンポーネントを介した、システムレベルの適応に相当する。</li>
+      <li><strong>能動学習との関係:</strong> エージェントが自ら失敗モードや検証者間の不一致を探索的に狙う点は能動学習と接続するが、オラクルラベルではなく自己生成的な検証や批評に依拠する点で、古典的な「人工的好奇心」の枠組み(学習進捗・ベイズ的サプライズ・圧縮進捗の最大化)により近い。</li>
+    </ul>
+  </section>
+
+  <section id="taxonomy">
+    <h2>4. 分類体系の全体像</h2>
+    <p>
+      本サーベイの中核となる分類は次の2つの経路である。
+    </p>
+    <div class="box formula">
+      <span class="badge theta">θ改善</span> θ<sub>t+1</sub> = IMPROVE<sub>θ</sub>(θ<sub>1:t</sub>; S<sub>t</sub>), &nbsp; Σ<sub>t+1</sub> = Σ<sub>t</sub><br><br>
+      <span class="badge sigma">Σ改善</span> Σ<sub>t+1</sub> = IMPROVE<sub>Σ</sub>(Σ<sub>1:t</sub>; S<sub>t</sub>), &nbsp; θ<sub>t+1</sub> = θ<sub>t</sub>
+    </div>
+    <p>
+      さらにそれぞれの経路は、更新を駆動する信号 <code>S<sub>t</sub></code> の性質によって細分化される。
+    </p>
+    <table>
+      <tr><th>経路</th><th>細分類</th><th>信号の例</th></tr>
+      <tr><td rowspan="3"><span class="badge theta">基盤モデル改善</span></td><td>内在的な生成デモンストレーション</td><td>D<sub>t</sub>(自己生成された学習データ)</td></tr>
+      <tr><td>内在的な評価フィードバック</td><td>e<sub>t</sub>(スコア・選好・批評)</td></tr>
+      <tr><td>外在的な探索的経験</td><td>τ<sub>t</sub>(環境との相互作用の軌跡)</td></tr>
+      <tr><td rowspan="4"><span class="badge sigma">スキャフォールディング改善</span></td><td>プロンプト最適化</td><td>p<sub>t</sub> → p<sub>t+1</sub></td></tr>
+      <tr><td>メモリの進化</td><td>m<sub>t</sub> → m<sub>t+1</sub></td></tr>
+      <tr><td>ツール統治</td><td>T<sub>t</sub> → T<sub>t+1</sub></td></tr>
+      <tr><td>全体スキャフォールディングの更新</td><td>Σ<sub>t</sub> → Σ<sub>t+1</sub>(コード自体を含む)</td></tr>
+    </table>
+    <p>
+      重要なのは、これらの介入形態が互いに排他的ではなく組み合わせ可能であるという点である。単一の更新が複数のスキャフォールディング要素を同時に編集することもあり、全体スキャフォールディング改善の手法はコンポーネント単位の編集を内包しつつ、アーカイブベースの探索やより強い受理テストを付加する。
+    </p>
+  </section>
+
+  <section id="fm">
+    <h2>5. 基盤モデル(θ)の改善</h2>
+    <p>
+      基盤モデル改善は、エージェント自身の実行によって学習信号を生成し、それをモデルパラメータへの更新に用いるという点で「自己教師あり学習」的な性質を持つ。信号の由来によって3つに分類される。
+    </p>
+
+    <h3>5.1 内在的な生成デモンストレーション</h3>
+    <p>
+      エージェントが自ら学習データ(指示-応答ペア、推論トレース、実行ログなど)を生成し、それをファインチューニングに用いる手法群である。Self-Instructのような単純なブートストラップから、Evol-Instructによる複雑度の進化的拡張、自己一貫性によるフィルタリング(Huangら, 2023)、カリキュラム的な問題分解(LADDER)、テスト時に弱点を検出してその場で低ランク適応を行うTest-Time Self-Improvement(TT-SI)まで幅広い。
+    </p>
+    <p>
+      主な課題はモデル崩壊(model collapse)や多様性の喪失であり、これに対して実データと生成データを併存させる、外部検証器で品質管理する、多様性を意識したフィルタリングを行う、といった対策が提案されている。
+    </p>
+
+    <h3>5.2 内在的な評価フィードバック</h3>
+    <p>
+      エージェント自身(あるいは補助的な評価モデル)が候補出力を採点・比較・批評し、その結果を学習信号として用いる手法群である。3つのサブカテゴリに整理される。
+    </p>
+    <ul>
+      <li><strong>ルーブリックに基づくフィードバック:</strong> Constitutional AIのように、明示的な原則・採点基準に基づいてAI自身が出力を評価する。Meta-Rewardingは行動・判断・メタ判断の全てを選好ペアへ変換する。</li>
+      <li><strong>一貫性フィードバック:</strong> TTRLの多数決や、INTUITORの自己確信度など、複数サンプル間の一致度を弱い報酬信号として利用する。ただし一貫性は正しさの代理指標に過ぎず、モデルが体系的に誤っている場合には脆弱である。</li>
+      <li><strong>訂正的フィードバック:</strong> モデル自身に欠陥を指摘させ修正案を提示させる手法(Reflexion、SELF、RISEなど)。批評は豊かな情報を持つ一方、表面的な体裁だけを整える「批評へのハック」というリスクも伴う。</li>
+    </ul>
+
+    <h3>5.3 外在的な探索的経験</h3>
+    <p>
+      エージェントが実際に(あるいはシミュレートされた)環境と相互作用し、その結果得られる軌跡やフィードバックを学習信号とする経路である。
+    </p>
+    <ul>
+      <li><strong>実環境との接地された相互作用:</strong> ユニットテストのようなプログラム的検証器(Agent-RLVR)、学習された報酬モデル(WebRL, UI-Genie)、あるいはエージェント自身が生成したタスクを実行結果で検証する自己対戦的手法(Absolute Zero)などが含まれる。</li>
+      <li><strong>シミュレートされたプロキシ環境との相互作用:</strong> 世界モデルを学習し、実環境の代わりにその予測モデル上でロールアウトすることでサンプル効率を高める手法(WebEvolver, WMPOなど)。生成される観測が方策の入力表現と同じ空間にあるという点が、基盤モデルベースの世界モデルの実用上の利点である。</li>
+    </ul>
+    <div class="box takeaway">
+      基盤モデル改善では、学習信号の信頼性の担保・分布シフトへの対処・反復学習の計算コストという3点のマネジメントが成功の鍵となる。
+    </div>
+  </section>
+
+  <section id="scaffold">
+    <h2>6. スキャフォールディング(Σ)の改善</h2>
+    <p>
+      スキャフォールディング改善は、基盤モデルのパラメータを凍結したまま、プロンプト・メモリ・ツール・制御ロジックといった構造的要素を書き換える経路であり、高速で可逆的、かつタスク特化的な適応を可能にする。
+    </p>
+
+    <h3>6.1 プロンプトの改善</h3>
+    <p>信号の豊かさに応じて4つのパラダイムに整理される。</p>
+    <table>
+      <tr><th>パラダイム</th><th>信号</th><th>代表手法</th><th>特徴</th></tr>
+      <tr><td>スカラーフィードバック最適化</td><td>タスク精度などの数値</td><td>APE, OPRO</td><td>モデル非依存だが解釈性が低い</td></tr>
+      <tr><td>質的フィードバック改良</td><td>自然言語の批評</td><td>Self-Refine, Reflexion, ACE</td><td>解釈可能だが批評自体がノイズを含みうる</td></tr>
+      <tr><td>集団ベースの進化</td><td>個体群の適応度・選抜</td><td>EvoPrompt, Promptbreeder, GEPA</td><td>探索性が高いが計算コストが大きい</td></tr>
+      <tr><td>テキスト勾配最適化</td><td>方向性を持つ構造化フィードバック</td><td>APO, TextGrad, metaTextGrad</td><td>方向づけられた更新が可能だが勾配の質にばらつき</td></tr>
+    </table>
+    <p>
+      興味深い発展として、Promptbreederは「タスクプロンプト」だけでなく「変異プロンプト(どう変異させるかを指示するプロンプト)」自体を進化させ、metaTextGradは「テキスト勾配をどう計算し適用するか」を規定する最適化器のプロンプト自体を最適化する。これらはエージェントが自らの改善プロセスそのものを改善するという、メタレベルの自己参照性を示している。
+    </p>
+
+    <h3>6.2 メモリの改善</h3>
+    <p>
+      メモリは「オブジェクト(何を保存するか)」「構造(どう組織化するか)」「処理(CRUD操作をどう行うか)」の3軸で整理される。
+    </p>
+    <ul>
+      <li><strong>オブジェクト:</strong> 処理済みの相互作用の軌跡(要約・教訓)、厳選された生データ(コード片・証拠)、外部知識の統合、潜在的な埋め込み表現。それぞれ忠実性・解釈性・コンパクトさ・監査可能性のトレードオフを持つ。</li>
+      <li><strong>構造:</strong> フラット(時系列)、階層的(要約-計画-詳細)、グラフベース(意味的・時間的・因果的な関係)、ベクトル検索型。それぞれ書き込みコスト・検索精度・保守の複雑さが異なる。</li>
+      <li><strong>処理:</strong> Create(選択的な蒸留)、Read(ハイブリッドなヒューリスティックや構造を意識した取得)、Update(定期的な見直しと減衰)、Delete(多段階の刈り込みや合意ベースの削除)から成るCRUDサイクルとして定式化される。</li>
+    </ul>
+    <div class="box takeaway">
+      メモリはもはや受動的なキャッシュではなく、「観察→作成→組織化→取得→計画・実行→評価→更新・削除」という信号駆動の継続的なループとして捉え直される。
+    </div>
+
+    <h3>6.3 ツールの改善(ツール統治メタ認知)</h3>
+    <p>
+      ツールに関する自己改善は「ツール統治メタ認知」という枠組みのもと、3つの側面から整理される。
+    </p>
+    <ul>
+      <li><strong>動的なツールルーティング:</strong> 検索・グラフベースのルーティング(MemTool, ToolNet)、方策学習に基づくルーティング(AgentFlow, ToolGen)、能動的・対話的なルーティング(MCP-Zero, ToolACE-R)の3つの潮流がある。</li>
+      <li><strong>反復的なツール改良:</strong> Voyagerのように、生成→実行→エラーからの改訂を繰り返す基本ループの上に、批評の専門化(STELLA)・APIの抽象化(SkillWeaver)・インターフェース(ドキュメント)の整合(DRAFT)といった強化が加えられている。</li>
+      <li><strong>自律的なツール創出:</strong> 必要に応じたオンデマンドの発明(ATLASS)と、自発的な探索によるツール蓄積(FRIDAY, STELLA)がある。生成したコードを実際に呼び出し可能な状態にするライフサイクル自動化(ToolMaker)や、MCPのような標準プロトコルでの統合(Alita)も重要な論点である。</li>
+    </ul>
+
+    <h3>6.4 全体スキャフォールディングの改善</h3>
+    <p>
+      最も深い介入として、エージェントは自身のコードベース全体を可変な基盤として扱う。この更新は自己参照的であり、次のように定式化される。
+    </p>
+    <div class="box formula">Σ<sub>t+1</sub> = I<sub>Σt</sub>(Σ<sub>t</sub>; S<sub>t</sub>)</div>
+    <p>
+      実際にはエージェントが自身のコードに対してパッチ <code>Δ<sub>t</sub></code> を生成し、ユニットテストや回帰スイート、安全性チェックといった検証器 <code>V</code> がその適用可否を判定するという枠組みで実装される。
+      代表例として、進化的アプローチで科学・アルゴリズム的発見を加速するAlphaEvolveやShinkaEvolve、エージェント設計空間そのものを探索するADAS、自身のコードベースを反復的に書き換え多様な子孫のアーカイブを育てるDarwin Gödel Machine(DGM)、子孫の性能推定に基づいてより長期的な改善可能性を最適化するHuxley-Gödel Machine(HGM)、実行時にその場で自身のスキャフォールディングを進化させるLive-SWE-agentなどが紹介されている。
+    </p>
+    <div class="box takeaway">
+      全体スキャフォールディング改善は再帰的自己改善(RSI)に最も近いカテゴリであり、真に開放的な再帰的自己改善は依然として大きな課題である一方、現行システムは境界づけられ検証可能なループとしてこの概念を実装している。
+    </div>
+  </section>
+
+  <section id="apps">
+    <h2>7. 応用領域</h2>
+    <p>
+      各応用領域は、フィードバックの信頼性・スケーラビリティ・コストが異なるサンドボックス環境を通じて自己改善を駆動する。
+    </p>
+    <table>
+      <tr><th>領域</th><th>主なフィードバック</th><th>主なボトルネック</th><th>代表システム</th></tr>
+      <tr><td>ソフトウェア工学</td><td>コンパイラ・ユニットテスト・CI</td><td>パッチの正当性、ツール効率</td><td>DGM, HGM, Live-SWE-agent</td></tr>
+      <tr><td>Web操作・自動化</td><td>タスク完了・部分検証</td><td>動的レイアウトへの接地</td><td>WebRL, WebEvolver, SkillWeaver</td></tr>
+      <tr><td>ゲーム・戦略的推論</td><td>勝敗・スカラー報酬</td><td>長期計画・非対称情報</td><td>Richelieu, DipLLM, MARSHAL</td></tr>
+      <tr><td>科学的発見</td><td>実験指標・ツール出力</td><td>コストの高い/雑な評価</td><td>AI Scientist, AI co-scientist</td></tr>
+      <tr><td>身体性AI・ロボティクス</td><td>報酬・成功信号</td><td>実世界データの収集と安全性</td><td>RoboCat, AutoRT</td></tr>
+      <tr><td>汎用コンピュータ操作</td><td>タスク完了・状態確認</td><td>脆弱なUI、多様なアプリ</td><td>UI-Genie, GUI-Reflection, Agent S</td></tr>
+    </table>
+    <p>
+      共通するパターンとして、失敗コストを抑えつつフィードバックを得られる「サンドボックス化された環境」の利用が挙げられる。特にソフトウェア工学は、エージェント自身がソフトウェアであるため直接的なスキャフォールディング/ソースコードの自己修正が可能という特異な性質を持つ。
+    </p>
+  </section>
+
+  <section id="eval">
+    <h2>8. 評価方法論</h2>
+    <p>
+      自己改善エージェントの評価は「静的なゼロショット採点」から「継続的な追跡」へとパラダイムシフトする必要があると論じられている。
+    </p>
+    <h3>8.1 改善の測定</h3>
+    <ul>
+      <li><strong>メトリックベースの測定:</strong> 実行可能なオラクル(単体テストなど)による決定論的評価。固定予算のもとで学習曲線・保留分布への転移・回帰率・コスト内訳を報告することが推奨される。</li>
+      <li><strong>判定者ベースの測定:</strong> 実行可能な検証が難しい開放的タスクに対して、LLM-as-a-Judgeのような判定者を用いる。判定基準・判定に使う計算予算の透明性、また学習と最終評価で判定者を分離し「判定者へのハック」を防ぐことが重要となる。</li>
+    </ul>
+    <h3>8.2 ベンチマークの分類</h3>
+    <p>
+      「更新チャネル(θ or Σ)」と「評価インターフェース(単発の入出力 vs. 対話的な多段階操作)」という2軸で、ベンチマークをメカニズム指向(SWE-bench, WebArenaなど、特定の更新経路を切り出して検証)とドメイン指向(各応用領域の実世界に近いフィードバックとタスク分布のもとでの評価)に分類している。
+    </p>
+  </section>
+
+  <section id="discussion">
+    <h2>9. 議論と今後の展望</h2>
+    <h3>9.1 システム設計への示唆</h3>
+    <ul>
+      <li><strong>高速な探索から低速な定着へ:</strong> スキャフォールディングの編集は可逆的で低コストだが、パラメータへの統合(蒸留)は非可逆的な圧縮であり、レアだが重要なエラー回復戦略を失うリスクがある。</li>
+      <li><strong>統治されたインフラとしての批評者:</strong> クローズドループに埋め込まれた批評者(critic)は攻撃対象になり得るため、生成者と評価者の分離、進化する批評者への監査可能な制約が必要である。</li>
+      <li><strong>階層的なゲーティングによる安全性:</strong> 対象が非定常であるため、自己改善エージェントは「保護されたランタイムで実行される未信頼コード」として扱うべきであり、構造的な更新の適用前には機能的正当性・権限境界・堅牢性を検証するゲートが必要となる。</li>
+    </ul>
+    <h3>9.2 今後の6つの重点方向</h3>
+    <p>2つのテーマに分けて整理されている。</p>
+    <ol>
+      <li>テストタイムでの継続適応</li>
+      <li>能動的な探索と好奇心駆動の学習</li>
+      <li>パラメトリックな蒸留とθ・Σの同時最適化</li>
+      <li>資源制約下での改善ダイナミクス</li>
+      <li>マルチエージェントの協調的共進化</li>
+      <li>オープンワールドの分布ドリフトへの耐性</li>
+    </ol>
+    <p>
+      いずれも「無限にスケールした基盤モデルを作る」だけでは解決できず、堅牢なフィードバック機構、安全な自己修正アーキテクチャ、評価そのものを継続的なプロセスとして捉え直す発想の転換が必要だと結論づけている。
+    </p>
+  </section>
+
+  <section id="conclusion">
+    <h2>10. 結論</h2>
+    <p>
+      本サーベイは、自己改善するAIという長年の構想が、基盤モデルの登場によってその規模・汎用性・射程を大きく拡張したことを、統一的なシステムの視点から整理している。
+      基盤モデル改善(パラメトリックで低速なループ)とスキャフォールディング改善(非パラメトリックで高速なループ)という2つの経路を軸に据えつつ、スケーラブルで安全な評価、継続適応下でのアライメント、そして両ループの統合という課題が今後も残ることを指摘する。
+      エージェントが自らの推論構造そのものを修正するようになるにつれ、「人間が定義したタスクを実行するAI」から「タスクに応じて自ら進化するAI」への移行が展望されており、本サーベイはその共通言語となることを目指している。
+    </p>
+  </section>
+
+  <section id="critique">
+    <h2>11. 訳者による所見(批判的検討)</h2>
+    <div class="box critique">
+      <p><strong>強み:</strong></p>
+      <ul>
+        <li><code>A<sub>t</sub> = (θ<sub>t</sub>, Σ<sub>t</sub>)</code> という単純な形式化により、プロンプト工学・メモリシステム・ツール利用・全体アーキテクチャ探索といった一見バラバラな研究群を同じ言語で比較できるようにした点は実務上も有用。特に「スキル=再利用可能な更新演算子」という定義は、ツールとメモリと制御ロジックを横断する概念整理として秀逸。</li>
+        <li>シュミットフーバーらの1980〜90年代の自己参照学習・ゲーデルマシンの系譜を丁寧に接続しており、現代のDGM/HGMのような手法が「新しい発想」ではなく「言語モデルという表現力の高い基盤の上で古典的なアイデアを再実装したもの」であることが明確になる。</li>
+      </ul>
+      <p><strong>限界・留意点:</strong></p>
+      <ul>
+        <li>分類の網羅性を優先するあまり、個々の手法の実証的な強さの比較(どの手法がどの条件下で優れるか)には深く踏み込んでいない。実務でどの手法を選ぶかの判断材料としては、個別論文の追加調査が必要。</li>
+        <li>安全性(9.1節)の議論は比較的短く、「階層的ゲーティング」「未信頼コードとしての実行」という方向性は示されるものの、具体的な検証プロトコルの提案までは踏み込んでいない。全体スキャフォールディング改善(6.4節)がRSIに最も近いとしている割に、その安全性評価ベンチマークの現状(8.2節)は薄い印象がある。</li>
+        <li>参考文献が600件近くに及び、同時期(2026年)に競合するサーベイ(Gao et al. 2026a, Fang et al. 2025a等)との差別化ポイントの説明はTable 1で簡潔に示されているものの、実際の記述内容としての重複は避けられていない部分もある。</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      出典:Zhe Ren et al., "Self-Improvements in Modern Agentic Systems: A Survey," arXiv:2607.13104v1 [cs.AI], 14 Jul 2026.
+      本ドキュメントは同論文の日本語による要約・解説であり、原文の逐語的な翻訳ではありません。詳細な引用文献・数式の完全な導出・図表原本については原論文をご参照ください。
+    </p>
+    <a class="back-to-top" href="#">↑ ページ先頭に戻る</a>
+  </footer>
+
+</div>
+</body>
+</html>
