@@ -1,0 +1,1128 @@
+<!doctype html>
+<html lang="ja" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="論文『LLM-as-a-Coach: Experiential Learning for Non-Verifiable Tasks』の日本語全訳。">
+<title>LLM-as-a-Coach：自動検証できないタスクのための経験学習 — 日本語訳</title>
+<style>
+:root {
+  color-scheme: light;
+  --font-size: 17px;
+  --bg: #edf2f7;
+  --paper: #ffffff;
+  --paper-soft: #f7f9fc;
+  --text: #1c2733;
+  --muted: #607080;
+  --faint: #8795a4;
+  --border: #d9e1e8;
+  --border-strong: #bac7d3;
+  --accent: #1769aa;
+  --accent-deep: #0d4979;
+  --accent-soft: #e9f3fb;
+  --accent-2: #6f4aa8;
+  --accent-2-soft: #f1ebfb;
+  --good: #2d7a3e;
+  --good-soft: #e9f6ec;
+  --warn: #a15b00;
+  --warn-soft: #fff4df;
+  --bad: #b43f36;
+  --bad-soft: #fff0ee;
+  --code-bg: #17212b;
+  --code-text: #f1f5f8;
+  --shadow: 0 14px 34px rgba(28, 39, 51, .10);
+  --toc-w: 290px;
+  --content-w: 920px;
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0f151c;
+  --paper: #171f28;
+  --paper-soft: #1d2732;
+  --text: #e9eff5;
+  --muted: #afbdca;
+  --faint: #8795a4;
+  --border: #314050;
+  --border-strong: #46586a;
+  --accent: #73bdf1;
+  --accent-deep: #a8d8f8;
+  --accent-soft: #173449;
+  --accent-2: #c5a5f0;
+  --accent-2-soft: #302542;
+  --good: #8cd49a;
+  --good-soft: #193824;
+  --warn: #f6bd68;
+  --warn-soft: #3c2c15;
+  --bad: #f19a92;
+  --bad-soft: #452421;
+  --code-bg: #0b1016;
+  --code-text: #eef4f9;
+  --shadow: 0 16px 38px rgba(0, 0, 0, .34);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Noto Sans JP", "Yu Gothic UI", "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, system-ui, sans-serif;
+  font-size: var(--font-size);
+  line-height: 1.9;
+  letter-spacing: .015em;
+}
+a { color: var(--accent); text-underline-offset: .18em; }
+a:hover { color: var(--accent-deep); }
+button { font: inherit; }
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 58px;
+  padding: 8px max(14px, calc((100vw - (var(--toc-w) + var(--content-w) + 48px))/2));
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+}
+.topbar-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  font-weight: 750;
+  font-size: .92rem;
+}
+.topbar-title .badge {
+  flex: none;
+  color: var(--accent-deep);
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: .78rem;
+}
+.topbar-title .name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.controls { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+.control {
+  border: 1px solid var(--border);
+  color: var(--text);
+  background: var(--paper-soft);
+  border-radius: 9px;
+  min-height: 36px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.control:hover { border-color: var(--accent); background: var(--accent-soft); }
+.layout {
+  display: grid;
+  grid-template-columns: var(--toc-w) minmax(0, var(--content-w));
+  gap: 32px;
+  justify-content: center;
+  align-items: start;
+  padding: 30px 20px 80px;
+}
+.toc {
+  position: sticky;
+  top: 84px;
+  max-height: calc(100vh - 106px);
+  overflow: auto;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 18px 18px 20px;
+}
+.toc h2 { margin: 0 0 10px; font-size: 1rem; }
+.toc ol { list-style: none; margin: 0; padding: 0; }
+.toc li { margin: 1px 0; }
+.toc a {
+  display: block;
+  padding: 5px 8px;
+  border-radius: 7px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: .84rem;
+  line-height: 1.45;
+}
+.toc a:hover, .toc a.active { color: var(--accent-deep); background: var(--accent-soft); }
+.toc .sub a { padding-left: 22px; font-size: .79rem; }
+.toc-note { margin: 12px 6px 0; color: var(--faint); font-size: .74rem; line-height: 1.55; }
+article {
+  min-width: 0;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.hero {
+  padding: clamp(34px, 6vw, 70px) clamp(26px, 7vw, 76px) 42px;
+  background:
+    radial-gradient(circle at 92% 12%, color-mix(in srgb, var(--accent-2) 15%, transparent), transparent 28%),
+    radial-gradient(circle at 9% 8%, color-mix(in srgb, var(--accent) 15%, transparent), transparent 30%),
+    var(--paper);
+  border-bottom: 1px solid var(--border);
+}
+.kicker { color: var(--accent); font-weight: 800; letter-spacing: .08em; font-size: .78rem; text-transform: uppercase; }
+h1 { margin: 12px 0 14px; font-size: clamp(2rem, 5vw, 3.35rem); line-height: 1.28; letter-spacing: -.025em; }
+.original-title { color: var(--muted); font-family: Georgia, "Times New Roman", serif; font-size: 1.05rem; line-height: 1.55; margin: 0 0 28px; }
+.authors { font-weight: 700; margin: 0 0 6px; }
+.affiliations, .meta { color: var(--muted); font-size: .9rem; }
+.meta { display: flex; gap: 12px 20px; flex-wrap: wrap; margin-top: 16px; }
+.hero-note { margin-top: 26px; padding: 14px 16px; background: var(--paper-soft); border: 1px solid var(--border); border-radius: 12px; color: var(--muted); font-size: .88rem; }
+.content { padding: 20px clamp(24px, 6vw, 68px) 70px; }
+section { scroll-margin-top: 82px; }
+.section-heading {
+  margin: 64px 0 24px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--border);
+  font-size: clamp(1.65rem, 3vw, 2.25rem);
+  line-height: 1.35;
+  letter-spacing: -.015em;
+}
+.section-heading .num { color: var(--accent); margin-right: .35em; }
+h3 { margin: 46px 0 16px; font-size: 1.35rem; line-height: 1.45; }
+h4 { margin: 32px 0 12px; font-size: 1.1rem; }
+p { margin: 0 0 1.15em; }
+.lead { font-size: 1.04rem; }
+.abstract {
+  margin: 36px 0 44px;
+  padding: 24px 26px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+  border-left: 5px solid var(--accent);
+  border-radius: 14px;
+  background: var(--accent-soft);
+}
+.abstract h2 { margin: 0 0 10px; font-size: 1.25rem; }
+.page-tag {
+  display: inline-block;
+  margin-left: .55em;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--faint);
+  font-size: .65rem;
+  vertical-align: middle;
+  font-weight: 500;
+}
+.term { color: var(--accent-deep); font-weight: 700; }
+.citation { color: var(--accent-2); white-space: nowrap; }
+.callout {
+  margin: 24px 0;
+  padding: 16px 18px;
+  background: var(--paper-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.callout strong:first-child { color: var(--accent-deep); }
+.callout.note { border-left: 4px solid var(--accent); }
+.callout.warning { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 32%, var(--border)); border-left: 4px solid var(--warn); }
+.glossary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 10px;
+  margin: 18px 0 36px;
+}
+.glossary div { padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--paper-soft); }
+.glossary dt { font-weight: 750; color: var(--accent-deep); }
+.glossary dd { margin: 2px 0 0; color: var(--muted); font-size: .86rem; }
+figure {
+  margin: 34px -10px 38px;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--paper-soft);
+  overflow: hidden;
+}
+figcaption { margin-top: 16px; color: var(--muted); font-size: .86rem; line-height: 1.65; }
+figcaption strong { color: var(--text); }
+.figure-title { margin: 0 0 16px; font-size: 1.05rem; }
+.example-prompt, .response-box, .coach-box, .judge-box, .prompt-card, .rubric-card, .experience-card {
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--paper);
+  padding: 14px 16px;
+}
+.example-prompt { margin-bottom: 12px; }
+.example-label { display: block; color: var(--muted); font-weight: 750; font-size: .76rem; letter-spacing: .05em; margin-bottom: 5px; }
+.response-box { margin-bottom: 16px; }
+.weak { color: var(--bad); font-weight: 650; background: var(--bad-soft); padding: 0 .15em; border-radius: 3px; }
+.strong-text { color: var(--good); font-weight: 650; background: var(--good-soft); padding: 0 .15em; border-radius: 3px; }
+.compare-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 18px; align-items: stretch; }
+.judge-box { text-align: center; border-top: 5px solid var(--accent); }
+.coach-box { border-top: 5px solid var(--accent-2); }
+.judge-box h4, .coach-box h4 { margin: 2px 0 12px; }
+.reward-score { display: inline-grid; place-items: center; width: 74px; height: 56px; margin: 14px auto; border-radius: 10px; background: var(--paper-soft); font-size: 1.5rem; font-weight: 800; }
+.bandwidth { margin-top: 14px; font-weight: 800; }
+.bandwidth small { display: block; color: var(--muted); font-weight: 500; }
+.coach-list { margin: 0; padding-left: 1.25em; }
+.coach-list li { margin: .55em 0; }
+.flow-panel { padding: 18px; border: 1px solid var(--border); border-radius: 13px; background: var(--paper); }
+.flow-panel + .flow-panel { margin-top: 16px; }
+.flow-heading { font-weight: 800; margin-bottom: 16px; }
+.flow-row { display: grid; grid-template-columns: 1.1fr auto 1fr auto 1.25fr auto 1.1fr; gap: 8px; align-items: center; }
+.flow-box { min-height: 66px; display: grid; place-items: center; text-align: center; padding: 8px; border: 1px solid var(--border); border-radius: 10px; background: var(--paper-soft); line-height: 1.35; }
+.flow-box.policy { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 32%, var(--border)); }
+.flow-box.feedback { background: var(--accent-2-soft); border-color: color-mix(in srgb, var(--accent-2) 32%, var(--border)); }
+.arrow { font-size: 1.4rem; color: var(--muted); text-align: center; }
+.flow-objective { margin-top: 14px; text-align: center; font-family: "Cambria Math", "Times New Roman", serif; font-size: 1.03rem; }
+.equation {
+  position: relative;
+  margin: 22px 0;
+  padding: 17px 58px 17px 18px;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--paper-soft);
+  font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif;
+  font-size: 1.05rem;
+  text-align: center;
+  white-space: nowrap;
+}
+.eqno { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-family: inherit; color: var(--muted); }
+.algorithm { margin: 26px 0; border: 1px solid var(--border-strong); border-radius: 13px; overflow: hidden; }
+.algorithm-title { padding: 10px 15px; background: var(--accent-soft); border-bottom: 1px solid var(--border); font-weight: 800; }
+.algorithm-meta { padding: 11px 15px; background: var(--paper-soft); border-bottom: 1px solid var(--border); font-size: .88rem; }
+.algorithm-body { padding: 15px 18px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .84rem; line-height: 1.75; overflow-x: auto; }
+.indent { padding-left: 2em; }
+.indent2 { padding-left: 4em; }
+.comment { color: var(--good); }
+.table-wrap { margin: 24px 0 32px; overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; }
+table { width: 100%; border-collapse: collapse; min-width: 640px; font-size: .86rem; line-height: 1.55; }
+th, td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { background: var(--paper-soft); color: var(--accent-deep); text-align: left; font-weight: 800; }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.el-row td { background: color-mix(in srgb, var(--good-soft) 58%, var(--paper)); }
+.model-group { font-weight: 750; white-space: nowrap; }
+.table-caption { margin: -20px 0 30px; color: var(--muted); font-size: .82rem; line-height: 1.6; }
+.chart-svg { display: block; width: 100%; height: auto; color: var(--text); }
+.chart-grid { stroke: var(--border); stroke-width: 1; }
+.chart-grid-minor { stroke: color-mix(in srgb, var(--border) 60%, transparent); stroke-width: .7; }
+.chart-axis { stroke: var(--text); stroke-width: 1.3; }
+.chart-tick, .chart-label, .chart-value, .axis-title, .chart-panel-title { fill: var(--text); font-family: inherit; }
+.chart-tick { font-size: 12px; fill: var(--muted); }
+.chart-label { font-size: 13px; }
+.chart-value { font-size: 13px; font-weight: 750; }
+.axis-title { font-size: 14px; font-weight: 650; }
+.chart-panel-title { font-size: 16px; font-weight: 800; }
+.bar-rl { fill: color-mix(in srgb, var(--warn) 78%, #f5a623); }
+.bar-el { fill: color-mix(in srgb, var(--good) 82%, #16833a); }
+.legend-bg { fill: var(--paper); stroke: var(--border); }
+.plot-target, .plot-rl, .plot-el { fill: none; stroke-width: 2.8; stroke-linejoin: round; stroke-linecap: round; }
+.plot-target { stroke: var(--text); }
+.plot-rl { stroke: var(--accent); }
+.plot-el { stroke: var(--warn); }
+.prompt-template {
+  position: relative;
+  margin: 20px 0;
+  padding: 20px;
+  color: var(--code-text);
+  background: var(--code-bg);
+  border: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+  border-radius: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Noto Sans Mono", monospace;
+  font-size: .82rem;
+  line-height: 1.72;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.template-caption { color: var(--muted); font-size: .82rem; margin: -10px 0 25px; }
+.cards { display: grid; gap: 16px; }
+.prompt-card h4, .rubric-card h4, .experience-card h4 { margin-top: 0; color: var(--accent-deep); }
+.rubric-list { margin: 0; padding-left: 1.25em; }
+.rubric-list li { margin: .55em 0; }
+.weight { color: var(--muted); white-space: nowrap; }
+.pitfall { color: var(--bad); }
+.experience-card ol { padding-left: 1.3em; }
+.experience-card li { margin: .72em 0; }
+.major-details { margin: 38px 0; border: 1px solid var(--border); border-radius: 14px; background: var(--paper-soft); overflow: hidden; }
+.major-details > summary { cursor: pointer; list-style: none; padding: 17px 20px; font-size: 1.2rem; font-weight: 800; background: var(--paper-soft); }
+.major-details > summary::-webkit-details-marker { display: none; }
+.major-details > summary::before { content: "＋"; display: inline-block; width: 1.6em; color: var(--accent); }
+.major-details[open] > summary::before { content: "−"; }
+.details-body { padding: 5px 22px 30px; background: var(--paper); border-top: 1px solid var(--border); }
+.reference-entry { display: grid; grid-template-columns: 82px 1fr; gap: 9px; padding: 11px 0; border-bottom: 1px solid var(--border); font-size: .78rem; line-height: 1.62; overflow-wrap: anywhere; }
+.reference-entry:last-child { border-bottom: 0; }
+.ref-key { color: var(--accent-2); font-weight: 800; }
+.footnotes { margin-top: 50px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--muted); font-size: .82rem; }
+.footnotes ol { padding-left: 1.4em; }
+.footnotes li { margin: .7em 0; }
+.footer { padding: 25px clamp(24px, 6vw, 68px) 38px; border-top: 1px solid var(--border); color: var(--muted); font-size: .8rem; background: var(--paper-soft); }
+.backtop { position: fixed; right: 18px; bottom: 18px; z-index: 80; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: var(--paper); color: var(--accent); box-shadow: var(--shadow); cursor: pointer; }
+.mobile-toc { display: none; }
+@media (max-width: 1050px) {
+  .layout { grid-template-columns: minmax(0, var(--content-w)); padding-top: 20px; }
+  .toc { display: none; }
+  .mobile-toc { display: block; margin-bottom: 16px; }
+  .mobile-toc summary { cursor: pointer; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--paper); font-weight: 750; }
+  .mobile-toc .toc { display: block; position: static; max-height: none; margin-top: 8px; box-shadow: none; }
+}
+@media (max-width: 760px) {
+  body { line-height: 1.82; }
+  .topbar { align-items: flex-start; padding: 8px 10px; }
+  .topbar-title .name { display: none; }
+  .controls .wide-label { display: none; }
+  .layout { padding: 12px 8px 60px; }
+  article { border-radius: 12px; }
+  .hero { padding: 34px 22px 30px; }
+  .content { padding: 15px 20px 50px; }
+  .section-heading { margin-top: 50px; }
+  figure { margin-left: -8px; margin-right: -8px; padding: 15px; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .flow-row { grid-template-columns: 1fr; }
+  .arrow { transform: rotate(90deg); }
+  .equation { text-align: left; }
+  .reference-entry { grid-template-columns: 1fr; gap: 2px; }
+}
+@media print {
+  :root { --font-size: 11pt; --bg: #fff; --paper: #fff; --paper-soft: #fff; --text: #000; --muted: #333; --border: #bbb; --accent: #000; --accent-deep: #000; --accent-2: #000; --shadow: none; }
+  .topbar, .toc, .mobile-toc, .backtop { display: none !important; }
+  body { background: #fff; }
+  .layout { display: block; padding: 0; }
+  article { border: 0; box-shadow: none; }
+  .hero, .content, .footer { padding-left: 0; padding-right: 0; }
+  details { break-inside: auto; }
+  details:not([open]) > *:not(summary) { display: block !important; }
+  details > summary { display: none; }
+  figure, .table-wrap, .algorithm, .callout { break-inside: avoid; }
+  a { color: #000; text-decoration: none; }
+}
+</style>
+</head>
+<body>
+<header class="topbar" id="top">
+  <div class="topbar-title"><span class="badge">日本語全訳</span><span class="name">LLM-as-a-Coach：自動検証できないタスクのための経験学習</span></div>
+  <div class="controls" aria-label="表示設定">
+    <button class="control" id="fontDown" type="button" title="文字を小さく">A−</button>
+    <button class="control" id="fontUp" type="button" title="文字を大きく">A＋</button>
+    <button class="control" id="themeToggle" type="button" title="明暗を切り替え">☾ <span class="wide-label">明暗</span></button>
+    <button class="control" id="detailsToggle" type="button" title="付録と参考文献を展開・折りたたみ">▤ <span class="wide-label">全展開</span></button>
+    <button class="control" type="button" onclick="window.print()" title="印刷">⎙ <span class="wide-label">印刷</span></button>
+  </div>
+</header>
+<div class="layout">
+  <nav class="toc" aria-label="目次">
+    <h2>目次</h2>
+    <ol>
+      <li><a href="#abstract">要旨</a></li>
+      <li><a href="#glossary">訳語メモ</a></li>
+      <li><a href="#sec1">1　はじめに</a></li>
+      <li><a href="#sec2">2　手法</a></li>
+      <li class="sub"><a href="#sec21">2.1　LLM-as-a-JudgeによるRL</a></li>
+      <li class="sub"><a href="#sec22">2.2　LLM-as-a-CoachによるEL</a></li>
+      <li class="sub"><a href="#sec23">2.3　判定者からコーチへ</a></li>
+      <li class="sub"><a href="#sec24">2.4　フィードバック帯域幅</a></li>
+      <li><a href="#sec3">3　実験</a></li>
+      <li class="sub"><a href="#sec31">3.1　設定</a></li>
+      <li class="sub"><a href="#sec32">3.2　主要結果</a></li>
+      <li class="sub"><a href="#sec33">3.3　汎化性能</a></li>
+      <li class="sub"><a href="#sec34">3.4　アブレーション</a></li>
+      <li class="sub"><a href="#sec35">3.5　分析</a></li>
+      <li><a href="#sec4">4　考察</a></li>
+      <li><a href="#sec5">5　関連研究</a></li>
+      <li><a href="#sec6">6　結論</a></li>
+      <li><a href="#references">参考文献</a></li>
+      <li><a href="#appendix">付録A　実験の詳細</a></li>
+    </ol>
+    <p class="toc-note">図表は原論文の内容を日本語で再構成しています。参考文献の書誌情報は原文表記です。</p>
+  </nav>
+
+  <div>
+    <details class="mobile-toc">
+      <summary>目次を開く</summary>
+      <nav class="toc" aria-label="モバイル目次">
+        <ol>
+          <li><a href="#abstract">要旨</a></li><li><a href="#glossary">訳語メモ</a></li><li><a href="#sec1">1 はじめに</a></li><li><a href="#sec2">2 手法</a></li><li><a href="#sec3">3 実験</a></li><li><a href="#sec4">4 考察</a></li><li><a href="#sec5">5 関連研究</a></li><li><a href="#sec6">6 結論</a></li><li><a href="#references">参考文献</a></li><li><a href="#appendix">付録A</a></li>
+        </ol>
+      </nav>
+    </details>
+
+    <article>
+      <header class="hero">
+        <div class="kicker">Experiential Learning — Part III</div>
+        <h1>LLM-as-a-Coach：<br>自動検証できないタスクのための経験学習</h1>
+        <p class="original-title">LLM-as-a-Coach: Experiential Learning for Non-Verifiable Tasks</p>
+        <p class="authors">Tianzhu Ye<sup>＊</sup>、Li Dong<sup>＊</sup>、Guanheng Chen<sup>1</sup>、He Zhu<sup>2</sup>、Xun Wu、Shaohan Huang、Furu Wei</p>
+        <p class="affiliations">Microsoft Research　／　<sup>1</sup> Tsinghua University　／　<sup>2</sup> Peking University</p>
+        <div class="meta">
+          <span>arXiv:2607.18110v1 [cs.LG]</span>
+          <span>2026年7月20日</span>
+          <span><a href="https://aka.ms/GeneralAI">GeneralAI</a></span>
+          <span><a href="https://aka.ms/el-code">コード</a></span>
+        </div>
+        <div class="hero-note"><strong>翻訳方針：</strong>本文・図表・付録を日本語化し、数式、モデル名、データセット名、引用キーは原文どおり保持しました。<em>non-verifiable tasks</em> は、絶対に検証できないという意味ではなく、数学問題や実行可能コードのように正解を自動判定しにくいタスクを指すため、本訳では主に「自動検証できないタスク」としています。</div>
+      </header>
+
+      <div class="content">
+        <section id="abstract" class="abstract">
+          <h2>要旨 <span class="page-tag">原文 p.1</span></h2>
+          <p>オープンエンドなタスクに対する強化学習（RL）では、LLMによるルーブリックベースの評価が単一のスカラー報酬へ圧縮される。その結果、豊かなテキストフィードバックが捨てられ、品質上の特性が異なる応答まで同じものとして扱われてしまう。本研究は、フィードバックモデルの役割を <span class="term">LLM-as-a-Judge</span>（LLMを判定者として使う方式）から <span class="term">LLM-as-a-Coach</span>（LLMをコーチとして使う方式）へ転換する、<span class="term">経験学習（Experiential Learning; EL）</span>を提案する。コーチは、方策がその時点で生成した各応答を評価し、その評価を他の事例にも移転できる<span class="term">経験知</span>へ蒸留する。この経験知を教師モデルの条件として与え、オンポリシー文脈蒸留を通じて方策モデルへ内在化する。</p>
+          <p>スカラー報酬と比べ、この高帯域なフィードバック経路は密な教師信号を与え、高品質な応答同士に存在する細かな選好差も保持する。2種類の方策モデル系列について、方策自身またはプロプライエタリモデルをフィードバックモデルとして用いた実験を行ったところ、ELは同一分布内のホールドアウト課題でも未見のオープンエンド課題でも、ルーブリックに基づくRLを一貫して上回った。特に、ELは訓練分布の外へよりよく汎化し、報酬ハッキングも緩和した。これらの結果は、経験知が、自動検証できないタスクの事後学習において、スカラー報酬より情報量が多く、汎化しやすい学習信号になり得ることを示している。</p>
+        </section>
+
+        <section id="glossary">
+          <h2 class="section-heading"><span class="num">訳語</span>本文で用いる主な用語</h2>
+          <dl class="glossary">
+            <div><dt>policy／方策モデル</dt><dd>訓練対象となる生成モデル。文脈により「方策」と略記します。</dd></div>
+            <div><dt>rubric／ルーブリック</dt><dd>事実性、関連性、構成など、応答品質を複数の観点に分けた評価基準。</dd></div>
+            <div><dt>experiential knowledge／経験知</dt><dd>個別の誤り訂正ではなく、類似課題へ再利用できる一般的な改善原則。</dd></div>
+            <div><dt>on-policy context distillation</dt><dd>方策自身が生成した軌跡上で、文脈を与えた教師分布を方策へ蒸留する手法。</dd></div>
+            <div><dt>feedback bandwidth</dt><dd>評価モデルから学習器へ渡せる情報量を捉えるための「フィードバック帯域幅」という直観。</dd></div>
+            <div><dt>OOD／分布外</dt><dd>訓練時と異なる課題分布や能力評価。本文では IFEval などを指します。</dd></div>
+          </dl>
+        </section>
+
+        <section id="sec1">
+          <h2 class="section-heading"><span class="num">1</span>はじめに <span class="page-tag">原文 pp.1–3</span></h2>
+          <p>強化学習 <span class="citation">[SB+98]</span> は、言語モデルの事後学習（post-training）における標準的な方法となっている。特に、数学の答えを照合できる、プログラムを実行できる、制約付き出力を自動検証できる、といった<span class="term">検証可能タスク</span>では高い効果を発揮する <span class="citation">[LMP+24]</span>。しかし、オープンエンドなタスクには、通常、唯一の正解が存在しない。説明、推薦、創作応答の品質は、事実性、関連性、網羅性、構成、文体など、複数の次元によって決まる。そのため、この種のタスクの訓練では、自然言語で記述されたルーブリックに従って応答を評価する LLM-as-a-Judge がしばしば利用される <span class="citation">[ZCS+23, GWL+25]</span>。</p>
+          <p>標準的なRLは、この評価をスカラー報酬へ縮約する。評価器が具体的な長所、失敗、改善可能性を特定していたとしても、最適化に使われるのは最終点数だけであり、それ以外のテキスト分析は捨てられる。ここに情報ボトルネックが生じる。同じ点数を受け取った応答は、評価器が両者の間に意味のある選好差を示していても、最適化器からは区別できない。とりわけ報酬尺度の上端では、多数の十分に良い応答が同じ最高点を受け取り得るため、微妙だが重要な差が失われやすい。</p>
+
+          <figure id="fig1">
+            <h3 class="figure-title">図1　RLとELが受け取る学習信号の比較</h3>
+            <div class="example-prompt"><span class="example-label">ユーザーの依頼</span>私のモロッコ旅行ガイド『モロッコを訪れる前に知っておくべき15のこと』の一章を書いてください。</div>
+            <div class="response-box"><span class="example-label">方策モデルの応答</span>…モロッコは、<span class="weak">すばらしい国</span>で、<span class="weak">すばらしい食べ物</span>と<span class="weak">すばらしい文化</span>があります。スークは迷路のような市場で、<span class="strong-text">空気にはサフランとクミンの香りが濃く漂い、商人たちは調子のある声で呼びかけ、手織りの絨毯が狭い路地へあふれています</span>。<span class="weak">人々は親切で、天気も良いです</span>…</div>
+            <div class="compare-grid">
+              <div class="judge-box">
+                <h4>ルーブリック → LLM-as-a-Judge</h4>
+                <p>出力される学習信号</p>
+                <div class="reward-score">7</div>
+                <div class="bandwidth">1サンプル当たり 3.3 bit<small>離散的な1～10点評価の場合</small></div>
+              </div>
+              <div class="coach-box">
+                <h4>ルーブリック → LLM-as-a-Coach</h4>
+                <p>出力される経験知</p>
+                <ul class="coach-list">
+                  <li><span class="weak">一般的な最上級表現を繰り返す</span>のではなく、変化に富んだ具体的な形容を使う。複数の文が同じ形容詞に依存すると、文章が単調になる…</li>
+                  <li><span class="strong-text">一つの描写に複数の感覚を重ねる</span>と没入感が生まれ、文章の魅力が持続する。匂い、音、質感を組み合わせる…</li>
+                  <li><span class="weak">抽象的な主張</span>は、読者が思い描ける具体的な感覚描写や個人的な逸話に結びつける。曖昧な要約は読者を引き込めないが、具体的な場面はつながりを生む…</li>
+                </ul>
+                <div class="bandwidth">1サンプル当たり 17,600 bit<small>スカラー報酬の5,000倍超の理論上の帯域幅</small></div>
+              </div>
+            </div>
+            <figcaption><strong>図1：</strong>RLは評価をスカラー報酬へ圧縮するのに対し、ELは LLM-as-a-Coach が生成した経験知から学ぶ。情報量の多い信号は学習を速め、自動検証できないタスクでスカラー報酬が同一視してしまう最上位応答同士を区別する。赤と緑の強調は、応答中の弱点・長所と、それに対応する修正的・肯定的な知識を結び付けている。RLの帯域幅は離散的な1～10点評価を仮定している。<span class="page-tag">原文 p.2</span></figcaption>
+          </figure>
+
+          <p>本研究では、評価時に生成される豊かな知識から直接学ぶ<span class="term">経験学習（EL）</span>を導入する。図1に示すように、ELはフィードバックモデルを LLM-as-a-Judge から LLM-as-a-Coach へ転用する。プロンプト、オンポリシー応答、ルーブリック群を受け取ると、コーチは応答を分析し、その評価を<span class="term">経験知</span>へ蒸留する。ここでいう経験知とは、類似タスクでより良い応答を作るための、一般的で移転可能な指針である。特定事例だけに通用する修正内容を保存するのではなく、方策自身の経験から導かれた再利用可能な戦略を抽出する。</p>
+          <p>この知識をモデル内部へ取り込むため、ELは<span class="term">オンポリシー文脈蒸留</span> <span class="citation">[YDW+26]</span> を用いる。抽出した経験を教師モデルの文脈として与え、コーチの指針を反映した分布を誘導する。続いて、方策が生成した応答上で、方策と文脈条件付き教師との間のトークン単位の逆KLダイバージェンスを最小化する。これにより自然言語フィードバックが密な分布レベルの教師信号へ変換され、方策パラメータへ定着する。そのため推論時には、コーチも経験知の文脈も不要である。</p>
+          <p>図1が示すように、経験知はスカラー報酬よりも高帯域なフィードバック経路になり得る。離散的な1～10点評価の理論上の最大帯域幅は1サンプル当たり3.3 bitであり、学習済み報酬ヘッドが bfloat16（bf16）値を出す場合でも表現上は最大16 bitである。同じアルファベットサイズの計算を当てはめると、語彙サイズ15万、長さ1,024トークンの経験知文脈は、理論上17,600 bitまで表現できる。これはbf16のスカラー報酬の最大帯域幅の1,000倍超、1～10点評価の5,000倍超に当たる。ただし、この比較はフィードバック帯域幅を理解するための直観であり、実際に有効な教師情報量を測ったものではない。文脈条件付き教師はこの情報をトークンごとの密な教師信号へ変換するため、オンポリシーサンプルが限られる場合にも学習を加速できる。RLが利用可能な報酬信号を使い切るほど十分に収束した領域では、同じ報酬値を与えられた高品質応答がスカラー信号上で同一視される。経験知はこの細かな選好差を保持し、複数の品質次元と微妙なトレードオフを含むタスクでも、さらに改善を続けられる。</p>
+          <p>著者らは、2種類の方策モデル系列を用い、初期の凍結方策チェックポイントまたはAPI経由のプロプライエタリモデルをフィードバックモデルとして、オープンエンドな指示追従タスク上でELを評価した。同一分布内のホールドアウト評価と複数の未見ベンチマークの双方で、ELはルーブリックに基づくRLを一貫して上回り、方策モデルとフィードバックモデルの組合せが異なっても経験的教師信号が有効であることを示した。</p>
+          <p>さらに、スカラー報酬の最適化は、訓練集合上の報酬を過剰に最適化する<span class="term">報酬ハッキング</span> <span class="citation">[SHKK22]</span> を起こしやすい一方、ELによる改善は訓練分布の外へよりよく転移することが示唆された。制御された分布マッチング分析では、単純化した設定において、量子化されたスカラーフィードバックは二値の目標を保持できるものの、多峰性の目標に含まれる細かな差を失い、分布に基づくガイダンスの方が目標分布を忠実に回復した。また、生の批評文やルーブリックそのものを使うより、蒸留済みの経験知の方が有効だった。教師を反復更新すると対象タスクの性能が向上し、一般領域プロンプト上でオンポリシー蒸留を併用すると、分布外能力の忘却が緩和された。</p>
+
+          <figure id="fig2">
+            <h3 class="figure-title">図2　RLとELの学習ループ</h3>
+            <div class="flow-panel">
+              <div class="flow-heading">強化学習（RL）</div>
+              <div class="flow-row">
+                <div class="flow-box">入力プロンプト<br><em>x</em></div><div class="arrow">→</div>
+                <div class="flow-box policy">方策<br>π<sub>θ</sub></div><div class="arrow">→</div>
+                <div class="flow-box feedback">LLM-as-a-Judge<br><small>ルーブリック ℛ<sub>x</sub></small></div><div class="arrow">→</div>
+                <div class="flow-box">報酬<br><em>r</em></div>
+              </div>
+              <div class="flow-objective">方策を更新：max<sub>θ</sub> 𝔼[r]</div>
+            </div>
+            <div class="flow-panel">
+              <div class="flow-heading">経験学習（EL）</div>
+              <div class="flow-row">
+                <div class="flow-box">入力プロンプト<br><em>x</em></div><div class="arrow">→</div>
+                <div class="flow-box policy">方策<br>π<sub>θ</sub></div><div class="arrow">→</div>
+                <div class="flow-box feedback">LLM-as-a-Coach<br><small>ルーブリック ℛ<sub>x</sub></small></div><div class="arrow">→</div>
+                <div class="flow-box">経験知<br><em>e</em></div>
+              </div>
+              <div class="flow-objective">方策を更新：ℒ(θ) = KL[ π<sub>θ</sub>(·|x) ∥ π<sub>teacher</sub>(·|e, x) ]</div>
+            </div>
+            <figcaption><strong>図2：</strong>RLは LLM-as-a-Judge が与えた報酬を最大化して方策を更新する。ELは同じルーブリックを用いるが、LLM-as-a-Coach が与えた経験知から学ぶ。経験知は、スカラー報酬より豊かな方策改善信号を提供する。<span class="page-tag">原文 p.3</span></figcaption>
+          </figure>
+        </section>
+
+        <section id="sec2">
+          <h2 class="section-heading"><span class="num">2</span>手法 <span class="page-tag">原文 pp.3–5</span></h2>
+          <p>ELが対象とするのは、正解（ground truth）が存在せず、応答品質を別のモデルが評価する、オープンエンドで自動検証できないタスクにおける言語モデル方策 π<sub>θ</sub> の訓練である。プロンプト <em>x</em> に対して方策が応答 <em>y</em> を生成し、フィードバックLLM <em>M</em> が、品質を確認可能な基準へ分解したルーブリック集合 ℛ<sub>x</sub> に照らして応答を評価する。<em>M</em> の完全な出力を <em>M</em>(<em>x</em>, <em>y</em>, ℛ<sub>x</sub>) と表す。標準RLでは、<em>M</em> は LLM-as-a-Judge として働き、評価をスカラー報酬へ縮約して他のテキスト内容を捨てる。これに対しELでは、<em>M</em> を LLM-as-a-Coach として使い、方策最適化を導く経験知を抽出することで、スカラーフィードバックより高帯域な信号を露出させる。</p>
+
+          <section id="sec21">
+            <h3>2.1　準備：LLM-as-a-Judgeを用いたRL</h3>
+            <p>ELの学習目的を導入する前に、フィードバックLLM <em>M</em> が LLM-as-a-Judge として機能する標準的なRLベースラインを定式化する <span class="citation">[ZCS+23, LIX+23, APC+24, GCD+26]</span>。各オンポリシー応答 <em>y</em> ∼ π<sub>θ</sub>(·|<em>x</em>) について、抽出されるのはスカラー報酬だけであり、残りのテキスト出力は捨てられる。プロンプトとルーブリックからなるデータ集合 <em>D</em> 上で、期待報酬を最大化するよう方策を訓練する。</p>
+            <div class="equation">max<sub>θ</sub> 𝔼<sub>(x,ℛ<sub>x</sub>)∼D, y∼π<sub>θ</sub>(·|x)</sub>[r]　　ただし　r = Extract_Reward(M(x, y, ℛ<sub>x</sub>))<span class="eqno">(1)</span></div>
+            <p>RLベースラインの実装には GRPO <span class="citation">[SWZ+24]</span> を用いる。</p>
+          </section>
+
+          <section id="sec22">
+            <h3>2.2　LLM-as-a-Coachを用いた経験学習</h3>
+            <p>コーチインターフェースでは、同じフィードバックLLM <em>M</em> を LLM-as-a-Coach として転用する。各オンポリシー応答について、<em>M</em> はルーブリックに基づく評価を分析し、移転可能な洞察を経験知 <em>e</em> へ蒸留する。続いて、方策自身の分布 π<sub>θ</sub>(·|<em>x</em>) と、経験知を条件にした教師分布 π<sub>teacher</sub>(·|<em>e</em>, <em>x</em>) の間の逆KLダイバージェンスを最小化するよう方策を訓練する。</p>
+            <div class="equation">ℒ(θ) = 𝔼<sub>(x,ℛ<sub>x</sub>)∼D, y∼π<sub>θ</sub>(·|x)</sub> [ (1/|y|) Σ<sub>t=1</sub><sup>|y|</sup> D<sub>KL</sub>(π<sub>θ</sub>(·|x,y&lt;t) ∥ π<sub>teacher</sub>(·|e,x,y&lt;t)) ]<br>e = Extract_Knowledge(M(x, y, ℛ<sub>x</sub>))<span class="eqno">(2)</span></div>
+            <p>教師には、初期方策の凍結チェックポイントを使うことも、各エポック末の方策チェックポイントを次のエポックの教師にする反復更新版を使うこともできる。ELは、LLM-as-a-Coach が生成した経験知を学習信号とし、オンポリシー文脈蒸留 <span class="citation">[YDW+26]</span> によって、その豊かな分布情報を方策の重みへ内在化する。プロンプトテンプレートは付録A.1に示す。</p>
+
+            <div class="algorithm">
+              <div class="algorithm-title">アルゴリズム1　EL：経験学習</div>
+              <div class="algorithm-meta"><strong>入力：</strong>訓練データ D = {(x, ℛ<sub>x</sub>)}、方策 π<sub>θ</sub>、教師 π<sub>teacher</sub>、LLM-as-a-Coach M<br><strong>出力：</strong>訓練済み方策 π<sub>θ</sub></div>
+              <div class="algorithm-body">
+                <div>各バッチ x ∼ D について：</div>
+                <div class="indent comment">// オンポリシー・ロールアウト</div>
+                <div class="indent">応答 y ∼ π<sub>θ</sub>(· | x) をサンプルする</div>
+                <br>
+                <div class="indent comment">// 経験知を抽出</div>
+                <div class="indent">e ← Extract_Knowledge(M(x, y, ℛ<sub>x</sub>))</div>
+                <br>
+                <div class="indent comment">// 文脈条件付き教師へ向かうトークン単位の逆KLを計算</div>
+                <div class="indent">ℒ(θ) ← (1/|y|) Σ<sub>t=1</sub><sup>|y|</sup> D<sub>KL</sub>(π<sub>θ</sub>(·|x,y&lt;t) ∥ π<sub>teacher</sub>(·|e,x,y&lt;t))</div>
+                <br>
+                <div class="indent comment">// 方策を更新</div>
+                <div class="indent">ℒ(θ) を最小化するよう θ を更新</div>
+                <div>終了</div>
+                <div>π<sub>θ</sub> を返す</div>
+              </div>
+            </div>
+          </section>
+
+          <section id="sec23">
+            <h3>2.3　判定者からコーチへ</h3>
+            <p>同じフィードバックLLM <em>M</em> と、プロンプト固有のルーブリック ℛ<sub>x</sub> を両方の学習インターフェースで使えるが、得られた評価の使い方が異なる。</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>観点</th><th>LLM-as-a-Judge</th><th>LLM-as-a-Coach（提案法）</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>役割</strong></td><td>評価：応答品質を査定する</td><td>指導：移転可能な指針を抽出する</td></tr>
+                  <tr><td><strong>学習信号</strong></td><td>系列全体に対するスカラー点数</td><td>経験知</td></tr>
+                  <tr><td><strong>フィードバック帯域幅</strong></td><td>低い</td><td>高い</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="table-caption"><strong>表1：</strong>LLM-as-a-Judge と LLM-as-a-Coach の役割、学習信号、フィードバック帯域幅の比較。どちらも同じフィードバックLLMとルーブリックを使う。</p>
+            <p>LLM-as-a-Judge は応答を評価し、学習信号としてスカラー点数だけを公開する。LLM-as-a-Coach は経験知を通じて改善を導く。端的に言えば、判定者は方策に「どれだけ良かったか」を伝え、コーチは「どうすればより良くできるか」という実行可能な指針を与える。</p>
+            <p>重要なのは、この違いが <em>M</em> 自身の能力ではなく、最適化器が消費するフィードバックに関する違いだという点である。LLM-as-a-Judge も詳細なテキスト分析を生成できるが、標準RLが保持するのは最終点数だけであり、低帯域な学習経路になる。ELでは、LLM-as-a-Coach が同じルーブリック評価を移転可能な経験知へ蒸留し、文脈条件付き教師がこの高帯域フィードバックを密なトークン単位の教師信号へ変換する。</p>
+          </section>
+
+          <section id="sec24">
+            <h3>2.4　フィードバック帯域幅という直観</h3>
+            <p>ELがRLより有利になり得る理由は、それぞれのフィードバック経路が持つ最大表現帯域幅から直観的に理解できる。</p>
+            <div class="callout note"><strong>RL：</strong>実験では、標準的なルーブリック評価に従い離散的な1～10点尺度を採用する。その理論上の最大帯域幅は log<sub>2</sub>(10) ≈ 3.3 bit／サンプルである。学習済み射影ヘッドが bfloat16（bf16）で報酬を出す場合、表現上の最大値は16 bitになる。</div>
+            <div class="callout note"><strong>EL：</strong>教師 π<sub>teacher</sub> は、初期方策の凍結チェックポイント、または反復更新された方策チェックポイントである。π<sub>θ</sub> と π<sub>teacher</sub> は閉じた系を構成し、外部から入る学習信号は <em>M</em> が生成した経験知 <em>e</em> だけである。長さ <em>L</em> の文脈を語彙サイズ |V| から選ぶと、テキスト経路の理論上の上限は <em>L</em>·log<sub>2</sub>|V| bitである。<em>L</em>=1,024、|V|=150,000なら約17,600 bit／サンプルとなり、bf16スカラー報酬の1,000倍超、離散的な1～10点報酬の5,000倍超になる。</div>
+            <p>この広いフィードバック経路は、自動検証できないタスクで特に有利になり得る。正誤が二値で決まる検証可能タスク <span class="citation">[LMP+24]</span> なら、結果を表現するには1 bitで足りる。しかし、自動検証できないタスクには、複数の品質次元、文体上の選好、微妙なトレードオフが含まれる。ロールアウトが十分に多く、RLが報酬信号を飽和させた収束領域では、最高報酬に達した応答が情報ボトルネックによってすべて同一視され、LLM-as-a-Judge が内部で示している細かな選好へ、これ以上整合させにくくなる。ELは経験知文脈を通じてより豊かな情報を伝えるため、このボトルネックを回避し、<em>M</em> が定義する目標分布をより忠実に近似できる。</p>
+            <div class="callout warning"><strong>原論文の注意：</strong>17,600 bitという値はテキスト経路の理論上の最大符号化容量であり、経験知が実際に運ぶ有効な教師情報量や、望ましい方策改善との相互情報量を表すものではない。自然言語の冗長性や知識抽出の不完全さにより、利用可能な情報は大幅に小さくなり得る。</div>
+          </section>
+        </section>
+
+        <section id="sec3">
+          <h2 class="section-heading"><span class="num">3</span>実験 <span class="page-tag">原文 pp.5–9</span></h2>
+          <p>自動検証できないタスクでは、ルーブリックを用いたオンポリシー訓練により、方策のオープンエンド応答を原則的に評価できる。標準RLは LLM-as-a-Judge に各応答を評価させ、テキストフィードバックを捨ててスカラー報酬だけを使う。ELは同じルーブリックに対する分析から LLM-as-a-Coach に経験知を生成させ、それを方策モデルの重みへ定着させる。</p>
+
+          <section id="sec31">
+            <h3>3.1　設定</h3>
+            <h4>訓練データとモデル</h4>
+            <p>訓練プロンプトには、幅広い会話型指示を重視して実ユーザーの問い合わせ7,500件を選別した WildChat-IF <span class="citation">[ZRH+24, HCZ+26, BYC25]</span> を用いる。各プロンプトについて、GPT-4oで評価ルーブリックを事前生成する。ルーブリックは応答品質を、細かく独立に確認できる基準へ分解する。</p>
+            <p>教師を反復更新する実験では、一般能力を保つため、Tulu3 <span class="citation">[LMP+24]</span> のプロンプトを WildChat-IF に 1:0.25 の割合で混ぜる。これらの一般プロンプトには追加文脈を付けず、初期の凍結方策チェックポイントをオンポリシー蒸留（OPD）の教師として使う。Tulu3のSFT混合データからは、WildChatと重複する出典を除外した。</p>
+            <p>方策モデルには、Qwen3-8B <span class="citation">[YLY+25]</span>（非思考モード）と OLMo-3-7B-Instruct <span class="citation">[OEB+25]</span> を用いる。RLの LLM-as-a-Judge、およびELの LLM-as-a-Coach には、初期方策の凍結チェックポイントまたは GPT-4o を使用する。</p>
+
+            <h4>訓練</h4>
+            <p>ベースラインには、GRPO <span class="citation">[SWZ+24]</span> で実装した Rubric-as-Reward <span class="citation">[GWL+25]</span> を用い、LLM-as-a-Judge の1～10点評価をスカラー報酬として方策を最適化する。ELでは、LLM-as-a-Coach がルーブリックと応答に基づいて経験知を生成し、それを教師モデルへの文脈として前置する。教師には、初期方策の固定チェックポイント、または各エポック末の方策チェックポイントを次のエポックの教師にする反復更新版を用いる。</p>
+            <p>両手法とも、1バッチ当たり256プロンプト、1プロンプト当たり8応答をサンプルする。学習率は 1×10<sup>−6</sup>。最大プロンプト長は8,192トークン、最大応答長は4,096トークン、ロールアウト温度は1とする。データ集合を3エポック学習し、10ステップごとにチェックポイントを保存する。逆KLは、学生モデルの予測確率で上位256語彙トークンに対して計算し、合計1になるよう再正規化は行わない。プロンプトテンプレートと例は付録A.1～A.5に示す。</p>
+
+            <h4>評価</h4>
+            <p>WildChat-IFから保留した250プロンプトのテスト集合について、GPT-4oをルーブリック条件付き LLM-as-a-Judge として使い、各プロンプトから4応答をサンプルして評価する。さらに、訓練で未使用の4つのオープンエンドベンチマーク、AlpacaEval v2.0 <span class="citation">[LZD+23]</span>、WildBench <span class="citation">[LDC+25]</span>、ArenaHard v2.0 <span class="citation">[LCF+24]</span>、CreativeWritingV3 <span class="citation">[Pae25]</span> への転移も測る。</p>
+            <p>すべてのベンチマークでGPT-4oを評価器とする。最初の3つは GPT-4-Turbo の参照応答とのペア比較であり、AlpacaEval v2.0 と ArenaHard v2.0 は勝率（%）、WildBench は [−100, 100] の選好スコアを報告する。CreativeWritingV3はルーブリックに基づく直接採点で、[0, 100] のスコアを報告する。主結論は、さらに強いプロプライエタリ評価器でも照合し、相対傾向が一貫することを確認した。評価費用を抑えるため、本文ではGPT-4oによる結果を報告する。</p>
+          </section>
+
+          <section id="sec32">
+            <h3>3.2　主要結果</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>方策＋フィードバック</th><th>手法</th><th class="num">WildChat<br>スコア</th><th class="num">AlpacaEval-v2<br>勝率（%）</th><th class="num">WildBench<br>スコア</th><th class="num">ArenaHard-v2<br>勝率（%）</th><th class="num">CW-v3<br>スコア</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td class="model-group" rowspan="3">Qwen3-8B<br>＋ Qwen3-8B</td><td>ベースモデル</td><td class="num">78.1</td><td class="num">34.5</td><td class="num">17.6</td><td class="num">29.1</td><td class="num">73.8</td></tr>
+                  <tr><td>RL</td><td class="num">79.2</td><td class="num">37.3</td><td class="num">18.4</td><td class="num">30.5</td><td class="num">74.3</td></tr>
+                  <tr class="el-row"><td><strong>EL</strong></td><td class="num"><strong>80.0</strong></td><td class="num"><strong>40.0</strong></td><td class="num"><strong>21.8</strong></td><td class="num"><strong>31.0</strong></td><td class="num"><strong>76.0</strong></td></tr>
+                  <tr><td class="model-group" rowspan="2">Qwen3-8B<br>＋ GPT-4o</td><td>RL</td><td class="num">80.4</td><td class="num"><strong>38.2</strong></td><td class="num">19.2</td><td class="num">31.2</td><td class="num">74.4</td></tr>
+                  <tr class="el-row"><td><strong>EL</strong></td><td class="num"><strong>80.7</strong></td><td class="num">37.4</td><td class="num"><strong>22.0</strong></td><td class="num"><strong>31.9</strong></td><td class="num"><strong>75.3</strong></td></tr>
+                  <tr><td class="model-group" rowspan="3">OLMo-3-7B<br>＋ OLMo-3-7B</td><td>ベースモデル</td><td class="num">75.7</td><td class="num">43.6</td><td class="num">39.0</td><td class="num">21.8</td><td class="num">78.7</td></tr>
+                  <tr><td>RL</td><td class="num">76.0</td><td class="num">45.9</td><td class="num">42.1</td><td class="num">23.3</td><td class="num"><strong>78.8</strong></td></tr>
+                  <tr class="el-row"><td><strong>EL</strong></td><td class="num"><strong>77.1</strong></td><td class="num"><strong>50.8</strong></td><td class="num"><strong>47.5</strong></td><td class="num"><strong>26.2</strong></td><td class="num"><strong>78.8</strong></td></tr>
+                  <tr><td class="model-group" rowspan="2">OLMo-3-7B<br>＋ GPT-4o</td><td>RL</td><td class="num">76.8</td><td class="num">44.7</td><td class="num">40.3</td><td class="num">22.5</td><td class="num">77.8</td></tr>
+                  <tr class="el-row"><td><strong>EL</strong></td><td class="num"><strong>78.2</strong></td><td class="num"><strong>48.5</strong></td><td class="num"><strong>46.2</strong></td><td class="num"><strong>25.1</strong></td><td class="num"><strong>78.0</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="table-caption"><strong>表2：</strong>RLとELの評価スコア。「方策＋フィードバック」は、最適化する方策モデルと、RLでは LLM-as-a-Judge、ELでは LLM-as-a-Coach として働くフィードバックモデルの組を表す。CW-v3はCreativeWritingV3の略。ELは、ほぼすべてのモデル組合せ・ベンチマークでRLを上回る。太字は各比較内の高い値。</p>
+            <p>表2は主要結果を示す。「方策＋フィードバック」列の第1モデルが最適化対象の方策、第2モデルがフィードバックLLMである。フィードバックLLMには、初期方策の凍結チェックポイントと、クローズドソースのGPT-4oの2種類を検討した。数値は、性能上位3チェックポイントのスコアまたは勝率の平均である。</p>
+            <p>RLとELはいずれも WildChat-IF のプロンプトで訓練し、保留したWildChatテスト集合と4つの追加ベンチマークで評価した。ELはWildChat評価で一貫してRLを上回り、未見ベンチマークにもよりよく汎化した。特に AlpacaEval v2.0 と WildBench で差が大きい。この優位性は、フィードバックLLMが初期の凍結方策でもGPT-4oでも成立しており、ELの利点が特定のフィードバックLLMではなく、より豊かな情報経路に由来することを示している。また、フィードバックLLMにGPT-4oを使うと、初期凍結方策を使う場合より、RLとELの両方でWildChatスコアが向上した。</p>
+          </section>
+
+          <section id="sec33">
+            <h3>3.3　経験学習はよりよく汎化する</h3>
+            <p>訓練終了後、WildChat訓練例から1,000件を抽出して評価し、WildChatテスト集合および2つのベンチマークと比較した。図3のとおり、ELは訓練集合上ではRLより改善量が小さいにもかかわらず、WildChatテスト、AlpacaEval v2.0、WildBenchではより高いスコアを得た。</p>
+            <figure>
+              <svg class="chart-svg" viewBox="0 0 780 390" role="img" aria-labelledby="fig3-title fig3-desc"><title id="fig3-title">ベースモデルに対するスコア改善</title><desc id="fig3-desc">RLと経験学習をWildChat訓練、WildChatテスト、AlpacaEval、WildBenchで比較した棒グラフ。</desc><line class="chart-grid" x1="70" y1="290.0" x2="755" y2="290.0"/><text class="chart-tick" x="58" y="295.0" text-anchor="end">0</text><line class="chart-grid" x1="70" y1="249.2" x2="755" y2="249.2"/><text class="chart-tick" x="58" y="254.2" text-anchor="end">1</text><line class="chart-grid" x1="70" y1="208.3" x2="755" y2="208.3"/><text class="chart-tick" x="58" y="213.3" text-anchor="end">2</text><line class="chart-grid" x1="70" y1="167.5" x2="755" y2="167.5"/><text class="chart-tick" x="58" y="172.5" text-anchor="end">3</text><line class="chart-grid" x1="70" y1="126.7" x2="755" y2="126.7"/><text class="chart-tick" x="58" y="131.7" text-anchor="end">4</text><line class="chart-grid" x1="70" y1="85.8" x2="755" y2="85.8"/><text class="chart-tick" x="58" y="90.8" text-anchor="end">5</text><line class="chart-grid" x1="70" y1="45.0" x2="755" y2="45.0"/><text class="chart-tick" x="58" y="50.0" text-anchor="end">6</text><line class="chart-axis" x1="70" y1="45" x2="70" y2="290"/><line class="chart-axis" x1="70" y1="290" x2="755" y2="290"/><rect class="bar-rl" x="108.6" y="220.6" width="42" height="69.4" rx="4"/><text class="chart-value" x="129.6" y="212.6" text-anchor="middle">+1.7</text><rect class="bar-el" x="160.6" y="236.9" width="42" height="53.1" rx="4"/><text class="chart-value" x="181.6" y="228.9" text-anchor="middle">+1.3</text><text class="chart-label" x="155.6" y="320" text-anchor="middle"><tspan x="155.6">WildChat</tspan><tspan x="155.6" dy="1.25em">訓練</tspan></text><rect class="bar-rl" x="279.9" y="245.1" width="42" height="44.9" rx="4"/><text class="chart-value" x="300.9" y="237.1" text-anchor="middle">+1.1</text><rect class="bar-el" x="331.9" y="208.3" width="42" height="81.7" rx="4"/><text class="chart-value" x="352.9" y="200.3" text-anchor="middle">+2.0</text><text class="chart-label" x="326.9" y="320" text-anchor="middle"><tspan x="326.9">WildChat</tspan><tspan x="326.9" dy="1.25em">テスト</tspan></text><rect class="bar-rl" x="451.1" y="175.7" width="42" height="114.3" rx="4"/><text class="chart-value" x="472.1" y="167.7" text-anchor="middle">+2.8</text><rect class="bar-el" x="503.1" y="65.4" width="42" height="224.6" rx="4"/><text class="chart-value" x="524.1" y="57.4" text-anchor="middle">+5.5</text><text class="chart-label" x="498.1" y="332" text-anchor="middle">AlpacaEval</text><rect class="bar-rl" x="622.4" y="257.3" width="42" height="32.7" rx="4"/><text class="chart-value" x="643.4" y="249.3" text-anchor="middle">+0.8</text><rect class="bar-el" x="674.4" y="118.5" width="42" height="171.5" rx="4"/><text class="chart-value" x="695.4" y="110.5" text-anchor="middle">+4.2</text><text class="chart-label" x="669.4" y="332" text-anchor="middle">WildBench</text><rect class="legend-bg" x="560" y="18" width="190" height="58" rx="8"/><rect class="bar-rl" x="575" y="32" width="24" height="14" rx="2"/><text class="chart-label" x="608" y="44">RL</text><rect class="bar-el" x="660" y="32" width="24" height="14" rx="2"/><text class="chart-label" x="693" y="44">EL</text><text class="axis-title" transform="translate(20 167.5) rotate(-90)" text-anchor="middle">スコア改善量</text></svg>
+              <figcaption><strong>図3：</strong>ベースモデルに対するスコア改善。「WildChat 訓練」は、訓練終了後に訓練データの一部で評価した値。ELは訓練集合でのスコア改善がRLより小さいにもかかわらず、テスト集合と未見ベンチマークへよりよく汎化する。Qwen3-8Bを方策とフィードバックLLMの双方に用いた結果。<span class="page-tag">原文 p.7</span></figcaption>
+            </figure>
+            <p>著者らは、この差の一部がRLとELのフィードバック帯域幅の違いから生じると仮説を立てる。RLは情報量の限られたスカラー報酬を最大化するため、実質的な品質を高めずに訓練報酬だけを押し上げるパターンへ方策が漂流し得る。これは報酬ハッキングの一形態である <span class="citation">[SHKK22]</span>。ELは訓練中、LLM-as-a-Coach からスカラー点数を一切受け取らない。代わりに、経験知文脈によって教師分布全体がどう変化したかを学習信号とし、より転移しやすい挙動へ方策を導く。フィードバックLLMをQwen3-8BからGPT-4oへ置き換えても、同様の現象が観測された。</p>
+          </section>
+
+          <section id="sec34">
+            <h3>3.4　アブレーション</h3>
+            <h4>教師の反復更新</h4>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>構成</th><th class="num">WildChatスコア</th><th class="num">OOD精度（IFEval）</th></tr></thead>
+                <tbody>
+                  <tr><td>ベースモデル</td><td class="num">78.1</td><td class="num"><strong>83.5</strong></td></tr>
+                  <tr><td>RL</td><td class="num">79.2</td><td class="num">81.3</td></tr>
+                  <tr class="el-row"><td>固定教師</td><td class="num">80.0</td><td class="num">83.1</td></tr>
+                  <tr class="el-row"><td>反復更新</td><td class="num"><strong>80.7</strong></td><td class="num">74.9</td></tr>
+                  <tr class="el-row"><td>反復更新＋一般プロンプト</td><td class="num"><strong>80.7</strong></td><td class="num">79.9</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="table-caption"><strong>表3：</strong>教師更新方式のアブレーション。「スコア」は性能上位3チェックポイントのWildChatテスト平均、「OOD精度」は同じチェックポイントのIFEval精度。</p>
+            <p>Qwen3-8Bを方策と LLM-as-a-Coach の双方に用いた。<strong>固定教師</strong>では、訓練を通じて初期方策の凍結チェックポイントを教師とし、これが既定設定である。<strong>反復更新</strong>では、各エポック末の方策チェックポイントを次のエポックの教師にする。<strong>反復更新＋一般プロンプト</strong>では、Tulu3 <span class="citation">[LMP+24]</span> のプロンプトを WildChat-IF に1:0.25で混ぜる。一般プロンプトには経験知文脈を付けず、初期の凍結方策チェックポイントをOPD教師として用いる <span class="citation">[MWZ+26, LL25]</span>。</p>
+            <p>教師を反復更新するとWildChatスコアは80.0から80.7へ向上するが、IFEval精度は大幅に低下し、分布外の指示追従能力を忘却していることが分かる。初期凍結方策から一般プロンプトへのOPDを追加すると、WildChatスコア80.7を維持したまま、IFEvalが74.9から79.9へ回復する。したがって一般プロンプトOPDは、教師を反復更新する際の有用な安定化手段となる。</p>
+
+            <h4>教師へ与える文脈</h4>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>構成</th><th class="num">WildChatスコア</th><th class="num">OOD精度（IFEval）</th></tr></thead>
+                <tbody>
+                  <tr><td>ベースモデル</td><td class="num">64.8</td><td class="num">68.0</td></tr>
+                  <tr><td>RL</td><td class="num">67.7</td><td class="num">67.6</td></tr>
+                  <tr><td>批評全文</td><td class="num">67.9</td><td class="num">64.6</td></tr>
+                  <tr><td>ルーブリックのみ</td><td class="num">68.1</td><td class="num">65.6</td></tr>
+                  <tr><td>多肢選択</td><td class="num">66.3</td><td class="num">68.5</td></tr>
+                  <tr class="el-row"><td><strong>既定のEL</strong></td><td class="num"><strong>68.6</strong></td><td class="num"><strong>68.8</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="table-caption"><strong>表4：</strong>Qwen3-1.7Bにおける教師文脈のアブレーション。「スコア」はWildChatテスト集合の上位3チェックポイント平均、「OOD精度」は同じ3チェックポイントのIFEval精度。</p>
+            <p>方策モデルにQwen3-1.7B、LLM-as-a-Coach にQwen3-4Bを用い、<em>M</em> が与える文脈形式を比較した。<strong>批評全文</strong>は、ルーブリック項目ごとの分析を含む <em>M</em> の採点出力全体を、経験知抽出を行わず教師文脈へ前置する。<strong>ルーブリックのみ</strong>は、応答固有のフィードバックを使わず、ルーブリックだけを与える <span class="citation">[RMW+26, GCZ+26]</span>。<strong>多肢選択</strong>は、LLM-as-a-Coach に事前定義した改善指示（例：「事実の正確さを改善する」）から1つを選ばせる。出力なしも含めて文脈は10種類となり、最大帯域幅は log<sub>2</sub>10 ≈ 3.3 bitで、RLの1～10点スカラー報酬と同等になる。方策の応答も採点全文と一緒に文脈へ含める構成も試したが、数ステップで発散した。</p>
+            <p>すべての変種はWildChatテストでベースモデルを上回ったが、移転可能な経験知を抽出する既定ELが最も良かった。批評全文とルーブリックのみは、教師を「課題を解く分布」ではなく「批評する分布」へ偏らせるため、IFEval精度を下げる。方策がこの不整合な挙動を模倣し、分布外タスクを忘却するからである。多肢選択はOOD性能を保つが、帯域幅が低いため改善幅も限定的だった。</p>
+          </section>
+
+          <section id="sec35">
+            <h3>3.5　分析</h3>
+            <h4>フィードバック帯域幅の比較</h4>
+            <p>表5は3種類以上の学習方法について、フィードバック帯域幅を定性的に比較する。RLが受け取るのはサンプルごとのスカラー報酬であり、応答長に関係なく表現帯域幅は O(1) である。より強い教師からのオンポリシー蒸留（OPD）は、教師のトークンごとの分布が、より大きなパラメータ空間の知識を符号化しているため、応答長 <em>N</em> に比例する O(<em>N</em>) のフィードバックを与えられる。ELでは学生と教師が閉じた系を構成し、外部学習信号はコーチが生成する長さ <em>L</em> の経験知文脈だけなので、理論上のテキスト帯域幅は O(<em>L</em>) である。OPDとELはいずれも蒸留を使うが、情報源が異なる。OPDは教師の優れたパラメータ知識から、ELはコーチがルーブリック評価をテキストとして外在化したものから学ぶ。</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>手法</th><th>フィードバック源</th><th>帯域幅</th></tr></thead>
+                <tbody>
+                  <tr><td>強化学習（RL）</td><td>LLM-as-a-Judgeによる系列全体のスカラー報酬</td><td>O(1)</td></tr>
+                  <tr><td>オンポリシー蒸留（OPD）</td><td>より大きな教師モデルのパラメータ</td><td>O(N)</td></tr>
+                  <tr><td>オンポリシー自己蒸留（OPSD）</td><td>正解、ヒントなどの特権情報</td><td>O(L)</td></tr>
+                  <tr class="el-row"><td>経験学習（EL）</td><td>LLM-as-a-Coachが生成した経験知文脈</td><td>O(L)</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="table-caption"><strong>表5：</strong>学習手法ごとのフィードバック帯域幅の定性的比較。<em>N</em> は応答長、<em>L</em> は経験知文脈長。</p>
+            <p>離散的な1～10点報酬の理論上の最大帯域幅は3.3 bit／サンプルである。学習済み報酬ヘッドがBF16値を出す場合、表現上の最大帯域幅は16 bitだが、実際の報酬モデルはこの範囲のごく一部しか使わない。疎な信号地形は、有用な情報を増やすより、報酬ハッキングによって方策が利用しやすい構造になる可能性がある。</p>
+
+            <h4>フィードバック量子化の分布マッチング分析</h4>
+            <p>量子化されたフィードバックを少数のスカラー段階へ落とすと、分布マッチングにどのような影響が生じるかを、制御された玩具設定で調べる。この構成はフィードバック表現だけを切り出すためのもので、RLとELの実際の訓練パイプラインを忠実に模擬するものでも、すべてのスカラー報酬法に共通する根本的限界を証明するものでもない。細粒度な目標を少数の報酬水準へ写像したときに失われる情報を直観的に示す。</p>
+            <p>フィードバックLLMが LLM-as-a-Judge または LLM-as-a-Coach として、方策に学ばせたい、200トークンの離散語彙上の理想分布 <em>p</em><sup>＊</sup> を内部に持つと仮定する。カテゴリカル方策 π<sub>θ</sub> = softmax(θ) を <em>p</em><sup>＊</sup> に近づける。各ステップで方策からトークン <em>y</em> をサンプルし、学習信号を受け取る。</p>
+            <p><strong>（1）RL：</strong>方策は <em>L</em> 段階へ量子化したスカラー報酬を受け取る。</p>
+            <div class="equation">r(y) = ⌊ [p<sup>＊</sup>(y) / max<sub>y′</sub> p<sup>＊</sup>(y′)] · (L−1) + 0.5 ⌋,　r(y) ∈ {0, 1, …, L−1}</div>
+            <p>これを、一様分布へのKLペナルティを伴う REINFORCE <span class="citation">[Wil92]</span> で最適化する。<strong>（2）分布に基づくガイダンス（ELの理想化した代理）：</strong>経験知が目標分布を特定できるだけの情報を持つと仮定し、逆KLダイバージェンス KL(π<sub>θ</sub>∥<em>p</em><sup>＊</sup>) を直接最小化する。検証可能タスクでは <em>p</em><sup>＊</sup> を正／誤の二値分布（<em>L</em>=2）、自動検証できないタスクでは二峰性ガウス混合を5段階の報酬へ量子化したもの（<em>L</em>=5）とする。</p>
+            <figure>
+              <svg class="chart-svg" viewBox="0 0 900 380" role="img" aria-labelledby="fig4-title fig4-desc"><title id="fig4-title">フィードバック量子化の分布マッチング分析</title><desc id="fig4-desc">左は二値目標、右は二峰性目標。二値ではRLとELが近いが、二峰性ではRLが階段状になりELが滑らかな目標分布を回復する。</desc><text class="chart-panel-title" x="257.5" y="28" text-anchor="middle">検証可能タスク</text><line class="chart-grid" x1="65" y1="315.00" x2="450" y2="315.00"/><text class="chart-tick" x="55" y="320.00" text-anchor="end">0.000</text><line class="chart-grid" x1="65" y1="228.33" x2="450" y2="228.33"/><text class="chart-tick" x="55" y="233.33" text-anchor="end">0.005</text><line class="chart-grid" x1="65" y1="141.67" x2="450" y2="141.67"/><text class="chart-tick" x="55" y="146.67" text-anchor="end">0.010</text><line class="chart-grid" x1="65" y1="55.00" x2="450" y2="55.00"/><text class="chart-tick" x="55" y="60.00" text-anchor="end">0.015</text><line class="chart-grid-minor" x1="65.00" y1="55" x2="65.00" y2="315"/><text class="chart-tick" x="65.00" y="338" text-anchor="middle">0</text><line class="chart-grid-minor" x1="142.39" y1="55" x2="142.39" y2="315"/><text class="chart-tick" x="142.39" y="338" text-anchor="middle">40</text><line class="chart-grid-minor" x1="219.77" y1="55" x2="219.77" y2="315"/><text class="chart-tick" x="219.77" y="338" text-anchor="middle">80</text><line class="chart-grid-minor" x1="297.16" y1="55" x2="297.16" y2="315"/><text class="chart-tick" x="297.16" y="338" text-anchor="middle">120</text><line class="chart-grid-minor" x1="374.55" y1="55" x2="374.55" y2="315"/><text class="chart-tick" x="374.55" y="338" text-anchor="middle">160</text><line class="chart-grid-minor" x1="450.00" y1="55" x2="450.00" y2="315"/><text class="chart-tick" x="450.00" y="338" text-anchor="middle">199</text><line class="chart-axis" x1="65" y1="55" x2="65" y2="315"/><line class="chart-axis" x1="65" y1="315" x2="450" y2="315"/><text class="axis-title" x="257.5" y="362" text-anchor="middle">クラス</text><text class="chart-panel-title" x="677.5" y="28" text-anchor="middle">自動検証できないタスク</text><line class="chart-grid" x1="485" y1="315.00" x2="870" y2="315.00"/><text class="chart-tick" x="475" y="320.00" text-anchor="end">0.000</text><line class="chart-grid" x1="485" y1="228.33" x2="870" y2="228.33"/><text class="chart-tick" x="475" y="233.33" text-anchor="end">0.005</text><line class="chart-grid" x1="485" y1="141.67" x2="870" y2="141.67"/><text class="chart-tick" x="475" y="146.67" text-anchor="end">0.010</text><line class="chart-grid" x1="485" y1="55.00" x2="870" y2="55.00"/><text class="chart-tick" x="475" y="60.00" text-anchor="end">0.015</text><line class="chart-grid-minor" x1="485.00" y1="55" x2="485.00" y2="315"/><text class="chart-tick" x="485.00" y="338" text-anchor="middle">0</text><line class="chart-grid-minor" x1="562.39" y1="55" x2="562.39" y2="315"/><text class="chart-tick" x="562.39" y="338" text-anchor="middle">40</text><line class="chart-grid-minor" x1="639.77" y1="55" x2="639.77" y2="315"/><text class="chart-tick" x="639.77" y="338" text-anchor="middle">80</text><line class="chart-grid-minor" x1="717.16" y1="55" x2="717.16" y2="315"/><text class="chart-tick" x="717.16" y="338" text-anchor="middle">120</text><line class="chart-grid-minor" x1="794.55" y1="55" x2="794.55" y2="315"/><text class="chart-tick" x="794.55" y="338" text-anchor="middle">160</text><line class="chart-grid-minor" x1="870.00" y1="55" x2="870.00" y2="315"/><text class="chart-tick" x="870.00" y="338" text-anchor="middle">199</text><line class="chart-axis" x1="485" y1="55" x2="485" y2="315"/><line class="chart-axis" x1="485" y1="315" x2="870" y2="315"/><text class="axis-title" x="677.5" y="362" text-anchor="middle">クラス</text><text class="axis-title" transform="translate(19 185.0) rotate(-90)" text-anchor="middle">確率</text><text class="axis-title" transform="translate(440 185.0) rotate(-90)" text-anchor="middle">確率</text><path class="plot-target" d="M65.00,312.40 L66.93,312.40 L68.87,312.40 L70.80,312.40 L72.74,312.40 L74.67,312.40 L76.61,312.40 L78.54,312.40 L80.48,312.40 L82.41,312.40 L84.35,312.40 L86.28,312.40 L88.22,312.40 L90.15,312.40 L92.09,312.40 L94.02,312.40 L95.95,312.40 L97.89,312.40 L99.82,312.40 L101.76,312.40 L103.69,312.40 L105.63,312.40 L107.56,312.40 L109.50,312.40 L111.43,312.40 L113.37,312.40 L115.30,312.40 L117.24,312.40 L119.17,312.40 L121.11,312.40 L123.04,312.40 L124.97,312.40 L126.91,312.40 L128.84,312.40 L130.78,312.40 L132.71,312.40 L134.65,312.40 L136.58,312.40 L138.52,312.40 L140.45,312.40 L142.39,171.13 L144.32,171.13 L146.26,171.13 L148.19,171.13 L150.13,171.13 L152.06,171.13 L153.99,171.13 L155.93,171.13 L157.86,171.13 L159.80,171.13 L161.73,171.13 L163.67,171.13 L165.60,171.13 L167.54,171.13 L169.47,171.13 L171.41,171.13 L173.34,171.13 L175.28,171.13 L177.21,171.13 L179.15,171.13 L181.08,171.13 L183.02,171.13 L184.95,171.13 L186.88,171.13 L188.82,171.13 L190.75,171.13 L192.69,171.13 L194.62,171.13 L196.56,171.13 L198.49,171.13 L200.43,171.13 L202.36,171.13 L204.30,171.13 L206.23,171.13 L208.17,171.13 L210.10,171.13 L212.04,171.13 L213.97,171.13 L215.90,171.13 L217.84,171.13 L219.77,171.13 L221.71,171.13 L223.64,171.13 L225.58,171.13 L227.51,171.13 L229.45,171.13 L231.38,171.13 L233.32,171.13 L235.25,171.13 L237.19,171.13 L239.12,171.13 L241.06,171.13 L242.99,171.13 L244.92,171.13 L246.86,171.13 L248.79,171.13 L250.73,171.13 L252.66,171.13 L254.60,171.13 L256.53,171.13 L258.47,312.40 L260.40,312.40 L262.34,312.40 L264.27,312.40 L266.21,312.40 L268.14,312.40 L270.08,312.40 L272.01,312.40 L273.94,312.40 L275.88,312.40 L277.81,171.13 L279.75,171.13 L281.68,171.13 L283.62,171.13 L285.55,171.13 L287.49,171.13 L289.42,171.13 L291.36,171.13 L293.29,171.13 L295.23,171.13 L297.16,171.13 L299.10,171.13 L301.03,171.13 L302.96,171.13 L304.90,171.13 L306.83,171.13 L308.77,171.13 L310.70,171.13 L312.64,171.13 L314.57,171.13 L316.51,171.13 L318.44,171.13 L320.38,171.13 L322.31,171.13 L324.25,171.13 L326.18,171.13 L328.12,171.13 L330.05,171.13 L331.98,171.13 L333.92,171.13 L335.85,171.13 L337.79,171.13 L339.72,171.13 L341.66,171.13 L343.59,171.13 L345.53,171.13 L347.46,171.13 L349.40,171.13 L351.33,171.13 L353.27,171.13 L355.20,171.13 L357.14,171.13 L359.07,171.13 L361.01,171.13 L362.94,171.13 L364.87,171.13 L366.81,171.13 L368.74,171.13 L370.68,171.13 L372.61,171.13 L374.55,312.40 L376.48,312.40 L378.42,312.40 L380.35,312.40 L382.29,312.40 L384.22,312.40 L386.16,312.40 L388.09,312.40 L390.03,312.40 L391.96,312.40 L393.89,312.40 L395.83,312.40 L397.76,312.40 L399.70,312.40 L401.63,312.40 L403.57,312.40 L405.50,312.40 L407.44,312.40 L409.37,312.40 L411.31,312.40 L413.24,312.40 L415.18,312.40 L417.11,312.40 L419.05,312.40 L420.98,312.40 L422.91,312.40 L424.85,312.40 L426.78,312.40 L428.72,312.40 L430.65,312.40 L432.59,312.40 L434.52,312.40 L436.46,312.40 L438.39,312.40 L440.33,312.40 L442.26,312.40 L444.20,312.40 L446.13,312.40 L448.07,312.40 L450.00,312.40"/><path class="plot-rl" d="M65.00,301.13 L66.93,301.13 L68.87,301.13 L70.80,301.13 L72.74,301.13 L74.67,301.13 L76.61,301.13 L78.54,301.13 L80.48,301.13 L82.41,301.13 L84.35,301.13 L86.28,301.13 L88.22,301.13 L90.15,301.13 L92.09,301.13 L94.02,301.13 L95.95,301.13 L97.89,301.13 L99.82,301.13 L101.76,301.13 L103.69,301.13 L105.63,301.13 L107.56,301.13 L109.50,301.13 L111.43,301.13 L113.37,301.13 L115.30,301.13 L117.24,301.13 L119.17,301.13 L121.11,301.13 L123.04,301.13 L124.97,301.13 L126.91,301.13 L128.84,301.13 L130.78,301.13 L132.71,301.13 L134.65,301.13 L136.58,301.13 L138.52,301.13 L140.45,301.13 L142.39,179.80 L144.32,179.80 L146.26,179.80 L148.19,179.80 L150.13,179.80 L152.06,179.80 L153.99,179.80 L155.93,179.80 L157.86,179.80 L159.80,179.80 L161.73,179.80 L163.67,179.80 L165.60,179.80 L167.54,179.80 L169.47,179.80 L171.41,179.80 L173.34,179.80 L175.28,179.80 L177.21,179.80 L179.15,179.80 L181.08,179.80 L183.02,179.80 L184.95,179.80 L186.88,179.80 L188.82,179.80 L190.75,179.80 L192.69,179.80 L194.62,179.80 L196.56,179.80 L198.49,179.80 L200.43,179.80 L202.36,179.80 L204.30,179.80 L206.23,179.80 L208.17,179.80 L210.10,179.80 L212.04,179.80 L213.97,179.80 L215.90,179.80 L217.84,179.80 L219.77,179.80 L221.71,179.80 L223.64,179.80 L225.58,179.80 L227.51,179.80 L229.45,179.80 L231.38,179.80 L233.32,179.80 L235.25,179.80 L237.19,179.80 L239.12,179.80 L241.06,179.80 L242.99,179.80 L244.92,179.80 L246.86,179.80 L248.79,179.80 L250.73,179.80 L252.66,179.80 L254.60,179.80 L256.53,179.80 L258.47,301.13 L260.40,301.13 L262.34,301.13 L264.27,301.13 L266.21,301.13 L268.14,301.13 L270.08,301.13 L272.01,301.13 L273.94,301.13 L275.88,301.13 L277.81,179.80 L279.75,179.80 L281.68,179.80 L283.62,179.80 L285.55,179.80 L287.49,179.80 L289.42,179.80 L291.36,179.80 L293.29,179.80 L295.23,179.80 L297.16,179.80 L299.10,179.80 L301.03,179.80 L302.96,179.80 L304.90,179.80 L306.83,179.80 L308.77,179.80 L310.70,179.80 L312.64,179.80 L314.57,179.80 L316.51,179.80 L318.44,179.80 L320.38,179.80 L322.31,179.80 L324.25,179.80 L326.18,179.80 L328.12,179.80 L330.05,179.80 L331.98,179.80 L333.92,179.80 L335.85,179.80 L337.79,179.80 L339.72,179.80 L341.66,179.80 L343.59,179.80 L345.53,179.80 L347.46,179.80 L349.40,179.80 L351.33,179.80 L353.27,179.80 L355.20,179.80 L357.14,179.80 L359.07,179.80 L361.01,179.80 L362.94,179.80 L364.87,179.80 L366.81,179.80 L368.74,179.80 L370.68,179.80 L372.61,179.80 L374.55,301.13 L376.48,301.13 L378.42,301.13 L380.35,301.13 L382.29,301.13 L384.22,301.13 L386.16,301.13 L388.09,301.13 L390.03,301.13 L391.96,301.13 L393.89,301.13 L395.83,301.13 L397.76,301.13 L399.70,301.13 L401.63,301.13 L403.57,301.13 L405.50,301.13 L407.44,301.13 L409.37,301.13 L411.31,301.13 L413.24,301.13 L415.18,301.13 L417.11,301.13 L419.05,301.13 L420.98,301.13 L422.91,301.13 L424.85,301.13 L426.78,301.13 L428.72,301.13 L430.65,301.13 L432.59,301.13 L434.52,301.13 L436.46,301.13 L438.39,301.13 L440.33,301.13 L442.26,301.13 L444.20,301.13 L446.13,301.13 L448.07,301.13 L450.00,301.13"/><path class="plot-el" d="M65.00,308.93 L66.93,308.93 L68.87,308.93 L70.80,308.93 L72.74,308.93 L74.67,308.93 L76.61,308.93 L78.54,308.93 L80.48,308.93 L82.41,308.93 L84.35,308.93 L86.28,308.93 L88.22,308.93 L90.15,308.93 L92.09,308.93 L94.02,308.93 L95.95,308.93 L97.89,308.93 L99.82,308.93 L101.76,308.93 L103.69,308.93 L105.63,308.93 L107.56,308.93 L109.50,308.93 L111.43,308.93 L113.37,308.93 L115.30,308.93 L117.24,308.93 L119.17,308.93 L121.11,308.93 L123.04,308.93 L124.97,308.93 L126.91,308.93 L128.84,308.93 L130.78,308.93 L132.71,308.93 L134.65,308.93 L136.58,308.93 L138.52,308.93 L140.45,308.93 L142.39,175.47 L144.32,175.47 L146.26,175.47 L148.19,175.47 L150.13,175.47 L152.06,175.47 L153.99,175.47 L155.93,175.47 L157.86,175.47 L159.80,175.47 L161.73,175.47 L163.67,175.47 L165.60,175.47 L167.54,175.47 L169.47,175.47 L171.41,175.47 L173.34,175.47 L175.28,175.47 L177.21,175.47 L179.15,175.47 L181.08,175.47 L183.02,175.47 L184.95,175.47 L186.88,175.47 L188.82,175.47 L190.75,175.47 L192.69,175.47 L194.62,175.47 L196.56,175.47 L198.49,175.47 L200.43,175.47 L202.36,175.47 L204.30,175.47 L206.23,175.47 L208.17,175.47 L210.10,175.47 L212.04,175.47 L213.97,175.47 L215.90,175.47 L217.84,175.47 L219.77,175.47 L221.71,175.47 L223.64,175.47 L225.58,175.47 L227.51,175.47 L229.45,175.47 L231.38,175.47 L233.32,175.47 L235.25,175.47 L237.19,175.47 L239.12,175.47 L241.06,175.47 L242.99,175.47 L244.92,175.47 L246.86,175.47 L248.79,175.47 L250.73,175.47 L252.66,175.47 L254.60,175.47 L256.53,175.47 L258.47,308.93 L260.40,308.93 L262.34,308.93 L264.27,308.93 L266.21,308.93 L268.14,308.93 L270.08,308.93 L272.01,308.93 L273.94,308.93 L275.88,308.93 L277.81,175.47 L279.75,175.47 L281.68,175.47 L283.62,175.47 L285.55,175.47 L287.49,175.47 L289.42,175.47 L291.36,175.47 L293.29,175.47 L295.23,175.47 L297.16,175.47 L299.10,175.47 L301.03,175.47 L302.96,175.47 L304.90,175.47 L306.83,175.47 L308.77,175.47 L310.70,175.47 L312.64,175.47 L314.57,175.47 L316.51,175.47 L318.44,175.47 L320.38,175.47 L322.31,175.47 L324.25,175.47 L326.18,175.47 L328.12,175.47 L330.05,175.47 L331.98,175.47 L333.92,175.47 L335.85,175.47 L337.79,175.47 L339.72,175.47 L341.66,175.47 L343.59,175.47 L345.53,175.47 L347.46,175.47 L349.40,175.47 L351.33,175.47 L353.27,175.47 L355.20,175.47 L357.14,175.47 L359.07,175.47 L361.01,175.47 L362.94,175.47 L364.87,175.47 L366.81,175.47 L368.74,175.47 L370.68,175.47 L372.61,175.47 L374.55,308.93 L376.48,308.93 L378.42,308.93 L380.35,308.93 L382.29,308.93 L384.22,308.93 L386.16,308.93 L388.09,308.93 L390.03,308.93 L391.96,308.93 L393.89,308.93 L395.83,308.93 L397.76,308.93 L399.70,308.93 L401.63,308.93 L403.57,308.93 L405.50,308.93 L407.44,308.93 L409.37,308.93 L411.31,308.93 L413.24,308.93 L415.18,308.93 L417.11,308.93 L419.05,308.93 L420.98,308.93 L422.91,308.93 L424.85,308.93 L426.78,308.93 L428.72,308.93 L430.65,308.93 L432.59,308.93 L434.52,308.93 L436.46,308.93 L438.39,308.93 L440.33,308.93 L442.26,308.93 L444.20,308.93 L446.13,308.93 L448.07,308.93 L450.00,308.93"/><path class="plot-target" d="M485.00,314.55 L486.93,314.46 L488.87,314.34 L490.80,314.21 L492.74,314.05 L494.67,313.86 L496.61,313.64 L498.54,313.38 L500.48,313.08 L502.41,312.73 L504.35,312.32 L506.28,311.85 L508.22,311.31 L510.15,310.68 L512.09,309.97 L514.02,309.16 L515.95,308.23 L517.89,307.19 L519.82,306.01 L521.76,304.69 L523.69,303.21 L525.63,301.56 L527.56,299.72 L529.50,297.68 L531.43,295.44 L533.37,292.97 L535.30,290.27 L537.24,287.32 L539.17,284.11 L541.11,280.64 L543.04,276.90 L544.97,272.88 L546.91,268.58 L548.84,264.00 L550.78,259.14 L552.71,254.00 L554.65,248.60 L556.58,242.94 L558.52,237.04 L560.45,230.91 L562.39,224.59 L564.32,218.09 L566.26,211.44 L568.19,204.67 L570.13,197.83 L572.06,190.94 L573.99,184.06 L575.93,177.22 L577.86,170.47 L579.80,163.85 L581.73,157.42 L583.67,151.22 L585.60,145.30 L587.54,139.72 L589.47,134.50 L591.41,129.70 L593.34,125.36 L595.28,121.52 L597.21,118.21 L599.15,115.45 L601.08,113.29 L603.02,111.72 L604.95,110.78 L606.88,110.46 L608.82,110.78 L610.75,111.72 L612.69,113.28 L614.62,115.45 L616.56,118.20 L618.49,121.51 L620.43,125.35 L622.36,129.68 L624.30,134.47 L626.23,139.68 L628.17,145.26 L630.10,151.17 L632.04,157.35 L633.97,163.76 L635.90,170.36 L637.84,177.08 L639.77,183.89 L641.71,190.73 L643.64,197.57 L645.58,204.35 L647.51,211.04 L649.45,217.60 L651.38,224.00 L653.32,230.20 L655.25,236.18 L657.19,241.90 L659.12,247.36 L661.06,252.52 L662.99,257.37 L664.92,261.90 L666.86,266.10 L668.79,269.96 L670.73,273.47 L672.66,276.63 L674.60,279.43 L676.53,281.87 L678.47,283.96 L680.40,285.69 L682.34,287.06 L684.27,288.08 L686.21,288.74 L688.14,289.06 L690.08,289.03 L692.01,288.66 L693.94,287.95 L695.88,286.91 L697.81,285.54 L699.75,283.85 L701.68,281.84 L703.62,279.53 L705.55,276.93 L707.49,274.04 L709.42,270.88 L711.36,267.46 L713.29,263.81 L715.23,259.94 L717.16,255.87 L719.10,251.63 L721.03,247.24 L722.96,242.74 L724.90,238.15 L726.83,233.51 L728.77,228.84 L730.70,224.20 L732.64,219.62 L734.57,215.12 L736.51,210.77 L738.44,206.58 L740.38,202.61 L742.31,198.88 L744.25,195.44 L746.18,192.31 L748.12,189.54 L750.05,187.14 L751.98,185.14 L753.92,183.57 L755.85,182.43 L757.79,181.75 L759.72,181.52 L761.66,181.75 L763.59,182.45 L765.53,183.59 L767.46,185.17 L769.40,187.18 L771.33,189.59 L773.27,192.38 L775.20,195.52 L777.14,198.98 L779.07,202.74 L781.01,206.74 L782.94,210.97 L784.87,215.37 L786.81,219.92 L788.74,224.57 L790.68,229.29 L792.61,234.05 L794.55,238.80 L796.48,243.53 L798.42,248.19 L800.35,252.77 L802.29,257.23 L804.22,261.56 L806.16,265.73 L808.09,269.73 L810.03,273.56 L811.96,277.19 L813.89,280.62 L815.83,283.85 L817.76,286.87 L819.70,289.69 L821.63,292.30 L823.57,294.72 L825.50,296.94 L827.44,298.97 L829.37,300.82 L831.31,302.50 L833.24,304.03 L835.18,305.39 L837.11,306.62 L839.05,307.72 L840.98,308.69 L842.91,309.55 L844.85,310.31 L846.78,310.98 L848.72,311.57 L850.65,312.08 L852.59,312.52 L854.52,312.90 L856.46,313.23 L858.39,313.52 L860.33,313.76 L862.26,313.97 L864.20,314.14 L866.13,314.29 L868.07,314.41 L870.00,314.52"/><path class="plot-rl" d="M485.00,257.80 L486.93,257.80 L488.87,257.80 L490.80,257.80 L492.74,257.80 L494.67,257.80 L496.61,257.80 L498.54,257.80 L500.48,257.80 L502.41,257.80 L504.35,257.80 L506.28,257.80 L508.22,257.80 L510.15,257.80 L512.09,257.80 L514.02,257.80 L515.95,257.80 L517.89,257.80 L519.82,257.80 L521.76,257.80 L523.69,257.80 L525.63,257.80 L527.56,257.80 L529.50,257.80 L531.43,257.80 L533.37,257.80 L535.30,257.80 L537.24,229.63 L539.17,229.63 L541.11,229.63 L543.04,229.63 L544.97,229.63 L546.91,229.63 L548.84,229.63 L550.78,229.63 L552.71,229.63 L554.65,229.63 L556.58,229.63 L558.52,201.47 L560.45,201.47 L562.39,201.47 L564.32,201.47 L566.26,201.47 L568.19,201.47 L570.13,201.47 L572.06,201.47 L573.99,173.30 L575.93,173.30 L577.86,173.30 L579.80,173.30 L581.73,173.30 L583.67,173.30 L585.60,173.30 L587.54,173.30 L589.47,145.13 L591.41,145.13 L593.34,145.13 L595.28,145.13 L597.21,145.13 L599.15,145.13 L601.08,145.13 L603.02,145.13 L604.95,145.13 L606.88,145.13 L608.82,145.13 L610.75,145.13 L612.69,145.13 L614.62,145.13 L616.56,145.13 L618.49,145.13 L620.43,145.13 L622.36,145.13 L624.30,145.13 L626.23,173.30 L628.17,173.30 L630.10,173.30 L632.04,173.30 L633.97,173.30 L635.90,173.30 L637.84,173.30 L639.77,173.30 L641.71,201.47 L643.64,201.47 L645.58,201.47 L647.51,201.47 L649.45,201.47 L651.38,201.47 L653.32,201.47 L655.25,201.47 L657.19,229.63 L659.12,229.63 L661.06,229.63 L662.99,229.63 L664.92,229.63 L666.86,229.63 L668.79,229.63 L670.73,229.63 L672.66,229.63 L674.60,229.63 L676.53,229.63 L678.47,229.63 L680.40,229.63 L682.34,229.63 L684.27,229.63 L686.21,229.63 L688.14,229.63 L690.08,229.63 L692.01,229.63 L693.94,229.63 L695.88,229.63 L697.81,229.63 L699.75,229.63 L701.68,229.63 L703.62,229.63 L705.55,229.63 L707.49,229.63 L709.42,229.63 L711.36,229.63 L713.29,229.63 L715.23,229.63 L717.16,229.63 L719.10,229.63 L721.03,229.63 L722.96,229.63 L724.90,201.47 L726.83,201.47 L728.77,201.47 L730.70,201.47 L732.64,201.47 L734.57,201.47 L736.51,201.47 L738.44,201.47 L740.38,201.47 L742.31,201.47 L744.25,201.47 L746.18,201.47 L748.12,201.47 L750.05,173.30 L751.98,173.30 L753.92,173.30 L755.85,173.30 L757.79,173.30 L759.72,173.30 L761.66,173.30 L763.59,173.30 L765.53,173.30 L767.46,173.30 L769.40,201.47 L771.33,201.47 L773.27,201.47 L775.20,201.47 L777.14,201.47 L779.07,201.47 L781.01,201.47 L782.94,201.47 L784.87,201.47 L786.81,201.47 L788.74,201.47 L790.68,201.47 L792.61,201.47 L794.55,229.63 L796.48,229.63 L798.42,229.63 L800.35,229.63 L802.29,229.63 L804.22,229.63 L806.16,229.63 L808.09,229.63 L810.03,229.63 L811.96,229.63 L813.89,229.63 L815.83,229.63 L817.76,229.63 L819.70,257.80 L821.63,257.80 L823.57,257.80 L825.50,257.80 L827.44,257.80 L829.37,257.80 L831.31,257.80 L833.24,257.80 L835.18,257.80 L837.11,257.80 L839.05,257.80 L840.98,257.80 L842.91,257.80 L844.85,257.80 L846.78,257.80 L848.72,257.80 L850.65,257.80 L852.59,257.80 L854.52,257.80 L856.46,257.80 L858.39,257.80 L860.33,257.80 L862.26,257.80 L864.20,257.80 L866.13,257.80 L868.07,257.80 L870.00,257.80"/><path class="plot-el" d="M485.00,290.74 L486.93,290.47 L488.87,290.16 L490.80,289.82 L492.74,289.43 L494.67,288.99 L496.61,288.50 L498.54,287.94 L500.48,287.33 L502.41,286.64 L504.35,285.87 L506.28,285.02 L508.22,284.08 L510.15,283.04 L512.09,281.89 L514.02,280.64 L515.95,279.26 L517.89,277.76 L519.82,276.12 L521.76,274.35 L523.69,272.42 L525.63,270.35 L527.56,268.11 L529.50,265.70 L531.43,263.13 L533.37,260.38 L535.30,257.45 L537.24,254.35 L539.17,251.06 L541.11,247.59 L543.04,243.93 L544.97,240.10 L546.91,236.10 L548.84,231.93 L550.78,227.59 L552.71,223.10 L554.65,218.47 L556.58,213.71 L558.52,208.83 L560.45,203.85 L562.39,198.79 L564.32,193.66 L566.26,188.49 L568.19,183.30 L570.13,178.10 L572.06,172.93 L573.99,167.81 L575.93,162.76 L577.86,157.82 L579.80,153.00 L581.73,148.33 L583.67,143.85 L585.60,139.58 L587.54,135.54 L589.47,131.75 L591.41,128.25 L593.34,125.05 L595.28,122.17 L597.21,119.64 L599.15,117.46 L601.08,115.66 L603.02,114.24 L604.95,113.21 L606.88,112.58 L608.82,112.36 L610.75,112.54 L612.69,113.12 L614.62,114.11 L616.56,115.48 L618.49,117.23 L620.43,119.35 L622.36,121.82 L624.30,124.62 L626.23,127.74 L628.17,131.15 L630.10,134.83 L632.04,138.75 L633.97,142.89 L635.90,147.21 L637.84,151.70 L639.77,156.32 L641.71,161.04 L643.64,165.83 L645.58,170.66 L647.51,175.51 L649.45,180.35 L651.38,185.14 L653.32,189.86 L655.25,194.49 L657.19,198.99 L659.12,203.36 L661.06,207.56 L662.99,211.57 L664.92,215.38 L666.86,218.97 L668.79,222.33 L670.73,225.43 L672.66,228.28 L674.60,230.85 L676.53,233.15 L678.47,235.16 L680.40,236.88 L682.34,238.31 L684.27,239.44 L686.21,240.28 L688.14,240.83 L690.08,241.09 L692.01,241.06 L693.94,240.75 L695.88,240.18 L697.81,239.34 L699.75,238.25 L701.68,236.93 L703.62,235.37 L705.55,233.61 L707.49,231.64 L709.42,229.50 L711.36,227.19 L713.29,224.74 L715.23,222.16 L717.16,219.48 L719.10,216.71 L721.03,213.87 L722.96,210.99 L724.90,208.09 L726.83,205.18 L728.77,202.30 L730.70,199.46 L732.64,196.69 L734.57,194.00 L736.51,191.42 L738.44,188.96 L740.38,186.65 L742.31,184.51 L744.25,182.54 L746.18,180.77 L748.12,179.21 L750.05,177.87 L751.98,176.77 L753.92,175.90 L755.85,175.29 L757.79,174.93 L759.72,174.83 L761.66,175.00 L763.59,175.42 L765.53,176.10 L767.46,177.04 L769.40,178.23 L771.33,179.65 L773.27,181.31 L775.20,183.20 L777.14,185.29 L779.07,187.58 L781.01,190.05 L782.94,192.69 L784.87,195.48 L786.81,198.41 L788.74,201.45 L790.68,204.60 L792.61,207.82 L794.55,211.12 L796.48,214.46 L798.42,217.84 L800.35,221.23 L802.29,224.62 L804.22,227.99 L806.16,231.34 L808.09,234.64 L810.03,237.89 L811.96,241.07 L813.89,244.18 L815.83,247.20 L817.76,250.13 L819.70,252.96 L821.63,255.68 L823.57,258.30 L825.50,260.80 L827.44,263.18 L829.37,265.45 L831.31,267.59 L833.24,269.62 L835.18,271.53 L837.11,273.32 L839.05,275.00 L840.98,276.57 L842.91,278.03 L844.85,279.39 L846.78,280.64 L848.72,281.80 L850.65,282.87 L852.59,283.85 L854.52,284.75 L856.46,285.57 L858.39,286.31 L860.33,286.99 L862.26,287.61 L864.20,288.16 L866.13,288.66 L868.07,289.11 L870.00,289.52"/><rect class="legend-bg" x="322" y="65" width="118" height="78" rx="7"/><line class="plot-target" x1="332" y1="84" x2="360" y2="84"/><text class="chart-label" x="369" y="89">目標</text><line class="plot-rl" x1="332" y1="106" x2="360" y2="106"/><text class="chart-label" x="369" y="111">RL</text><line class="plot-el" x1="332" y1="128" x2="360" y2="128"/><text class="chart-label" x="369" y="133">EL</text><rect class="legend-bg" x="742" y="65" width="118" height="78" rx="7"/><line class="plot-target" x1="752" y1="84" x2="780" y2="84"/><text class="chart-label" x="789" y="89">目標</text><line class="plot-rl" x1="752" y1="106" x2="780" y2="106"/><text class="chart-label" x="789" y="111">RL</text><line class="plot-el" x1="752" y1="128" x2="780" y2="128"/><text class="chart-label" x="789" y="133">EL</text></svg>
+              <figcaption><strong>図4：</strong>制御された分布マッチング分析。左：二値の目標では、二値報酬を用いるRLと、分布を直接合わせる方法が近い分布へ収束する。右：二峰性の目標では、5段階報酬から得られるRL分布は階段状になり、分布を直接合わせる方法は滑らかな目標形状を回復する。図は原論文の概念と傾向を日本語で再構成したもの。<span class="page-tag">原文 p.9</span></figcaption>
+            </figure>
+            <p>図4左の構成された二値タスクでは、RLと直接分布マッチングの双方が <em>p</em><sup>＊</sup> に近いほぼ同一の分布へ収束する。この目標と目的関数では応答は正しいか誤りかのどちらかであり、それ以上細かな区別は不要なので、二値報酬が必要な情報を保持できる。</p>
+            <p>一方、5段階報酬の構成では明確な差が生じる。直接分布マッチングは <em>p</em><sup>＊</sup> の滑らかな二峰形状を回復するのに対し、RLは階段状の分布へ収束する。特に、ピーク上の同じ最高報酬を受け取るトークンは、このRL目的の下で同じ確率を学習するが、<em>p</em><sup>＊</sup> はそれらに異なる尤度を割り当てている。この設定では、量子化されたスカラー報酬は同じ最高点を与えられたトークン同士をそれ以上区別できない。分布ガイダンスは細かな差を保持するため、量子化由来の不自然さなしに <em>p</em><sup>＊</sup> を一致させられる。</p>
+          </section>
+        </section>
+
+        <section id="sec4">
+          <h2 class="section-heading"><span class="num">4</span>考察 <span class="page-tag">原文 pp.9–10</span></h2>
+          <h3>報酬ハッキング</h3>
+          <p>ELは、フィードバックモデルと方策の間にある情報ボトルネックから生じる報酬ハッキングを緩和する。LLM-as-a-Judge が評価をスカラー報酬へ圧縮すると、方策は応答品質を本当に高めずに点数だけを上げるパターンを利用し得る。ELは経験知を通じてより豊かな情報を伝えるため、この失敗形態を減らす。</p>
+          <p>ただし、フィードバックモデル自体に偏りや較正不良がある場合には、別の原因による報酬ハッキングが起こり得る。ELが対処するのはフィードバックモデルと方策の間の帯域幅であり、フィードバックモデルそのものの品質ではない。したがって、評価モデルの較正と正確さを改善する研究は、ELと補完的な方向である。</p>
+          <h3>強化学習との違い</h3>
+          <p>ELの逆KL目的はトークン単位のアドバンテージ重み付き形式へ分解できるが、最適化対象はRLと異なる。RLはスカラー報酬を最大化し、最適方策は最高報酬の応答へ確率質量を集中させる。ELはオンポリシー文脈蒸留を通じて、文脈条件付き教師分布との差を最小化する。したがって、RLは<span class="term">報酬追求</span>、ELは<span class="term">分布マッチング</span>である。前者は高い報酬と相関するあらゆる特徴を利用し得るが、後者は教師分布の形状そのものに近く留まる。</p>
+          <h3>訓練費用と効率</h3>
+          <p>RLとELはいずれも、エンドツーエンドの訓練時間の大部分をオンラインデータ生成に費やす。すなわち、方策からロールアウトをサンプルし、フィードバックLLMを LLM-as-a-Judge または LLM-as-a-Coach として呼び出す処理である。これら2つの高価な処理は両手法に共通する。ELはさらに、文脈条件付き教師の前向き計算とトークン単位の蒸留を必要とし、RLは報酬に基づくGRPO更新を行う。本実験設定では、手法固有の更新費用は、共通のロールアウト・フィードバック生成費用に比べて小さかった。</p>
+        </section>
+
+        <section id="sec5">
+          <h2 class="section-heading"><span class="num">5</span>関連研究 <span class="page-tag">原文 p.10</span></h2>
+          <h3>経験からの学習</h3>
+          <p>近年の研究は、環境との相互作用を通じて経験から学ぶことを提唱している <span class="citation">[SS25]</span>。そのような経験は将来の学習を加速し <span class="citation">[ZCL+25]</span>、推論エージェントが自己対戦と内省を通じて有効な戦略を発見することを可能にする <span class="citation">[WWX25]</span>。言語モデルについては、過去の失敗を振り返る <span class="citation">[SCG+23]</span>、再利用可能な知識を外部メモリへ保存する <span class="citation">[ZHX+24]</span>、複数ターンのテキストフィードバックで最適化する <span class="citation">[YBB+24, ATS+25, LBF25]</span> といった研究がある。より最近では、批評文を条件として方策最適化を行い、批評をRL目的へ組み込む方法も提案されている <span class="citation">[ZZS+25, HCZ+26]</span>。ただし、これらは元のプロンプトに対してオフポリシーであり、最終的な学習信号はスカラー報酬に律速される。</p>
+          <h3>文脈蒸留と自己蒸留</h3>
+          <p>文脈蒸留は、文脈として与えられた知識をモデルパラメータへ圧縮し、推論時の文脈処理を不要にすることを目指す <span class="citation">[ABC+21, SKZ22, CCL25]</span>。オフポリシー訓練に伴う露出バイアスを緩和するため、オンポリシー蒸留は学生自身が生成した軌跡上で学生を訓練する <span class="citation">[GDWH24, LL25, AVZ+24]</span>。この考えを発展させたオンポリシー文脈蒸留（OPCD）は、オンポリシー訓練の下で、文脈条件付き教師による文脈蒸留を行う <span class="citation">[YDW+26]</span>。</p>
+          <p>近接する研究系列として、教師が同様に解答、実演、環境フィードバックなどの文脈を条件とするオンポリシー自己蒸留がある。ただし通常は学生モデル自身を教師として使う <span class="citation">[ZXL+26, HLB+26, SDHA26, PVG+26]</span>。最近の研究は、この枠組みをRLVRとの結合 <span class="citation">[YQS+26, LYF+26, KJLY26]</span>、エージェントタスクへの統合 <span class="citation">[WWX+26, WZS+26, YWL+26]</span>、改善された訓練アルゴリズム <span class="citation">[XSZ+26, ZZS+26, ZDP+26, WCL+26, SXZ+26, YLX+26]</span>、オンライン学習への適応 <span class="citation">[YDD+26, BHP+26, WCJ+26]</span> へ拡張している。同時に、実証的成功の仕組みと、能力劣化が生じる条件を分析する研究も増えている <span class="citation">[LZH+26, KLK+26, ZBZ+26]</span>。</p>
+        </section>
+
+        <section id="sec6">
+          <h2 class="section-heading"><span class="num">6</span>結論 <span class="page-tag">原文 p.10</span></h2>
+          <p>本研究は、スカラー報酬ではなく豊かな経験知を用いて、自動検証できないタスク上で言語モデルを事後学習する枠組み、経験学習（EL）を提案した。フィードバックモデルを LLM-as-a-Coach として転用し、ルーブリックに基づく評価を移転可能な指針へ蒸留し、オンポリシー文脈蒸留によってモデル内部へ取り込む。この高帯域なフィードバック経路は、密な教師信号を与え、スカラー報酬が捨てる細かな選好差を保持する。</p>
+          <p>異なる方策モデル系列とフィードバックモデルにわたり、ELはホールドアウトされたオープンエンド課題と未見課題の双方で、ルーブリックに基づくRLを一貫して上回り、訓練分布の外でも強い汎化を示した。これらの結果は、経験知が情報量と移転性を備えた学習信号であることを示し、スケーラブルな反復学習、知識抽出の改善、複雑なオープンエンドタスクに対するより広範な事後学習への道を開く。</p>
+        </section>
+
+        <details id="references" class="major-details">
+          <summary>参考文献（原文表記）</summary>
+          <div class="details-body">
+            <p class="callout note">書誌情報は引用の同定性を保つため原文表記としています。本文中の引用キーと対応します。</p>
+            <div class="reference-entry" id="ref-ABC+21"><span class="ref-key">[ABC+21]</span><span>Amanda Askell, Yuntao Bai, Anna Chen, Dawn Drain, Deep Ganguli, T. J. Henighan, Andy Jones, Nicholas Joseph, Benjamin Mann, Nova Dassarma, Nelson Elhage, Zac Hatfield-Dodds, Danny Hernandez, John Kernion, Kamal Ndousse, Catherine Olsson, Dario Amodei, Tom B. Brown, Jack Clark, Sam McCandlish, Chris Olah, and Jared Kaplan. A general language assistant as a laboratory for alignment. ArXiv, abs/2112.00861, 2021.</span></div>
+<div class="reference-entry" id="ref-APC+24"><span class="ref-key">[APC+24]</span><span>Zachary Ankner, Mansheej Paul, Brandon Cui, Jonathan D Chang, and Prithviraj Ammanabrolu. Critique-out-loud reward models. arXiv preprint arXiv:2408.11791, 2024.</span></div>
+<div class="reference-entry" id="ref-ATS+25"><span class="ref-key">[ATS+25]</span><span>Lakshya A Agrawal, Shangyin Tan, Dilara Soylu, Noah Ziems, Rishi Khare, Krista Opsahl-Ong, Arnav Singhvi, Herumb Shandilya, Michael J Ryan, Meng Jiang, et al. Gepa: Reflective prompt evolution can outperform reinforcement learning. arXiv preprint arXiv:2507.19457, 2025.</span></div>
+<div class="reference-entry" id="ref-AVZ+24"><span class="ref-key">[AVZ+24]</span><span>Rishabh Agarwal, Nino Vieillard, Yongchao Zhou, Piotr Stanczyk, Sabela Ramos Garea, Matthieu Geist, and Olivier Bachem. On-policy distillation of language models: Learning from self-generated mistakes. In The twelfth international conference on learning representations, 2024.</span></div>
+<div class="reference-entry" id="ref-BHP+26"><span class="ref-key">[BHP+26]</span><span>Thomas Kleine Buening, Jonas Hübotter, Barna Pásztor, Idan Shenfeld, Giorgia Ramponi, and Andreas Krause. Aligning language models from user interactions. In Continual Adaptation at Scale: Towards Sustainable AI Workshop, 2026.</span></div>
+<div class="reference-entry" id="ref-BYC25"><span class="ref-key">[BYC25]</span><span>Adithya Bhaskar, Xi Ye, and Danqi Chen. Language models that think, chat better. In First Workshop on Foundations of Reasoning in Language Models, 2025.</span></div>
+<div class="reference-entry" id="ref-CCL25"><span class="ref-key">[CCL25]</span><span>Bowen Cao, Deng Cai, and Wai Lam. Infiniteicl: Breaking the limit of context window size via long short-term memory transformation. In Findings of the Association for Computational Linguistics: ACL 2025, pages 11402–11415, 2025.</span></div>
+<div class="reference-entry" id="ref-GCD+26"><span class="ref-key">[GCD+26]</span><span>Jiaxin Guo, Zewen Chi, Li Dong, Qingxiu Dong, Xun Wu, Shaohan Huang, and Furu Wei. Reward reasoning models. Advances in Neural Information Processing Systems, 38:150477–150510, 2026.</span></div>
+<div class="reference-entry" id="ref-GCZ+26"><span class="ref-key">[GCZ+26]</span><span>Siyi Gu, Jialin Chen, Sophia Zhou, Arman Cohan, and Rex Ying. Rethinking reward supervision: Rubric-conditioned self-distillation. arXiv preprint arXiv:2606.19327, 2026.</span></div>
+<div class="reference-entry" id="ref-GDWH24"><span class="ref-key">[GDWH24]</span><span>Yuxian Gu, Li Dong, Furu Wei, and Minlie Huang. MiniLLM: On-policy distillation of large language models. In The Twelfth International Conference on Learning Representations, 2024.</span></div>
+<div class="reference-entry" id="ref-GWL+25"><span class="ref-key">[GWL+25]</span><span>Anisha Gunjal, Anthony Wang, Elaine Lau, Vaskar Nath, Yunzhong He, Bing Liu, and Sean M Hendryx. Rubrics as rewards: Reinforcement learning beyond verifiable domains. In NeurIPS 2025 Workshop on Efficient Reasoning, 2025.</span></div>
+<div class="reference-entry" id="ref-HCZ+26"><span class="ref-key">[HCZ+26]</span><span>Lei Huang, Xiang Cheng, Chenxiao Zhao, Guobin Shen, Junjie Yang, Xiaocheng Feng, Yuxuan Gu, Xing Yu, and Bing Qin. Bootstrapping exploration with group-level natural language feedback in reinforcement learning. arXiv preprint arXiv:2603.04597, 2026.</span></div>
+<div class="reference-entry" id="ref-HLB+26"><span class="ref-key">[HLB+26]</span><span>Jonas Hübotter, Frederike Lübeck, Lejs Behric, Anton Baumann, Marco Bagatella, Daniel Marta, Ido Hakimi, Idan Shenfeld, Thomas Kleine Buening, Carlos Guestrin, and Andreas Krause. Reinforcement learning via self-distillation, 2026.</span></div>
+<div class="reference-entry" id="ref-KJLY26"><span class="ref-key">[KJLY26]</span><span>Jeonghye Kim, Jiwon Jeon, Dongsheng Li, and Yuqing Yang. Rebellious student: Reversing teacher signals for reasoning exploration with self-distilled rlvr. arXiv preprint arXiv:2605.10781, 2026.</span></div>
+<div class="reference-entry" id="ref-KLK+26"><span class="ref-key">[KLK+26]</span><span>Jeonghye Kim, Xufang Luo, Minbeom Kim, Sangmook Lee, Dohyung Kim, Jiwon Jeon, Dongsheng Li, and Yuqing Yang. Why does self-distillation (sometimes) degrade the reasoning capability of llms? arXiv preprint arXiv:2603.24472, 2026.</span></div>
+<div class="reference-entry" id="ref-LBF25"><span class="ref-key">[LBF25]</span><span>Yoonho Lee, Joseph Boen, and Chelsea Finn. Feedback descent: Open-ended text optimization via pairwise comparison. arXiv preprint arXiv:2511.07919, 2025.</span></div>
+<div class="reference-entry" id="ref-LCF+24"><span class="ref-key">[LCF+24]</span><span>Tianle Li, Wei-Lin Chiang, Evan Frick, Lisa Dunlap, Tianhao Wu, Banghua Zhu, Joseph E Gonzalez, and Ion Stoica. From crowdsourced data to high-quality benchmarks: Arena-hard and benchbuilder pipeline. In Forty-second International Conference on Machine Learning, 2024.</span></div>
+<div class="reference-entry" id="ref-LDC+25"><span class="ref-key">[LDC+25]</span><span>Bill Yuchen Lin, Yuntian Deng, Khyathi Chandu, Abhilasha Ravichander, Valentina Pyatkin, Nouha Dziri, Ronan Le Bras, and Yejin Choi. Wildbench: Benchmarking llms with challenging tasks from real users in the wild. In The Thirteenth International Conference on Learning Representations, 2025.</span></div>
+<div class="reference-entry" id="ref-LIX+23"><span class="ref-key">[LIX+23]</span><span>Yang Liu, Dan Iter, Yichong Xu, Shuohang Wang, Ruochen Xu, and Chenguang Zhu. G-eval: Nlg evaluation using gpt-4 with better human alignment. In Proceedings of the 2023 conference on empirical methods in natural language processing, pages 2511– 2522, 2023.</span></div>
+<div class="reference-entry" id="ref-LL25"><span class="ref-key">[LL25]</span><span>Kevin Lu and Thinking Machines Lab. On-policy distillation. Thinking Machines Lab: Connectionism, 2025. <a href="https://thinkingmachines.ai/blog/on-policy-distillation.">https://thinkingmachines.ai/blog/on-policy-distillation.</a></span></div>
+<div class="reference-entry" id="ref-LMP+24"><span class="ref-key">[LMP+24]</span><span>Nathan Lambert, Jacob Morrison, Valentina Pyatkin, Shengyi Huang, Hamish Ivison, Faeze Brahman, Lester James V Miranda, Alisa Liu, Nouha Dziri, Shane Lyu, et al. Tulu 3: Pushing frontiers in open language model post-training. arXiv preprint arXiv:2411.15124, 2024.</span></div>
+<div class="reference-entry" id="ref-LYF+26"><span class="ref-key">[LYF+26]</span><span>Gengsheng Li, Tianyu Yang, Junfeng Fang, Mingyang Song, Mao Zheng, Haiyun Guo, Dan Zhang, Jinqiao Wang, and Tat-Seng Chua. Unifying group-relative and selfdistillation policy optimization via sample routing. arXiv preprint arXiv:2604.02288, 2026.</span></div>
+<div class="reference-entry" id="ref-LZD+23"><span class="ref-key">[LZD+23]</span><span>Xuechen Li, Tianyi Zhang, Yann Dubois, Rohan Taori, Ishaan Gulrajani, Carlos Guestrin, Percy Liang, and Tatsunori B Hashimoto. Alpacaeval: An automatic evaluator of instruction-following models, 2023.</span></div>
+<div class="reference-entry" id="ref-LZH+26"><span class="ref-key">[LZH+26]</span><span>Yaxuan Li, Yuxin Zuo, Bingxiang He, Jinqian Zhang, Chaojun Xiao, Cheng Qian, Tianyu Yu, Huan-ang Gao, Wenkai Yang, Zhiyuan Liu, et al. Rethinking on-policy distillation of large language models: Phenomenology, mechanism, and recipe. In ICML 2026 Workshop on Foundations of Deep Generative Models: Understanding Memorization, Generalization, and Reasoning, 2026.</span></div>
+<div class="reference-entry" id="ref-MWZ+26"><span class="ref-key">[MWZ+26]</span><span>Wenhan Ma, Jianyu Wei, Liang Zhao, Hailin Zhang, Bangjun Xiao, Lei Li, Qibin Yang, Bofei Gao, Yudong Wang, Rang Li, et al. Mopd: Multi-teacher on-policy distillation for capability integration in llm post-training. arXiv preprint arXiv:2606.30406, 2026.</span></div>
+<div class="reference-entry" id="ref-OEB+25"><span class="ref-key">[OEB+25]</span><span>Team Olmo, Allyson Ettinger, Amanda Bertsch, Bailey Kuehl, David Graham, David Heineman, Dirk Groeneveld, Faeze Brahman, Finbarr Timbers, Hamish Ivison, et al. Olmo 3. arXiv preprint arXiv:2512.13961, 2025.</span></div>
+<div class="reference-entry" id="ref-Pae25"><span class="ref-key">[Pae25]</span><span>Samuel J Paech. Eq-bench creative writing benchmark v3, 2025.</span></div>
+<div class="reference-entry" id="ref-PVG+26"><span class="ref-key">[PVG+26]</span><span>Emiliano Penaloza, Dheeraj Vattikonda, Nicolas Gontier, Alexandre Lacoste, Laurent Charlin, and Massimo Caccia. Privileged information distillation for language models, 2026.</span></div>
+<div class="reference-entry" id="ref-RMW+26"><span class="ref-key">[RMW+26]</span><span>MohammadHossein Rezaei, Anas Mahmoud, Zihao Wang, Utkarsh Tyagi, Advait Gosai, Razvan-Gabriel Dumitru, Aakash Sabharwal, Bing Liu, and Yunzhong He. Rubric-guided self-distillation: Post-training without rubric verifiers. arXiv preprint arXiv:2606.12507, 2026.</span></div>
+<div class="reference-entry" id="ref-SB+98"><span class="ref-key">[SB+98]</span><span>Richard S Sutton, Andrew G Barto, et al. Reinforcement learning: An introduction, volume 1. MIT press Cambridge, 1998.</span></div>
+<div class="reference-entry" id="ref-SCG+23"><span class="ref-key">[SCG+23]</span><span>Noah Shinn, Federico Cassano, Ashwin Gopinath, Karthik Narasimhan, and Shunyu Yao. Reflexion: Language agents with verbal reinforcement learning. Advances in neural information processing systems, 36:8634–8652, 2023.</span></div>
+<div class="reference-entry" id="ref-SDHA26"><span class="ref-key">[SDHA26]</span><span>Idan Shenfeld, Mehul Damani, Jonas Hübotter, and Pulkit Agrawal. Self-distillation enables continual learning, 2026.</span></div>
+<div class="reference-entry" id="ref-SHKK22"><span class="ref-key">[SHKK22]</span><span>Joar Max Viktor Skalse, Nikolaus HR Howe, Dmitrii Krasheninnikov, and David Krueger. Defining and characterizing reward gaming. In Proceedings of NeurIPS, 2022.</span></div>
+<div class="reference-entry" id="ref-SKZ22"><span class="ref-key">[SKZ22]</span><span>Charlie Snell, Dan Klein, and Ruiqi Zhong. Learning by distilling context, 2022.</span></div>
+<div class="reference-entry" id="ref-SS25"><span class="ref-key">[SS25]</span><span>David Silver and Richard S Sutton. Welcome to the era of experience. Google AI, 1:11, 2025.</span></div>
+<div class="reference-entry" id="ref-SWZ+24"><span class="ref-key">[SWZ+24]</span><span>Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu, Junxiao Song, Xiao Bi, Haowei Zhang, Mingchuan Zhang, YK Li, et al. Deepseekmath: Pushing the limits of mathematical reasoning in open language models. arXiv preprint arXiv:2402.03300, 2024.</span></div>
+<div class="reference-entry" id="ref-SXZ+26"><span class="ref-key">[SXZ+26]</span><span>Hejian Sang, Yuanda Xu, Zhengze Zhou, Ran He, Zhipeng Wang, and Jiachen Sun. Crisp: Compressed reasoning via iterative self-policy distillation. arXiv preprint arXiv:2603.05433, 2026.</span></div>
+<div class="reference-entry" id="ref-WCJ+26"><span class="ref-key">[WCJ+26]</span><span>Yinjie Wang, Xuyang Chen, Xiaolong Jin, Mengdi Wang, and Ling Yang. Openclawrl: Train any agent simply by talking. arXiv preprint arXiv:2603.10165, 2026.</span></div>
+<div class="reference-entry" id="ref-WCL+26"><span class="ref-key">[WCL+26]</span><span>Xun Wang, Ruishuo Chen, Zhuoran Li, Yu Chen, and Longbo Huang. When context returns: Toward robust internalization in on-policy distillation. arXiv preprint arXiv:2606.11627, 2026.</span></div>
+<div class="reference-entry" id="ref-Wil92"><span class="ref-key">[Wil92]</span><span>Ronald J Williams. Simple statistical gradient-following algorithms for connectionist reinforcement learning. Machine learning, 1992.</span></div>
+<div class="reference-entry" id="ref-WWX25"><span class="ref-key">[WWX25]</span><span>Sai Wang, Yu Wu, and Zhongwen Xu. Cogito, ergo ludo: An agent that learns to play by reasoning and planning. arXiv preprint arXiv:2509.25052, 2025.</span></div>
+<div class="reference-entry" id="ref-WWX+26"><span class="ref-key">[WWX+26]</span><span>Hao Wang, Guozhi Wang, Han Xiao, Yufeng Zhou, Yue Pan, Jichao Wang, Ke Xu, Yafei Wen, Xiaohu Ruan, Xiaoxin Chen, et al. Skill-sd: Skill-conditioned selfdistillation for multi-turn llm agents. arXiv preprint arXiv:2604.10674, 2026.</span></div>
+<div class="reference-entry" id="ref-WZS+26"><span class="ref-key">[WZS+26]</span><span>Jiaqi Wang, Wenhao Zhang, Weijie Shi, Yaliang Li, and James Cheng. Tcod: Exploring temporal curriculum in on-policy distillation for multi-turn autonomous agents. arXiv preprint arXiv:2604.24005, 2026.</span></div>
+<div class="reference-entry" id="ref-XSZ+26"><span class="ref-key">[XSZ+26]</span><span>Yuanda Xu, Hejian Sang, Zhengze Zhou, Ran He, and Zhipeng Wang. Paced: Distillation and on-policy self-distillation at the frontier of student competence. arXiv preprint arXiv:2603.11178, 2026.</span></div>
+<div class="reference-entry" id="ref-YBB+24"><span class="ref-key">[YBB+24]</span><span>Mert Yuksekgonul, Federico Bianchi, Joseph Boen, Sheng Liu, Zhi Huang, Carlos Guestrin, and James Zou. Textgrad: Automatic&quot; differentiation&quot; via text. arXiv preprint arXiv:2406.07496, 2024.</span></div>
+<div class="reference-entry" id="ref-YDD+26"><span class="ref-key">[YDD+26]</span><span>Tianzhu Ye, Li Dong, Qingxiu Dong, Xun Wu, Shaohan Huang, and Furu Wei. Online experiential learning for language models. arXiv preprint arXiv:2603.16856, 2026.</span></div>
+<div class="reference-entry" id="ref-YDW+26"><span class="ref-key">[YDW+26]</span><span>Tianzhu Ye, Li Dong, Xun Wu, Shaohan Huang, and Furu Wei. On-policy context distillation for language models. arXiv preprint arXiv:2602.12275, 2026.</span></div>
+<div class="reference-entry" id="ref-YLX+26"><span class="ref-key">[YLX+26]</span><span>Wenkai Yang, Weijie Liu, Ruobing Xie, Kai Yang, Saiyong Yang, and Yankai Lin. Learning beyond teacher: Generalized on-policy distillation with reward extrapolation. arXiv preprint arXiv:2602.12125, 2026.</span></div>
+<div class="reference-entry" id="ref-YLY+25"><span class="ref-key">[YLY+25]</span><span>An Yang, Anfeng Li, Baosong Yang, Beichen Zhang, Binyuan Hui, Bo Zheng, Bowen Yu, Chang Gao, Chengen Huang, Chenxu Lv, et al. Qwen3 technical report. arXiv preprint arXiv:2505.09388, 2025.</span></div>
+<div class="reference-entry" id="ref-YQS+26"><span class="ref-key">[YQS+26]</span><span>Chenxu Yang, Chuanyu Qin, Qingyi Si, Minghui Chen, Naibin Gu, Dingyu Yao, Zheng Lin, Weiping Wang, Jiaqi Wang, and Nan Duan. Self-distilled rlvr. arXiv preprint arXiv:2604.03128, 2026.</span></div>
+<div class="reference-entry" id="ref-YWL+26"><span class="ref-key">[YWL+26]</span><span>Shuo Yang, Jinyang Wu, Zhengxi Lu, Yuhao Shen, Fan Zhang, Lang Feng, Shuai Zhang, Haoran Luo, Zheng Lian, Zhengqi Wen, et al. Opid: On-policy skill distillation for agentic reinforcement learning. arXiv preprint arXiv:2606.26790, 2026.</span></div>
+<div class="reference-entry" id="ref-ZBZ+26"><span class="ref-key">[ZBZ+26]</span><span>Ruixiang Zhang, Richard He Bai, Huangjie Zheng, Navdeep Jaitly, Ronan Collobert, and Yizhe Zhang. Embarrassingly simple self-distillation improves code generation. arXiv preprint arXiv:2604.01193, 2026.</span></div>
+<div class="reference-entry" id="ref-ZCL+25"><span class="ref-key">[ZCL+25]</span><span>Kai Zhang, Xiangchao Chen, Bo Liu, Tianci Xue, Zeyi Liao, Zhihan Liu, Xiyao Wang, Yuting Ning, Zhaorun Chen, Xiaohan Fu, et al. Agent learning via early experience. arXiv preprint arXiv:2510.08558, 2025.</span></div>
+<div class="reference-entry" id="ref-ZCS+23"><span class="ref-key">[ZCS+23]</span><span>Lianmin Zheng, Wei-Lin Chiang, Ying Sheng, Siyuan Zhuang, Zhanghao Wu, Yonghao Zhuang, Zi Lin, Zhuohan Li, Dacheng Li, Eric Xing, et al. Judging llm-as-a-judge with mt-bench and chatbot arena. Advances in neural information processing systems, 36:46595–46623, 2023.</span></div>
+<div class="reference-entry" id="ref-ZDP+26"><span class="ref-key">[ZDP+26]</span><span>Xinsen Zhang, Zhenkai Ding, Tianjun Pan, Run Yang, Chun Kang, Xue Xiong, and Jingnan Gu. Opsdl: On-policy self-distillation for long-context language models. arXiv preprint arXiv:2604.17535, 2026.</span></div>
+<div class="reference-entry" id="ref-ZHX+24"><span class="ref-key">[ZHX+24]</span><span>Andrew Zhao, Daniel Huang, Quentin Xu, Matthieu Lin, Yong-Jin Liu, and Gao Huang. Expel: Llm agents are experiential learners. In Proceedings of the AAAI Conference on Artificial Intelligence, volume 38, pages 19632–19642, 2024.</span></div>
+<div class="reference-entry" id="ref-ZLM+23"><span class="ref-key">[ZLM+23]</span><span>Jeffrey Zhou, Tianjian Lu, Swaroop Mishra, Siddhartha Brahma, Sujoy Basu, Yi Luan, Denny Zhou, and Le Hou. Instruction-following evaluation for large language models. arXiv preprint arXiv:2311.07911, 2023.</span></div>
+<div class="reference-entry" id="ref-ZRH+24"><span class="ref-key">[ZRH+24]</span><span>Wenting Zhao, Xiang Ren, Jack Hessel, Claire Cardie, Yejin Choi, and Yuntian Deng. Wildchat: 1m chatgpt interaction logs in the wild. In The Twelfth International Conference on Learning Representations, 2024.</span></div>
+<div class="reference-entry" id="ref-ZXL+26"><span class="ref-key">[ZXL+26]</span><span>Siyan Zhao, Zhihui Xie, Mengchen Liu, Jing Huang, Guan Pang, Feiyu Chen, and Aditya Grover. Self-distilled reasoner: On-policy self-distillation for large language models, 2026.</span></div>
+<div class="reference-entry" id="ref-ZZS+25"><span class="ref-key">[ZZS+25]</span><span>Xiaoying Zhang, Yipeng Zhang, Hao Sun, Kaituo Feng, Chaochao Lu, Chao Yang, and Helen Meng. Critique-grpo: Advancing llm reasoning with natural language and numerical feedback. arXiv preprint arXiv:2506.03106, 2025.</span></div>
+<div class="reference-entry" id="ref-ZZS+26"><span class="ref-key">[ZZS+26]</span><span>Qiyong Zhong, Mao Zheng, Mingyang Song, Xin Lin, Jie Sun, Houcheng Jiang, Xiang Wang, and Junfeng Fang. Sod: Step-wise on-policy distillation for small language model agents. arXiv preprint arXiv:2605.07725, 2026.</span></div>
+          </div>
+        </details>
+
+        <details id="appendix" class="major-details">
+          <summary>付録A　実験の詳細</summary>
+          <div class="details-body">
+            <section id="appA1">
+              <h2 class="section-heading"><span class="num">A.1</span>プロンプトテンプレート <span class="page-tag">原文 pp.15–16</span></h2>
+              <p>ELでは、LLM-as-a-Coach <em>M</em> はRLと同じ入力を受け取るが、さらに移転可能な経験知を蒸留するよう指示される。図5のテンプレートを使用し、<code>&lt;experience&gt;</code> タグ内のテキストを経験知として抽出する。</p>
+              <pre class="prompt-template">あなたは専門の評価者です。ユーザーのプロンプト、生成された応答、品質ルーブリックの一覧が与えられます。応答がルーブリックをどの程度満たすかに基づき、応答全体の品質を1～10点で評価してください。
+
+最終点を決める際は、すべてのルーブリックを総合的に考慮してください。複数のルーブリックに違反する応答には低い点数を、すべてを満たす応答には高い点数を付けてください。
+
+&lt;prompt&gt;
+{instruction}
+&lt;/prompt&gt;
+&lt;response&gt;
+{response}
+&lt;/response&gt;
+&lt;rubrics&gt;
+{rubric_list_string}
+&lt;/rubrics&gt;
+
+最初に、各ルーブリック項目に照らして応答を分析し、各基準をどの程度満たしているか、または満たしていないかを論じてください。次に、最終点を1～10の整数として、&lt;score&gt; と &lt;/score&gt; タグで囲んで出力してください。
+
+点数の後に、分析を移転可能な経験知へ蒸留してください。これは、将来の類似タスクへの応答改善に役立つ、一般的・高水準・広く適用できる洞察です。この応答だけに固有の詳細ではなく、再利用可能な戦略とパターンに焦点を当ててください。この知識を &lt;experience&gt; と &lt;/experience&gt; タグで囲んで出力してください。
+
+出力末尾の例：
+&lt;score&gt; 1～10の整数点 &lt;/score&gt;
+&lt;experience&gt;
+経験知...
+&lt;/experience&gt;
+
+評価：</pre>
+              <p class="template-caption"><strong>図5：</strong>ELの知識抽出プロンプト。<code>&lt;experience&gt;</code> タグ内を経験知 <em>e</em> として抽出する。</p>
+              <p>抽出した経験知は、図6のテンプレートを使って教師モデルへの文脈として前置する。</p>
+              <pre class="prompt-template">以下に経験知を示します：
+&lt;experience&gt;
+{experience}
+&lt;/experience&gt;
+
+上記の経験知を踏まえ、次の問題を解いてください：
+{prompt}</pre>
+              <p class="template-caption"><strong>図6：</strong>教師モデルを経験知で条件付けるためのプロンプトテンプレート。</p>
+              <p>RLでは、LLM-as-a-Judge <em>M</em> が各オンポリシー応答をルーブリックに照らして評価し、スカラー点数を生成する。図7のテンプレートを使う。</p>
+              <pre class="prompt-template">あなたは専門の評価者です。ユーザーのプロンプト、生成された応答、品質ルーブリックの一覧が与えられます。応答がルーブリックをどの程度満たすかに基づき、応答全体の品質を1～10点で評価してください。
+
+最終点を決める際は、すべてのルーブリックを総合的に考慮してください。複数のルーブリックに違反する応答には低い点数を、すべてを満たす応答には高い点数を付けてください。
+
+&lt;prompt&gt;
+{instruction}
+&lt;/prompt&gt;
+&lt;response&gt;
+{response}
+&lt;/response&gt;
+&lt;rubrics&gt;
+{rubric_list_string}
+&lt;/rubrics&gt;
+
+最初に、各ルーブリック項目に照らして応答を分析し、各基準をどの程度満たしているか、または満たしていないかを論じてください。次に、最終点を1～10の整数として、&lt;score&gt; と &lt;/score&gt; タグで囲んで出力してください。
+
+出力末尾の例：
+&lt;score&gt; 1～10の整数点 &lt;/score&gt;
+
+評価：</pre>
+              <p class="template-caption"><strong>図7：</strong>RLのルーブリック採点プロンプト。<code>&lt;score&gt;</code> タグから抽出した整数点をスカラー報酬として使う。</p>
+            </section>
+
+            <section id="appA2">
+              <h2 class="section-heading"><span class="num">A.2</span>アブレーション用プロンプト <span class="page-tag">原文 pp.16–18</span></h2>
+              <p>表4の各アブレーション構成には、<em>M</em> へ送る採点プロンプトと、教師を条件付けるための文脈テンプレートがある。</p>
+              <h3>批評全文（Full Critique）</h3>
+              <p>採点プロンプトはRL（図7）と同じで、<em>M</em> の採点出力全体を教師文脈へ前置する。</p>
+              <pre class="prompt-template">採点プロンプト：図7と同じ。
+
+文脈テンプレート：
+以下は、この問題に対する前回の試行の評価です：
+[採点モデルによる評価]
+{scoring_output}
+
+上記の評価を踏まえ、改善して問題を解いてください：
+{prompt}</pre>
+              <p class="template-caption"><strong>図8：</strong>項目別分析と点数を含む <em>M</em> のテキスト出力全文を、教師文脈として使用する。</p>
+              <h3>ルーブリックのみ（Rubrics Only）</h3>
+              <pre class="prompt-template">採点プロンプト：なし
+
+文脈テンプレート：
+以下は、応答の評価に使われる品質ルーブリックです：
+&lt;rubrics&gt;
+{rubric_list_string}
+&lt;/rubrics&gt;
+
+上記の評価基準を念頭に置いて、次の問題を解いてください：
+{prompt}</pre>
+              <p class="template-caption"><strong>図9：</strong>採点プロンプトは使わず、応答固有のフィードバックなしにルーブリックだけを文脈として与える。</p>
+              <h3>多肢選択（Multiple-Choice）</h3>
+              <p>採点プロンプトの末尾に、9種類の事前定義済み改善指示から1つを選ぶ命令を追加する。<em>M</em> がどれも出力しなければ経験知を空とし、合計10種類の文脈になる。文脈テンプレートは既定EL（図6）と同じで、選んだ指示を経験知として入れる。</p>
+              <pre class="prompt-template">点数の後に、応答で最も改善すべき主要領域に最もよく当てはまる、以下9つの改善指示から正確に1つを選んでください。選択結果を &lt;experience&gt; と &lt;/experience&gt; タグで囲んで出力してください。以下の英語文言を変更せず、そのまま出力しなければなりません。
+
+1. Improve factual accuracy and correctness of claims.
+   （事実の正確さと、主張の正しさを改善する。）
+2. Follow the user’s instructions and constraints more precisely.
+   （ユーザーの指示と制約へ、より厳密に従う。）
+3. Provide more depth, detail, and thorough coverage of the topic.
+   （主題を、より深く、詳しく、徹底的に扱う。）
+4. Improve clarity, organization, and logical flow of the response.
+   （応答の明瞭さ、構成、論理の流れを改善する。）
+5. Adopt a more appropriate tone, style, or register for the context.
+   （文脈により適した調子、文体、言語使用域を採用する。）
+6. Be more concise and eliminate unnecessary verbosity or repetition.
+   （より簡潔にし、不要な冗長さや反復を除く。）
+7. Enhance creativity, originality, or engagement in the response.
+   （応答の創造性、独自性、魅力を高める。）
+8. Improve safety, sensitivity, and avoidance of harmful content.
+   （安全性と配慮を高め、有害な内容を避ける。）
+9. No significant improvement needed. Maintain current quality.
+   （大きな改善は不要。現在の品質を維持する。）
+
+出力末尾の例：
+&lt;score&gt; 1～10の整数点 &lt;/score&gt;
+&lt;experience&gt;
+SELECTED_IMPROVEMENT
+&lt;/experience&gt;
+
+評価：</pre>
+              <p class="template-caption"><strong>図10：</strong>多肢選択アブレーション。選択した指示を <code>&lt;experience&gt;</code> タグから抽出し、既定ELと同じ文脈テンプレートへ入れる。</p>
+            </section>
+
+            <section id="appA3">
+              <h2 class="section-heading"><span class="num">A.3</span>ルーブリック例 <span class="page-tag">原文 p.19</span></h2>
+              <p>各訓練プロンプトには、GPT-4oで生成した評価ルーブリックを対応付ける。各項目には、名称、説明、重要度を示す重みがある。以下は異なるタスク型から選んだ3例である。</p>
+              <div class="cards">
+                <div class="prompt-card">
+                  <h4>例1：オープンエンドな分析質問</h4>
+                  <p><strong>プロンプト：</strong>現在の世界情勢を踏まえ、人類が直面している最も差し迫った問題は何ですか。また、それらへ対処するために、どのような解決策や行動が考えられますか。推論を説明し、主張を裏付ける証拠または例を示してください。</p>
+                  <ul class="rubric-list">
+                    <li><strong>問題の包括的な網羅</strong> <span class="weight">（重み5）</span>：複数の差し迫った世界的問題を特定し、論じる。</li>
+                    <li><strong>解決策の提案</strong> <span class="weight">（重み4）</span>：取り上げた問題について、実行可能な解決策または行動を提示する。</li>
+                    <li><strong>証拠と例</strong> <span class="weight">（重み4）</span>：主張と解決策を裏付ける証拠または例を示す。</li>
+                    <li><strong>推論の明瞭さ</strong> <span class="weight">（重み4）</span>：問題と解決策に関する推論を明確かつ論理的に説明する。</li>
+                    <li><strong>事実の正確さ</strong> <span class="weight">（重み5）</span>：すべての事実主張が正確で検証可能である。</li>
+                    <li><strong>共感的な調子</strong> <span class="weight">（重み2）</span>：全体を通して共感と理解のある調子を保つ。</li>
+                  </ul>
+                </div>
+                <div class="prompt-card">
+                  <h4>例2：技術的なSQL課題</h4>
+                  <p><strong>プロンプト：</strong>次の表から、Sean Maguireという役が配役されている映画の監督を求めるSQLクエリを書いてください。監督の名、姓、映画タイトルを返してください。</p>
+                  <ul class="rubric-list">
+                    <li><strong>SQL構文の正しさ</strong> <span class="weight">（重み5）</span>：構文エラーのないSQLクエリを提示する。</li>
+                    <li><strong>表名・列名の正しい使用</strong> <span class="weight">（重み5）</span>：プロンプトで指定または示唆された表名と列名を正しく使う。</li>
+                    <li><strong>クエリの完全性</strong> <span class="weight">（重み4）</span>：指定役が登場する映画の監督を正しく求めるために必要な結合と条件をすべて含む。</li>
+                    <li><strong>結果の明瞭さ</strong> <span class="weight">（重み4）</span>：要求どおり、監督の名、姓、映画タイトルを明確に返す。</li>
+                    <li><strong>クエリ効率</strong> <span class="weight">（重み1）</span>：適切な索引や絞り込みを使い、可能な範囲で効率的にする。</li>
+                  </ul>
+                </div>
+                <div class="prompt-card">
+                  <h4>例3：レシピの倍率計算</h4>
+                  <p><strong>プロンプト：</strong>150人分のケータリングを行います。1人分の提供量は大さじ2杯です。これから12人分になるレシピを渡すので、150人分にするための適切な比率を示してください。</p>
+                  <ul class="rubric-list">
+                    <li><strong>数学的正確さ</strong> <span class="weight">（重み5）</span>：12人分の元レシピから150人分の材料比率を正しく計算する。</li>
+                    <li><strong>説明の明瞭さ</strong> <span class="weight">（重み4）</span>：レシピ量を調整する手順を明確かつ曖昧さなく示す。</li>
+                    <li><strong>レシピの完全性</strong> <span class="weight">（重み3）</span>：元レシピの全材料を調整後のレシピにも含める。</li>
+                    <li><strong>書式</strong> <span class="weight">（重み2）</span>：整理され、読みやすい形式で提示する。</li>
+                    <li class="pitfall"><strong>落とし穴：倍率の誤り</strong> <span class="weight">（重み−2）</span>：150人分への倍率に触れない、または誤った倍率を用いる。</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="template-caption"><strong>図11：</strong>訓練集合のルーブリック例。上から、オープンエンドな分析質問、技術的なコーディング課題、負の重みを持つ落とし穴項目を含むレシピ倍率課題。</p>
+            </section>
+
+            <section id="appA4">
+              <h2 class="section-heading"><span class="num">A.4</span>経験知の例 <span class="page-tag">原文 p.20</span></h2>
+              <p>以下は、訓練中に LLM-as-a-Coach が抽出した3種類の経験知である。それぞれ異なる種類のタスクに対応し、個別事例の修正ではなく移転可能な戦略を捉えている。</p>
+              <div class="cards">
+                <div class="experience-card">
+                  <h4>例1：物語・対話応答</h4>
+                  <p>主な戦略：</p>
+                  <ol>
+                    <li><strong>感情の流れを維持する：</strong>人物の感情の進行を尊重し、弱さがゆっくりと好奇心や慎重な希望へ移るようにする。これにより、信じられて引き込まれる人物体験が生まれる。</li>
+                    <li><strong>プロンプトの文脈を尊重する：</strong>与えられた対話と場面に密接に沿い、無関係な情報や脱線を持ち込まず、そのやり取りへ集中する。</li>
+                    <li><strong>明確で理解しやすい言葉を使う：</strong>専門語や過度に複雑な描写を避け、簡潔で会話的な言葉を使う。世界を没入的でありながら理解しやすくする。</li>
+                    <li><strong>安全で支援的な調子を保つ：</strong>苦痛へ応答し、安心を与える、慰めと支援のある調子を一貫して用いる。人物の感情的ニーズに合致させる。</li>
+                    <li><strong>世界設定の情報量を均衡させる：</strong>人物を圧倒しない範囲で、舞台の詳細を十分に示す。環境を、場面に自然になじむ地に足のついた形で導入する。</li>
+                    <li><strong>落とし穴を避ける：</strong>情報過多と誤解を招く方向付けの双方を避け、物語を安全で首尾一貫したものにする。</li>
+                  </ol>
+                  <p>これらの戦略は、人物と舞台に忠実でありながら、感情の真実味、明瞭さ、物語の一貫性を保つため、将来の応答にも適用できる。</p>
+                </div>
+                <div class="experience-card">
+                  <h4>例2：具体的な数値を含む事実質問</h4>
+                  <p>事実質問、特に具体的な測定値を含む質問へ答える際は、正確さと明瞭さを最優先すべきである。正確な数値を必ず確認し、不要な説明を加えず、ユーザーの質問へ直接答える。</p>
+                  <p>将来の応答を改善するには、事実データの精度と、質問へ正面から答えることに集中する。混乱を招く仮定や説明を避ける。追加文脈を示す場合は、中心的な質問から逸れず、理解を深める関連情報だけにする。事実データと説明内容を明確に分けて構成すると、可読性とユーザー満足度が高まる。</p>
+                </div>
+                <div class="experience-card">
+                  <h4>例3：技術レポート</h4>
+                  <p>高品質な技術レポートを作るには、対象分野を十分に理解し、内容を論理的で整理された構造へ配置することが不可欠である。主要な論点をすべて扱う包括性を保ちながら、焦点と分析の深さを失わない。指定語数を守ることは、ユーザーの期待を満たし、十分な検討を示すうえで重要である。関連する技術的詳細と適切な用語を含めれば、深い理解を示せる。正しい文法と書式は、専門性と可読性を高める。最後に、正確で安全であり、技術標準に準拠した内容にすることで、誤情報を避け、想定読者に適したレポートになる。</p>
+                </div>
+              </div>
+              <p class="template-caption"><strong>図12：</strong>LLM-as-a-Coach が抽出した経験知の3例。いずれも個別応答だけの修正ではなく、再利用可能な戦略を捉えている。</p>
+            </section>
+
+            <section id="appA5">
+              <h2 class="section-heading"><span class="num">A.5</span>エンドツーエンドの例 <span class="page-tag">原文 p.21</span></h2>
+              <p>図13は、プロンプト、ルーブリック、方策のオンポリシー応答、LLM-as-a-Coach が抽出した経験知まで、ELパイプライン全体を示す。</p>
+              <div class="cards">
+                <div class="prompt-card">
+                  <h4>プロンプト</h4>
+                  <p>メンタルウェルネスアプリと利用者の関係は臨床的なものではなく、専門的な臨床サービスの代替でもないことを伝えるため、どのような免責文を掲載すればよいですか。</p>
+                </div>
+                <div class="rubric-card">
+                  <h4>ルーブリック</h4>
+                  <ul class="rubric-list">
+                    <li><strong>明示的な免責</strong> <span class="weight">（重み5）</span>：アプリが専門的な臨床サービスの代替ではないことを明確に述べる。</li>
+                    <li><strong>非臨床的な関係</strong> <span class="weight">（重み4）</span>：アプリと利用者の関係が臨床的なものではないと明記する。</li>
+                    <li><strong>専門家への相談を促す注意</strong> <span class="weight">（重み5）</span>：メンタルヘルス上の問題について、専門家の臨床的助言を求めるよう勧める。</li>
+                    <li><strong>法的責任の限定</strong> <span class="weight">（重み4）</span>：アプリの役割と範囲を明確にし、法的責任を限定する。</li>
+                    <li><strong>明瞭な言葉</strong> <span class="weight">（重み3）</span>：理解しやすい言葉で免責事項を伝える。</li>
+                    <li class="pitfall"><strong>落とし穴：専門家の関与なしの具体的助言</strong> <span class="weight">（重み−2）</span>：専門家の判断なしに特定の治療や療法を勧める。</li>
+                  </ul>
+                </div>
+                <div class="response-box">
+                  <h4>オンポリシー応答（抜粋）</h4>
+                  <p>メンタルウェルネスアプリに掲載できる、専門的で明瞭な免責文の例を示します。</p>
+                  <p><strong>免責事項</strong><br>[アプリ名] が提供する情報とサービスは、一般的な情報提供および教育のみを目的としており、専門的なメンタルヘルスケアに代わるものではありません。本アプリの利用によって、利用者との間に臨床的または治療的な関係が成立することはありません。[アプリ名] は、資格を持つメンタルヘルス専門家による助言、診断、治療の代替ではありません。メンタルヘルスに関する懸念がある場合は、免許を持つ専門家へ相談することを推奨します。[アプリ名] は医学的、心理学的、臨床的サービスを提供しません…</p>
+                  <p class="meta">［原文では全195語］</p>
+                </div>
+                <div class="experience-card">
+                  <h4>抽出された経験知</h4>
+                  <ol>
+                    <li><strong>機能より先に制約を述べる：</strong>免責文や境界設定文を書く際は、「成立させない」「代替ではない」などの明示的な否定から始め、サービスの範囲を誤解されないようにする。</li>
+                    <li><strong>各制約に建設的な案内を組み合わせる：</strong>サービスが提供しないものを述べるたびに、「資格を持つ専門家へ相談する」など、そのサービスをどこで受けられるかを示す。利用者を行き先のない状態にしない。</li>
+                    <li><strong>信頼性のため標準的な法的表現を使う：</strong>「一般的な情報提供のみを目的とする」「専門的な関係を構成しない」など、広く認識された表現は、独自の法務確認なしでも権威と完全性を伝えやすい。</li>
+                    <li><strong>中立で理解しやすい調子を保つ：</strong>免責文は誰でも理解できる平易な言葉で書き、軽すぎる表現と難解な法律用語の双方を避ける。</li>
+                    <li><strong>最後に調整可能性を示す：</strong>ユーザーの正確な利用環境が不明なら、異なるプラットフォームや調子に合わせて調整できる旨を最後に示し、文字どおりの依頼を超えた有用性を提供する。</li>
+                  </ol>
+                </div>
+              </div>
+              <p class="template-caption"><strong>図13：</strong>ELパイプラインのエンドツーエンド例。プロンプトとルーブリックから方策が応答を生成し、LLM-as-a-Coach が移転可能な経験知を抽出する。この経験知を教師モデルの文脈へ前置し、オンポリシー文脈蒸留を行う。</p>
+            </section>
+          </div>
+        </details>
+
+        <div class="footnotes">
+          <ol>
+            <li><sup>＊</sup> Tianzhu Ye と Li Dong は同等貢献。</li>
+            <li>本論文は Experiential Learning シリーズの第III部。第I部：<em>On-Policy Context Distillation for Language Models</em>。第II部：<em>Online Experiential Learning for Language Models</em>。</li>
+          </ol>
+        </div>
+      </div>
+      <footer class="footer">原論文：Tianzhu Ye et al., “LLM-as-a-Coach: Experiential Learning for Non-Verifiable Tasks,” arXiv:2607.18110v1, 20 Jul 2026.　本HTMLは読みやすさを目的とした日本語訳であり、引用・検証時には原論文も参照してください。</footer>
+    </article>
+  </div>
+</div>
+<button class="backtop" type="button" aria-label="ページ先頭へ" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+(() => {
+  const root = document.documentElement;
+  const min = 14, max = 23;
+  const storage = {
+    get(key) { try { return localStorage.getItem(key); } catch (_) { return null; } },
+    set(key, value) { try { localStorage.setItem(key, value); } catch (_) {} }
+  };
+  const savedTheme = storage.get('el-theme');
+  if (savedTheme) root.dataset.theme = savedTheme;
+  const savedSize = Number(storage.get('el-font-size'));
+  if (savedSize >= min && savedSize <= max) root.style.setProperty('--font-size', savedSize + 'px');
+
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    storage.set('el-theme', next);
+  });
+  const changeFont = delta => {
+    const current = parseFloat(getComputedStyle(root).getPropertyValue('--font-size')) || 17;
+    const next = Math.min(max, Math.max(min, current + delta));
+    root.style.setProperty('--font-size', next + 'px');
+    storage.set('el-font-size', String(next));
+  };
+  document.getElementById('fontDown').addEventListener('click', () => changeFont(-1));
+  document.getElementById('fontUp').addEventListener('click', () => changeFont(1));
+  let expanded = false;
+  document.getElementById('detailsToggle').addEventListener('click', () => {
+    expanded = !expanded;
+    document.querySelectorAll('details.major-details').forEach(d => d.open = expanded);
+  });
+
+  const navLinks = [...document.querySelectorAll('.toc a[href^="#"]')];
+  const targets = navLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries.filter(e => e.isIntersecting).sort((a,b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+      if (!visible) return;
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + visible.target.id));
+    }, {rootMargin: '-18% 0px -72% 0px', threshold: 0});
+    targets.forEach(t => observer.observe(t));
+  }
+})();
+</script>
+</body>
+</html>
