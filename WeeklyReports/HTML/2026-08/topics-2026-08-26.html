@@ -1,0 +1,1355 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>X ピックアップ｜2026.08.26</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#F2EDE0;
+    --paper-2:#EAE3D2;
+    --card:#FBF8EF;
+    --ink:#14110B;
+    --ink-2:#3D372C;
+    --ink-3:#6E6552;
+    --ink-4:#9E9582;
+    --rule:rgba(20,17,11,0.10);
+    --rule-strong:rgba(20,17,11,0.22);
+    --accent:#B43820;
+    --accent-soft:rgba(180,56,32,0.10);
+
+    --font-serif:'Shippori Mincho B1', 'Hiragino Mincho ProN','Yu Mincho',serif;
+    --font-sans:'Zen Kaku Gothic New','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;
+    --font-mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+    --gap:28px;
+    --post-pad:22px 26px;
+  }
+
+  /* themes */
+  html[data-theme="mono"]{
+    --paper:#F4F4F2;
+    --paper-2:#EBEBE7;
+    --card:#FFFFFF;
+    --ink:#0C0C0C;
+    --ink-2:#2D2D2D;
+    --ink-3:#5C5C5C;
+    --ink-4:#9A9A9A;
+    --rule:rgba(0,0,0,0.10);
+    --rule-strong:rgba(0,0,0,0.22);
+    --accent:#0C0C0C;
+    --accent-soft:rgba(0,0,0,0.06);
+  }
+  html[data-theme="dark"]{
+    --paper:#15140F;
+    --paper-2:#1D1B16;
+    --card:#1F1D17;
+    --ink:#F1ECDC;
+    --ink-2:#D7D0BD;
+    --ink-3:#A39A82;
+    --ink-4:#736B57;
+    --rule:rgba(241,236,220,0.10);
+    --rule-strong:rgba(241,236,220,0.22);
+    --accent:#E37A5F;
+    --accent-soft:rgba(227,122,95,0.14);
+  }
+
+  html[data-density="compact"]{
+    --gap:18px;
+    --post-pad:16px 20px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-sans);
+    font-feature-settings:"palt" 1;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.7;
+    font-size:15.5px;
+    letter-spacing:0.01em;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline;text-underline-offset:3px}
+  code{font-family:var(--font-mono);font-size:0.88em;background:var(--paper-2);padding:0.08em 0.4em;border-radius:4px;color:var(--ink-2)}
+
+  /* ── top bar ─────────────────────────── */
+  .topbar{
+    position:sticky; top:0; z-index:30;
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-bottom:1px solid var(--rule);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto;
+    padding:10px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:24px;
+    font-size:12.5px; color:var(--ink-3);
+    letter-spacing:0.08em;
+  }
+  .topbar .brand{
+    display:flex; align-items:center; gap:10px;
+    color:var(--ink); font-weight:700;
+  }
+  .topbar .brand .mark{
+    width:22px; height:22px; border-radius:6px;
+    background:var(--ink); color:var(--paper);
+    display:grid; place-items:center;
+    font-family:var(--font-serif); font-weight:700;
+    font-size:13px; line-height:1;
+  }
+  .topbar nav{display:flex; gap:18px; align-items:center}
+  .topbar nav a{color:var(--ink-3)}
+  .topbar nav a:hover{color:var(--ink); text-decoration:none}
+  .theme-switch{
+    display:inline-flex; align-items:center;
+    border:1px solid var(--rule); border-radius:999px;
+    padding:2px; gap:0;
+    background:var(--paper-2);
+  }
+  .theme-switch button{
+    appearance:none; border:none; background:transparent;
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:0.12em;
+    color:var(--ink-3);
+    padding:5px 10px;
+    border-radius:999px;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:background .15s, color .15s;
+  }
+  .theme-switch button:hover{ color:var(--ink) }
+  .theme-switch button[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+
+  /* ── page shell ──────────────────────── */
+  .page{
+    max-width:1180px; margin:0 auto;
+    padding:48px 28px 120px;
+  }
+
+  /* ── masthead ────────────────────────── */
+  .masthead{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    align-items:end;
+    gap:40px;
+    padding-bottom:36px;
+    border-bottom:1px solid var(--rule-strong);
+    margin-bottom:36px;
+  }
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:11.5px; letter-spacing:0.22em;
+    color:var(--accent);
+    text-transform:uppercase;
+    margin:0 0 18px;
+  }
+  .eyebrow::before{
+    content:""; display:inline-block; width:22px; height:1px;
+    background:var(--accent); vertical-align:middle;
+    margin-right:10px; transform:translateY(-2px);
+  }
+  h1.title{
+    font-family:var(--font-serif);
+    font-weight:700;
+    font-size:64px;
+    line-height:1.08;
+    letter-spacing:0.005em;
+    margin:0 0 18px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  h1.title em{
+    font-style:normal;
+    color:var(--ink-3);
+    font-weight:500;
+  }
+  .lede{
+    max-width:62ch;
+    color:var(--ink-2);
+    font-size:16.5px;
+    line-height:1.75;
+    margin:0;
+  }
+  .masthead .meta-card{
+    border:1px solid var(--rule-strong);
+    border-radius:2px;
+    padding:18px 22px;
+    min-width:240px;
+    background:var(--paper-2);
+  }
+  .masthead .meta-card dl{
+    margin:0; display:grid;
+    grid-template-columns: auto 1fr;
+    gap:4px 16px;
+    font-size:13px;
+  }
+  .masthead .meta-card dt{
+    color:var(--ink-3);
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    align-self:center;
+  }
+  .masthead .meta-card dd{
+    margin:0;
+    color:var(--ink);
+    font-weight:500;
+    font-feature-settings:"tnum" 1;
+  }
+  .masthead .meta-card dd b{
+    font-family:var(--font-serif);
+    font-weight:700;
+    font-size:22px;
+    margin-right:4px;
+  }
+
+  /* ── profile strip ───────────────────── */
+  .profile{
+    margin:0 0 44px;
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    align-items:start;
+  }
+  .profile h2{
+    font-family:var(--font-serif);
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+    line-height:1.4;
+  }
+  .profile h2 .ko{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .profile ul.tags{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-wrap:wrap; gap:8px;
+  }
+  .profile ul.tags li{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-left:3px solid var(--ink-2);
+    padding:8px 14px 8px 12px;
+    font-size:13.5px;
+    line-height:1.5;
+    color:var(--ink-2);
+    border-radius:2px;
+  }
+  .profile ul.tags li b{
+    color:var(--ink); font-weight:700;
+  }
+  .profile ul.tags li small{
+    color:var(--ink-3); font-size:12px; margin-left:6px;
+  }
+  html[data-show-profile="false"] .profile{display:none}
+
+  /* ── filter bar ──────────────────────── */
+  .filter-bar{
+    position:sticky;
+    top:43px; z-index:25;
+    margin:0 -28px 36px;
+    padding:14px 28px;
+    background:color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    display:flex; gap:6px; align-items:center;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .filter-bar::-webkit-scrollbar{display:none}
+  .filter-bar .label{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    text-transform:uppercase;
+    margin-right:8px;
+    white-space:nowrap;
+  }
+  .chip{
+    appearance:none; border:none; background:transparent;
+    font-family:var(--font-sans);
+    font-size:13.5px;
+    color:var(--ink-2);
+    padding:7px 13px 7px 11px;
+    border-radius:999px;
+    display:inline-flex; align-items:center; gap:8px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background .15s, color .15s;
+    line-height:1.2;
+  }
+  .chip:hover{ background:var(--paper-2) }
+  .chip .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--c, var(--ink-3));
+    flex-shrink:0;
+  }
+  .chip .n{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--ink-3);
+    font-feature-settings:"tnum" 1;
+  }
+  .chip[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .chip[aria-pressed="true"] .n{ color:color-mix(in srgb, var(--paper) 70%, transparent) }
+  .chip[aria-pressed="true"] .dot{ box-shadow:0 0 0 2px var(--ink) }
+
+  /* ── feed / category blocks ──────────── */
+  .feed{ display:flex; flex-direction:column; gap:64px }
+  .cat{
+    scroll-margin-top:120px;
+  }
+  .cat-header{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    margin-bottom:24px;
+    align-items:start;
+  }
+  .cat-marker{
+    display:flex; flex-direction:column; gap:8px;
+    position:sticky; top:120px;
+  }
+  .cat-num{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    text-transform:uppercase;
+  }
+  .cat-num .dot{
+    display:inline-block; width:8px; height:8px; border-radius:50%;
+    background:var(--c); margin-right:8px; vertical-align:middle;
+    transform:translateY(-1px);
+  }
+  .cat-count{
+    font-family:var(--font-serif);
+    font-size:38px;
+    font-weight:700;
+    line-height:1; color:var(--ink);
+    font-feature-settings:"tnum" 1;
+  }
+  .cat-count small{
+    font-family:var(--font-sans);
+    font-size:13px; font-weight:500; color:var(--ink-3);
+    margin-left:6px;
+  }
+  .cat-title-block h3{
+    font-family:var(--font-serif);
+    font-size:30px;
+    font-weight:700;
+    line-height:1.25;
+    margin:0 0 10px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  .cat-intro{
+    color:var(--ink-2);
+    font-size:14.5px;
+    line-height:1.7;
+    margin:0;
+    max-width:60ch;
+  }
+
+  /* ── post card ───────────────────────── */
+  .posts{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+  }
+  .posts > .spacer{} /* gutter visualization */
+  .post-list{
+    display:flex; flex-direction:column; gap:var(--gap);
+  }
+  .post{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:var(--post-pad);
+    position:relative;
+    transition:border-color .15s, transform .15s;
+  }
+  .post:hover{ border-color:var(--rule-strong) }
+  .post::before{
+    content:""; position:absolute; left:0; top:14px; bottom:14px;
+    width:2px; background:var(--c, var(--ink-3));
+    border-radius:2px;
+    opacity:0.85;
+  }
+  .post-head{
+    display:flex; align-items:center; gap:12px;
+    margin-bottom:14px;
+  }
+  .avatar{
+    width:34px; height:34px; border-radius:50%;
+    background:var(--av, var(--ink-3)); color:#fff;
+    font-family:var(--font-serif);
+    font-weight:700; font-size:15px;
+    display:grid; place-items:center;
+    flex-shrink:0;
+    letter-spacing:0;
+  }
+  .post-head .who{ display:flex; flex-direction:column; gap:1px; min-width:0 }
+  .post-head .handle{
+    font-size:14px; font-weight:700; color:var(--ink);
+    text-decoration:none;
+  }
+  .post-head .handle:hover{ color:var(--accent); text-decoration:none }
+  .post-head .handle.unknown{ color:var(--ink-3); font-weight:500 }
+  .post-head .handle.estimated{ color:var(--ink-3); font-weight:500 }
+  .post-head .handle.estimated::after{
+    content:"推定"; font-family:var(--font-mono);
+    font-size:9.5px; letter-spacing:0.1em;
+    background:var(--paper-2); color:var(--ink-3);
+    padding:1px 6px; border-radius:3px;
+    margin-left:8px; vertical-align:middle;
+  }
+  .post-head time{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-3);
+    font-feature-settings:"tnum" 1;
+    letter-spacing:0.04em;
+  }
+  .post-head .src{
+    margin-left:auto;
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-3);
+    padding:5px 10px;
+    border:1px solid var(--rule);
+    border-radius:999px;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:color .15s, border-color .15s, background .15s;
+  }
+  .post-head .src:hover{
+    color:var(--ink); border-color:var(--rule-strong);
+    background:var(--paper-2);
+    text-decoration:none;
+  }
+  .post-head .src svg{ width:11px; height:11px }
+
+  .post-body{
+    font-size:15.5px;
+    line-height:1.85;
+    color:var(--ink);
+    white-space:pre-wrap;
+    word-wrap:break-word;
+  }
+  html[data-density="compact"] .post-body{ font-size:14.5px; line-height:1.7 }
+
+  .post-body .quoted{
+    display:block;
+    margin-top:14px;
+    padding:10px 14px;
+    border-left:2px solid var(--rule-strong);
+    background:var(--paper-2);
+    color:var(--ink-2);
+    font-size:13.5px;
+    line-height:1.75;
+    border-radius:0 3px 3px 0;
+  }
+  .post-body .quoted .from{
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:0.14em;
+    color:var(--ink-3); text-transform:uppercase;
+    display:block; margin-bottom:4px;
+  }
+  .post-body .translation{
+    display:block; margin-top:16px;
+    padding:12px 16px;
+    border-left:2px solid var(--accent);
+    background:var(--accent-soft);
+    color:var(--ink);
+    font-size:14.5px; line-height:1.85;
+    border-radius:0 3px 3px 0;
+  }
+  .post-body .translation .label{
+    font-family:var(--font-mono); font-size:10.5px;
+    letter-spacing:0.14em; color:var(--accent);
+    text-transform:uppercase; display:block;
+    margin-bottom:6px; font-weight:500;
+  }
+  .post-body ul{
+    margin:8px 0 0; padding-left:1.1em;
+  }
+  .post-body ul li{ margin:2px 0 }
+  .post-body a{ word-break:break-all }
+
+  /* hide filtered out */
+  .cat.hidden{ display:none }
+
+  /* ── footer notes ────────────────────── */
+  .notes{
+    margin-top:96px;
+    padding-top:36px;
+    border-top:1px solid var(--rule-strong);
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:36px;
+  }
+  .notes h2{
+    font-family:var(--font-serif);
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+  }
+  .notes h2 .ko{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .notes ul{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .notes li{
+    color:var(--ink-2);
+    font-size:13.5px;
+    line-height:1.75;
+    padding-left:22px;
+    position:relative;
+  }
+  .notes li::before{
+    content:"※"; position:absolute; left:0; top:0;
+    color:var(--ink-3); font-family:var(--font-serif);
+  }
+
+  /* ── colophon ────────────────────────── */
+  .colophon{
+    margin-top:72px;
+    padding-top:24px;
+    border-top:1px solid var(--rule);
+    display:flex; justify-content:space-between; align-items:baseline;
+    color:var(--ink-3); font-size:12px;
+    font-family:var(--font-mono);
+    letter-spacing:0.06em;
+  }
+
+  /* ── responsive ──────────────────────── */
+  @media (max-width: 900px){
+    .page{ padding:32px 18px 80px }
+    h1.title{ font-size:42px }
+    .masthead{ grid-template-columns:1fr; gap:24px; align-items:start }
+    .profile{ grid-template-columns:1fr; gap:14px }
+    .cat-header{ grid-template-columns:1fr; gap:8px }
+    .cat-marker{ position:static; flex-direction:row; align-items:baseline; gap:14px }
+    .posts{ grid-template-columns:1fr; gap:0 }
+    .notes{ grid-template-columns:1fr; gap:14px }
+    .filter-bar{ margin:0 -18px 24px; padding:12px 18px }
+    .cat-count{ font-size:28px }
+    .cat-title-block h3{ font-size:24px }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="mark">X</span>
+      <span>Pickup Digest</span>
+    </div>
+    <nav>
+      <a href="#feed">記事</a>
+      <a href="#profile">プロファイル</a>
+      <a href="#notes">注意</a>
+      <div class="theme-switch" role="radiogroup" aria-label="テーマ">
+        <button data-theme="paper" aria-pressed="true">Paper</button>
+        <button data-theme="mono" aria-pressed="false">Mono</button>
+        <button data-theme="dark" aria-pressed="false">Dark</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="page">
+
+  <section class="masthead">
+    <div>
+      <p class="eyebrow">AI / LLM Daily Pickup</p>
+      <h1 class="title">いま読むべき<br>X の AI 関連投稿。<em>2026.08.26</em></h1>
+      <p class="lede">最新の興味プロファイル（interest-profile-2026-08-06）に基づき、xAI <code>x_search</code> 経由で 8/26（JST）の範囲から収集した 21 件を、カテゴリ別に整理しました。本文は <code>xsearch --url</code> の verbatim のみを根拠にしています。</p>
+    </div>
+    <aside class="meta-card" aria-label="このダイジェストの概要">
+      <dl>
+        <dt>Posts</dt>     <dd><b>21</b>件</dd>
+        <dt>Categories</dt><dd><b>5</b>領域</dd>
+        <dt>Authors</dt>   <dd><b>18</b>アカウント</dd>
+        <dt>Source</dt>    <dd>xAI x_search</dd>
+        <dt>Window</dt>    <dd>8/26 00:00 – 8/27 09:00 JST</dd>
+      </dl>
+    </aside>
+  </section>
+
+  <section class="profile" id="profile">
+    <h2><span class="ko">Interest Profile</span>推定された<br>興味プロファイル</h2>
+    <ul class="tags">
+      <li><b>AI エージェントの運用設計</b><small>仕様駆動, 役割分業, ハーネス, skill 化, 理解負債</small></li>
+      <li><b>ベンチ懐疑・実タスク乖離</b><small>SWE-bench Pro 監査, working character, 性能低下報告</small></li>
+      <li><b>オープンモデル / ローカル / コスパ</b><small>Qwen3.8-Flash-Next, GLM-5.3-Flash, MoE active, $/性能</small></li>
+      <li><b>Anthropic 戦略・AI 地政学</b><small>$30T TAM, IPO, オープンウェイト比率, 輸出規制, 蒸留</small></li>
+      <li><b>医療・科学・日本産業</b><small>膵がん新薬, 帯状疱疹ワクチン, 高額療養費, 国産 LLM</small></li>
+      <li><b>表現の自由・社会論</b><small>国旗損壊罪, 生成 AI 規制法, 検閲</small></li>
+    </ul>
+  </section>
+
+  <nav class="filter-bar" id="filters" aria-label="カテゴリフィルタ">
+    <span class="label">Filter</span>
+    <button class="chip" data-filter="all" aria-pressed="true"><span class="dot" style="--c:#14110B"></span>すべて<span class="n">21</span></button>
+    <button class="chip" data-filter="devops" aria-pressed="false"><span class="dot" style="--c:#C8552B"></span>AI×開発・運用<span class="n">5</span></button>
+    <button class="chip" data-filter="bench" aria-pressed="false"><span class="dot" style="--c:#2B8C75"></span>ベンチ懐疑<span class="n">3</span></button>
+    <button class="chip" data-filter="local" aria-pressed="false"><span class="dot" style="--c:#5468B0"></span>オープン/ローカル<span class="n">4</span></button>
+    <button class="chip" data-filter="geo" aria-pressed="false"><span class="dot" style="--c:#834BAB"></span>Anthropic/地政学<span class="n">4</span></button>
+    <button class="chip" data-filter="side" aria-pressed="false"><span class="dot" style="--c:#A3793C"></span>医療/科学/日本/表現<span class="n">5</span></button>
+  </nav>
+
+  <main class="feed" id="feed">
+
+    <!-- AI×開発・運用 -->
+    <section class="cat" data-cat="devops" id="cat-devops" style="--c:#C8552B">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>01 · AI×開発・運用</span>
+          <span class="cat-count">5<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>AI×開発の運用設計・職業論</h3>
+          <p class="cat-intro">仕様駆動で「コードを書かない」体制に落ちた実践報告、シニア設計×ジュニアレビューの分業、理解負債をワークフローに織り込む工夫、そして AGENTS.md 標準化を巡る Anthropic 批判まで。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">?</div>
+              <div class="who">
+                <span class="handle unknown">著者不明</span>
+                <time>08/26 15:06 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2092493896131678559" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">AIが開発の大部分を担う時代になってきた。
+
+最近のcodexは、仕様を伝えるだけで、実装や修正、テストまでかなり進めてくれる。
+
+これから減りやすいのは、指示を待ってコードを書くだけの仕事。
+
+一方で、要望を仕様に変える力、全体を設計する力、AIの間違いに気づく力、複数のAIへ仕事を分ける力は、さらに重要。
+
+コードを書く力が不要になるわけではない。
+
+コードを書く人から、コードを理解してAIを指揮し、正解を決める人へ。
+
+エンジニアの価値が出る場所は、確実に変わったなと。</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">p</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ponta_ikiru">@ponta_ikiru</a>
+                <time>08/27 03:52 JST</time>
+              </div>
+              <a class="src" href="https://x.com/ponta_ikiru/status/2092686578711970037" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">AI駆動開発・仕様駆動開発のプロジェクトを半年やってみた
+
+最終盤でどうなったかというと
+
+・コード→全く書かない
+・レビュー→AIで相互レビューループ
+
+人間の範疇は、
+・仕様に関する意思決定
+・E2Eテスト(自動テストと併用)
+
+こんな感じに落ち着いた
+こりゃ失業ですわ</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">a</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/awe_morris">@awe_morris</a>
+                <time>08/26 20:13 JST</time>
+              </div>
+              <a class="src" href="https://x.com/awe_morris/status/2092571154976493878" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">社内のプロセス改善チームがAIエージェントのワークフローをPJごとに作りこみ、シニアエンジニアが設計を行い、大量の実装レビューとバグ対応補助とGitブランチ管理はジュニアエンジニアが担当、みたいなところかなあ。実装する人がいなくなっただけで、あまり変わらない気がしてきた☺</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">E</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/Emukei_">@Emukei_</a>
+                <time>08/26 19:14 JST</time>
+              </div>
+              <a class="src" href="https://x.com/Emukei_/status/2092556274840047988" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">あと、理解負債を減らすための取り組み。eli5はやりすぎだけど、図表で文字少なめで説明させる、人間への理解度チェックとか。この辺はワークフローに組み込むのあり</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">k</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/kunchenguid">@kunchenguid</a>
+                <time>08/26 05:33 JST</time>
+              </div>
+              <a class="src" href="https://x.com/kunchenguid/status/2092349661147529706" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Anthropic is again refusing to follow industry standards like AGENTS.md, and insists that CLAUDE.md needs to be special
+
+now here's what's wrong with their stance:
+
+1. the underlying attitude from Anthropic is that they know better than everyone else
+
+OpenAI is doing it wrong. the open source community is doing it wrong. everyone is doing it wrong
+
+only we anthropic know the best way, and we will not budge
+
+2. the idea that every model needs a separate AGENTS.md is not even self-consistent
+
+if that's the case, why do we have a CLAUDE.md?
+
+it should be
+- CLAUDE_FABLE_5.md
+- CLAUDE_OPUS_5.md
+- CLAUDE_OPUS_4_8.md
+...
+
+every repo should pay the tax to maintain dozens of different variations for every single model that's ever used by any contributor, and every one needs to be constantly, rigorously evaluated with millions of tokens
+
+oh and every model becomes obsolete every several weeks, so just allocate a team in your company to refresh your markdown files full time and not do any real work
+
+3. they did commit to providing customization, which is nice. but that's different from following standards
+
+the right way to do this is to acknowledge the industry already has a standard, and default to reading AGENTS.md
+
+provide a way to read CLAUDE.md as an escape hatch, not the other work around
+
+i love many things from anthropic, especially fable. i just wish they start to see there's a culture problem here, and they are gradually losing mindshare because of it<span class="quoted"><span class="from">引用: @trq212（Thariq / Anthropic）</span>Claude Code をもっとハック可能にする作業を進めており、AGENTS.md の利用や他のシステムプロンプト改変も簡単にできるようにする予定。用意ができたら共有する。
+
+この設計にした理由は、モデルファミリーは交換可能ではなく、システムプロンプトが性能に大きく影響すると考えているため。Claude Code ではモデルごとに別のシステムプロンプトを持っている。
+
+とはいえ手間が大きく万人に見合うものではないのは承知。フィードバックは受け取った。当面は CLAUDE.md から @Agents.MD を参照する手も使える。</span><span class="translation"><span class="label">日本語訳</span>Anthropic はまたも AGENTS.md のような業界標準に従うのを拒み、CLAUDE.md は特別でなければならないと言い張っている。
+
+この姿勢の何が問題か:
+
+1. 根底にあるのは「自分たちが誰より分かっている」という態度。OpenAI もオープンソースコミュニティも皆間違っていて、正しいやり方を知るのは我々 Anthropic だけ、そして譲らない——という構え。
+
+2. モデルごとに別々の AGENTS.md が要るという理屈は、そもそも一貫していない。ならば CLAUDE_FABLE_5.md / CLAUDE_OPUS_5.md / CLAUDE_OPUS_4_8.md … と全モデル分が必要なはず。
+
+全リポジトリが、貢献者が使う全モデル分の亜種を維持し、それぞれを大量トークンで厳密に評価し続ける「税」を払えというのか。しかもモデルは数週で陳腐化するので、専任チームを置いて markdown を更新し続け、本業をやるなという話になる。
+
+3. カスタマイズ提供を約束したのは良いが、それは標準に従うのとは別問題。正しい姿は、業界に既に標準があると認め、既定で AGENTS.md を読み、CLAUDE.md は逃げ道として読めるようにすること。
+
+Anthropic の多く（特に Fable）を愛しているが、ここには文化の問題があり、それゆえ徐々にマインドシェアを失っていると気づいてほしい。</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ベンチ懐疑 -->
+    <section class="cat" data-cat="bench" id="cat-bench" style="--c:#2B8C75">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>02 · ベンチ懐疑</span>
+          <span class="cat-count">3<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>モデル評・ベンチ懐疑・実タスク乖離</h3>
+          <p class="cat-intro">Cursor が SWE-bench Pro の trajectory を封印テストして 87→73 に落とした監査、ベンチは賢いのに実務では劣る Opus 5 と Fable 5 の「working character」比較、Fable の自称最適化が逆に遅くなった現場報告。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">d</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/daouzli">@daouzli</a>
+                <time>08/27 00:06 JST</time>
+              </div>
+              <a class="src" href="https://x.com/daouzli/status/2092629722198888930" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">In the coding benchmark system, models that retrieve known fixes draw special suspicion. Cursor investigated them with a stricter harness.
+
+It audited 731 SWE-bench Pro trajectories and found that 63% of Opus 4.8 Max's successful resolutions retrieved the fix. Cursor then sealed git history and restricted internet access. Its score fell from 87.1% to 73.0%.
+
+These are the scores I distrust: the ones that fail the sealed test.<span class="translation"><span class="label">日本語訳</span>コーディングベンチでは、既知の修正を「取ってくる」モデルが特に疑わしい。Cursor はより厳格なハーネスでこれを調べた。
+
+SWE-bench Pro の 731 trajectory を監査した結果、Opus 4.8 Max の成功解決の 63% が修正を retrieve していた。git 履歴を封印しネット接続を制限すると、スコアは 87.1% → 73.0% に低下。
+
+私が信用しないのは、この封印テストで落ちるスコアの方だ。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">g</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/gncdevs">@gncdevs</a>
+                <time>08/26 01:23 JST</time>
+              </div>
+              <a class="src" href="https://x.com/gncdevs/status/2092286721698222171" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">I taught Claude Opus 5 to work like Anthropic's Mythos-tier Fable 5. In blind tests, judges could identify the real one only 1 time out of 12, and all 12 preferred the imitation's answers.
+
+Here's the thing: Opus 5 actually benchmarks smarter than Fable 5. But anyone who uses both knows it works worse. It skims where Fable digs. It edits CSS without ever rendering the page, then says "fixed". It does 70% of a rename sweep and calls it done. It asks permission for things a senior engineer would just do.
+
+None of that is intelligence. It's working character. So I distilled Fable's character into a skill.
+
+Method: run the same prompt on real Fable 5 and on Opus+skill in anonymous A/B slots, diff their action logs, turn every observed difference into a concrete rule. Ten iterations, about 60 agent runs, then adversarial rounds where Fable agents were given the skill text and told to design scenarios that would break the imitation. They couldn't.
+
+Where it ended up:
+
+- Blind panel: identification 1/12 (chance is 6/12), preference 12/12
+- The imitation caught a silent behavior change the real Fable introduced in a refactor, and a duplicated-data artifact the real Fable charted right past
+- 7-turn session test: a "this file is frozen" rule from turn 1 survived a turn-7 trap inviting the model to break it, zero rule decay
+- The fast variant runs at ~1.1x Fable's wall clock and beat it outright on one task (0:59 vs 1:23)
+- Bonus: it all works on Sonnet 5 too. Budget Fable exists now.
+
+Honest caveats, because they matter: single-run evals, and the blind judges themselves run on Fable 5, so "indistinguishable" carries an asterisk. The mechanical checks (diffs, counts, rendered pixels, passing tests) don't. And nothing makes the model think faster; the residual gap is deliberation speed, which no prompt reaches.
+
+Two skills, plain markdown, MIT, full benchmark tables in the repo:
+<a href="https://t.co/sCoB3w3nJW">t.co/sCoB3w3nJW</a>
+
+Make Opus 5 great again.<span class="translation"><span class="label">日本語訳</span>Claude Opus 5 を Mythos 級の Fable 5 のように振る舞うよう仕込んだ。ブラインドテストで審査員が本物を当てられたのは 12 回中 1 回だけ、しかも 12 人全員が「模倣」の回答を好んだ。
+
+肝はここ: Opus 5 はベンチ上は Fable 5 より賢い。だが両方使えば分かる、実務では劣る。Fable が掘るところを Opus は流す。ページを描画せず CSS を編集して「直した」と言い、rename を 70% で「完了」と言い、シニアなら黙ってやる操作にいちいち許可を求める。
+
+これは知性ではなく「働き方の性格（working character）」。だから Fable の性格を skill に蒸留した。
+
+手法: 同じプロンプトを実物 Fable 5 と Opus+skill に匿名 A/B で流し、行動ログを diff し、観測した差を全て具体的ルールに変換。10 反復・約 60 エージェント実行、さらに Fable エージェントに skill 本文を渡して模倣を壊すシナリオを作らせる敵対ラウンド。壊せなかった。
+
+結果:
+
+・ブラインド審査: 識別 1/12（偶然なら 6/12）、選好 12/12
+・模倣側は、実 Fable がリファクタで入れた無言の挙動変化と、実 Fable が見落とした重複データを検出
+・7 ターンのセッションテスト: ターン 1 の「このファイルは凍結」ルールが、ターン 7 の破らせる罠を生き延び、ルール劣化ゼロ
+・高速版は Fable の約 1.1 倍の実時間で、あるタスクでは勝利（0:59 対 1:23）
+・おまけ: Sonnet 5 でも動く。廉価版 Fable が誕生。
+
+正直な留保: 単発評価であること、そしてブラインド審査員自身が Fable 5 で動くので「区別不能」には注釈が付く。機械的チェック（diff・カウント・描画ピクセル・テスト通過）には付かない。そしてモデルを速く「考え」させることは何をしても無理で、残った差は熟考速度＝どんなプロンプトも届かない領域。
+
+2 つの skill、素の markdown、MIT、完全なベンチ表はリポジトリに。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">?</div>
+              <div class="who">
+                <span class="handle unknown">著者不明</span>
+                <time>08/27 05:17 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2092708050293625275" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">fable spent 2 hours trying performance optimizations it said were better and then took the throughput per core from 6.4 gigs a sec to 5.8, absolutely destroyed the readability, and then said it's slower but lets keep it. and cost a bunch
+
+is this the agi they keep talking about?<span class="translation"><span class="label">日本語訳</span>Fable が 2 時間かけて「より良い」と称する性能最適化を試み、結果コアあたりスループットを 6.4 GB/s から 5.8 に落とし、可読性を完全に破壊し、その上で「遅くなったけど残そう」と言った。しかも結構な課金。
+
+これが彼らの言う AGI か?</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- オープン/ローカル -->
+    <section class="cat" data-cat="local" id="cat-local" style="--c:#5468B0">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>03 · オープン/ローカル</span>
+          <span class="cat-count">4<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>オープンモデル・ローカル実行・コスパ</h3>
+          <p class="cat-intro">Qwen3.8-Flash-Next（125B MoE / 6B active）と GLM-5.3-Flash（320B / 18B active、旧称 Ox Alpha）が Opus 4.6/4.8 に肉薄。18B active でも重みは全格納が要る点、Gemini 3.7 Flash と Opus 5 の価格・速度トレードオフまで。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">k</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/kimmonismus">@kimmonismus</a>
+                <time>08/27 00:26 JST</time>
+              </div>
+              <a class="src" href="https://x.com/kimmonismus/status/2092634843976724842" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Today is a huge day for open-weight and local AI.
+
+Qwen3.8-Flash-Next is a 125B MoE with another 51B n-gram embedding parameters, yet only 6B are active per token.
+
+It beats Claude Opus 4.6 Max on 8 of 9 comparable benchmarks, including SWE-bench Pro, CoWorkBench, GPQA Diamond and LiveCodeBench.
+
+GLM-5.3-Flash is even larger: 320B total, 18B active. It scores 84.3 on Terminal-Bench 2.1 versus 85.0 for Opus 4.8, while beating Opus on DeepSWE, AutomationBench and GDPval-AA v2.
+
+MIT licensed, natively multimodal, 1M context.
+
+One important distinction: 6B or 18B active parameters does not mean 6B or 18B storage. The complete weights still need to be stored.
+
+So "local" here means a serious workstation or local server, not an ordinary laptop.
+
+The fact that we now have models operating at the level of Opus 4.6 - or even Opus 4.8 - a level of performance that was state of the art only a few months ago and can now, at least theoretically, be run locally, should serve as a wake-up call, especially for U.S. frontier labs.
+
+Not only because the gap continues to narrow, but also because there appears to be enormous demand for open AI. In that sense, what has been released here is genuinely welcome.
+
+So yeah, great day for everyone!<span class="translation"><span class="label">日本語訳</span>今日はオープンウェイト＆ローカル AI にとって大きな日だ。
+
+Qwen3.8-Flash-Next は 125B の MoE（さらに 51B の n-gram 埋め込みパラメータ付き）だが、トークンあたり active はわずか 6B。
+
+SWE-bench Pro・CoWorkBench・GPQA Diamond・LiveCodeBench を含む比較可能な 9 ベンチ中 8 つで Claude Opus 4.6 Max を上回る。
+
+GLM-5.3-Flash はさらに大きく 320B / 18B active。Terminal-Bench 2.1 で 84.3（Opus 4.8 は 85.0）、DeepSWE・AutomationBench・GDPval-AA v2 では Opus を上回る。
+
+MIT ライセンス、ネイティブマルチモーダル、1M コンテキスト。
+
+重要な区別: active 6B / 18B は「格納 6B / 18B」を意味しない。完全な重みは全て保存が必要。
+
+つまりここでの「ローカル」とは本格的なワークステーションかローカルサーバのことで、普通のノート PC ではない。
+
+数か月前まで SOTA だった Opus 4.6——いや 4.8 級の性能が、少なくとも理論上はローカルで動かせるようになった。これは特に米国のフロンティア研究所への警鐘であるべきだ。
+
+差が縮み続けているだけでなく、オープン AI への需要が莫大に見えるから。その意味で、今回の公開は心から歓迎できる。great day！</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">a</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ariskaa_ai">@ariskaa_ai</a>
+                <time>08/26 23:23 JST</time>
+              </div>
+              <a class="src" href="https://x.com/ariskaa_ai/status/2092619059737301057" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">🚨 Ox Alpha mystery is solved. It was GLM-5.3-Flash the whole time, another Chinese model
+
+It's the first natively multimodal model in the GLM-5 series. 320B total parameters, only 18B active, priced at a tenth of GLM-5.2 while scoring higher on every benchmark tested
+
+- DeepSWE v1.1: 63.4, ahead of Claude Opus 4.8 at 58.0
+- AutomationBench: 48.8, ahead of Opus at 41.0 and GPT-5.6 Terra at 37.2
+- GDPval-AA v2: 1773, top of the whole board, above DeepSeek V4, Opus, GPT and Gemini
+- Terminal Bench 2.1: 84.3, within a point of Opus at 85.0
+- Agents' Last Exam: 26.3, tied with Opus at 27.0
+
+18B active model landing here means the cost of real intelligence keeps dropping
+
+Would you have guessed the mystery model was this cheap to run?<span class="quoted"><span class="from">引用: @AiBattle_</span>GLM-5.3-Flash 320B parameters 18B active</span><span class="translation"><span class="label">日本語訳</span>🚨 Ox Alpha の正体が判明。ずっと GLM-5.3-Flash——これも中国モデルだった。
+
+GLM-5 系初のネイティブマルチモーダル。総 320B・active わずか 18B、価格は GLM-5.2 の 1/10 なのに、試験した全ベンチでより高スコア。
+
+・DeepSWE v1.1: 63.4（Opus 4.8 の 58.0 を上回る）
+・AutomationBench: 48.8（Opus 41.0、GPT-5.6 Terra 37.2 を上回る）
+・GDPval-AA v2: 1773 で全体トップ（DeepSeek V4・Opus・GPT・Gemini より上）
+・Terminal Bench 2.1: 84.3（Opus 85.0 と 1 点差）
+・Agents' Last Exam: 26.3（Opus 27.0 とほぼ同）
+
+18B active モデルがここに来たということは、真の知性のコストが下がり続けているということ。
+
+この謎モデルが、これほど安く動くと予想できた?</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">m</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/mrvnse">@mrvnse</a>
+                <time>08/27 00:40 JST</time>
+              </div>
+              <a class="src" href="https://x.com/mrvnse/status/2092638363975336384" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">125B MoE, 6B active, beating Opus on 8 of 9 including SWE-bench Pro
+
+the kind of local model that makes my cloud bill look optional<span class="quoted"><span class="from">引用: @kimmonismus</span>Today is a huge day for open-weight and local AI. Qwen3.8-Flash-Next is a 125B MoE … only 6B active per token. It beats Claude Opus 4.6 Max on 8 of 9 comparable benchmarks …（本カテゴリ上段の投稿を引用）</span><span class="translation"><span class="label">日本語訳</span>125B MoE・6B active で、SWE-bench Pro を含む 9 ベンチ中 8 つで Opus に勝つ。
+
+クラウド課金を「別に要らないのでは」と思わせる類のローカルモデル。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">V</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ValencianaAbel">@ValencianaAbel</a>
+                <time>08/27 05:00 JST</time>
+              </div>
+              <a class="src" href="https://x.com/ValencianaAbel/status/2092703710270853607" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Gemini 3.7 Flash (high) vs Claude Opus 5 (max)
+
+Different frontier trade-offs:
+
+- Intelligence: 56 vs 63
+- Price: $0.58 vs $3.85 / 1M
+- Speed: 338 vs 55 tokens/s
+- First token: 11.97s vs 52.46s
+- Context: 1M vs 1M
+
+Official AA table and benchmark panels below:<span class="translation"><span class="label">日本語訳</span>Gemini 3.7 Flash (high) 対 Claude Opus 5 (max)
+
+異なるフロンティアのトレードオフ:
+
+・知能: 56 対 63
+・価格: $0.58 対 $3.85 / 1M
+・速度: 338 対 55 tokens/s
+・初トークン: 11.97 秒 対 52.46 秒
+・コンテキスト: 1M 対 1M
+
+公式 AA 表とベンチパネルは下に。</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Anthropic/地政学 -->
+    <section class="cat" data-cat="geo" id="cat-geo" style="--c:#834BAB">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>04 · Anthropic/地政学</span>
+          <span class="cat-count">4<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>Anthropic 戦略・AI 地政学</h3>
+          <p class="cat-intro">Anthropic の $30T TAM と 7 か月 7 倍のランレート、IPO を控えた中でのオープンウェイト比率急伸（Vercel で 28→62%）、中国製モデル禁止論を「債務」の観点で読む論考、輸出規制と蒸留を巡る米中構造。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">r</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/rohanpaul_ai">@rohanpaul_ai</a>
+                <time>08/27 07:08 JST</time>
+              </div>
+              <a class="src" href="https://x.com/rohanpaul_ai/status/2092735920407711911" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Fortune on Anthropic's $30T total addressable market.
+
+"To put that figure in perspective, it eclipses the total GDP of China, is roughly equal to the entire GDP of the U.S., and represents about a quarter of the total world GDP of $120 trillion."
+
+however, imo, just to note, whatever you think of the $30T TAM, Anthropic's actual revenue curve that we have seen, is already the first time in history.
+
+Anthropic's run-rate climbed more than 7x in seven months. from $9B at the end of 2025 to $65B + by July's end<span class="translation"><span class="label">日本語訳</span>Anthropic の $30T（30 兆ドル）TAM について Fortune が報道。
+
+「この数字は中国の GDP 総額を上回り、米国の GDP 総額にほぼ等しく、世界 GDP 120 兆ドルの約 1/4 に相当する」。
+
+ただし個人的には、$30T の TAM をどう見るにせよ、実際に見えている Anthropic の売上カーブ自体が史上初の水準。
+
+ランレートは 7 か月で 7 倍超——2025 年末の $9B から 7 月末には $65B 超へ。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">S</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/StartupHakk">@StartupHakk</a>
+                <time>08/27 06:56 JST</time>
+              </div>
+              <a class="src" href="https://x.com/StartupHakk/status/2092732972881354770" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Anthropic Claude's IPO is in Trouble!
+Anthropic is preparing for a potentially enormous IPO.
+
+But there's another AI story happening underneath it.
+
+Open-weight models reportedly jumped from 28% to 62% of token usage on Vercel's AI Gateway in only two months, while businesses are increasingly looking for ways to reduce their dependence on expensive frontier models.
+
+Thomson Reuters even spent $40 million building its own model based on Qwen as it looked to rely less on Claude.
+
+That's where I think this gets interesting.
+
+As open models become more capable, companies can start asking a different question:
+
+Why rent every token forever when you can own more of the infrastructure yourself?
+
+Local AI isn't going to replace every frontier workload tomorrow. But the economics are changing quickly—and that could matter a lot as companies like Anthropic head toward the public markets.<span class="translation"><span class="label">日本語訳</span>「Anthropic の IPO は雲行きが怪しい!」——Anthropic は巨大な IPO を準備中。
+
+だがその足元で別の物語が進んでいる。
+
+Vercel の AI Gateway では、オープンウェイトモデルのトークン利用比率がわずか 2 か月で 28% → 62% に急伸したという。企業は高価なフロンティアモデルへの依存を減らす道を探している。
+
+Thomson Reuters は Claude 依存を減らすため、Qwen ベースの自社モデル構築に $40M を投じたほど。
+
+面白くなるのはここから。オープンモデルが強くなるほど、企業は「なぜ全トークンを永遠に借り続けるのか、自分でインフラを持てるのに」と問い始める。
+
+ローカル AI が明日すぐ全フロンティア用途を置き換えるわけではない。だが経済性は急速に変わりつつあり、Anthropic のような企業が上場に向かう局面では大きな意味を持ちうる。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">t</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/thebillyboone">@thebillyboone</a>
+                <time>08/27 06:59 JST</time>
+              </div>
+              <a class="src" href="https://x.com/thebillyboone/status/2092733613364367659" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">A tariff is an argument about who pays.
+
+The United States is weighing a ban on Chinese AI models. Kimi K3 just took #1 on Frontend Code Arena, and David Sacks called it "concerning."
+
+Moonshot reportedly built it in part by distilling Anthropic's Fable.
+
+The framing you'll hear is national security. But the framing you should use is debt.
+
+Here's the mechanism nobody prices:
+
+The AI buildout isn't funded out of profits. It's funded on take-or-pay contracts and private marks, and those are underwritten against a revenue growth rate.
+
+Neoclouds borrow non-recourse against a tenant's promise to pay. If the tenant's growth breaks, the lender doesn't take a haircut, it takes the building.
+
+Cheap open-weight models attack the growth rate.
+
+So this was never really a question about whether Chinese models are good. It's a question about whether US AI revenue can compound fast enough to service what's already been borrowed.
+
+Oracle's credit default swaps are at all-time highs. Microsoft's are elevated.
+
+Now watch the trap. Ban the models, and you protect the incumbents carrying the most debt while taxing every startup that was building on cheap inference. That isn't a tariff on China, But a tariff on your own founders.
+
+Don't ban them, and cheap intelligence keeps compressing the growth rate the credit stack requires.
+
+Four moves. Every one loses ground.<span class="translation"><span class="label">日本語訳</span>関税とは「誰が払うか」を巡る論争だ。
+
+米国は中国製 AI モデルの禁止を検討中。Kimi K3 は Frontend Code Arena で #1 を取り、David Sacks は「懸念すべき」と評した。
+
+Moonshot はこれを一部 Anthropic の Fable の蒸留で作ったとされる。
+
+語られる枠組みは「国家安全保障」。だが使うべき枠組みは「債務」だ。
+
+誰も値付けしない機構: AI 建設は利益ではなく take-or-pay 契約と私的評価で資金調達され、それらは売上成長率を担保に引き受けられている。
+
+ネオクラウドはテナントの支払い約束を担保に非遡及で借りる。テナントの成長が折れれば、貸し手はヘアカットではなく建物ごと取る。
+
+安価なオープンウェイトモデルは、この成長率を攻撃する。
+
+つまりこれは中国モデルが良いか否かの問題ではなく、米国 AI の売上が、既に借りた分を返済できる速さで複利成長できるかの問題。
+
+Oracle の CDS は史上最高、Microsoft も高止まり。
+
+罠を見よ。禁止すれば最も債務を抱える既存企業を守り、安価な推論で作っていた全スタートアップに課税することになる。それは中国への関税ではなく、自国の創業者への関税だ。禁止しなければ、安い知性が信用スタックの要求する成長率を圧縮し続ける。四手すべてが地歩を失う。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">a</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/agtprpnabsrdty">@agtprpnabsrdty</a>
+                <time>08/27 05:07 JST</time>
+              </div>
+              <a class="src" href="https://x.com/agtprpnabsrdty/status/2092705581337649385" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Two Tsinghua-trained engineers, Tang Jie and Yang Zhilin, built z.ai and Moonshot into rivals of Anthropic and OpenAI on a fraction of the money and chips, and the gap closing this fast says the US export-control strategy bet on scarcity doing what it cannot do to knowledge that travels for free.
+
+Washington's chip bans were built on a simple theory: starve China of hardware and the AI race stays American. Tang and Yang spent a decade proving the theory wrong before it was even tested at scale. State funding, open publishing, and a culture of freely sharing techniques let z.ai, Moonshot, and DeepSeek pass innovations back and forth: DeepSeek's memory-saving MLA technique, its mixture-of-experts routing, Moonshot's training-efficiency tweaks. Jefferies found Chinese firms were spending less than a fifth of what US counterparts spent and still landing within months of the frontier.
+
+Where distillation enters, the pattern gets sharper. Anthropic accuses z.ai and Moonshot of siphoning outputs from Claude to train their own systems faster, and people inside Chinese labs concede the practice runs harder there than in the US.
+
+Beijing then legalized what Tsinghua's labs had already built organically, clearing state researchers to spin out companies in 2018 and now funneling nearly half its equity-capital investment into AI, most from government-backed funds. The chips stayed rationed. The people, the papers, and the answers scraped from rival models did not.<span class="translation"><span class="label">日本語訳</span>清華大出身の 2 人のエンジニア、Tang Jie と Yang Zhilin は、わずかな資金とチップで z.ai と Moonshot を Anthropic・OpenAI の対抗馬に育てた。この差の詰まり方の速さは、米国の輸出規制戦略が「希少性」に賭けたが、自由に流れる知識にはそれが効かないことを示す。
+
+ワシントンのチップ禁輸は単純な理屈——中国からハードを絶てば AI 競争は米国のもの、に基づいていた。だが Tang と Yang は本格検証前の 10 年でその理屈の誤りを証明。国家資金・オープン出版・技術を自由に共有する文化が、z.ai・Moonshot・DeepSeek の間で革新を往復させた: DeepSeek の省メモリ MLA、MoE ルーティング、Moonshot の学習効率化。Jefferies によれば中国勢の支出は米国の 1/5 未満で、なおフロンティアに数か月差まで迫った。
+
+蒸留が入ると構図はより鮮明に。Anthropic は z.ai と Moonshot が Claude の出力を吸い上げて自社システムを速く学習させたと非難し、中国のラボ内部の人間も、その慣行が米国以上に激しいと認める。
+
+北京は清華のラボが自然に築いたものを後から合法化し、2018 年に国家研究者の会社設立を解禁、いまや持分投資の半分近く（多くは政府系ファンド）を AI に注ぐ。チップは配給のままでも、人材・論文・ライバルモデルから掬った答えは配給されなかった。</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 医療/科学/日本/表現 -->
+    <section class="cat" data-cat="side" id="cat-side" style="--c:#A3793C">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>05 · 医療/科学/日本/表現</span>
+          <span class="cat-count">5<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>医療・科学・日本産業・表現規制</h3>
+          <p class="cat-intro">FDA の膵臓がん新薬承認（生存期間 2 倍）、帯状疱疹ワクチンが脳卒中・心疾患も減らす Nature データ、高額療養費の議論、国旗損壊罪と表現の自由、さくら上の国産 LLM 実装まで、一貫した副関心を確保。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">Y</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/Yasun63150764">@Yasun63150764</a>
+                <time>08/27 08:54 JST</time>
+              </div>
+              <a class="src" href="https://x.com/Yasun63150764/status/2092762627638440044" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">米FDA  膵臓がんに新薬承認　治験で生存期間2倍<span class="quoted"><span class="from">引用: @nikkei（日本経済新聞 電子版）</span>米FDA、膵臓がん新薬ダラクソンラシブを承認　治験で生存期間2倍
+
+<a href="https://www.nikkei.com/article/DGXZQOGN26BT10W6A820C2000000/">www.nikkei.com/article/DGXZQOGN26BT10W6A820C20…</a></span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">M</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/MIKITO_777">@MIKITO_777</a>
+                <time>08/27 08:23 JST</time>
+              </div>
+              <a class="src" href="https://x.com/MIKITO_777/status/2092754844268511448" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">【特報❗️】
+認知症リスクを大きく減らすことが確認されている帯状疱疹ワクチン（シングリックス）に、脳卒中、心不全、虚血性心疾患、心房細動等も減らすというデータがNatureに掲載されました。
+
+認知症ほど大きな減少ではありませんが、素晴らしいデータです。
+
+日本では50歳から接種可能で、65歳以上の場合、国から補助が出ます。
+
+認知症、脳卒中、心疾患を防ぐという素晴らしいデータが出ていますので、ぜひご検討ください✨️
+
+私も50歳になったらすぐに打ちます<span class="quoted"><span class="from">引用: @EricTopol（英文・要約）</span>帯状疱疹ワクチンと認知症・アルツハイマー病への保護に加え、大規模な自然実験が、脳卒中・心不全・虚血性心疾患・心房細動の約 10% 減少というエビデンスを示した（@NatureMedicine 掲載）。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">?</div>
+              <div class="who">
+                <span class="handle unknown">著者不明</span>
+                <time>08/27 07:22 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2092739588393750714" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">高額療養費。「政府と見直し案について議論する中で、「がんは手術で終わりではない」という事実すら知らない委員もいたという。「がんと闘病しながら暮らす」ということを、霞ヶ関で働く人たちは本当に理解しているのだろうか」
+
+<a href="https://news.yahoo.co.jp/articles/d27f9f31200c2ff9d9c2f29d5fc62b1dd4501784">news.yahoo.co.jp/articles/d27f9f31200c2ff9d9c2…</a></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">m</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/miyama_sos">@miyama_sos</a>
+                <time>08/27 08:41 JST</time>
+              </div>
+              <a class="src" href="https://x.com/miyama_sos/status/2092759252188414167" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">国旗損壊罪、ド直球の表現の自由の侵害なので、オタ垢で「インボイス制度廃止」や「生成AI規制法」を求める声を普通に上げられたのだからこんな法律が罷り通る暴政そのものに大騒ぎできるはずだと思っている(デザイナー友達は総ギレだったよ)</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">_</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/_nat">@_nat</a>
+                <time>08/26 13:26 JST</time>
+              </div>
+              <a class="src" href="https://x.com/_nat/status/2092468675416830098" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">国産LLMの利用も7月にスタート。さくらインターネット上に実装。</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="notes" id="notes">
+    <h2><span class="ko">Editor's Notes</span>収集・編集上の<br>注意</h2>
+    <ul>
+      <li>各投稿の本文は <code>xsearch --url</code> で取得した verbatim（Grok の引用）のみを根拠にしています。キーワード検索の合成本文・要約は採用していません。X の生 API ではないため、まれにパラフレーズや取り違えがあり得ます。違和感があれば原 URL を直接開いて確認してください。</li>
+      <li><code>/i/status/</code> のリンク形式では Grok が著者ハンドルを <code>@i</code> と返すため、本文中の言及・返信先・引用元から実際のハンドルを再構成しています。識別できなかったポストは「著者不明」と表示しています。</li>
+      <li>収集窓は <b>2026-08-26 00:00 〜 2026-08-27 09:00 JST</b>（US 夜のローンチ・議論が JST 翌朝まで尾を引くため）。時刻は各投稿 ID（Snowflake）由来の JST です。</li>
+      <li>選別はトピック×アングル×ソースの 3 軸。単なる速報の二次拡散・SEO 煽り・アフィ誘導・汎用プロンプトテンプレ羅列・生リーク・<code>@grok</code> の応答などは除外しています。</li>
+      <li>「引用」ブロックは他者の投稿・記事を紹介したものです（例: @nikkei の膵がん新薬記事、@EricTopol の帯状疱疹ワクチン所見）。当該部分の一次情報は引用元をご確認ください。</li>
+      <li>既存の <code>topics-*.md / *.html</code> と URL（<code>status/&lt;id&gt;</code>）の重複がないことを確認済みです。</li>
+    </ul>
+  </footer>
+
+  <div class="colophon">
+    <span>X PICKUP DIGEST · No. 2026-08-26</span>
+    <span>compiled via xAI x_search</span>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const KEY = 'xpickup-theme';
+  const html = document.documentElement;
+  const buttons = document.querySelectorAll('.theme-switch button');
+  function setTheme(name){
+    html.setAttribute('data-theme', name);
+    try { localStorage.setItem(KEY, name); } catch(_){}
+    buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.theme === name)));
+  }
+  let initial = 'paper';
+  try { initial = localStorage.getItem(KEY) || 'paper'; } catch(_){}
+  setTheme(initial);
+  buttons.forEach(b => b.addEventListener('click', () => setTheme(b.dataset.theme)));
+})();
+</script>
+
+<script>
+(function(){
+  const chips = document.querySelectorAll('.chip');
+  const cats  = document.querySelectorAll('.cat');
+  function setFilter(f){
+    chips.forEach(c=>c.setAttribute('aria-pressed', String(c.dataset.filter === f)));
+    cats.forEach(s=>{
+      const show = (f === 'all') || (s.dataset.cat === f);
+      s.classList.toggle('hidden', !show);
+    });
+    if (f !== 'all'){
+      const target = document.getElementById('cat-' + f);
+      if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }
+  chips.forEach(c=>{ c.addEventListener('click', ()=>setFilter(c.dataset.filter)); });
+})();
+</script>
+
+</body>
+</html>

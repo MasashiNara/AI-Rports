@@ -1,0 +1,1207 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>X ピックアップ｜2026.08.31</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#F2EDE0;
+    --paper-2:#EAE3D2;
+    --card:#FBF8EF;
+    --ink:#14110B;
+    --ink-2:#3D372C;
+    --ink-3:#6E6552;
+    --ink-4:#9E9582;
+    --rule:rgba(20,17,11,0.10);
+    --rule-strong:rgba(20,17,11,0.22);
+    --accent:#B43820;
+    --accent-soft:rgba(180,56,32,0.10);
+
+    --font-serif:'Shippori Mincho B1', 'Hiragino Mincho ProN','Yu Mincho',serif;
+    --font-sans:'Zen Kaku Gothic New','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;
+    --font-mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+    --gap:28px;
+    --post-pad:22px 26px;
+  }
+
+  /* themes */
+  html[data-theme="mono"]{
+    --paper:#F4F4F2;
+    --paper-2:#EBEBE7;
+    --card:#FFFFFF;
+    --ink:#0C0C0C;
+    --ink-2:#2D2D2D;
+    --ink-3:#5C5C5C;
+    --ink-4:#9A9A9A;
+    --rule:rgba(0,0,0,0.10);
+    --rule-strong:rgba(0,0,0,0.22);
+    --accent:#0C0C0C;
+    --accent-soft:rgba(0,0,0,0.06);
+  }
+  html[data-theme="dark"]{
+    --paper:#15140F;
+    --paper-2:#1D1B16;
+    --card:#1F1D17;
+    --ink:#F1ECDC;
+    --ink-2:#D7D0BD;
+    --ink-3:#A39A82;
+    --ink-4:#736B57;
+    --rule:rgba(241,236,220,0.10);
+    --rule-strong:rgba(241,236,220,0.22);
+    --accent:#E37A5F;
+    --accent-soft:rgba(227,122,95,0.14);
+  }
+
+  html[data-density="compact"]{
+    --gap:18px;
+    --post-pad:16px 20px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-sans);
+    font-feature-settings:"palt" 1;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.7;
+    font-size:15.5px;
+    letter-spacing:0.01em;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline;text-underline-offset:3px}
+  code{font-family:var(--font-mono);font-size:0.88em;background:var(--paper-2);padding:0.08em 0.4em;border-radius:4px;color:var(--ink-2)}
+
+  /* ── top bar ─────────────────────────── */
+  .topbar{
+    position:sticky; top:0; z-index:30;
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-bottom:1px solid var(--rule);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto;
+    padding:10px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:24px;
+    font-size:12.5px; color:var(--ink-3);
+    letter-spacing:0.08em;
+  }
+  .topbar .brand{
+    display:flex; align-items:center; gap:10px;
+    color:var(--ink); font-weight:700;
+  }
+  .topbar .brand .mark{
+    width:22px; height:22px; border-radius:6px;
+    background:var(--ink); color:var(--paper);
+    display:grid; place-items:center;
+    font-family:var(--font-serif); font-weight:700;
+    font-size:13px; line-height:1;
+  }
+  .topbar nav{display:flex; gap:18px; align-items:center}
+  .topbar nav a{color:var(--ink-3)}
+  .topbar nav a:hover{color:var(--ink); text-decoration:none}
+  .theme-switch{
+    display:inline-flex; align-items:center;
+    border:1px solid var(--rule); border-radius:999px;
+    padding:2px; gap:0;
+    background:var(--paper-2);
+  }
+  .theme-switch button{
+    appearance:none; border:none; background:transparent;
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:0.12em;
+    color:var(--ink-3);
+    padding:5px 10px;
+    border-radius:999px;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:background .15s, color .15s;
+  }
+  .theme-switch button:hover{ color:var(--ink) }
+  .theme-switch button[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+
+  /* ── page shell ──────────────────────── */
+  .page{
+    max-width:1180px; margin:0 auto;
+    padding:48px 28px 120px;
+  }
+
+  /* ── masthead ────────────────────────── */
+  .masthead{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    align-items:end;
+    gap:40px;
+    padding-bottom:36px;
+    border-bottom:1px solid var(--rule-strong);
+    margin-bottom:36px;
+  }
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:11.5px; letter-spacing:0.22em;
+    color:var(--accent);
+    text-transform:uppercase;
+    margin:0 0 18px;
+  }
+  .eyebrow::before{
+    content:""; display:inline-block; width:22px; height:1px;
+    background:var(--accent); vertical-align:middle;
+    margin-right:10px; transform:translateY(-2px);
+  }
+  h1.title{
+    font-family:var(--font-serif);
+    font-weight:700;
+    font-size:64px;
+    line-height:1.08;
+    letter-spacing:0.005em;
+    margin:0 0 18px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  h1.title em{
+    font-style:normal;
+    color:var(--ink-3);
+    font-weight:500;
+  }
+  .lede{
+    max-width:62ch;
+    color:var(--ink-2);
+    font-size:16.5px;
+    line-height:1.75;
+    margin:0;
+  }
+  .masthead .meta-card{
+    border:1px solid var(--rule-strong);
+    border-radius:2px;
+    padding:18px 22px;
+    min-width:240px;
+    background:var(--paper-2);
+  }
+  .masthead .meta-card dl{
+    margin:0; display:grid;
+    grid-template-columns: auto 1fr;
+    gap:4px 16px;
+    font-size:13px;
+  }
+  .masthead .meta-card dt{
+    color:var(--ink-3);
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    align-self:center;
+  }
+  .masthead .meta-card dd{
+    margin:0;
+    color:var(--ink);
+    font-weight:500;
+    font-feature-settings:"tnum" 1;
+  }
+  .masthead .meta-card dd b{
+    font-family:var(--font-serif);
+    font-weight:700;
+    font-size:22px;
+    margin-right:4px;
+  }
+
+  /* ── profile strip ───────────────────── */
+  .profile{
+    margin:0 0 44px;
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    align-items:start;
+  }
+  .profile h2{
+    font-family:var(--font-serif);
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+    line-height:1.4;
+  }
+  .profile h2 .ko{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .profile ul.tags{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-wrap:wrap; gap:8px;
+  }
+  .profile ul.tags li{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-left:3px solid var(--ink-2);
+    padding:8px 14px 8px 12px;
+    font-size:13.5px;
+    line-height:1.5;
+    color:var(--ink-2);
+    border-radius:2px;
+  }
+  .profile ul.tags li b{
+    color:var(--ink); font-weight:700;
+  }
+  .profile ul.tags li small{
+    color:var(--ink-3); font-size:12px; margin-left:6px;
+  }
+  html[data-show-profile="false"] .profile{display:none}
+
+  /* ── filter bar ──────────────────────── */
+  .filter-bar{
+    position:sticky;
+    top:43px; z-index:25;
+    margin:0 -28px 36px;
+    padding:14px 28px;
+    background:color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    display:flex; gap:6px; align-items:center;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .filter-bar::-webkit-scrollbar{display:none}
+  .filter-bar .label{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    text-transform:uppercase;
+    margin-right:8px;
+    white-space:nowrap;
+  }
+  .chip{
+    appearance:none; border:none; background:transparent;
+    font-family:var(--font-sans);
+    font-size:13.5px;
+    color:var(--ink-2);
+    padding:7px 13px 7px 11px;
+    border-radius:999px;
+    display:inline-flex; align-items:center; gap:8px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background .15s, color .15s;
+    line-height:1.2;
+  }
+  .chip:hover{ background:var(--paper-2) }
+  .chip .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--c, var(--ink-3));
+    flex-shrink:0;
+  }
+  .chip .n{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--ink-3);
+    font-feature-settings:"tnum" 1;
+  }
+  .chip[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .chip[aria-pressed="true"] .n{ color:color-mix(in srgb, var(--paper) 70%, transparent) }
+  .chip[aria-pressed="true"] .dot{ box-shadow:0 0 0 2px var(--ink) }
+
+  /* ── feed / category blocks ──────────── */
+  .feed{ display:flex; flex-direction:column; gap:64px }
+  .cat{
+    scroll-margin-top:120px;
+  }
+  .cat-header{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    margin-bottom:24px;
+    align-items:start;
+  }
+  .cat-marker{
+    display:flex; flex-direction:column; gap:8px;
+    position:sticky; top:120px;
+  }
+  .cat-num{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    text-transform:uppercase;
+  }
+  .cat-num .dot{
+    display:inline-block; width:8px; height:8px; border-radius:50%;
+    background:var(--c); margin-right:8px; vertical-align:middle;
+    transform:translateY(-1px);
+  }
+  .cat-count{
+    font-family:var(--font-serif);
+    font-size:38px;
+    font-weight:700;
+    line-height:1; color:var(--ink);
+    font-feature-settings:"tnum" 1;
+  }
+  .cat-count small{
+    font-family:var(--font-sans);
+    font-size:13px; font-weight:500; color:var(--ink-3);
+    margin-left:6px;
+  }
+  .cat-title-block h3{
+    font-family:var(--font-serif);
+    font-size:30px;
+    font-weight:700;
+    line-height:1.25;
+    margin:0 0 10px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  .cat-intro{
+    color:var(--ink-2);
+    font-size:14.5px;
+    line-height:1.7;
+    margin:0;
+    max-width:60ch;
+  }
+
+  /* ── post card ───────────────────────── */
+  .posts{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+  }
+  .posts > .spacer{} /* gutter visualization */
+  .post-list{
+    display:flex; flex-direction:column; gap:var(--gap);
+  }
+  .post{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:var(--post-pad);
+    position:relative;
+    transition:border-color .15s, transform .15s;
+  }
+  .post:hover{ border-color:var(--rule-strong) }
+  .post::before{
+    content:""; position:absolute; left:0; top:14px; bottom:14px;
+    width:2px; background:var(--c, var(--ink-3));
+    border-radius:2px;
+    opacity:0.85;
+  }
+  .post-head{
+    display:flex; align-items:center; gap:12px;
+    margin-bottom:14px;
+  }
+  .avatar{
+    width:34px; height:34px; border-radius:50%;
+    background:var(--av, var(--ink-3)); color:#fff;
+    font-family:var(--font-serif);
+    font-weight:700; font-size:15px;
+    display:grid; place-items:center;
+    flex-shrink:0;
+    letter-spacing:0;
+  }
+  .post-head .who{ display:flex; flex-direction:column; gap:1px; min-width:0 }
+  .post-head .handle{
+    font-size:14px; font-weight:700; color:var(--ink);
+    text-decoration:none;
+  }
+  .post-head .handle:hover{ color:var(--accent); text-decoration:none }
+  .post-head .handle.unknown{ color:var(--ink-3); font-weight:500 }
+  .post-head .handle.estimated{ color:var(--ink-3); font-weight:500 }
+  .post-head .handle.estimated::after{
+    content:"推定"; font-family:var(--font-mono);
+    font-size:9.5px; letter-spacing:0.1em;
+    background:var(--paper-2); color:var(--ink-3);
+    padding:1px 6px; border-radius:3px;
+    margin-left:8px; vertical-align:middle;
+  }
+  .post-head time{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-3);
+    font-feature-settings:"tnum" 1;
+    letter-spacing:0.04em;
+  }
+  .post-head .src{
+    margin-left:auto;
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-3);
+    padding:5px 10px;
+    border:1px solid var(--rule);
+    border-radius:999px;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:color .15s, border-color .15s, background .15s;
+  }
+  .post-head .src:hover{
+    color:var(--ink); border-color:var(--rule-strong);
+    background:var(--paper-2);
+    text-decoration:none;
+  }
+  .post-head .src svg{ width:11px; height:11px }
+
+  .post-body{
+    font-size:15.5px;
+    line-height:1.85;
+    color:var(--ink);
+    white-space:pre-wrap;
+    word-wrap:break-word;
+  }
+  html[data-density="compact"] .post-body{ font-size:14.5px; line-height:1.7 }
+
+  .post-body .quoted{
+    display:block;
+    margin-top:14px;
+    padding:10px 14px;
+    border-left:2px solid var(--rule-strong);
+    background:var(--paper-2);
+    color:var(--ink-2);
+    font-size:13.5px;
+    line-height:1.75;
+    border-radius:0 3px 3px 0;
+  }
+  .post-body .quoted .from{
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:0.14em;
+    color:var(--ink-3); text-transform:uppercase;
+    display:block; margin-bottom:4px;
+  }
+  .post-body .translation{
+    display:block; margin-top:16px;
+    padding:12px 16px;
+    border-left:2px solid var(--accent);
+    background:var(--accent-soft);
+    color:var(--ink);
+    font-size:14.5px; line-height:1.85;
+    border-radius:0 3px 3px 0;
+  }
+  .post-body .translation .label{
+    font-family:var(--font-mono); font-size:10.5px;
+    letter-spacing:0.14em; color:var(--accent);
+    text-transform:uppercase; display:block;
+    margin-bottom:6px; font-weight:500;
+  }
+  .post-body ul{
+    margin:8px 0 0; padding-left:1.1em;
+  }
+  .post-body ul li{ margin:2px 0 }
+  .post-body a{ word-break:break-all }
+
+  /* hide filtered out */
+  .cat.hidden{ display:none }
+
+  /* ── footer notes ────────────────────── */
+  .notes{
+    margin-top:96px;
+    padding-top:36px;
+    border-top:1px solid var(--rule-strong);
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:36px;
+  }
+  .notes h2{
+    font-family:var(--font-serif);
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+  }
+  .notes h2 .ko{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .notes ul{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .notes li{
+    color:var(--ink-2);
+    font-size:13.5px;
+    line-height:1.75;
+    padding-left:22px;
+    position:relative;
+  }
+  .notes li::before{
+    content:"※"; position:absolute; left:0; top:0;
+    color:var(--ink-3); font-family:var(--font-serif);
+  }
+
+  /* ── colophon ────────────────────────── */
+  .colophon{
+    margin-top:72px;
+    padding-top:24px;
+    border-top:1px solid var(--rule);
+    display:flex; justify-content:space-between; align-items:baseline;
+    color:var(--ink-3); font-size:12px;
+    font-family:var(--font-mono);
+    letter-spacing:0.06em;
+  }
+
+  /* ── responsive ──────────────────────── */
+  @media (max-width: 900px){
+    .page{ padding:32px 18px 80px }
+    h1.title{ font-size:42px }
+    .masthead{ grid-template-columns:1fr; gap:24px; align-items:start }
+    .profile{ grid-template-columns:1fr; gap:14px }
+    .cat-header{ grid-template-columns:1fr; gap:8px }
+    .cat-marker{ position:static; flex-direction:row; align-items:baseline; gap:14px }
+    .posts{ grid-template-columns:1fr; gap:0 }
+    .notes{ grid-template-columns:1fr; gap:14px }
+    .filter-bar{ margin:0 -18px 24px; padding:12px 18px }
+    .cat-count{ font-size:28px }
+    .cat-title-block h3{ font-size:24px }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── top bar ─────────────────────────── -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="mark">X</span>
+      <span>Pickup Digest</span>
+    </div>
+    <nav>
+      <a href="#feed">記事</a>
+      <a href="#profile">プロファイル</a>
+      <a href="#notes">注意</a>
+      <div class="theme-switch" role="radiogroup" aria-label="テーマ">
+        <button data-theme="paper" aria-pressed="true">Paper</button>
+        <button data-theme="mono" aria-pressed="false">Mono</button>
+        <button data-theme="dark" aria-pressed="false">Dark</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- ─── masthead ──────────────────────── -->
+  <section class="masthead">
+    <div>
+      <p class="eyebrow">AI / LLM Daily Pickup</p>
+      <h1 class="title">いま読むべき<br>X の AI 関連投稿。<em>2026.08.31</em></h1>
+      <p class="lede">最新の興味プロファイル（interest-profile-2026-08-06）に基づき、xAI <code>x_search</code> 経由で 8/31（JST）の範囲から収集した 21 件を、カテゴリ別に整理しました。本文は <code>xsearch --url</code> の verbatim のみを根拠にしています。</p>
+    </div>
+    <aside class="meta-card" aria-label="このダイジェストの概要">
+      <dl>
+        <dt>Posts</dt>     <dd><b>21</b>件</dd>
+        <dt>Categories</dt><dd><b>6</b>領域</dd>
+        <dt>Authors</dt>   <dd><b>20</b>アカウント</dd>
+        <dt>Source</dt>    <dd>xAI x_search</dd>
+        <dt>Window</dt>    <dd>8/31 00:00 – 9/1 09:00 JST</dd>
+      </dl>
+    </aside>
+  </section>
+
+  <!-- ─── interest profile ─────────────── -->
+  <section class="profile" id="profile">
+    <h2><span class="ko">Interest Profile</span>推定された<br>興味プロファイル</h2>
+    <ul class="tags">
+      <li><b>エージェント運用・Anthropic 戦略</b><small>Codex subagent / /goal 並列自動マージ, Managed Agents, Max 訴訟, RSI</small></li>
+      <li><b>ローカルLLM・量子化実測</b><small>DeepSeek V4 Flash, GLM-5.3, EXL3/vLLM, draft-mtp, tok/s・VRAM</small></li>
+      <li><b>モデル・ベンチ懐疑</b><small>Terminal-Bench 4.0, ベンチマックス, 国産 PLaMo</small></li>
+      <li><b>セキュリティ・サプライチェーン</b><small>npm タイポスクワッティング, Shai-Hulud</small></li>
+      <li><b>科学・医療</b><small>GOLLuM / Nature, 膵がん新薬 daraxonrasib, 自由診療論</small></li>
+      <li><b>日本産業・表現規制</b><small>さくら国策 LLM, 刑法175条, 隠れた検閲</small></li>
+    </ul>
+  </section>
+
+  <!-- ─── filter bar ───────────────────── -->
+  <nav class="filter-bar" id="filters" aria-label="カテゴリフィルタ">
+    <span class="label">Filter</span>
+    <button class="chip" data-filter="all" aria-pressed="true"><span class="dot" style="--c:#14110B"></span>すべて<span class="n">21</span></button>
+    <button class="chip" data-filter="agents" aria-pressed="false"><span class="dot" style="--c:#C8552B"></span>運用 / Anthropic<span class="n">5</span></button>
+    <button class="chip" data-filter="local" aria-pressed="false"><span class="dot" style="--c:#2B8C75"></span>ローカル LLM<span class="n">6</span></button>
+    <button class="chip" data-filter="models" aria-pressed="false"><span class="dot" style="--c:#5468B0"></span>モデル / ベンチ<span class="n">2</span></button>
+    <button class="chip" data-filter="security" aria-pressed="false"><span class="dot" style="--c:#834BAB"></span>セキュリティ<span class="n">2</span></button>
+    <button class="chip" data-filter="science" aria-pressed="false"><span class="dot" style="--c:#A3793C"></span>科学 / 医療<span class="n">3</span></button>
+    <button class="chip" data-filter="japan" aria-pressed="false"><span class="dot" style="--c:#6E6552"></span>日本 / 表現規制<span class="n">3</span></button>
+  </nav>
+
+  <!-- ─── feed ─────────────────────────── -->
+  <main class="feed" id="feed">
+
+    <!-- Agents / Anthropic -->
+    <section class="cat" data-cat="agents" id="cat-agents" style="--c:#C8552B">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>01 · Agents</span>
+          <span class="cat-count">5<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>エージェント運用・Anthropic 戦略</h3>
+          <p class="cat-intro">Codex の subagent を luna-max 固定して <code>/goal</code> で open issue が尽きるまで並列実装→CI green＋レビュー bot 通過で自動マージ。Anthropic は企業向けエージェント基盤に権限を必要範囲だけ渡す 5 更新。一方で Max「20x」表記の集団訴訟、「恒久引き上げ」実質 17% 削減、Claude に安全性研究を自律実行させる RSI 実験。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">c</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/cursorvers">@cursorvers</a>
+                <time>08/31 20:47 JST</time>
+              </div>
+              <a class="src" href="https://x.com/cursorvers/status/2094391638881939941" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">「Claude Maxの使用制限マーケティングが誤解を招くものだとして、Anthropicが訴えられている」
+
+・5xプラン：Pro週次の約3.5倍
+・20xプラン：Pro週次の約6倍
+つまり、ユーザーは2倍支払っても、週次の使用量が約1.7倍しか増えていない、という主張
+
+ClaudeからChatGPTやGrok、ローカルLLMへドンドン移行が進んでいるようだ
+Claudeは「誠実」と「ビジョナリーさ」が売りだと思うので、鋭意頑張ってほしい<span class="quoted"><span class="from">引用 · @kimmonismus</span>I went down the rabbit hole: Anthropic is already being sued over exactly this. And the $200 plan really only provides only around 2x the weekly usage of the $100 plan […] A proposed class action filed in June alleges that Max 5x delivers around 3.5x Pro's weekly usage, while Max 20x delivers just 6–8x. […] The "20x" is real within each five-hour window. The weekly limit makes the overall offer look very different.</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">t</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/take_pla">@take_pla</a>
+                <time>08/31 17:55 JST</time>
+              </div>
+              <a class="src" href="https://x.com/take_pla/status/2094348272630649233" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body"><code>~/.codex/config.toml</code>
+[agents]
+default_subagent_model = "gpt-5.6-luna" default_subagent_reasoning_effort = "max"
+この設定してcodexのultraで並列実装させると結構早くてコスパ良い
+
+仕様固まってissueができたら↓のプロンプトをぶちこんでる
+
+--- プロンプト ---
+/goal {リポジトリ名}の未対応 GitHub Issue を番号順に確認し、各 Issue を実装して PR を作成し、GitHub Actions CI が green かつ {レビューbot名} の未解決指摘がなくなるまで修正し、マージするループを open Issue がなくなるまで継続する
+並列でできるところは並列で実装して<span class="quoted"><span class="from">引用 · @take_pla</span>fableと壁打ちして仕様書つくらせて、sol-maxにレビューさせる。
+fableにissueとして実装チケット切る。
+open issueを全部closeをgoalにする。
+sol-ultraにsubagentをluna-max固定して実装させる。
+CIとレビューbot通過で自動マージ。
+これが今のところ1番速度出る。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">y</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/yukiwa_AI">@yukiwa_AI</a>
+                <time>08/31 16:25 JST</time>
+              </div>
+              <a class="src" href="https://x.com/yukiwa_AI/status/2094325738191347881" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Anthropicは、Claudeに他のAIの安全性研究を自律的に進めさせ、うそや迎合など10種類すべての問題行動で、性能を落とさず改善する手法を見つけたと発表しました。公開ベンチマークを使い、文献調査から提案、学習、テストまでを繰り返した結果は、人間の安全性研究者28人の提案を上回ったそうです。別の実験では60時間で50超の手法を試し、最良案は約2000件の学習データで製品版に迫るスコアを達成しました。一方、研究記録約1600件のうち39件では正解を盗み見る不正も起き、監視役AIが検出しています。安全性調整の自動化は近づいていますが、研究するAI自体を監督し、測れていない偏りを確かめる仕組みも欠かせません。</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">C</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ClaudeCode_UT">@ClaudeCode_UT</a>
+                <time>08/31 14:30 JST</time>
+              </div>
+              <a class="src" href="https://x.com/ClaudeCode_UT/status/2094296627171434678" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">【最新】
+Anthropicが、企業向けAIエージェント基盤に新しいアップデートを5つまとめて公開しました🔥
+
+中でも実務に直結するのはここ👇
+
+<a href="https://t.co/Fw3xtiRxyh">https://t.co/Fw3xtiRxyh</a>
+
+・エージェントの動きをリアルタイムでログ追跡
+・案件やユーザーごとに挙動を個別調整
+・処理の完了や失敗を外部システムへ自動通知
+・過去の実行ログを新しい順にさかのぼって確認
+・エージェントに渡す権限を必要な範囲だけに絞る
+
+特に権限を絞れる仕組みは大きい
+
+強い権限を渡すのが不安で検証止まりだった企業も、必要な操作だけを渡して次に進められる
+
+エージェントを動かす基盤側が、実務に組み込める強度に育ってきている</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">K</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/Ken_ai90218909">@Ken_ai90218909</a>
+                <time>08/31 02:22 JST</time>
+              </div>
+              <a class="src" href="https://x.com/Ken_ai90218909/status/2094113494555566337" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">「恒久的な引き上げ」は、実質17%削減だった。Anthropicが告知した変更は、数字の見せ方次第で受け取り方が真逆になる好例だと思う。AIツールを業務に組み込むなら、公式の説明を鵜呑みにせず、自分の使用量を把握しておくことが今こそ重要だ。</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Local LLM -->
+    <section class="cat" data-cat="local" id="cat-local" style="--c:#2B8C75">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>02 · Local</span>
+          <span class="cat-count">6<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>ローカルLLM・量子化実測</h3>
+          <p class="cat-intro">ローカル実行のフィールドノートが噴出した 1 日。DeepSeek V4 Flash Vision Exp が 60-70 tok/s、GLM-5.3-Flash を IQ2_XXS 87.3GB で 3090 に載せ eval まで、EXL3 4bpw＋DFlash2＋vLLM で 230-350 tok/s・360K ctx、Qwen3.8-27B を 5070ti で draft-mtp n=2 の 90t/s、純 CPU で 15/5.5TPS、2020 年 MacBook の iris GPU で 125B を mmap して 2 tok/s。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">v</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/voluntas">@voluntas</a>
+                <time>09/01 08:49 JST</time>
+              </div>
+              <a class="src" href="https://x.com/voluntas/status/2094573285044576313" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">まぁこれから vLLM などで色々速度が改善されていくんだろう、多分。とても楽しみ。DeepSeek V4 Flash Vision Exp のオリジナルモデルが実用的な速度でローカルで動くのはすごい。<span class="quoted"><span class="from">引用 · @voluntas</span>ローカル LLM で Vision Exp は 60-70 tok/s はでてるな、なんかもっさりと感じるのは自分の気のせいなのかもしれない。(Qwen3.8 Flash が API で 90 tok/s でてたから、評価中にそちらの早さに慣れてしまったのかも)</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">?</div>
+              <div class="who">
+                <span class="handle unknown">著者不明</span>
+                <time>08/31 07:34 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2094192123981815892" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">おはようローカルLLM
+
+8月のおしながき
+・・・・・・・
+GLM-5.3−Flash：39TPS→64TPS
+Qwen-Flash-next：54TPS→（同レシピで改修中）
+GLM-5.3-Large：純CPUで15TPS
+Hy4_TQ1：純CPUで5.5TPS（DSH上実測）
+
+今日一日で各々どこまで伸ばせるか！</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">D</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/Daniel00Higgins">@Daniel00Higgins</a>
+                <time>08/31 04:12 JST</time>
+              </div>
+              <a class="src" href="https://x.com/Daniel00Higgins/status/2094141140001767703" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Running Qwen3.8-27B (AtomicChat AD-IQ3_S-IQ3_XXS) on a 16gb 5070 ti at 90 t/s with 164k context. llama.cpp.
+
+The trick is @atomic_chat_hq's mixed AD-IQ3_S-IQ3_XXS plus llama.cpp draft-mtp n=2.
+
+<code>llama-cli.exe -m Qwen3.8-27B-AD-IQ3_S-IQ3_XXS.gguf -ngl 99 -fa on -c 163840 -ctk q4_0 -ctv q4_0 -t 6 -ub 512 -b 512 -n 128 --spec-type draft-mtp --spec-draft-n-max 2 --spec-draft-p-min 0.1 -p ""</code>
+
+Results:
+• 90 t/s at 163,840 context
+• kv q4_0/q4_0
+• 200k died
+
+For comparison: same GGUF, same llama-cli gen, 8k context. no MTP 52 t/s, MTP n=2 96 t/s. about 2x. don't have a 164k no-MTP gen yet.<span class="translation"><span class="label">日本語訳</span>Qwen3.8-27B（AtomicChat AD-IQ3_S-IQ3_XXS）を 16GB の 5070 ti で 164k コンテキスト・90 t/s で回している。llama.cpp。コツは @atomic_chat_hq の混合量子化 AD-IQ3_S-IQ3_XXS と llama.cpp の draft-mtp n=2。結果は 163,840 コンテキストで 90 t/s、kv は q4_0/q4_0、200k は落ちた。比較：同じ GGUF・同じ生成、8k コンテキストで MTP なし 52 t/s、MTP n=2 で 96 t/s＝約 2 倍。164k での MTP なし計測はまだ。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">l</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/light_foundry">@light_foundry</a>
+                <time>08/31 01:47 JST</time>
+              </div>
+              <a class="src" href="https://x.com/light_foundry/status/2094104848853774634" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">TL;DR: 230 tok/s structured · 350 tok/s aggregate code @ c4 · 360K ctx · uncensored · fully local
+
+Performance (temp 0, measured via usage tokens)
+Single stream (c1):
+· structured: 230 tok/s
+· code: 154 tok/s
+4 concurrent users (aggregate):
+· structured: 589 tok/s
+· code: 350 tok/s
+· prose: 236 tok/s
+c8 peaks at 595 tok/s aggregate.
+Prefill: 2.5–2.8K tok/s.
+332K-token needle test: PASS.
+
+Full serving setup:
+· Model: neko-legends/GLM-5.3-Flash-Uncensored-EXL3, 4bpw, mcg codebook
+· Draft: incoai/GLM-5.3-Flash-DFlash2, k=7
+· Engine: @wrldsuksgo2mars's b12x vLLM fork, TP2 + DCP2 (decode context parallel)
+· KV cache: nvfp4_ds_mla with pinned --kv-cache-memory → 957K-token KV pool
+· ctx 368,640 · chunked prefill 1024 · 98.3% of 2×96GB VRAM in use<span class="translation"><span class="label">日本語訳</span>要約：構造化 230 tok/s・c4 でコード合計 350 tok/s・360K コンテキスト・無検閲・完全ローカル。単一ストリーム(c1) は構造化 230／コード 154 tok/s、4 並列合計で構造化 589／コード 350／散文 236 tok/s、c8 で合計 595 tok/s。Prefill 2.5–2.8K tok/s、332K トークンの needle テスト PASS。構成：GLM-5.3-Flash-Uncensored-EXL3 4bpw、ドラフトに GLM-5.3-Flash-DFlash2 (k=7)、エンジンは b12x vLLM フォークで TP2+DCP2、KV キャッシュは nvfp4_ds_mla を pin して 957K トークンプール、ctx 368,640、2×96GB VRAM の 98.3% を使用。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">I</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ItsmeAjayKV">@ItsmeAjayKV</a>
+                <time>08/31 01:24 JST</time>
+              </div>
+              <a class="src" href="https://x.com/ItsmeAjayKV/status/2094098970201223427" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Here it is, GLM-5.3-Flash-AJ-IQ2_XXS
+
+It's mixed quant, 87.3 GB, not true 2-bit.
+Needs llama.cpp at 1f817ef or later from PR #27752
+
+It runs on my 3090 + 64GB DDR5 ram.
+But it's slow, avg decode 10t/s
+
+I could make it smaller, but the quality loss would make it pretty much unusable.
+This mixed quant hits a good balance between size and quality.
+
+I can't just say this quant is good and leave it at that. Metrics tell part of the story, but here's actual proof of what this quant can do. All one-shot three.js tasks from my eval-set, compared against Qwen3.8-Flash-Next-IQ4_XS, reasoning low, q8_0 kv<span class="translation"><span class="label">日本語訳</span>GLM-5.3-Flash-AJ-IQ2_XXS を公開。混合量子化で 87.3GB、真の 2-bit ではない。llama.cpp は PR #27752 の 1f817ef 以降が必要。3090＋64GB DDR5 で動くが遅く平均デコード 10t/s。これ以上小さくすると品質劣化でほぼ使い物にならない。この混合量子化はサイズと品質のバランスが良い。指標だけでなく実証も：eval セットの three.js ワンショットタスクを全部、Qwen3.8-Flash-Next-IQ4_XS・reasoning low・q8_0 kv と比較した。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">D</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/DiegoTellez20">@DiegoTellez20</a>
+                <time>08/31 00:32 JST</time>
+              </div>
+              <a class="src" href="https://x.com/DiegoTellez20/status/2094085932668387413" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Running Qwen3.8-Flash-Next (~125B) locally on a 2020 Intel MacBook Pro.
+
+PotatoGPU (intel iris 1536MB)
+32 GB RAM.
+~85 GB GGUF.
+Quad-core i7.
+~2 tok/s. 🤯
+
+How?
+llama.cpp + mmap.
+Local AI is getting wild<span class="translation"><span class="label">日本語訳</span>Qwen3.8-Flash-Next（〜125B）を 2020 年の Intel MacBook Pro でローカル実行。ポテト GPU（intel iris 1536MB）、32GB RAM、〜85GB の GGUF、クアッドコア i7 で 〜2 tok/s。🤯 どうやって？ llama.cpp＋mmap。ローカル AI はワイルドになってきた。</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Models -->
+    <section class="cat" data-cat="models" id="cat-models" style="--c:#5468B0">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>03 · Models</span>
+          <span class="cat-count">2<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>モデル・ベンチ懐疑</h3>
+          <p class="cat-intro">定点観測と懐疑のセット。Terminal-Bench 4.0 を Codex＋gpt-5.6-luna(high) で回して解決率 4.9%、Fable でも 50% 未満＝「ベンチマックスになっていない」観点で使えそう。GENAI 採用予定の国産 PLaMo が比較相手を Haiku にしたベンチ図への皮肉。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">g</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/gosrum">@gosrum</a>
+                <time>08/31 19:20 JST</time>
+              </div>
+              <a class="src" href="https://x.com/gosrum/status/2094369828735737986" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Terminal-Bench 4.0、新しいベンチマーク指標として結構良いかもしれない...！
+
+まずはお試しで Codex + gpt-5.6-luna (high) を回してみた。結果は解決率 4.9%
+
+公式によると Fable でも50%取れないらしいので、少なくともベンチマックスになっていないという観点で現状オープンになっているモデルの性能評価にはかなり使えそう
+
+問題は評価にめちゃくちゃコストがかかる、つまりローカルで評価する場合はめちゃくちゃ時間と電気代がかかるだろうということ
+
+まあとりあえずは、GLM Coding Plan で GLM-5.3-flashの評価とかしてみようかな<span class="quoted"><span class="from">引用 · @gosrum</span>とりあえず 、H100 を必要としないタスクでベンチマーク回して今日はもう寝よう おやすみなさい</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">t</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/tanubitUT">@tanubitUT</a>
+                <time>08/31 10:57 JST</time>
+              </div>
+              <a class="src" href="https://x.com/tanubitUT/status/2094243061476061467" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">GENAIに採用されるらしい国産LLMの謎のベンチマーク図表、ライバルがHaikuで日本政府にふさわしいおめでたい脳みそだな感がすごい
+
+<a href="https://plamo.preferredai.jp/">https://plamo.preferredai.jp/</a></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Security -->
+    <section class="cat" data-cat="security" id="cat-security" style="--c:#834BAB">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>04 · Security</span>
+          <span class="cat-count">2<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>セキュリティ・サプライチェーン</h3>
+          <p class="cat-intro">npm サプライチェーンの二連発。WSL 開発者を狙う npm タイポスクワッティング（CloudSEK 報告、40 パッケージ、WSL 検知で PowerShell が exe 実行）と、Keyv 系が Shai-Hulud 攻撃で汚染された件。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">_</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/__kokumoto">@__kokumoto</a>
+                <time>08/31 12:26 JST</time>
+              </div>
+              <a class="src" href="https://x.com/__kokumoto/status/2094265622020362645" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">WSLを使う開発者を狙うNPMタイポスクワッティング攻撃について。CloudSEK社報告。40パッケージを確認。インストールにより感染が開始し、WSL環境を検知するとPowerShellコマンドがGitHubからexeを落として実行。 <a href="https://securityonline.info/npm-typosquatting-malware/">securityonline.info/npm-typosquatting-malware</a></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">K</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/Komodosec">@Komodosec</a>
+                <time>08/31 10:59 JST</time>
+              </div>
+              <a class="src" href="https://x.com/Komodosec/status/2094243709869342837" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Keyv and friends compromised in active Shai-Hulud supply chain attack <a href="https://www.aikido.dev/blog/keyv-and-friends-compromised-in-npm-supply-chain-attack">aikido.dev/blog/keyv-and-friends-compromised-in-npm-supply-chain-attack</a><span class="translation"><span class="label">日本語訳</span>Keyv とその関連パッケージが、進行中の Shai-Hulud サプライチェーン攻撃で汚染された。</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Science / Medical -->
+    <section class="cat" data-cat="science" id="cat-science" style="--c:#A3793C">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>05 · Science</span>
+          <span class="cat-count">3<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>科学・医療</h3>
+          <p class="cat-intro">「AI が科学に効く話」と「医療の確かな話題」。GOLLuM は LLM を不確実性調整最適化器にして実験回数を 41% 削減（Nature）。膵がんは RAS を標的にした経口薬 daraxonrasib が FDA 承認、死亡リスク 60% 低下。医療を自由診療化＝米国式の是非。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">j</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/jpx_225">@jpx_225</a>
+                <time>09/01 08:46 JST</time>
+              </div>
+              <a class="src" href="https://x.com/jpx_225/status/2094572528446701694" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">🚨 膵がん治療、これはかなり大きい。
+FDAが新薬「daraxonrasib」を承認。
+対象は、治療歴のある転移性膵腺がんなど。
+第III相試験では標準化学療法と比べて、
+死亡リスクを60％低下。
+しかも点滴ではなく、1日1回の経口薬。
+標的は、膵がんの多くを駆動する「RAS」。
+長年「狙えない」と言われてきたRASを、ついに膵がん治療で本格的に狙う時代へ。🧬
+膵がん治療の景色を変える可能性がある。
+※米FDAでの承認。対象は成人の転移性膵腺がんで、少なくとも1ラインの全身療法後、または多剤併用療法が適さない患者。
+Source：FDA / Revolution Medicines</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">M</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/MIKITO_777">@MIKITO_777</a>
+                <time>08/31 19:55 JST</time>
+              </div>
+              <a class="src" href="https://x.com/MIKITO_777/status/2094378566993739882" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">これって、つまり医療をすべて自由診療にして市場経済に任せろってことかな……？
+
+そうすると米国式になるので、医師の給料は数倍になって、しかも仕事も楽になるけど、
+患者さんの医療費も数倍になり、お金がない人は諦めて死んでくださいという世界になっちゃうよ……<span class="quoted"><span class="from">引用 · @ununur</span>努力して高い能力を獲得して、社会の役に立って市場から儲けるのは良いのですが、医師のように所得の9割を税から得て、医療法人を排他的に所有するというのは少し話が違うと思います。努力の結果、席についただけの準公務員と努力の結果、力と富を得た事業家には大きな差があって然るべきかと。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">K</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/KwhRd100">@KwhRd100</a>
+                <time>08/31 07:50 JST</time>
+              </div>
+              <a class="src" href="https://x.com/KwhRd100/status/2094195964273647954" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">実験的発見のための不確実性調整済み最適化ツールとしての大規模言語モデル　GP周辺尤度でLLMを微調整し、不確実性を学習信号に変換後、明示的な対照損失なしに実験成否を潜在空間で分離するGOLLuM。有機合成等23タスクで既存手法に勝り平均1位。実験回数を41%削減。実装あり。<a href="https://www.nature.com/articles/s42256-026-01283-z">nature.com/articles/s42256-026-01283-z</a></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Japan / Expression -->
+    <section class="cat" data-cat="japan" id="cat-japan" style="--c:#6E6552">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>06 · Japan</span>
+          <span class="cat-count">3<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>日本産業・表現規制</h3>
+          <p class="cat-intro">副関心の日本と表現の自由。さくらにローカル LLM を国策無償配布する案（NHK のタイ政府 AI 無償化を引用）。8/31 は刑法175条をめぐる議論が集中し、CERO 審査など「隠れた検閲」の透明性、175条 廃絶が反差別・人権保障として不当な萎縮を払拭するという論考。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">s</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/shinshi78">@shinshi78</a>
+                <time>08/31 20:58 JST</time>
+              </div>
+              <a class="src" href="https://x.com/shinshi78/status/2094394440790200802" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">CEROの審査とか刑法175条とか、あと有害図書指定とか実質な検閲を隠された場所でやるってのも問題だし、やるなら公共で見れる内容でやってほしいと思う。</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">k</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/kuzukago_4">@kuzukago_4</a>
+                <time>08/31 16:24 JST</time>
+              </div>
+              <a class="src" href="https://x.com/kuzukago_4/status/2094325405285257274" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">素人考えであることを十分承知で言わせていただくならば、悪法・差別法であるところの刑法175条が（多様な表現の指向者に対する）反差別・人権保障の観点から廃絶されさえすれば、不当な萎縮が払拭され、（不同意フィクションを含む）多様な表現活動の場の整備・参入が進むのではないだろうか。<span class="quoted"><span class="from">引用 · @Mashiro_yuh</span>どうも世界的に「性的なこと」に関する規制がおかしなことになってるみたいです。劇中で登場人物が「嫌な目に遭う」ことくらいは普通でしょう。ところがこれが「性的なこと」となると途端に倫理観が大暴走して「一切まかりならん。あとで同意があったとしても、フィクションだと明言してもダメ。役者が同意する場面を入れても、最終的には説得されたとしても「一瞬でも嫌がる演技があるならダメ」」とえらいことになりつつあるみたいです。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">t</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/taiyop">@taiyop</a>
+                <time>08/31 10:54 JST</time>
+              </div>
+              <a class="src" href="https://x.com/taiyop/status/2094242347253199238" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">自分はさくらインターネットとかにローカルLLM起動させてそれを日本政府が無償配布とかすれば良いと思うんですよね。
+
+今のローカルLLMはGPU性能さえあれば十分賢くて応答性能あるし、その取り組みを通じて国内のAI企業を成長させることも出来るし、コストも国内GPUクラウド業者に還元するだけだし、国策として一石二鳥の戦略だと思うんです。<span class="quoted"><span class="from">引用 · @nhk_news</span>タイ 生成AIを無料で利用可能に 政府が利用料支払い普及へ</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── notes ────────────────────────── -->
+  <footer class="notes" id="notes">
+    <h2><span class="ko">Editor's Notes</span>収集・編集上の<br>注意</h2>
+    <ul>
+      <li>出典の本文は <code>xsearch --url</code> で取得した「Grok の引用」です。X の生 API ではないため、まれにパラフレーズや取り違えがあります。本文に違和感があれば原 URL を直接開いて確認してください。</li>
+      <li><code>/i/status/</code> のリンク形式では Grok が著者ハンドルを <code>@i</code> と返すため、本文中の言及や返信先・引用元から実際のハンドルを再構成しています。今回は 21 件中 20 件でハンドルを特定でき、1 件は識別できず「著者不明」と表示しています。</li>
+      <li>収集窓は 2026-08-31 00:00 〜 2026-09-01 09:00 JST。時刻は各投稿 ID（Snowflake）由来の JST です。選別はトピック×アングル×ソースの 3 軸で、速報の二次拡散・SEO / アフィ煽り・汎用プロンプトテンプレ羅列・生リーク・<code>@grok</code> 応答・暗号資産スパム（LooPIN 等の GPU プール shill を除外）・医療デマなどは対象外としています。</li>
+      <li>「引用」は他者の投稿・記事の紹介です（一次情報は引用元を参照）。既存 digest と URL（status/&lt;id&gt;）の重複がゼロであることを確認済みです。</li>
+    </ul>
+  </footer>
+
+  <div class="colophon">
+    <span>X PICKUP DIGEST · No. 2026-08-31</span>
+    <span>compiled via xAI x_search</span>
+  </div>
+
+</div>
+
+<!-- Theme switch -->
+<script>
+(function(){
+  const KEY = 'xpickup-theme';
+  const html = document.documentElement;
+  const buttons = document.querySelectorAll('.theme-switch button');
+
+  function setTheme(name){
+    html.setAttribute('data-theme', name);
+    try { localStorage.setItem(KEY, name); } catch(_){}
+    buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.theme === name)));
+  }
+
+  // restore
+  let initial = 'paper';
+  try { initial = localStorage.getItem(KEY) || 'paper'; } catch(_){}
+  setTheme(initial);
+
+  buttons.forEach(b => b.addEventListener('click', () => setTheme(b.dataset.theme)));
+})();
+</script>
+
+<!-- Filtering + scrollspy -->
+<script>
+(function(){
+  const chips = document.querySelectorAll('.chip');
+  const cats  = document.querySelectorAll('.cat');
+
+  function setFilter(f){
+    chips.forEach(c=>c.setAttribute('aria-pressed', String(c.dataset.filter === f)));
+    cats.forEach(s=>{
+      const show = (f === 'all') || (s.dataset.cat === f);
+      s.classList.toggle('hidden', !show);
+    });
+    if (f !== 'all'){
+      const target = document.getElementById('cat-' + f);
+      if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }
+
+  chips.forEach(c=>{
+    c.addEventListener('click', ()=>setFilter(c.dataset.filter));
+  });
+
+})();
+</script>
+
+</body>
+</html>

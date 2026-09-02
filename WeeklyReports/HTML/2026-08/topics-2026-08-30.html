@@ -1,0 +1,1250 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>X ピックアップ｜2026.08.30</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#F2EDE0;
+    --paper-2:#EAE3D2;
+    --card:#FBF8EF;
+    --ink:#14110B;
+    --ink-2:#3D372C;
+    --ink-3:#6E6552;
+    --ink-4:#9E9582;
+    --rule:rgba(20,17,11,0.10);
+    --rule-strong:rgba(20,17,11,0.22);
+    --accent:#B43820;
+    --accent-soft:rgba(180,56,32,0.10);
+
+    --font-serif:'Shippori Mincho B1', 'Hiragino Mincho ProN','Yu Mincho',serif;
+    --font-sans:'Zen Kaku Gothic New','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;
+    --font-mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+    --gap:28px;
+    --post-pad:22px 26px;
+  }
+
+  /* themes */
+  html[data-theme="mono"]{
+    --paper:#F4F4F2;
+    --paper-2:#EBEBE7;
+    --card:#FFFFFF;
+    --ink:#0C0C0C;
+    --ink-2:#2D2D2D;
+    --ink-3:#5C5C5C;
+    --ink-4:#9A9A9A;
+    --rule:rgba(0,0,0,0.10);
+    --rule-strong:rgba(0,0,0,0.22);
+    --accent:#0C0C0C;
+    --accent-soft:rgba(0,0,0,0.06);
+  }
+  html[data-theme="dark"]{
+    --paper:#15140F;
+    --paper-2:#1D1B16;
+    --card:#1F1D17;
+    --ink:#F1ECDC;
+    --ink-2:#D7D0BD;
+    --ink-3:#A39A82;
+    --ink-4:#736B57;
+    --rule:rgba(241,236,220,0.10);
+    --rule-strong:rgba(241,236,220,0.22);
+    --accent:#E37A5F;
+    --accent-soft:rgba(227,122,95,0.14);
+  }
+
+  html[data-density="compact"]{
+    --gap:18px;
+    --post-pad:16px 20px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-sans);
+    font-feature-settings:"palt" 1;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.7;
+    font-size:15.5px;
+    letter-spacing:0.01em;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline;text-underline-offset:3px}
+  code{font-family:var(--font-mono);font-size:0.88em;background:var(--paper-2);padding:0.08em 0.4em;border-radius:4px;color:var(--ink-2)}
+
+  /* ── top bar ─────────────────────────── */
+  .topbar{
+    position:sticky; top:0; z-index:30;
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-bottom:1px solid var(--rule);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto;
+    padding:10px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:24px;
+    font-size:12.5px; color:var(--ink-3);
+    letter-spacing:0.08em;
+  }
+  .topbar .brand{
+    display:flex; align-items:center; gap:10px;
+    color:var(--ink); font-weight:700;
+  }
+  .topbar .brand .mark{
+    width:22px; height:22px; border-radius:6px;
+    background:var(--ink); color:var(--paper);
+    display:grid; place-items:center;
+    font-family:var(--font-serif); font-weight:700;
+    font-size:13px; line-height:1;
+  }
+  .topbar nav{display:flex; gap:18px; align-items:center}
+  .topbar nav a{color:var(--ink-3)}
+  .topbar nav a:hover{color:var(--ink); text-decoration:none}
+  .theme-switch{
+    display:inline-flex; align-items:center;
+    border:1px solid var(--rule); border-radius:999px;
+    padding:2px; gap:0;
+    background:var(--paper-2);
+  }
+  .theme-switch button{
+    appearance:none; border:none; background:transparent;
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:0.12em;
+    color:var(--ink-3);
+    padding:5px 10px;
+    border-radius:999px;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:background .15s, color .15s;
+  }
+  .theme-switch button:hover{ color:var(--ink) }
+  .theme-switch button[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+
+  /* ── page shell ──────────────────────── */
+  .page{
+    max-width:1180px; margin:0 auto;
+    padding:48px 28px 120px;
+  }
+
+  /* ── masthead ────────────────────────── */
+  .masthead{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    align-items:end;
+    gap:40px;
+    padding-bottom:36px;
+    border-bottom:1px solid var(--rule-strong);
+    margin-bottom:36px;
+  }
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:11.5px; letter-spacing:0.22em;
+    color:var(--accent);
+    text-transform:uppercase;
+    margin:0 0 18px;
+  }
+  .eyebrow::before{
+    content:""; display:inline-block; width:22px; height:1px;
+    background:var(--accent); vertical-align:middle;
+    margin-right:10px; transform:translateY(-2px);
+  }
+  h1.title{
+    font-family:var(--font-serif);
+    font-weight:700;
+    font-size:64px;
+    line-height:1.08;
+    letter-spacing:0.005em;
+    margin:0 0 18px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  h1.title em{
+    font-style:normal;
+    color:var(--ink-3);
+    font-weight:500;
+  }
+  .lede{
+    max-width:62ch;
+    color:var(--ink-2);
+    font-size:16.5px;
+    line-height:1.75;
+    margin:0;
+  }
+  .masthead .meta-card{
+    border:1px solid var(--rule-strong);
+    border-radius:2px;
+    padding:18px 22px;
+    min-width:240px;
+    background:var(--paper-2);
+  }
+  .masthead .meta-card dl{
+    margin:0; display:grid;
+    grid-template-columns: auto 1fr;
+    gap:4px 16px;
+    font-size:13px;
+  }
+  .masthead .meta-card dt{
+    color:var(--ink-3);
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    align-self:center;
+  }
+  .masthead .meta-card dd{
+    margin:0;
+    color:var(--ink);
+    font-weight:500;
+    font-feature-settings:"tnum" 1;
+  }
+  .masthead .meta-card dd b{
+    font-family:var(--font-serif);
+    font-weight:700;
+    font-size:22px;
+    margin-right:4px;
+  }
+
+  /* ── profile strip ───────────────────── */
+  .profile{
+    margin:0 0 44px;
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    align-items:start;
+  }
+  .profile h2{
+    font-family:var(--font-serif);
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+    line-height:1.4;
+  }
+  .profile h2 .ko{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .profile ul.tags{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-wrap:wrap; gap:8px;
+  }
+  .profile ul.tags li{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-left:3px solid var(--ink-2);
+    padding:8px 14px 8px 12px;
+    font-size:13.5px;
+    line-height:1.5;
+    color:var(--ink-2);
+    border-radius:2px;
+  }
+  .profile ul.tags li b{
+    color:var(--ink); font-weight:700;
+  }
+  .profile ul.tags li small{
+    color:var(--ink-3); font-size:12px; margin-left:6px;
+  }
+  html[data-show-profile="false"] .profile{display:none}
+
+  /* ── filter bar ──────────────────────── */
+  .filter-bar{
+    position:sticky;
+    top:43px; z-index:25;
+    margin:0 -28px 36px;
+    padding:14px 28px;
+    background:color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    display:flex; gap:6px; align-items:center;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .filter-bar::-webkit-scrollbar{display:none}
+  .filter-bar .label{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    text-transform:uppercase;
+    margin-right:8px;
+    white-space:nowrap;
+  }
+  .chip{
+    appearance:none; border:none; background:transparent;
+    font-family:var(--font-sans);
+    font-size:13.5px;
+    color:var(--ink-2);
+    padding:7px 13px 7px 11px;
+    border-radius:999px;
+    display:inline-flex; align-items:center; gap:8px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background .15s, color .15s;
+    line-height:1.2;
+  }
+  .chip:hover{ background:var(--paper-2) }
+  .chip .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--c, var(--ink-3));
+    flex-shrink:0;
+  }
+  .chip .n{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--ink-3);
+    font-feature-settings:"tnum" 1;
+  }
+  .chip[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .chip[aria-pressed="true"] .n{ color:color-mix(in srgb, var(--paper) 70%, transparent) }
+  .chip[aria-pressed="true"] .dot{ box-shadow:0 0 0 2px var(--ink) }
+
+  /* ── feed / category blocks ──────────── */
+  .feed{ display:flex; flex-direction:column; gap:64px }
+  .cat{
+    scroll-margin-top:120px;
+  }
+  .cat-header{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    margin-bottom:24px;
+    align-items:start;
+  }
+  .cat-marker{
+    display:flex; flex-direction:column; gap:8px;
+    position:sticky; top:120px;
+  }
+  .cat-num{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    text-transform:uppercase;
+  }
+  .cat-num .dot{
+    display:inline-block; width:8px; height:8px; border-radius:50%;
+    background:var(--c); margin-right:8px; vertical-align:middle;
+    transform:translateY(-1px);
+  }
+  .cat-count{
+    font-family:var(--font-serif);
+    font-size:38px;
+    font-weight:700;
+    line-height:1; color:var(--ink);
+    font-feature-settings:"tnum" 1;
+  }
+  .cat-count small{
+    font-family:var(--font-sans);
+    font-size:13px; font-weight:500; color:var(--ink-3);
+    margin-left:6px;
+  }
+  .cat-title-block h3{
+    font-family:var(--font-serif);
+    font-size:30px;
+    font-weight:700;
+    line-height:1.25;
+    margin:0 0 10px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  .cat-intro{
+    color:var(--ink-2);
+    font-size:14.5px;
+    line-height:1.7;
+    margin:0;
+    max-width:60ch;
+  }
+
+  /* ── post card ───────────────────────── */
+  .posts{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+  }
+  .posts > .spacer{} /* gutter visualization */
+  .post-list{
+    display:flex; flex-direction:column; gap:var(--gap);
+  }
+  .post{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:var(--post-pad);
+    position:relative;
+    transition:border-color .15s, transform .15s;
+  }
+  .post:hover{ border-color:var(--rule-strong) }
+  .post::before{
+    content:""; position:absolute; left:0; top:14px; bottom:14px;
+    width:2px; background:var(--c, var(--ink-3));
+    border-radius:2px;
+    opacity:0.85;
+  }
+  .post-head{
+    display:flex; align-items:center; gap:12px;
+    margin-bottom:14px;
+  }
+  .avatar{
+    width:34px; height:34px; border-radius:50%;
+    background:var(--av, var(--ink-3)); color:#fff;
+    font-family:var(--font-serif);
+    font-weight:700; font-size:15px;
+    display:grid; place-items:center;
+    flex-shrink:0;
+    letter-spacing:0;
+  }
+  .post-head .who{ display:flex; flex-direction:column; gap:1px; min-width:0 }
+  .post-head .handle{
+    font-size:14px; font-weight:700; color:var(--ink);
+    text-decoration:none;
+  }
+  .post-head .handle:hover{ color:var(--accent); text-decoration:none }
+  .post-head .handle.unknown{ color:var(--ink-3); font-weight:500 }
+  .post-head .handle.estimated{ color:var(--ink-3); font-weight:500 }
+  .post-head .handle.estimated::after{
+    content:"推定"; font-family:var(--font-mono);
+    font-size:9.5px; letter-spacing:0.1em;
+    background:var(--paper-2); color:var(--ink-3);
+    padding:1px 6px; border-radius:3px;
+    margin-left:8px; vertical-align:middle;
+  }
+  .post-head time{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-3);
+    font-feature-settings:"tnum" 1;
+    letter-spacing:0.04em;
+  }
+  .post-head .src{
+    margin-left:auto;
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-3);
+    padding:5px 10px;
+    border:1px solid var(--rule);
+    border-radius:999px;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:color .15s, border-color .15s, background .15s;
+  }
+  .post-head .src:hover{
+    color:var(--ink); border-color:var(--rule-strong);
+    background:var(--paper-2);
+    text-decoration:none;
+  }
+  .post-head .src svg{ width:11px; height:11px }
+
+  .post-body{
+    font-size:15.5px;
+    line-height:1.85;
+    color:var(--ink);
+    white-space:pre-wrap;
+    word-wrap:break-word;
+  }
+  html[data-density="compact"] .post-body{ font-size:14.5px; line-height:1.7 }
+
+  .post-body .quoted{
+    display:block;
+    margin-top:14px;
+    padding:10px 14px;
+    border-left:2px solid var(--rule-strong);
+    background:var(--paper-2);
+    color:var(--ink-2);
+    font-size:13.5px;
+    line-height:1.75;
+    border-radius:0 3px 3px 0;
+  }
+  .post-body .quoted .from{
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:0.14em;
+    color:var(--ink-3); text-transform:uppercase;
+    display:block; margin-bottom:4px;
+  }
+  .post-body .translation{
+    display:block; margin-top:16px;
+    padding:12px 16px;
+    border-left:2px solid var(--accent);
+    background:var(--accent-soft);
+    color:var(--ink);
+    font-size:14.5px; line-height:1.85;
+    border-radius:0 3px 3px 0;
+  }
+  .post-body .translation .label{
+    font-family:var(--font-mono); font-size:10.5px;
+    letter-spacing:0.14em; color:var(--accent);
+    text-transform:uppercase; display:block;
+    margin-bottom:6px; font-weight:500;
+  }
+  .post-body ul{
+    margin:8px 0 0; padding-left:1.1em;
+  }
+  .post-body ul li{ margin:2px 0 }
+  .post-body a{ word-break:break-all }
+
+  /* hide filtered out */
+  .cat.hidden{ display:none }
+
+  /* ── footer notes ────────────────────── */
+  .notes{
+    margin-top:96px;
+    padding-top:36px;
+    border-top:1px solid var(--rule-strong);
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:36px;
+  }
+  .notes h2{
+    font-family:var(--font-serif);
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+  }
+  .notes h2 .ko{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .notes ul{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .notes li{
+    color:var(--ink-2);
+    font-size:13.5px;
+    line-height:1.75;
+    padding-left:22px;
+    position:relative;
+  }
+  .notes li::before{
+    content:"※"; position:absolute; left:0; top:0;
+    color:var(--ink-3); font-family:var(--font-serif);
+  }
+
+  /* ── colophon ────────────────────────── */
+  .colophon{
+    margin-top:72px;
+    padding-top:24px;
+    border-top:1px solid var(--rule);
+    display:flex; justify-content:space-between; align-items:baseline;
+    color:var(--ink-3); font-size:12px;
+    font-family:var(--font-mono);
+    letter-spacing:0.06em;
+  }
+
+  /* ── responsive ──────────────────────── */
+  @media (max-width: 900px){
+    .page{ padding:32px 18px 80px }
+    h1.title{ font-size:42px }
+    .masthead{ grid-template-columns:1fr; gap:24px; align-items:start }
+    .profile{ grid-template-columns:1fr; gap:14px }
+    .cat-header{ grid-template-columns:1fr; gap:8px }
+    .cat-marker{ position:static; flex-direction:row; align-items:baseline; gap:14px }
+    .posts{ grid-template-columns:1fr; gap:0 }
+    .notes{ grid-template-columns:1fr; gap:14px }
+    .filter-bar{ margin:0 -18px 24px; padding:12px 18px }
+    .cat-count{ font-size:28px }
+    .cat-title-block h3{ font-size:24px }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── top bar ─────────────────────────── -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="mark">X</span>
+      <span>Pickup Digest</span>
+    </div>
+    <nav>
+      <a href="#feed">記事</a>
+      <a href="#profile">プロファイル</a>
+      <a href="#notes">注意</a>
+      <div class="theme-switch" role="radiogroup" aria-label="テーマ">
+        <button data-theme="paper" aria-pressed="true">Paper</button>
+        <button data-theme="mono" aria-pressed="false">Mono</button>
+        <button data-theme="dark" aria-pressed="false">Dark</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- ─── masthead ──────────────────────── -->
+  <section class="masthead">
+    <div>
+      <p class="eyebrow">AI / LLM Daily Pickup</p>
+      <h1 class="title">いま読むべき<br>X の AI 関連投稿。<em>2026.08.30</em></h1>
+      <p class="lede">興味プロファイル <code>interest-profile-2026-08-06</code> に基づき、xAI <code>x_search</code> 経由で 8/30（JST）の範囲から収集した 19 件を、カテゴリ別に整理しました。本文は <code>xsearch --url</code> の verbatim のみを根拠にしています。</p>
+    </div>
+    <aside class="meta-card" aria-label="このダイジェストの概要">
+      <dl>
+        <dt>Posts</dt>     <dd><b>19</b>件</dd>
+        <dt>Categories</dt><dd><b>6</b>領域</dd>
+        <dt>Authors</dt>   <dd><b>14</b>＋不明5</dd>
+        <dt>Source</dt>    <dd>xAI x_search</dd>
+        <dt>Window</dt>    <dd>8/30 00:00 – 8/31 09:00 JST</dd>
+      </dl>
+    </aside>
+  </section>
+
+  <!-- ─── interest profile ─────────────── -->
+  <section class="profile" id="profile">
+    <h2><span class="ko">Interest Profile</span>推定された<br>興味プロファイル</h2>
+    <ul class="tags">
+      <li><b>運用設計・ハーネス・職業論</b><small>Claude Code/Codex を Rule/Skill/Reference/Script に分ける作業契約, /goal 放置×サブエージェント委譲でトークン節約, rtk, 理解負債</small></li>
+      <li><b>ベンチ懐疑・コスパ</b><small>SWE-bench 71% でも実チケット 3/12・private eval, Opus は Sol の 3〜5 倍トークンで同結果, Terminal-Bench 4.0 のコスト/トークン表</small></li>
+      <li><b>ローカルLLM実測</b><small>Qwen3.8-Flash-Next 125B を旧 Ampere 2 枚で 54tok/s・51B の PLE を SSD へ mmap, vLLM 対 llama.cpp</small></li>
+      <li><b>Anthropic 戦略・思想</b><small>J-space=出力に現れない内部作業空間と AI ガバナンス, RSI があっても人間が意味理解で方向づける</small></li>
+      <li><b>セキュリティ・地政学・医療</b><small>AI エージェントファイル=新種のサプライチェーン攻撃, Mini Shai-Hulud npm ワーム, 中国勢の産業規模の蒸留, 膵臓がん新薬ダラクソンラシブ承認と年 7,600 万円</small></li>
+    </ul>
+  </section>
+
+  <!-- ─── filter bar ───────────────────── -->
+  <nav class="filter-bar" id="filters" aria-label="カテゴリフィルタ">
+    <span class="label">Filter</span>
+    <button class="chip" data-filter="all" aria-pressed="true"><span class="dot" style="--c:#14110B"></span>すべて<span class="n">19</span></button>
+    <button class="chip" data-filter="craft" aria-pressed="false"><span class="dot" style="--c:#5468B0"></span>運用設計 / 職業論<span class="n">5</span></button>
+    <button class="chip" data-filter="bench" aria-pressed="false"><span class="dot" style="--c:#C8552B"></span>ベンチ懐疑<span class="n">3</span></button>
+    <button class="chip" data-filter="local" aria-pressed="false"><span class="dot" style="--c:#2B8C75"></span>ローカルLLM<span class="n">2</span></button>
+    <button class="chip" data-filter="anthropic" aria-pressed="false"><span class="dot" style="--c:#834BAB"></span>Anthropic<span class="n">2</span></button>
+    <button class="chip" data-filter="secgeo" aria-pressed="false"><span class="dot" style="--c:#A3793C"></span>セキュリティ / 地政学<span class="n">4</span></button>
+    <button class="chip" data-filter="medical" aria-pressed="false"><span class="dot" style="--c:#6E6552"></span>医療 / 科学<span class="n">3</span></button>
+  </nav>
+
+  <!-- ─── feed ─────────────────────────── -->
+  <main class="feed" id="feed">
+
+    <!-- craft -->
+    <section class="cat" data-cat="craft" id="cat-craft" style="--c:#5468B0">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>01 · Craft</span>
+          <span class="cat-count">5<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>運用設計・ハーネス・職業論</h3>
+          <p class="cat-intro">「モデルの性能よりハーネスを見る時代」を地で行く 1 日。Claude Code / Codex を Rule・Skill・Reference・Script に分離し、フォルダを「作業契約」として設計する運用チェックリスト。/goal を放置で走らせつつコンテキスト肥大＝性能低下・トークン増を避けるためサブエージェントに実装/レビューを逃す実験。トークンを削る rtk。そして「理解負債」——大型で方針・人間がレビュー・小型で実装という分担と、AI に書かせて 7 割読んでいない個人開発の正直な告白。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">O</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/okikusan_public">@okikusan_public</a>
+                <time>08/30 14:03 JST</time>
+              </div>
+              <a class="src" href="https://x.com/okikusan_public/status/2093927580604702772" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">「理解負債」という言葉、すごく合っている。
+技術負債になると、コーディングルールが崩れるだけではない。
+Source of Truth をソースコードに置くほど、1ファイルが肥大化したり、凝集性が落ちたり、修正の影響範囲が見えにくくなったりする。
+
+理解負債も同じで、コード作成速度は上がった一方で、人間の確認コストは確実に上がっている。
+自分も別記事で書いたが、速く作れることと、責任を持って出せることは別問題だと思っている。
+自分が薦めているのは、
+
+・大型モデルで方針を決める
+・人間がレビューする
+・小型モデルで実装を進める
+
+という分担。
+
+昔 GPT-4 / ChatGPT で開発していた頃は、自分で理解しながら進めていたので認知負荷は低かった。今は生成速度が上がった分、確認側がボトルネックになっている。
+加えて、大型LLMにレビューさせるのも有効。
+人間が感知しない問題は、実際にある。
+
+ただし、AIドリブン開発をどう埋め込んでも、最後の責任は人間にある。<span class="quoted"><span class="from">引用 · @cu30rry_</span>理解をAIに丸投げするなを「理解負債」と定義していて、しっくり来ます
+
+AIは理解の補助にはなるので、そこで活用すると良さそう</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">G</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/goro2_traveler">@goro2_traveler</a>
+                <time>08/30 17:13 JST</time>
+              </div>
+              <a class="src" href="https://x.com/goro2_traveler/status/2093975466487300336" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Claude Code / Codexを使う時に知っておきたいこと
+
+・AGENTS.md / CLAUDE.mdは巨大化させない。常時contextに置くRuleと、progressive disclosureで必要時だけ読むSkill / Referenceを分離する
+
+・Folderは整理整頓ではなく、scope / state / provenance / permission / handoffを切る作業contractとして設計する
+
+・Rule / Skill / Reference / Scriptは混ぜない。Rule=常時制約、Skill=再利用手順、Reference=判断材料、Script=deterministic処理
+
+・Trigger / cron / event-drivenを区別する。人間が毎回promptして起動してるならまだchatであってagentic workflowではない
+
+・Hookは「強いprompt」ではない。PreToolUse / PostToolUse / PreCompact / Stop等のlifecycle eventへ検査・block・通知を接続する
+
+・HarnessとGuardrailも分ける。Harnessはscope → stage → artifact → retry → handoverを回す工程、Guardrailはleast privilege / sandbox / approval boundary / kill switchでblast radiusを制御する
+
+・Compaction / Memory / Handoverを同一視しない。compactionはlossy、Memoryはcurated facts、Handoverはtask continuation用checkpoint
+
+・成果物は一気に生成しない。Specify → Decompose → Execute → Inspect → Gateのstaged pipelineにしてsilent failureを局所化する
+
+・acceptance criteriaをpromptの雰囲気で済ませない。artifact contractとpostconditionを先に置く
+
+・「最後にテストして」はお願い。Hook + Eval + testで終了条件そのものをGate化する
+
+・バグ修正はreproduction → minimal fix → retest → regressionまで。再現caseが残ってない修正は経験が資産化されてない
+
+・Skillは生成側のmemory、Evalは判定側のmemory。Skillだけ自己更新させるとself-judge loopになる
+
+・feedbackはdiffだけ残さない。change / reason / scope / counterexample / severity / testまで持たせて過剰一般化を防ぐ
+
+・Gitはversion control以上に、AIのexternal episodic memoryとして使う。Issue / PR / diff / review reason / rollbackまで含めてexperienceを残す
+
+・session resumeとtask continuityは別物。runtimeを跨いでも続けられる状態をartifactとしてexternalizeする
+
+・sub-agentは「いっぱい起動すると速い」ではない。独立contextに切れるtaskだけDAG化し、依存taskはstage boundaryを置く
+
+・model routingは最強model固定ではなく、difficulty / risk / costでrouting。3-model ensembleもcorrelated errorがあるので多数決をtruthにしない
+
+・LLM-as-a-Judgeだけに寄せず、deterministic scorer / tool-grounded verification / human reviewをriskに応じて使い分ける
+
+・MCPはSkillではない。MCPはtool/contextのconnection plane、Skillはそのtoolを使ってどう仕事を完遂するかのcapability layer
+
+・Agentを並列化すると次に詰まるのはcomputeではなくHuman Attention。Cockpit / PMOは全ログを見るUIではなくexception / approval / decision queueを圧縮するcontrol planeとして作る
+
+・Decision Logを残さないと、AIは「その人の好み」と「その人の判断原則」を混同する
+
+・Second Brainはメモ帳ではなく、Journal / Decision Log / Git / Handoverを横断してprovenance付きで再利用するlong-term asset layer
+
+・token costだけ測っても意味がない。model + tool + compute + human review + rework + expected failure costまで含めてaccepted outcomeあたりで見る
+
+・Vibe Codingを卒業するなら、Spec-driven / TDD / observability / rollback / regressionを先に持つ
+
+・最終的には
+Capture → Externalize → Scope → Specify → Decompose → Route → Execute → Observe → Gate → Correct → Distill → Compound
+まで閉じる</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">4</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/4310sy">@4310sy</a>
+                <time>08/30 19:59 JST</time>
+              </div>
+              <a class="src" href="https://x.com/4310sy/status/2094017113140969608" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Claude Codeのトークン消費量を大幅に削減してくれるrtkというツールがあるのを知った。試してみようかな
+
+<a href="https://github.com/rtk-ai/rtk">github.com/rtk-ai/rtk</a></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">Y</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/yosshi_4486">@yosshi_4486</a>
+                <time>08/31 00:31 JST</time>
+              </div>
+              <a class="src" href="https://x.com/yosshi_4486/status/2094085727839736231" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">ほぼAIに書かせたコード読んでない開発も個人でしてるけど、進捗と引き換えに順当に理解負債が溜まっている。7割ぐらいは何書いてあるかしらん</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">M</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/muscle_coding">@muscle_coding</a>
+                <time>08/31 05:20 JST</time>
+              </div>
+              <a class="src" href="https://x.com/muscle_coding/status/2094158423508258922" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">複数のタスクを回してしばらく放置したいとき、
+メインセッションは全体管理に集中し、
+実装とレビューはサブエージェントに逃してます。
+
+/goal を使えばひたすら走り続けるものの
+コンテキストが肥大化すると性能低下＆トークン消費増大が気になるので
+節約しつつ、放置できる方法を色々お試し中🧪</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+    <!-- bench -->
+    <section class="cat" data-cat="bench" id="cat-bench" style="--c:#C8552B">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>02 · Bench</span>
+          <span class="cat-count">3<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>モデル評・ベンチ懐疑・コスパ</h3>
+          <p class="cat-intro">「公開ベンチか、自前の eval か」——SWE-bench 71% 首位のモデルが自分の実チケットは 12 件中 3 件しか閉じられなかった、という private eval 信仰。Opus 4.8/5 は GPT-5.6 Sol と同じ正答に 3〜5 倍のトークンとコストを食うので実務では 6〜7 割を GPT で回している、という現場の配分。そして Terminal-Bench 4.0 を解決率だけでなくトークンとコストまで並べ、「10 ポイント高いことに 2.2 倍払う価値があるか」を突きつける保存版の一覧。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">C</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/coulditbecoley">@coulditbecoley</a>
+                <time>08/30 08:00 JST</time>
+              </div>
+              <a class="src" href="https://x.com/coulditbecoley/status/2093836250197131777" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">A model topped SWE-bench at 71% and closed 3 of my 12 real tickets.
+
+Benchmarks are curated and leak into training. I keep a private eval of 20 tickets from my backlog, and that's the only number I trust before switching.
+
+Public benchmark or your own eval? #AI #LLM<span class="translation"><span class="label">日本語訳</span>あるモデルが SWE-bench を 71% で首位——だが私の実チケット 12 件のうち閉じられたのは 3 件だった。
+
+ベンチマークはキュレーションされ、訓練データに漏れ込む。私は自分のバックログから取った 20 件のチケットで private eval を回していて、乗り換え前に信じるのはその数字だけだ。
+
+公開ベンチか、それとも自前の eval か？</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">?</div>
+              <div class="who">
+                <span class="handle unknown">著者不明</span>
+                <time>08/30 13:39 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2093921501061747063" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">I'll +1 you on this one. Work benchmark: Opus 4.8 and 5 takes x3-5 more tokens, and cost roughly the same multiplication, for the identically correct results comparing to GPT 5.6-Sol.
+
+If someone did pure math, it would appear like we utilize Opus 80% of the time and 20% Sol. In fact, we're roughly 60-70% GPT if not more, and rest is Opus.<span class="translation"><span class="label">日本語訳</span>これには +1 する。うちの実務ベンチだと、Opus 4.8 と 5 は GPT-5.6 Sol と同一の正しい結果を得るのに 3〜5 倍のトークンを食い、コストもほぼ同じ倍率で膨らむ。
+
+純粋に数字だけ見れば Opus を 8 割・Sol を 2 割使っているように見えるが、実際は 6〜7 割かそれ以上が GPT で、残りが Opus だ。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">K</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/keitaro_aigc">@keitaro_aigc</a>
+                <time>08/31 05:54 JST</time>
+              </div>
+              <a class="src" href="https://x.com/keitaro_aigc/status/2094166964793131211" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">【保存版】Terminal-Bench 4.0 のリーダーボードを、コストとトークンまで並べて見ました。モデル選びの景色が変わります。
+
+■ 上位（解決率・使用トークン・コスト）
+
+・1位 Opus 5(max) + Claude Code: 𝟱𝟭.𝟴% ± 3.4%／6.5Bトークン／$6.0k
+・2位 Fable 5(max) + Claude Code: 44.5% ± 3.8%／3.8Bトークン／$7.3k
+・3位 GLM-5.3(max) + Claude Code: 𝟰𝟭.𝟴% ± 3.2%／8.7Bトークン／$2.7k
+・4位 GPT-5.6 Sol(max) + Codex: 37.3% ± 3.8%／4.4Bトークン／$2.5k
+
+■ ここが効きます
+
+・GLM-5.3がGPT-5.6 Solを上回り（41.8% vs 37.3%）、コストはほぼ同じ（$2.7k vs $2.5k）
+・首位のOpus 5とGLM-5.3の差は10ポイント。ただしコストは2.2倍（$6.0k vs $2.7k）
+・最下位タイのSonnet 5(max)は12.4%なのにコストは最高の$9.6k・21.6Bトークン。スコアと費用は一致しません
+・最安はGPT-5.6 Luna(max)の$0.3kで、解決率は17.3%
+
+■ 条件
+
+各スコアに95%信頼区間が付いています。1位と2位は区間が重なりません。3位と4位は端がわずかに接する程度。エージェントは固定ではなくClaude Code / Codex / Grok Buildが混在するので、モデル単体の比較ではありません。
+
+■ 今日やること
+
+「解決率が10ポイント高いことに2.2倍払う価値があるか」を自分の用途で一度決めてください。判断に必要な3つの数字が同じ場所に並んでいる数少ない資料です。
+
+出典: Terminal-Bench 4.0 公式リーダーボード（Harbor と Laude Institute がホスト・8/31時点の表を確認）</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+    <!-- local -->
+    <section class="cat" data-cat="local" id="cat-local" style="--c:#2B8C75">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>03 · Local</span>
+          <span class="cat-count">2<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>ローカルLLM実測</h3>
+          <p class="cat-intro">8 月の最大関心＝ローカルで動くオープンモデルの「速く・安く」を、Qwen3.8-Flash-Next（125B MoE・アクティブ 6B）で徹底計測した 2 本。177B のうち 51B を占める n-gram テーブル（PLE）は乗算されず gather されるだけなので VRAM に入れず SSD から mmap で供給——旧 Ampere 2 枚で 131K コンテキスト・54tok/s、量子化を小さく全層 GPU に載せると 5.7 倍速。もう 1 本は同じマシンで vLLM 対 llama.cpp を突き合わせ、「シングルストリームの decode は llama.cpp、TTFT・プレフィル・並列は vLLM」と切り分ける。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">J</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/JoelDeTeves">@JoelDeTeves</a>
+                <time>08/30 14:17 JST</time>
+              </div>
+              <a class="src" href="https://x.com/JoelDeTeves/status/2093931123776909348" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Running Qwen3.8-Flash-Next (125B MoE, 6B active) on two old Ampere GPUs at 54+ tok/s with 131K context. RTX 3090 (24GB) + RTX A6000 (48GB) = 72GB VRAM, 192GB DDR4 RAM, and llama.cpp.
+
+The key insight: 51B of the model's 177B params are an n-gram lookup table (PLE). It's read once per token at a deterministic address — ~2.7KB per token, ~3MB/s of random reads. That pages from NVMe via mmap and never enters VRAM. The remaining 54.5GB of actual weights fit in 72GB VRAM with room for 131K context.
+
+The trick was using @AtomicChat's AD-4.27bpw-Q4_K_M imatrix quant (94.5 GB). They isolate the PLE table in its own GGUF shard so llama.cpp puts it on the host automatically — no --override-tensor needed. Their imatrix calibration is excellent, measured against BF16 reference logits with a public corpus.
+
+Serve flags: llama-server -m ...gguf -ngl 999 --tensor-split 2,1 --fit off -lm mmap --tensor-read-lazy on --spec-type ngram-mod -fa on -c 131072 --jinja
+
+Results:
+• Generation: 54 tok/s (all 48 layers on GPU, zero CPU offload)
+• Prompt processing: 47.5 tok/s
+• Context: 131,072 tokens
+• ngram-mod speculation: active (14% draft acceptance)
+• 3090: 20.7/24.5 GB VRAM, A6000: 39.0/49.1 GB VRAM
+
+For comparison: Unsloth UD-Q4_K_XL (111 GB) only fit 38/48 layers on GPU with 10 on CPU → 8.2 tok/s. Getting all layers on GPU with the smaller quant = 5.7x speedup. Quality tradeoff is modest: 92.3% → 89.5% top-1 accuracy (KLD 0.047 → 0.084).
+
+This architecture is a preview of Qwen4. 125B params with 6B active per token + a 51B n-gram table that offloads to SSD. A 177B model generating at 54 tok/s on two consumer GPUs from 2020. The future of local inference is architectural innovation, not just bigger GPUs.
+
+Credit: @0xBakeer for the PLE offloading recipe which I adapted for my GPUs.<span class="translation"><span class="label">日本語訳</span>Qwen3.8-Flash-Next（125B MoE・アクティブ 6B）を、旧 Ampere GPU 2 枚で 131K コンテキスト・54+ tok/s で動かしている。RTX 3090（24GB）+ RTX A6000（48GB）= VRAM 72GB、DDR4 192GB、llama.cpp。
+
+肝はこれ: モデルの 177B パラメータのうち 51B は n-gram ルックアップテーブル（PLE）で、トークンごとに決定的アドレスで一度だけ読まれる（約 2.7KB/トークン、ランダムリード約 3MB/s）。これは mmap 経由で NVMe からページングされ、VRAM には一切入らない。残り 54.5GB の実際の重みは 72GB VRAM に収まり、131K コンテキスト分の余裕もある。
+
+コツは @AtomicChat の AD-4.27bpw-Q4_K_M imatrix 量子化（94.5GB）。PLE テーブルを専用 GGUF シャードに隔離しているので llama.cpp が自動でホスト側に置く（--override-tensor 不要）。imatrix キャリブレーションも優秀。
+
+結果: 生成 54 tok/s（全 48 層 GPU、CPU オフロードゼロ）、プロンプト処理 47.5 tok/s、131,072 トークン、ngram-mod 投機（受理率 14%）、3090 は 20.7/24.5GB・A6000 は 39.0/49.1GB。
+
+比較: Unsloth UD-Q4_K_XL（111GB）は 48 層中 38 層しか GPU に載らず 8.2 tok/s。小さい量子化で全層 GPU に載せると 5.7 倍速。品質劣化は控えめ（top-1 92.3%→89.5%、KLD 0.047→0.084）。
+
+このアーキは Qwen4 のプレビュー。SSD へ逃がせる 51B の n-gram テーブル込みで、2020 年の民生 GPU 2 枚が 177B を 54tok/s。ローカル推論の未来は、大きい GPU ではなくアーキテクチャの革新にある。（PLE オフロードのレシピは @0xBakeer のものを自分の GPU 向けに調整した）</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">0</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/0xBakeer">@0xBakeer</a>
+                <time>08/30 18:49 JST</time>
+              </div>
+              <a class="src" href="https://x.com/0xBakeer/status/2093999615611728020" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Same model, same box, two engines. Qwen3.8-Flash-Next on vLLM vs llama.cpp on a DGX Spark. New runs are in the atlas, and the recipe repo had a busy week.
+
+The split is not "llama.cpp is slower." It's sharper than that.
+
+Single stream, llama.cpp wins decode: 54 tok/s per request vs 34 on vLLM. Sixty percent faster where it counts for one person typing at one model.
+
+Everything else, vLLM wins:
+
+Time to first token: 527 ms vs ~1 s.
+Prefill: 2,031 vs 1,772 tok/s at 8k. At 32k it's 2,230 vs 1,485. llama.cpp gets slower with prompt length, vLLM doesn't care.
+Concurrency: 81 vs 33 tok/s aggregate at 8 streams. 147 vs 45 at 16.
+
+Honest footnote on concurrency: llama.cpp served 2 slots here against vLLM's 64. Two is what's verified for this architecture so far, not a proven ceiling. The real constraint is that its n-gram embeddings can't share a token across sequences, which limits batching, not slot count. Beyond the slots, requests queue: first token at 8 concurrent streams took 48 seconds.
+
+Vision, where I have to correct myself: BOTH engines see images, and they score identically. 58/60 on the atlas vision eval. llama.cpp just needs the 0.9 GB projector Unsloth publishes right next to the quants.
+
+Quality overall is a tie despite different quants: JSON 98.2 both, format 100 both, vision 96.7 both. Math 97.7 on the Q4 GGUF vs 100 on NVFP4, the only visible quant cost.
+
+Still the part that impresses me most: both engines serve the model's 51B-parameter n-gram lookup table straight from NVMe via mmap, because it never gets multiplied, only gathered. vLLM's official CPU-offload path for it hangs on this box. The mmap hack IS the production path.
+
+Verdict unchanged since forever: llama.cpp is a chat client, vLLM is a server. Pick by how many people are on the other end.<span class="translation"><span class="label">日本語訳</span>同じモデル・同じマシン・2 つのエンジン。DGX Spark 上で Qwen3.8-Flash-Next を vLLM 対 llama.cpp。
+
+差は「llama.cpp が遅い」ではなく、もっと鋭い。
+
+シングルストリームの decode は llama.cpp の勝ち: 1 リクエスト 54 tok/s 対 vLLM 34 tok/s。一人が一つのモデルを叩くなら 6 割速い。
+
+それ以外は vLLM の勝ち。初トークンまで 527ms 対約 1s。プレフィルは 8k で 2,031 対 1,772 tok/s、32k で 2,230 対 1,485（llama.cpp は長いほど遅く、vLLM は気にしない）。並列は 8 ストリームで合計 81 対 33 tok/s、16 で 147 対 45。
+
+並列の正直な注記: ここでは llama.cpp 2 スロット対 vLLM 64 スロット。2 は検証済みの数で上限が証明されたわけではない。真の制約は n-gram 埋め込みがシーケンス間でトークンを共有できずバッチ化が制限されること。スロットを超えるとキュー（8 並列で初トークンに 48 秒）。
+
+ビジョン（訂正）: 両エンジンとも画像を見てスコアも同一（58/60）。llama.cpp は 0.9GB のプロジェクタが要るだけ。
+
+品質は量子化が違っても互角: JSON 98.2・format 100・vision 96.7 いずれも同点。数学だけ Q4 GGUF 97.7 対 NVFP4 100——唯一見える量子化コスト。
+
+一番感心したのは、両エンジンとも 51B の n-gram テーブルを mmap で NVMe から直接供給していること（乗算されず gather されるだけだから）。vLLM 公式の CPU オフロード経路はこのマシンでハングする。mmap ハックこそが本番経路。
+
+結論は昔から不変: llama.cpp はチャットクライアント、vLLM はサーバー。向こう側に何人いるかで選べ。</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+    <!-- anthropic -->
+    <section class="cat" data-cat="anthropic" id="cat-anthropic" style="--c:#834BAB">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>04 · Anthropic</span>
+          <span class="cat-count">2<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>Anthropic 戦略・思想</h3>
+          <p class="cat-intro">RSI（再帰的自己改善）は進むが、「人間が意味的な理解＝設計図を持たなければ、どれだけエージェントを積んでも意味がない」——人間は RSI を方向づける形でループに残る、という epistemics の視点。そして Anthropic の「J-space」研究——Claude が多段推論に使う小さな内部作業空間で、テキストに現れないまま重要な判断が形成されるなら、出力だけを見る AI 監視は決定的な安全シグナルを見落とす、というガバナンス上の論点。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">?</div>
+              <div class="who">
+                <span class="handle unknown">著者不明</span>
+                <time>08/30 16:16 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2093961129999376890" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">But the thing is, even with RSI, without the human to have the semantic understanding, the blueprint, the understanding, no amount of agents will matter. So humans will be in the loop directing the RSI.<span class="translation"><span class="label">日本語訳</span>だが肝心なのは、RSI があっても、人間が意味的な理解——設計図、全体像——を持っていなければ、どれだけエージェントを積んでも意味がない、ということだ。だから人間は RSI を方向づける形でループに残り続ける。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">O</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/orfonline">@orfonline</a>
+                <time>08/31 03:20 JST</time>
+              </div>
+              <a class="src" href="https://x.com/orfonline/status/2094128014388773294" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Anthropic's "J-space" research suggests #Claude uses a small internal workspace for multi-step reasoning. If key judgments form there without appearing in text, #AI oversight focused on outputs may miss critical safety signals: @IshitaDeshmukh8 <a href="https://www.orfonline.org/expert-speak/inside-ai-models-what-claude-s-hidden-workspace-means-for-ai-governance">orfonline.org/expert-speak/inside-ai-models-what-claude-s-hidden-workspace-means-for-ai-governance</a> #AIgovernance<span class="translation"><span class="label">日本語訳</span>Anthropic の「J-space」研究は、Claude が多段推論のために小さな内部作業空間を使っていることを示唆する。もし重要な判断がそこで、テキストに現れないまま形成されるなら、出力だけに注目する AI 監視は決定的な安全シグナルを見落としかねない。（分析: @IshitaDeshmukh8 / ORF）</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+    <!-- secgeo -->
+    <section class="cat" data-cat="secgeo" id="cat-secgeo" style="--c:#A3793C">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>05 · Security</span>
+          <span class="cat-count">4<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>セキュリティ・地政学</h3>
+          <p class="cat-intro">「AI エージェントのファイル群は、名前を変えただけのサプライチェーン攻撃だ。npm と pip を 15 年かけて守ったのに、今や AI に言われるまま得体の知れない .md をターミナルに貼る」という警鐘。実例として @7nohe/openapi-react-query-codegen の悪性 npm 10 版＝Mini Shai-Hulud ワーム。地政学では、米ラボとホワイトハウスが記録した中国勢の産業規模の「無許可蒸留」と、国産オープンウェイトはベンチの土俵にすら金銭的に立てないという日本の現実。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">T</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/tech_savvyact">@tech_savvyact</a>
+                <time>08/30 00:17 JST</time>
+              </div>
+              <a class="src" href="https://x.com/tech_savvyact/status/2093719592354947566" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">AI agent files are supply chain attacks with a new name. Companies spent 15 years securing npm and pip. Now everyone pastes random .md files into terminal bc an AI told them to<span class="translation"><span class="label">日本語訳</span>AI エージェントのファイル群は、名前を変えただけのサプライチェーン攻撃だ。企業は npm と pip を守るのに 15 年かけた。それが今や、AI にそう言われたからと、誰もが得体の知れない .md ファイルをターミナルに貼り付けている。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">?</div>
+              <div class="who">
+                <span class="handle unknown">著者不明</span>
+                <time>08/30 04:09 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2093778098441355507" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Yes. Leading US labs (OpenAI, Anthropic, Google, xAI) and the White House have documented industrial-scale unauthorized distillation by Chinese firms including DeepSeek, Moonshot, MiniMax and Alibaba/Qwen. Thousands of fake accounts generated millions of outputs from frontier models, used as training data to replicate capabilities far cheaper and faster than independent development.<span class="translation"><span class="label">日本語訳</span>そう。米主要ラボ（OpenAI・Anthropic・Google・xAI）とホワイトハウスは、DeepSeek・Moonshot・MiniMax・Alibaba/Qwen を含む中国企業による産業規模の無許可蒸留を記録している。数千の偽アカウントがフロンティアモデルから数百万の出力を生成し、それを訓練データとして能力を複製——独自開発よりはるかに安く速く。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">K</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/kiyoka">@kiyoka</a>
+                <time>08/30 15:07 JST</time>
+              </div>
+              <a class="src" href="https://x.com/kiyoka/status/2093943552158110174" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">そろそろ国産のオープンウェイトのLLMモデルのベンチマークを取ろうかと思ったが、使えそうな上位レベルのモデルはほぼ法人契約が必要で、グローバルな土俵にさえ立てないという状況だな。
+とにかく金がないので、中国のようには行かないのだろう。</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">?</div>
+              <div class="who">
+                <span class="handle unknown">著者不明</span>
+                <time>08/30 20:31 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2094025116879372359" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Healthcare IT teams: 10 malicious npm versions of @7nohe/openapi-react-query-codegen are a Mini Shai-Hulud worm: harvesting cloud, npm, GitHub and CI credentials. Audit installs now. Rotate exposed credentials.<span class="translation"><span class="label">日本語訳</span>医療 IT チームへ: @7nohe/openapi-react-query-codegen の悪意ある npm バージョン 10 個は Mini Shai-Hulud ワームで、クラウド・npm・GitHub・CI の認証情報を収集する。今すぐインストールを監査し、露出した認証情報をローテートせよ。</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+    <!-- medical -->
+    <section class="cat" data-cat="medical" id="cat-medical" style="--c:#6E6552">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>06 · Medical</span>
+          <span class="cat-count">3<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>医療・科学</h3>
+          <p class="cat-intro">膵臓がんの新薬ダラクソンラシブ（ダラキソンラシブ）を FDA が承認——死亡リスク 60% 減、生存期間中央値 13.2 カ月（化学療法群 6.7 カ月）、RAS G12 変異患者の 33.2% で腫瘍が著しく縮小。一方で薬価は「年 7,600 万円」、日本は公費で負担するのか、という問い。さらに「薬を早く承認する」だけでなく「その薬が誰に合うかを早く知る」＝がんゲノム検査（CGP）を治療の後半でなく早期にできる体制を、という現場の声。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">T</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/tweetsoku1">@tweetsoku1</a>
+                <time>08/30 08:44 JST</time>
+              </div>
+              <a class="src" href="https://x.com/tweetsoku1/status/2093847163503812637" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">FDA、転移性膵臓がんの新薬を承認！ダラキソンラシブで死亡リスク60％減→生存期間中央値13.2カ月（化学療法群6.7カ月）、RAS G12変異患者の33.2％で腫瘍が著しく縮小・消失　<a href="https://tweetsoku.news/2026/08/30/">tweetsoku.news/2026/08/30/</a></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">F</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/FunPedDr">@FunPedDr</a>
+                <time>08/30 10:47 JST</time>
+              </div>
+              <a class="src" href="https://x.com/FunPedDr/status/2093878332635201964" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">膵臓がんの新薬の価格
+「年間7,600万円」
+
+これを日本は公費で負担するのか……？<span class="quoted"><span class="from">引用 · @nikkei（日本経済新聞 電子版）</span>米FDA、膵臓がん新薬ダラクソンラシブを承認　治験で生存期間2倍 <a href="https://www.nikkei.com/article/DGXZQOGN26BT10W6A820C2000000/">nikkei.com/article/DGXZQOGN26BT10W6A820C2000000</a></span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">?</div>
+              <div class="who">
+                <span class="handle unknown">著者不明</span>
+                <time>08/30 22:44 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2094058736075878680" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">ダラクソンラシブの早期承認と同じくらい、早期のがんゲノム検査も大切だと思っています‼️
+
+今の日本では、保険でのがん遺伝子パネル検査（CGP）は、基本的に標準治療終了後または終了見込みの段階で行われています。
+
+でもKRASをはじめ、遺伝子変異を標的とした新薬や治験がどんどん出てくる時代。
+
+治療選択肢が少なくなってから初めて調べるのではなく、もっと早い段階で自分のがんの遺伝子変異を知ることができれば、治験や次の治療を探す時間も作れます。
+
+膵臓がんは特に時間が大切です。
+
+「薬を早く承認する」だけじゃなく、
+「その薬が誰に合うのかを早く知る」体制も一緒に進んでほしいです‼️</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="notes" id="notes">
+    <h2><span class="ko">Editor's Notes</span>収集・編集上の<br>注意</h2>
+    <ul>
+      <li>出典の本文は <code>xsearch --url</code> で取得した「Grok の引用（verbatim）」です。X の生 API ではないため、まれにパラフレーズや取り違えがあります。本文に違和感があれば原 URL を直接開いて確認してください。キーワード検索の合成本文・要約は採用していません。</li>
+      <li><code>/i/status/</code> のリンク形式では Grok が著者ハンドルを <code>@i</code> と返すため、本文中の言及・返信先・引用元から実際のハンドルを再構成しています。今回は 19 件中 14 件でハンドルを特定でき、5 件は特定できず「著者不明」としています。</li>
+      <li>収集窓は 2026-08-30 00:00 〜 2026-08-31 09:00 JST。時刻は各投稿 ID (Snowflake) 由来の JST です。US 夜のローンチが JST 翌朝まで尾を引くため、翌日 09:00 まで含みます。</li>
+      <li>選別はトピック×アングル×ソースの 3 軸。速報の二次拡散・SEO / アフィ煽り・汎用プロンプトテンプレ羅列・出所不明の生リーク・<code>@grok</code> 応答・暗号資産スパム・医療デマ（イベルメクチンでがんが治る等）などは除外しています。</li>
+      <li>「引用」は他者の投稿・記事の紹介です（一次情報は引用元を参照）。既存の Topics ダイジェストと URL（<code>status/&lt;id&gt;</code>）の重複がないことを確認済みです。</li>
+    </ul>
+  </footer>
+
+  <div class="colophon">
+    <span>X PICKUP DIGEST · No. 2026-08-30</span>
+    <span>compiled via xAI x_search</span>
+  </div>
+
+</div>
+
+<!-- Theme switch -->
+<script>
+(function(){
+  const KEY = 'xpickup-theme';
+  const html = document.documentElement;
+  const buttons = document.querySelectorAll('.theme-switch button');
+
+  function setTheme(name){
+    html.setAttribute('data-theme', name);
+    try { localStorage.setItem(KEY, name); } catch(_){}
+    buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.theme === name)));
+  }
+
+  // restore
+  let initial = 'paper';
+  try { initial = localStorage.getItem(KEY) || 'paper'; } catch(_){}
+  setTheme(initial);
+
+  buttons.forEach(b => b.addEventListener('click', () => setTheme(b.dataset.theme)));
+})();
+</script>
+
+<!-- Filtering + scrollspy -->
+<script>
+(function(){
+  const chips = document.querySelectorAll('.chip');
+  const cats  = document.querySelectorAll('.cat');
+
+  function setFilter(f){
+    chips.forEach(c=>c.setAttribute('aria-pressed', String(c.dataset.filter === f)));
+    cats.forEach(s=>{
+      const show = (f === 'all') || (s.dataset.cat === f);
+      s.classList.toggle('hidden', !show);
+    });
+    if (f !== 'all'){
+      const target = document.getElementById('cat-' + f);
+      if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }
+
+  chips.forEach(c=>{
+    c.addEventListener('click', ()=>setFilter(c.dataset.filter));
+  });
+
+})();
+</script>
+
+</body>
+</html>

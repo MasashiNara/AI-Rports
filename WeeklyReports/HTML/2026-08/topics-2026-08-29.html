@@ -1,0 +1,1225 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>X ピックアップ｜2026.08.29</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#F2EDE0;
+    --paper-2:#EAE3D2;
+    --card:#FBF8EF;
+    --ink:#14110B;
+    --ink-2:#3D372C;
+    --ink-3:#6E6552;
+    --ink-4:#9E9582;
+    --rule:rgba(20,17,11,0.10);
+    --rule-strong:rgba(20,17,11,0.22);
+    --accent:#B43820;
+    --accent-soft:rgba(180,56,32,0.10);
+
+    --font-serif:'Shippori Mincho B1', 'Hiragino Mincho ProN','Yu Mincho',serif;
+    --font-sans:'Zen Kaku Gothic New','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;
+    --font-mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+    --gap:28px;
+    --post-pad:22px 26px;
+  }
+
+  /* themes */
+  html[data-theme="mono"]{
+    --paper:#F4F4F2;
+    --paper-2:#EBEBE7;
+    --card:#FFFFFF;
+    --ink:#0C0C0C;
+    --ink-2:#2D2D2D;
+    --ink-3:#5C5C5C;
+    --ink-4:#9A9A9A;
+    --rule:rgba(0,0,0,0.10);
+    --rule-strong:rgba(0,0,0,0.22);
+    --accent:#0C0C0C;
+    --accent-soft:rgba(0,0,0,0.06);
+  }
+  html[data-theme="dark"]{
+    --paper:#15140F;
+    --paper-2:#1D1B16;
+    --card:#1F1D17;
+    --ink:#F1ECDC;
+    --ink-2:#D7D0BD;
+    --ink-3:#A39A82;
+    --ink-4:#736B57;
+    --rule:rgba(241,236,220,0.10);
+    --rule-strong:rgba(241,236,220,0.22);
+    --accent:#E37A5F;
+    --accent-soft:rgba(227,122,95,0.14);
+  }
+
+  html[data-density="compact"]{
+    --gap:18px;
+    --post-pad:16px 20px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-sans);
+    font-feature-settings:"palt" 1;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.7;
+    font-size:15.5px;
+    letter-spacing:0.01em;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline;text-underline-offset:3px}
+  code{font-family:var(--font-mono);font-size:0.88em;background:var(--paper-2);padding:0.08em 0.4em;border-radius:4px;color:var(--ink-2)}
+
+  /* ── top bar ─────────────────────────── */
+  .topbar{
+    position:sticky; top:0; z-index:30;
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-bottom:1px solid var(--rule);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto;
+    padding:10px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:24px;
+    font-size:12.5px; color:var(--ink-3);
+    letter-spacing:0.08em;
+  }
+  .topbar .brand{
+    display:flex; align-items:center; gap:10px;
+    color:var(--ink); font-weight:700;
+  }
+  .topbar .brand .mark{
+    width:22px; height:22px; border-radius:6px;
+    background:var(--ink); color:var(--paper);
+    display:grid; place-items:center;
+    font-family:var(--font-serif); font-weight:700;
+    font-size:13px; line-height:1;
+  }
+  .topbar nav{display:flex; gap:18px; align-items:center}
+  .topbar nav a{color:var(--ink-3)}
+  .topbar nav a:hover{color:var(--ink); text-decoration:none}
+  .theme-switch{
+    display:inline-flex; align-items:center;
+    border:1px solid var(--rule); border-radius:999px;
+    padding:2px; gap:0;
+    background:var(--paper-2);
+  }
+  .theme-switch button{
+    appearance:none; border:none; background:transparent;
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:0.12em;
+    color:var(--ink-3);
+    padding:5px 10px;
+    border-radius:999px;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:background .15s, color .15s;
+  }
+  .theme-switch button:hover{ color:var(--ink) }
+  .theme-switch button[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+
+  /* ── page shell ──────────────────────── */
+  .page{
+    max-width:1180px; margin:0 auto;
+    padding:48px 28px 120px;
+  }
+
+  /* ── masthead ────────────────────────── */
+  .masthead{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    align-items:end;
+    gap:40px;
+    padding-bottom:36px;
+    border-bottom:1px solid var(--rule-strong);
+    margin-bottom:36px;
+  }
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:11.5px; letter-spacing:0.22em;
+    color:var(--accent);
+    text-transform:uppercase;
+    margin:0 0 18px;
+  }
+  .eyebrow::before{
+    content:""; display:inline-block; width:22px; height:1px;
+    background:var(--accent); vertical-align:middle;
+    margin-right:10px; transform:translateY(-2px);
+  }
+  h1.title{
+    font-family:var(--font-serif);
+    font-weight:700;
+    font-size:64px;
+    line-height:1.08;
+    letter-spacing:0.005em;
+    margin:0 0 18px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  h1.title em{
+    font-style:normal;
+    color:var(--ink-3);
+    font-weight:500;
+  }
+  .lede{
+    max-width:62ch;
+    color:var(--ink-2);
+    font-size:16.5px;
+    line-height:1.75;
+    margin:0;
+  }
+  .masthead .meta-card{
+    border:1px solid var(--rule-strong);
+    border-radius:2px;
+    padding:18px 22px;
+    min-width:240px;
+    background:var(--paper-2);
+  }
+  .masthead .meta-card dl{
+    margin:0; display:grid;
+    grid-template-columns: auto 1fr;
+    gap:4px 16px;
+    font-size:13px;
+  }
+  .masthead .meta-card dt{
+    color:var(--ink-3);
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    align-self:center;
+  }
+  .masthead .meta-card dd{
+    margin:0;
+    color:var(--ink);
+    font-weight:500;
+    font-feature-settings:"tnum" 1;
+  }
+  .masthead .meta-card dd b{
+    font-family:var(--font-serif);
+    font-weight:700;
+    font-size:22px;
+    margin-right:4px;
+  }
+
+  /* ── profile strip ───────────────────── */
+  .profile{
+    margin:0 0 44px;
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    align-items:start;
+  }
+  .profile h2{
+    font-family:var(--font-serif);
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+    line-height:1.4;
+  }
+  .profile h2 .ko{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .profile ul.tags{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-wrap:wrap; gap:8px;
+  }
+  .profile ul.tags li{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-left:3px solid var(--ink-2);
+    padding:8px 14px 8px 12px;
+    font-size:13.5px;
+    line-height:1.5;
+    color:var(--ink-2);
+    border-radius:2px;
+  }
+  .profile ul.tags li b{
+    color:var(--ink); font-weight:700;
+  }
+  .profile ul.tags li small{
+    color:var(--ink-3); font-size:12px; margin-left:6px;
+  }
+  html[data-show-profile="false"] .profile{display:none}
+
+  /* ── filter bar ──────────────────────── */
+  .filter-bar{
+    position:sticky;
+    top:43px; z-index:25;
+    margin:0 -28px 36px;
+    padding:14px 28px;
+    background:color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    display:flex; gap:6px; align-items:center;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .filter-bar::-webkit-scrollbar{display:none}
+  .filter-bar .label{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    text-transform:uppercase;
+    margin-right:8px;
+    white-space:nowrap;
+  }
+  .chip{
+    appearance:none; border:none; background:transparent;
+    font-family:var(--font-sans);
+    font-size:13.5px;
+    color:var(--ink-2);
+    padding:7px 13px 7px 11px;
+    border-radius:999px;
+    display:inline-flex; align-items:center; gap:8px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background .15s, color .15s;
+    line-height:1.2;
+  }
+  .chip:hover{ background:var(--paper-2) }
+  .chip .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--c, var(--ink-3));
+    flex-shrink:0;
+  }
+  .chip .n{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--ink-3);
+    font-feature-settings:"tnum" 1;
+  }
+  .chip[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .chip[aria-pressed="true"] .n{ color:color-mix(in srgb, var(--paper) 70%, transparent) }
+  .chip[aria-pressed="true"] .dot{ box-shadow:0 0 0 2px var(--ink) }
+
+  /* ── feed / category blocks ──────────── */
+  .feed{ display:flex; flex-direction:column; gap:64px }
+  .cat{
+    scroll-margin-top:120px;
+  }
+  .cat-header{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    margin-bottom:24px;
+    align-items:start;
+  }
+  .cat-marker{
+    display:flex; flex-direction:column; gap:8px;
+    position:sticky; top:120px;
+  }
+  .cat-num{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    text-transform:uppercase;
+  }
+  .cat-num .dot{
+    display:inline-block; width:8px; height:8px; border-radius:50%;
+    background:var(--c); margin-right:8px; vertical-align:middle;
+    transform:translateY(-1px);
+  }
+  .cat-count{
+    font-family:var(--font-serif);
+    font-size:38px;
+    font-weight:700;
+    line-height:1; color:var(--ink);
+    font-feature-settings:"tnum" 1;
+  }
+  .cat-count small{
+    font-family:var(--font-sans);
+    font-size:13px; font-weight:500; color:var(--ink-3);
+    margin-left:6px;
+  }
+  .cat-title-block h3{
+    font-family:var(--font-serif);
+    font-size:30px;
+    font-weight:700;
+    line-height:1.25;
+    margin:0 0 10px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  .cat-intro{
+    color:var(--ink-2);
+    font-size:14.5px;
+    line-height:1.7;
+    margin:0;
+    max-width:60ch;
+  }
+
+  /* ── post card ───────────────────────── */
+  .posts{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+  }
+  .posts > .spacer{} /* gutter visualization */
+  .post-list{
+    display:flex; flex-direction:column; gap:var(--gap);
+  }
+  .post{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:var(--post-pad);
+    position:relative;
+    transition:border-color .15s, transform .15s;
+  }
+  .post:hover{ border-color:var(--rule-strong) }
+  .post::before{
+    content:""; position:absolute; left:0; top:14px; bottom:14px;
+    width:2px; background:var(--c, var(--ink-3));
+    border-radius:2px;
+    opacity:0.85;
+  }
+  .post-head{
+    display:flex; align-items:center; gap:12px;
+    margin-bottom:14px;
+  }
+  .avatar{
+    width:34px; height:34px; border-radius:50%;
+    background:var(--av, var(--ink-3)); color:#fff;
+    font-family:var(--font-serif);
+    font-weight:700; font-size:15px;
+    display:grid; place-items:center;
+    flex-shrink:0;
+    letter-spacing:0;
+  }
+  .post-head .who{ display:flex; flex-direction:column; gap:1px; min-width:0 }
+  .post-head .handle{
+    font-size:14px; font-weight:700; color:var(--ink);
+    text-decoration:none;
+  }
+  .post-head .handle:hover{ color:var(--accent); text-decoration:none }
+  .post-head .handle.unknown{ color:var(--ink-3); font-weight:500 }
+  .post-head .handle.estimated{ color:var(--ink-3); font-weight:500 }
+  .post-head .handle.estimated::after{
+    content:"推定"; font-family:var(--font-mono);
+    font-size:9.5px; letter-spacing:0.1em;
+    background:var(--paper-2); color:var(--ink-3);
+    padding:1px 6px; border-radius:3px;
+    margin-left:8px; vertical-align:middle;
+  }
+  .post-head time{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-3);
+    font-feature-settings:"tnum" 1;
+    letter-spacing:0.04em;
+  }
+  .post-head .src{
+    margin-left:auto;
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-3);
+    padding:5px 10px;
+    border:1px solid var(--rule);
+    border-radius:999px;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:color .15s, border-color .15s, background .15s;
+  }
+  .post-head .src:hover{
+    color:var(--ink); border-color:var(--rule-strong);
+    background:var(--paper-2);
+    text-decoration:none;
+  }
+  .post-head .src svg{ width:11px; height:11px }
+
+  .post-body{
+    font-size:15.5px;
+    line-height:1.85;
+    color:var(--ink);
+    white-space:pre-wrap;
+    word-wrap:break-word;
+  }
+  html[data-density="compact"] .post-body{ font-size:14.5px; line-height:1.7 }
+
+  .post-body .quoted{
+    display:block;
+    margin-top:14px;
+    padding:10px 14px;
+    border-left:2px solid var(--rule-strong);
+    background:var(--paper-2);
+    color:var(--ink-2);
+    font-size:13.5px;
+    line-height:1.75;
+    border-radius:0 3px 3px 0;
+  }
+  .post-body .quoted .from{
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:0.14em;
+    color:var(--ink-3); text-transform:uppercase;
+    display:block; margin-bottom:4px;
+  }
+  .post-body .translation{
+    display:block; margin-top:16px;
+    padding:12px 16px;
+    border-left:2px solid var(--accent);
+    background:var(--accent-soft);
+    color:var(--ink);
+    font-size:14.5px; line-height:1.85;
+    border-radius:0 3px 3px 0;
+  }
+  .post-body .translation .label{
+    font-family:var(--font-mono); font-size:10.5px;
+    letter-spacing:0.14em; color:var(--accent);
+    text-transform:uppercase; display:block;
+    margin-bottom:6px; font-weight:500;
+  }
+  .post-body ul{
+    margin:8px 0 0; padding-left:1.1em;
+  }
+  .post-body ul li{ margin:2px 0 }
+  .post-body a{ word-break:break-all }
+
+  /* hide filtered out */
+  .cat.hidden{ display:none }
+
+  /* ── footer notes ────────────────────── */
+  .notes{
+    margin-top:96px;
+    padding-top:36px;
+    border-top:1px solid var(--rule-strong);
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:36px;
+  }
+  .notes h2{
+    font-family:var(--font-serif);
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+  }
+  .notes h2 .ko{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .notes ul{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .notes li{
+    color:var(--ink-2);
+    font-size:13.5px;
+    line-height:1.75;
+    padding-left:22px;
+    position:relative;
+  }
+  .notes li::before{
+    content:"※"; position:absolute; left:0; top:0;
+    color:var(--ink-3); font-family:var(--font-serif);
+  }
+
+  /* ── colophon ────────────────────────── */
+  .colophon{
+    margin-top:72px;
+    padding-top:24px;
+    border-top:1px solid var(--rule);
+    display:flex; justify-content:space-between; align-items:baseline;
+    color:var(--ink-3); font-size:12px;
+    font-family:var(--font-mono);
+    letter-spacing:0.06em;
+  }
+
+  /* ── responsive ──────────────────────── */
+  @media (max-width: 900px){
+    .page{ padding:32px 18px 80px }
+    h1.title{ font-size:42px }
+    .masthead{ grid-template-columns:1fr; gap:24px; align-items:start }
+    .profile{ grid-template-columns:1fr; gap:14px }
+    .cat-header{ grid-template-columns:1fr; gap:8px }
+    .cat-marker{ position:static; flex-direction:row; align-items:baseline; gap:14px }
+    .posts{ grid-template-columns:1fr; gap:0 }
+    .notes{ grid-template-columns:1fr; gap:14px }
+    .filter-bar{ margin:0 -18px 24px; padding:12px 18px }
+    .cat-count{ font-size:28px }
+    .cat-title-block h3{ font-size:24px }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── top bar ─────────────────────────── -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="mark">X</span>
+      <span>Pickup Digest</span>
+    </div>
+    <nav>
+      <a href="#feed">記事</a>
+      <a href="#profile">プロファイル</a>
+      <a href="#notes">注意</a>
+      <div class="theme-switch" role="radiogroup" aria-label="テーマ">
+        <button data-theme="paper" aria-pressed="true">Paper</button>
+        <button data-theme="mono" aria-pressed="false">Mono</button>
+        <button data-theme="dark" aria-pressed="false">Dark</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- ─── masthead ──────────────────────── -->
+  <section class="masthead">
+    <div>
+      <p class="eyebrow">AI / LLM Daily Pickup</p>
+      <h1 class="title">いま読むべき<br>X の AI 関連投稿。<em>2026.08.29</em></h1>
+      <p class="lede">興味プロファイル <code>interest-profile-2026-08-06</code> に基づき、xAI <code>x_search</code> 経由で 8/29（JST）の範囲から収集した 16 件を、カテゴリ別に整理しました。本文は <code>xsearch --url</code> の verbatim のみを根拠にしています。</p>
+    </div>
+    <aside class="meta-card" aria-label="このダイジェストの概要">
+      <dl>
+        <dt>Posts</dt>     <dd><b>16</b>件</dd>
+        <dt>Categories</dt><dd><b>5</b>領域</dd>
+        <dt>Authors</dt>   <dd><b>15</b>アカウント</dd>
+        <dt>Source</dt>    <dd>xAI x_search</dd>
+        <dt>Window</dt>    <dd>8/29 00:00 – 8/30 09:00 JST</dd>
+      </dl>
+    </aside>
+  </section>
+
+  <!-- ─── interest profile ─────────────── -->
+  <section class="profile" id="profile">
+    <h2><span class="ko">Interest Profile</span>推定された<br>興味プロファイル</h2>
+    <ul class="tags">
+      <li><b>ベンチ懐疑・コスパ</b><small>GLM-5.3 事後学習で TB3.0 4.6→28.3, Terminal-Bench 4.0 で GPT-5.6 Sol 超え, ベンチコスト約1/3</small></li>
+      <li><b>運用設計・ハーネス・職業論</b><small>1M エージェントトレース比較, JIT-Agent 使い捨てハーネス, 理解負債, 使用量リセット連動スケジュール</small></li>
+      <li><b>Anthropic 戦略・課金</b><small>Sonnet 5 が初期 Opus 4.8 を 60h で事後学習=RSI, 週次上限 +50%→+25% は実質16.7%減</small></li>
+      <li><b>地政学・輸出規制</b><small>台湾が NVIDIA 幹部を B300 対中密輸で起訴, 中国 AI 企業のシンガポール移転=国籍ウォッシング</small></li>
+      <li><b>医療・科学</b><small>マンジャロ適応外制限, シングリックスが心疾患・認知症も減, S⁶ ホップ問題 Lean 形式証明</small></li>
+    </ul>
+  </section>
+
+  <!-- ─── filter bar ───────────────────── -->
+  <nav class="filter-bar" id="filters" aria-label="カテゴリフィルタ">
+    <span class="label">Filter</span>
+    <button class="chip" data-filter="all" aria-pressed="true"><span class="dot" style="--c:#14110B"></span>すべて<span class="n">16</span></button>
+    <button class="chip" data-filter="bench" aria-pressed="false"><span class="dot" style="--c:#C8552B"></span>ベンチ懐疑<span class="n">4</span></button>
+    <button class="chip" data-filter="se" aria-pressed="false"><span class="dot" style="--c:#5468B0"></span>運用設計 / 職業論<span class="n">4</span></button>
+    <button class="chip" data-filter="anthropic" aria-pressed="false"><span class="dot" style="--c:#834BAB"></span>Anthropic<span class="n">3</span></button>
+    <button class="chip" data-filter="geo" aria-pressed="false"><span class="dot" style="--c:#A3793C"></span>地政学<span class="n">2</span></button>
+    <button class="chip" data-filter="medical" aria-pressed="false"><span class="dot" style="--c:#6E6552"></span>医療 / 科学<span class="n">3</span></button>
+  </nav>
+
+  <!-- ─── feed ─────────────────────────── -->
+  <main class="feed" id="feed">
+
+    <!-- bench -->
+    <section class="cat" data-cat="bench" id="cat-bench" style="--c:#C8552B">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>01 · Bench</span>
+          <span class="cat-count">4<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>モデル評・ベンチ懐疑・コスパ</h3>
+          <p class="cat-intro">GLM-5.3 は基盤モデルを変えず事後学習だけで Terminal Bench 3.0 を 4.6→28.3、DeepSWE を 46.2→66.9 に引き上げた——という中身の話。新登場の Terminal-Bench 4.0 では Opus 5 が首位、GLM-5.3 が GPT-5.6 Sol を抜いて 3 位（ベンチコストは Fable の約 1/3）。「新ベンチが出た瞬間だけ実力がモロバレ」という懐疑と、Luna を GLM-5.3 flash に差し替えても品質そのままで安い、という実タスクの声。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">F</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/fmlybg">@fmlybg</a>
+                <time>08/29 00:44 JST</time>
+              </div>
+              <a class="src" href="https://x.com/fmlybg/status/2093364012935524631" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Z AI、GLM-5.3を公開
+同じベースモデルのまま、事後学習だけでコード性能を改善
+
+GLM-5.2と同じ基盤モデルを使い、性能向上はすべて事後学習によるもの。社内Code Benchは50%改善し、Terminal Bench 3.0は4.6→28.3、DeepSWEは46.2→66.9、Agents' Last Examは23.8→28.5。
+
+社内Code BenchのMaxでは精度34.5%、1タスク平均の出力は約7.5万トークン。GLM-5.2は23.4%・9.6万トークンだった。Highでは31.4%・約5万トークンとなり、Claude Opus 4.8の29.5%・12万トークンを上回る。一方、Claude Fable 5のMax39.5%には届かず。
+
+サイバー評価はCyberGymで84.5%、ExploitBenchで54.4%（前世代24.4%）。セキュリティチームとの検証では269プロジェクトから2,436件の脆弱性を検出し、Critical／Highは1,097件。重みは安全評価と強化を終えたうえで、発表から2週間後に公開予定。
+
+基盤モデルを変えず、長期タスク向けの事後学習で性能とトークン効率を引き上げた。オープンウェイト競争は、モデル規模だけでなくRL環境と検証基盤の質も競う段階へ。</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">U</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/umiyuki_ai">@umiyuki_ai</a>
+                <time>08/29 23:01 JST</time>
+              </div>
+              <a class="src" href="https://x.com/umiyuki_ai/status/2093700590555877760" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">ターミナルベンチ4.0が登場。新しいベンチマークが出た瞬間、コレ大事。ベンチマークは一瞬でベンチマックスされるけど新しいベンチ出た瞬間だけはモデルどもの実力がモロバレする。これによると何故かFable5よりOpus5の方が上。GPT5.6SolよりGLM5.3が上。え、なんじゃこりゃ<span class="quoted"><span class="from">引用 · @kimmonismus（Chubby♨️）</span>GLM-5.3 (max) outperforming GPT-5.6 (max) on the new Terminal-Bench 4.0 was not on my bingo card. 1) what?</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">T</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/TeksEdge">@TeksEdge</a>
+                <time>08/30 03:53 JST</time>
+              </div>
+              <a class="src" href="https://x.com/TeksEdge/status/2093773981476368714" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">🔥 Wow let's go GLM-5.3!  Terminal-Bench 4.0 was recently updated.
+
+This benchie gives agents real terminal environments and asks them to complete difficult software-engineering tasks.
+
+Here's the new leaderboard ...
+🥇 Opus 5 + Claude Code — 51.82%
+🥈 Fable 5 + Claude Code — 44.55%
+🥉 GLM-5.3 + Claude Code — 41.82%
+4️⃣ GPT-5.6 Sol + Codex — 37.27%
+
+An os GLM-5.3 is now only 2.73 points behind Fable 5 and actually scores above GPT-5.6 Sol + Codex on Terminal-Bench 4.0.
+
+And GLM-5.3's reported benchmark cost was also much lower than Fable:
+💰 GLM-5.3 👉  $2,728 total
+💰 Fable 5 👉  $7,265
+💰 Opus 5 👉 $5,969<span class="translation"><span class="label">日本語訳</span>🔥 いくぞ GLM-5.3！ Terminal-Bench 4.0 が先ごろ更新された。
+
+このベンチはエージェントに本物のターミナル環境を与え、難しいソフトウェアエンジニアリングのタスクをやらせる。
+
+新しいリーダーボードはこう:
+🥇 Opus 5 + Claude Code — 51.82%
+🥈 Fable 5 + Claude Code — 44.55%
+🥉 GLM-5.3 + Claude Code — 41.82%
+4️⃣ GPT-5.6 Sol + Codex — 37.27%
+
+オープンソースの GLM-5.3 は Fable 5 の 2.73 ポイント差まで迫り、Terminal-Bench 4.0 では GPT-5.6 Sol + Codex を実際に上回っている。
+
+しかも GLM-5.3 の報告ベンチコストは Fable よりずっと安い:
+💰 GLM-5.3 👉 合計 $2,728
+💰 Fable 5 👉 $7,265
+💰 Opus 5 👉 $5,969</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">C</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/carlosnavamat">@carlosnavamat</a>
+                <time>08/30 04:33 JST</time>
+              </div>
+              <a class="src" href="https://x.com/carlosnavamat/status/2093784239485395092" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">de acuerdo al Don Carlos Benchmark:
+
+GLM 5.3 hace mierda a GPT 5.6 Luna fácilmente.
+
+si habría que compararlo sería con Opus 5, el cual hace mejor trabajo en copywriting.
+
+incluso aunque GPT 5.6 Sol sea un buen modelo, si no puedo usarlo en el plan de $20 USD, es INUSABLE.<span class="quoted"><span class="from">引用 · @abacaj</span>Was using GPT 5.6 Luna to process documents, replaced it all with GLM 5.3 flash past two days for zero quality drop and it's still cheaper than their 80% discount… You can just switch models</span><span class="translation"><span class="label">日本語訳</span>Don Carlos Benchmark によれば:
+
+GLM 5.3 は GPT 5.6 Luna を軽くボロ負けさせる。
+
+比べるなら Opus 5 とで、コピーライティングは Opus 5 の方が上手い。
+
+GPT 5.6 Sol は良いモデルだとしても、$20 のプランで使えないなら「使い物にならない」。</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+    <!-- se -->
+    <section class="cat" data-cat="se" id="cat-se" style="--c:#5468B0">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>02 · Craft</span>
+          <span class="cat-count">4<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>運用設計・ハーネス・職業論</h3>
+          <p class="cat-intro">100 万件超のエージェント実行トレースから見た claude/cursor/codex の「別種の生き物」ぶり（claude は総当たり、cursor は先に検索、codex はチェックポイント）。タスクごとに使い捨てのハーネスを組む JIT-Agent が固定ハーネスをスコアでもトークンでも上回る論文。「理解負債」を手放さない開発フロー。そして使用量リセットに合わせて自律実行をスケジュールする多モデル編成の実験。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">A</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/anandPa94">@anandPa94</a>
+                <time>08/29 06:12 JST</time>
+              </div>
+              <a class="src" href="https://x.com/anandPa94/status/2093446560390766620" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">we've looked at 1M+ agent traces on claude, cursor, and codex and not only do they fail differently, but they also behave like entirely different species.
+some observations:
+
+claude code brute forces. leans hard on training data, skips most searches, guesses the endpoint, retries. takes 3-4x longer to finish the task than others.
+
+cursor searches first. 5-15 searches before it writes a single line. doesn't mean it never gets stuck, but it gets to the same output in less time and fewer tokens.
+
+codex is the middleman. checkpoints. search, move, hit a checkpoint, search again. In my opinion, the smartest pattern of the three.<span class="translation"><span class="label">日本語訳</span>claude・cursor・codex の 100 万件超のエージェント実行トレースを見たが、失敗の仕方が違うだけでなく、まるで別種の生き物のように振る舞う。いくつか観察を:
+
+Claude Code は総当たり。訓練データに強く依存し、検索の大半を飛ばしてエンドポイントを推測し、リトライする。タスク完了までに他より 3〜4 倍長くかかる。
+
+Cursor はまず検索する。1 行書く前に 5〜15 回検索する。詰まらないわけではないが、同じ出力に、より短時間・より少ないトークンで到達する。
+
+Codex は中間型。チェックポイントを打つ。検索して、進めて、チェックポイントに当たり、また検索する。個人的には 3 つの中で最も賢いパターンだ。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">O</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/oliviscusAI">@oliviscusAI</a>
+                <time>08/29 20:13 JST</time>
+              </div>
+              <a class="src" href="https://x.com/oliviscusAI/status/2093658191628554547" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">claude code's harness is cooked.
+
+a new paper builds a different agent harness (memory, tools, planning steps) for every single task instead of locking one in place, and it beats the fixed version while using way less.
+
+same task, same underlying model, different setup around it, here's what changed:
+
+&gt; Claude Code: 79.6 score, 625k tokens, $0.088/case
+&gt; Codex: 77.8 score, 760k tokens, $0.107/case
+&gt; OpenCode: 75.9 score, 1,832k tokens, $0.258/case
+&gt; JIT-Agent: 85.1 score, 400k tokens, $0.066/case
+
+same principle as the guide, load only what the task actually needs instead of running the same fixed setup for everything.
+
+researchers describe it as "a trainable, transferable, and compounding dimension of agent capability," separate from just picking a bigger model.
+
+paper: <a href="https://t.co/ZqZSNYrq77">t.co/ZqZSNYrq77</a><span class="translation"><span class="label">日本語訳</span>Claude Code のハーネスはもう終わり（cooked）。
+
+新しい論文は、ひとつを固定する代わりにタスクごとに別のエージェントハーネス（メモリ・ツール・計画ステップ）を組み、固定版をはるかに少ない消費で上回る。
+
+同じタスク・同じ基盤モデルで、周りのセットアップだけ変えるとこう変わった:
+
+&gt; Claude Code: スコア 79.6、625k トークン、$0.088/件
+&gt; Codex: 77.8、760k、$0.107/件
+&gt; OpenCode: 75.9、1,832k、$0.258/件
+&gt; JIT-Agent: 85.1、400k、$0.066/件
+
+ガイドと同じ原理——固定セットアップを毎回回すのでなく、タスクが実際に必要とするものだけ読み込む。
+
+研究者はこれを「訓練可能で、転移可能で、複利的に効くエージェント能力の次元」——単に大きいモデルを選ぶのとは別物——と表現している。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">C</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/connect24h">@connect24h</a>
+                <time>08/29 15:56 JST</time>
+              </div>
+              <a class="src" href="https://x.com/connect24h/status/2093593709325463864" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">拡散支援。AI理解が私と同意だったんで、方向性間違ってないの確認できた。
+AIコーディングで一番怖いのは、コードを書けなくなることじゃない。
+
+「理解負債」が溜まること。
+
+AIに丸投げすると、
+実装は爆速になる一方で「なぜこの設計なのか」を説明できないコードが増えていく。
+
+この記事の流れがかなり参考になる。
+
+要件をAIに詰めさせる
+→ 実装計画を作る
+→ 人間が理解・レビュー
+→ 別AIで計画を叩く
+→ 実装
+→ PRレビュー
+→ 最後は人間が判断
+
+特に刺さったのは、実装より前の工程に労力の9割以上を使うという考え方。
+
+AI時代、「書ける人」より
+AIが書いたものを理解し、説明できる人が強い。<span class="quoted"><span class="from">引用 · @keita_kn_web（keita@プロダクトエンジニア）</span>最近の開発手法を記事にしました👍️／やる事はシンプルで「AIで効率化はするけど理解だけは手放さい」です！／コードは全て読む必要はないと思いますが、少なくともAIが出してきた物を自分の言葉で説明出来る事が必要だと考えています！ <a href="https://zenn.dev/avaintelligence/articles/dont-outsource-understanding-to-ai">zenn.dev/avaintelligence/articles/dont-outsource-understanding-to-ai</a></span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">R</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/rolottr">@rolottr</a>
+                <time>08/30 06:15 JST</time>
+              </div>
+              <a class="src" href="https://x.com/rolottr/status/2093809796705071192" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">every day I see a new repo about agent harness + factory with 10000 github stars and the FOMO feels overwhelming
+
+i've decided to try for my first MacOS app just ask codex to design and act as a conductor while using Claude and Opencode with GLM-5.3, and some codex subagents with Luna Max
+
+to check on the status use Visualize to update the work in progress and it blew my mind 🤯
+
+not only that, it even setup a Schedule to continue when Claude usage resets so we don't burn tokens
+
+so, with models being more and more capable, the idea that they need less and less guidance makes sense
+
+let's see after the app lands if it actually one-shots it or needs a few more iterations<span class="translation"><span class="label">日本語訳</span>毎日、1 万 GitHub スター級の「エージェントハーネス + ファクトリ」の新リポジトリを目にして、FOMO に押しつぶされそうになる。
+
+そこで初めての MacOS アプリに挑戦することにした——codex に設計させ、指揮者（conductor）役をやらせつつ、Claude と Opencode（GLM-5.3）を使い、一部の codex サブエージェントには Luna Max を使う。
+
+進捗確認には Visualize で作業中の状態を更新させる——これには度肝を抜かれた 🤯
+
+それだけでなく、Claude の使用量がリセットされたら続きを回すよう Schedule まで自分で組んだ——トークンを無駄に燃やさないように。
+
+モデルがどんどん賢くなるほど、必要な指示が減っていくという発想は理にかなう。
+
+アプリが仕上がったら、本当に一発（one-shot）で決まるのか、あと数回の反復が要るのか見てみよう。</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+    <!-- anthropic -->
+    <section class="cat" data-cat="anthropic" id="cat-anthropic" style="--c:#834BAB">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>03 · Anthropic</span>
+          <span class="cat-count">3<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>Anthropic 戦略・課金</h3>
+          <p class="cat-intro">Claude が Claude をアライメントする RSI 研究の続報——弱い Sonnet 5 が初期 Opus 4.8 チェックポイントを 60 時間で製品版並みに事後学習し、AAR 手法は熟練研究者の案を平均 6 時間で上回った。あわせて 9/14 からの週次上限「+50%→+25%」が現行ユーザーには実質 16.7% 減、という財布直結の腑分けも。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">K</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/kimmonismus">@kimmonismus</a>
+                <time>08/29 22:15 JST</time>
+              </div>
+              <a class="src" href="https://x.com/kimmonismus/status/2093688871141978135" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Anthropic just published one of the clearest previews of recursive self-improvement yet. But we still dont talk about it.
+
+Yesterday Anthropic released a reserach paper. Claude was tasked with improving the alignment of other AI models. It searched the literature, proposed methods, created training data, trained the models, evaluated the results and iterated.
+
+It improved all 10 tested alignment failures without degrading measured general capabilities. Anthropic even used the weaker Sonnet 5 to post-train an early Opus 4.8 checkpoint, bringing its alignment close to the released production model within 60 hours.
+
+Anthropic:
+
+"The best AAR method beats what experienced humans propose, on average within six hours. (...) Human-guided research directions do not lead to stronger performance."
+
+This is not full recursive self-improvement yet. The improved model did not become the next researcher and repeat the process. But most of the loop now exists:
+
+AI researches AI.
+AI trains improved AI.
+AI evaluates the result.
+AI iterates.
+The loop closes when the improved AI becomes the researcher for the next generation. That is when progress could begin to compound. And tbh Id say we are pretty close to it. So talk that reserach serious.
+
+h/t to @tradernewsai for bringing this to my attention
+
+Sources: Anthropic blog / Tech Crunch<span class="translation"><span class="label">日本語訳</span>Anthropic は、これまでで最も明快な「再帰的自己改善」のプレビューの一つを公開した。なのに我々はまだそれを話題にしていない。
+
+昨日 Anthropic は研究論文を出した。Claude は他の AI モデルのアライメント改善を課された。文献を調べ、手法を提案し、学習データを作り、モデルを学習させ、結果を評価し、反復した。
+
+テストした 10 件のアライメント不具合すべてを、計測された一般能力を落とさずに改善した。Anthropic はさらに、より弱い Sonnet 5 を使って初期の Opus 4.8 チェックポイントを事後学習し、そのアライメントを 60 時間以内に製品版モデル近くまで引き上げた。
+
+Anthropic 曰く: 「最良の AAR 手法は、熟練した人間の提案を平均 6 時間以内で上回る。(...) 人間が誘導した研究方針は、より強い性能につながらない。」
+
+これはまだ完全な再帰的自己改善ではない。改善されたモデルが次の研究者になって過程を繰り返したわけではない。しかしループの大半はもう存在する——AI が AI を研究し、AI が改善版 AI を学習させ、AI が結果を評価し、AI が反復する。改善された AI が次世代の研究者になった瞬間にループは閉じる。そのとき進歩は複利で回り始める。正直、我々はもうかなり近いと思う。だからこの研究を真剣に受け止めてほしい。
+
+（出典: Anthropic ブログ / TechCrunch）</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">H</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/haider1">@haider1</a>
+                <time>08/30 02:51 JST</time>
+              </div>
+              <a class="src" href="https://x.com/haider1/status/2093758498152874404" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">anthropic STRIKES again
+
+they've made it pretty clear they're building for businesses first, not consumers
+
+openai, SpaceXAI, and google still care about consumer access, while Claude seems fine being expensive and overthinky if it means better enterprise reliability<span class="quoted"><span class="from">引用 · @ClaudeDevs</span>Starting September 14, we're permanently raising standard weekly limits in Claude Code by 25% for Pro, Max, Team, and seat-based Enterprise plans. Until then, the current 50% increase will be in place.</span><span class="translation"><span class="label">日本語訳</span>Anthropic がまたやった。
+
+彼らは、コンシューマ向けよりもまず企業向けに作っていることをかなり明確にした。
+
+OpenAI・SpaceXAI・Google はいまだコンシューマのアクセスを気にかけているが、Claude は——エンタープライズの信頼性が上がるなら——高価で考えすぎ（overthinky）でも構わない、という姿勢に見える。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">B</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/buildwithrajath">@buildwithrajath</a>
+                <time>08/30 03:04 JST</time>
+              </div>
+              <a class="src" href="https://x.com/buildwithrajath/status/2093761835346604460" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">🚨 A quick clarification on Anthropic's Claude usage changes:
+
+Right now: Claude users have a temporary 50% higher weekly limit.
+
+Until September 13: that +50% boost remains.
+
+From September 14: the boost drops to +25% permanently over the original limit.
+
+So in simple terms:
++50% → +25%
+
+That means users currently getting the +50% boost will effectively have 16.7% less weekly usage from September 14.
+
+Example: 150 → 125 usage units
+
+Anthropic is making the +25% level permanent based on what it says it can sustainably serve.
+
+So calling this simply a "limit increase" misses an important part of the story.
+
+For current users, it's actually a 16.7% reduction in available usage. 👀<span class="translation"><span class="label">日本語訳</span>🚨 Anthropic の Claude 使用量変更について簡単に整理:
+
+現在: ユーザーは一時的に週次上限が 50% 増。
+
+9/13 まで: この +50% ブーストは維持。
+
+9/14 から: ブーストは元の上限に対して恒久的に +25% へ低下。
+
+つまり単純化すると: +50% → +25%
+
+これは、現在 +50% を受けているユーザーにとって、9/14 から週次使用量が実質 16.7% 減ることを意味する。
+
+例: 150 → 125 使用ユニット。
+
+Anthropic は「持続的に提供できる」水準として +25% を恒久化する。
+
+だからこれを単なる「上限引き上げ」と呼ぶのは、話の重要な部分を見落としている。現行ユーザーにとっては、実際には使える量の 16.7% 削減なのだ。👀</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+    <!-- geo -->
+    <section class="cat" data-cat="geo" id="cat-geo" style="--c:#A3793C">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>04 · Geopolitics</span>
+          <span class="cat-count">2<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>地政学・輸出規制</h3>
+          <p class="cat-intro">AI ハードの対中輸出規制をめぐる摘発が本格化——台湾検察が NVIDIA 幹部ら 9 名を B300 サーバーの対中密輸（日本・インドネシア経由の迂回）で起訴。中国 AI 企業はシンガポールへ本社を移す「国籍ウォッシング」で制裁を回避しようとするが、Manus の「西洋企業」転身は失敗し、習政権は脱出取り締まりを強化。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">A</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/AIGuideNote">@AIGuideNote</a>
+                <time>08/30 06:46 JST</time>
+              </div>
+              <a class="src" href="https://x.com/AIGuideNote/status/2093817468355477645" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">【AI最新ニュース】
+台湾、NVIDIA幹部ら9名を中国へのAI密輸で起訴
+
+・台湾検察が米対中規制対象のAIサーバー密輸容疑でNVIDIA幹部らを起訴
+・B300搭載サーバーを日本・インドネシア経由で中国へ不正迂回輸出
+・半導体サプライチェーンの地政学リスクと規制監視が一段と厳格化
+
+【解説・背景】
+先端AIハードウェアの対中輸出規制が強化される中、第三国を中継した迂回密輸ネットワークへの摘発が本格化しています。</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">N</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/nikkeimatome">@nikkeimatome</a>
+                <time>08/30 07:22 JST</time>
+              </div>
+              <a class="src" href="https://x.com/nikkeimatome/status/2093826553616773129" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">中国AI企業が相次いでシンガポールへ本社移転、米中輸出規制・制裁合戦を避ける「国籍ウォッシング」が横行 – Manusの「西洋企業」転身は失敗、習近平政権は脱出取り締まりを強化 <a href="http://nikkeimatome.com/?p=79203">nikkeimatome.com/?p=79203</a> @nikkeimatomeより</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+    <!-- medical -->
+    <section class="cat" data-cat="medical" id="cat-medical" style="--c:#6E6552">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>05 · Medical</span>
+          <span class="cat-count">3<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>医療・科学</h3>
+          <p class="cat-intro">priority ソース MIKITO_777 の医療リテラシー 2 件——ダイエット目的のマンジャロ適応外使用にイーライリリーが「一切容認せず」、帯状疱疹ワクチン（シングリックス）は認知症に加え心不全・脳卒中・虚血性心疾患も減らす Nature データ。さらに 1948 年に Hopf が提起した S⁶ の複素構造問題に Alpöge 氏が構成を公表、Lean 4 の形式証明が通過——「解いたのも検証したのも AI か」の視点。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">Y</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/yohaku121244">@yohaku121244</a>
+                <time>08/29 10:09 JST</time>
+              </div>
+              <a class="src" href="https://x.com/yohaku121244/status/2093506283668467785" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">1948年にHopfが提起したS⁶の複素構造問題が解決に近づいています！ヤコビアン予想の反例を発表したAlpöge氏が、今度はS⁶の複素構造の構成を公表しました。代数次元はa(X)=1で既知の定理のa(X)=0と矛盾しますが、Lean 4の形式証明が通過しており今回の構成が正しい可能性が高そうです。<span class="quoted"><span class="from">引用 · @jdlichtman（Jared Duker Lichtman）</span>The Hopf problem for S^6 is now formalized: 270k lines of Lean code</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">M</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/MIKITO_777">@MIKITO_777</a>
+                <time>08/29 11:42 JST</time>
+              </div>
+              <a class="src" href="https://x.com/MIKITO_777/status/2093529771535999048" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">マンジャロの発売元であるイーライリリーから、適応外使用についてのコメントが出ました
+
+今後はダイエット目的の使用は制限されていきそうです
+
+若い女性がこれを使って過剰に痩せて健康リスクが上がっている症例があるので、適切な対応だと思います<span class="quoted"><span class="from">引用 · @nikkei（日本経済新聞 電子版）</span>糖尿病薬マンジャロの痩身利用「一切容認せず」　日本イーライリリー幹部／「（日本で）適応外で処方しているのはごく一部だと認識している。ただ、問題がさらに広がる前に対処することが重要だ」（特別顧問のシモーネ・トムセン氏） <a href="https://www.nikkei.com/article/DGXZQOUC181KJ0Y6A810C2000000/">www.nikkei.com/article/DGXZQOUC181KJ0Y6A810C2000000</a></span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">M</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/MIKITO_777">@MIKITO_777</a>
+                <time>08/29 14:09 JST</time>
+              </div>
+              <a class="src" href="https://x.com/MIKITO_777/status/2093566726067880108" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">現在、補助が受けられる帯状疱疹ワクチンは、従来の水痘生ワクチンと、新しい組み換えワクチン（シングリックス）がありますが、
+今回、心疾患抑制効果が確認されたのはシングリックスです
+
+また、認知症リスクを大きく下げる効果が確認できているのもそちらです
+
+シングリックスは高価で2回接種する必要がありますが、
+帯状疱疹のリスクを90%以上低下させる高価が10年以上保ち、さらに認知症や心疾患、脳卒中のリスクを減らすとされていますので、
+そちらを強くお勧めいたします
+
+ご参考までに<span class="quoted"><span class="from">引用 · @MIKITO_777（自己引用）</span>【特報❗️】認知症リスクを大きく減らすことが確認されている帯状疱疹ワクチン（シングリックス）に、脳卒中、心不全、虚血性心疾患、心房細動等も減らすというデータがNatureに掲載されました。／日本では50歳から接種可能で、65歳以上の場合、国から補助が出ます。</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="notes" id="notes">
+    <h2><span class="ko">Editor's Notes</span>収集・編集上の<br>注意</h2>
+    <ul>
+      <li>出典の本文は <code>xsearch --url</code> で取得した「Grok の引用（verbatim）」です。X の生 API ではないため、まれにパラフレーズや取り違えがあります。本文に違和感があれば原 URL を直接開いて確認してください。キーワード検索の合成本文・要約は採用していません。</li>
+      <li><code>/i/status/</code> のリンク形式では Grok が著者ハンドルを <code>@i</code> と返すため、本文中の言及・返信先・引用元から実際のハンドルを再構成しています。今回は全 16 件でハンドルを特定できました。</li>
+      <li>収集窓は 2026-08-29 00:00 〜 2026-08-30 09:00 JST。時刻は各投稿 ID (Snowflake) 由来の JST です。US 夜のローンチが JST 翌朝まで尾を引くため、翌日 09:00 まで含みます。</li>
+      <li>選別はトピック×アングル×ソースの 3 軸。速報の二次拡散・SEO / アフィ煽り・汎用プロンプトテンプレ羅列・出所不明の生リーク・<code>@grok</code> 自身の応答などは除外しています。</li>
+      <li>「引用」は他者の投稿・記事の紹介です（一次情報は引用元を参照）。既存の Topics ダイジェストと URL（<code>status/&lt;id&gt;</code>）の重複がないことを確認済みです。</li>
+    </ul>
+  </footer>
+
+  <div class="colophon">
+    <span>X PICKUP DIGEST · No. 2026-08-29</span>
+    <span>compiled via xAI x_search</span>
+  </div>
+
+</div>
+
+<!-- Theme switch -->
+<script>
+(function(){
+  const KEY = 'xpickup-theme';
+  const html = document.documentElement;
+  const buttons = document.querySelectorAll('.theme-switch button');
+
+  function setTheme(name){
+    html.setAttribute('data-theme', name);
+    try { localStorage.setItem(KEY, name); } catch(_){}
+    buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.theme === name)));
+  }
+
+  // restore
+  let initial = 'paper';
+  try { initial = localStorage.getItem(KEY) || 'paper'; } catch(_){}
+  setTheme(initial);
+
+  buttons.forEach(b => b.addEventListener('click', () => setTheme(b.dataset.theme)));
+})();
+</script>
+
+<!-- Filtering + scrollspy -->
+<script>
+(function(){
+  const chips = document.querySelectorAll('.chip');
+  const cats  = document.querySelectorAll('.cat');
+
+  function setFilter(f){
+    chips.forEach(c=>c.setAttribute('aria-pressed', String(c.dataset.filter === f)));
+    cats.forEach(s=>{
+      const show = (f === 'all') || (s.dataset.cat === f);
+      s.classList.toggle('hidden', !show);
+    });
+    if (f !== 'all'){
+      const target = document.getElementById('cat-' + f);
+      if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }
+
+  chips.forEach(c=>{
+    c.addEventListener('click', ()=>setFilter(c.dataset.filter));
+  });
+
+})();
+</script>
+
+</body>
+</html>
