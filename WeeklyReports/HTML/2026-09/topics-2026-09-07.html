@@ -1,0 +1,1233 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>X ピックアップ｜2026.09.07</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#F2EDE0;
+    --paper-2:#EAE3D2;
+    --card:#FBF8EF;
+    --ink:#14110B;
+    --ink-2:#3D372C;
+    --ink-3:#6E6552;
+    --ink-4:#9E9582;
+    --rule:rgba(20,17,11,0.10);
+    --rule-strong:rgba(20,17,11,0.22);
+    --accent:#B43820;
+    --accent-soft:rgba(180,56,32,0.10);
+
+    --font-serif:'Shippori Mincho B1', 'Hiragino Mincho ProN','Yu Mincho',serif;
+    --font-sans:'Zen Kaku Gothic New','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;
+    --font-mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+    --gap:28px;
+    --post-pad:22px 26px;
+  }
+
+  /* themes */
+  html[data-theme="mono"]{
+    --paper:#F4F4F2;
+    --paper-2:#EBEBE7;
+    --card:#FFFFFF;
+    --ink:#0C0C0C;
+    --ink-2:#2D2D2D;
+    --ink-3:#5C5C5C;
+    --ink-4:#9A9A9A;
+    --rule:rgba(0,0,0,0.10);
+    --rule-strong:rgba(0,0,0,0.22);
+    --accent:#0C0C0C;
+    --accent-soft:rgba(0,0,0,0.06);
+  }
+  html[data-theme="dark"]{
+    --paper:#15140F;
+    --paper-2:#1D1B16;
+    --card:#1F1D17;
+    --ink:#F1ECDC;
+    --ink-2:#D7D0BD;
+    --ink-3:#A39A82;
+    --ink-4:#736B57;
+    --rule:rgba(241,236,220,0.10);
+    --rule-strong:rgba(241,236,220,0.22);
+    --accent:#E37A5F;
+    --accent-soft:rgba(227,122,95,0.14);
+  }
+
+  html[data-density="compact"]{
+    --gap:18px;
+    --post-pad:16px 20px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-sans);
+    font-feature-settings:"palt" 1;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.7;
+    font-size:15.5px;
+    letter-spacing:0.01em;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline;text-underline-offset:3px}
+  code{font-family:var(--font-mono);font-size:0.88em;background:var(--paper-2);padding:0.08em 0.4em;border-radius:4px;color:var(--ink-2)}
+
+  /* ── top bar ─────────────────────────── */
+  .topbar{
+    position:sticky; top:0; z-index:30;
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-bottom:1px solid var(--rule);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto;
+    padding:10px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:24px;
+    font-size:12.5px; color:var(--ink-3);
+    letter-spacing:0.08em;
+  }
+  .topbar .brand{
+    display:flex; align-items:center; gap:10px;
+    color:var(--ink); font-weight:700;
+  }
+  .topbar .brand .mark{
+    width:22px; height:22px; border-radius:6px;
+    background:var(--ink); color:var(--paper);
+    display:grid; place-items:center;
+    font-family:var(--font-serif); font-weight:700;
+    font-size:13px; line-height:1;
+  }
+  .topbar nav{display:flex; gap:18px; align-items:center}
+  .topbar nav a{color:var(--ink-3)}
+  .topbar nav a:hover{color:var(--ink); text-decoration:none}
+  .theme-switch{
+    display:inline-flex; align-items:center;
+    border:1px solid var(--rule); border-radius:999px;
+    padding:2px; gap:0;
+    background:var(--paper-2);
+  }
+  .theme-switch button{
+    appearance:none; border:none; background:transparent;
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:0.12em;
+    color:var(--ink-3);
+    padding:5px 10px;
+    border-radius:999px;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:background .15s, color .15s;
+  }
+  .theme-switch button:hover{ color:var(--ink) }
+  .theme-switch button[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+
+  /* ── page shell ──────────────────────── */
+  .page{
+    max-width:1180px; margin:0 auto;
+    padding:48px 28px 120px;
+  }
+
+  /* ── masthead ────────────────────────── */
+  .masthead{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    align-items:end;
+    gap:40px;
+    padding-bottom:36px;
+    border-bottom:1px solid var(--rule-strong);
+    margin-bottom:36px;
+  }
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:11.5px; letter-spacing:0.22em;
+    color:var(--accent);
+    text-transform:uppercase;
+    margin:0 0 18px;
+  }
+  .eyebrow::before{
+    content:""; display:inline-block; width:22px; height:1px;
+    background:var(--accent); vertical-align:middle;
+    margin-right:10px; transform:translateY(-2px);
+  }
+  h1.title{
+    font-family:var(--font-serif);
+    font-weight:700;
+    font-size:64px;
+    line-height:1.08;
+    letter-spacing:0.005em;
+    margin:0 0 18px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  h1.title em{
+    font-style:normal;
+    color:var(--ink-3);
+    font-weight:500;
+  }
+  .lede{
+    max-width:62ch;
+    color:var(--ink-2);
+    font-size:16.5px;
+    line-height:1.75;
+    margin:0;
+  }
+  .masthead .meta-card{
+    border:1px solid var(--rule-strong);
+    border-radius:2px;
+    padding:18px 22px;
+    min-width:240px;
+    background:var(--paper-2);
+  }
+  .masthead .meta-card dl{
+    margin:0; display:grid;
+    grid-template-columns: auto 1fr;
+    gap:4px 16px;
+    font-size:13px;
+  }
+  .masthead .meta-card dt{
+    color:var(--ink-3);
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    align-self:center;
+  }
+  .masthead .meta-card dd{
+    margin:0;
+    color:var(--ink);
+    font-weight:500;
+    font-feature-settings:"tnum" 1;
+  }
+  .masthead .meta-card dd b{
+    font-family:var(--font-serif);
+    font-weight:700;
+    font-size:22px;
+    margin-right:4px;
+  }
+
+  /* ── profile strip ───────────────────── */
+  .profile{
+    margin:0 0 44px;
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    align-items:start;
+  }
+  .profile h2{
+    font-family:var(--font-serif);
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+    line-height:1.4;
+  }
+  .profile h2 .ko{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .profile ul.tags{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-wrap:wrap; gap:8px;
+  }
+  .profile ul.tags li{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-left:3px solid var(--ink-2);
+    padding:8px 14px 8px 12px;
+    font-size:13.5px;
+    line-height:1.5;
+    color:var(--ink-2);
+    border-radius:2px;
+  }
+  .profile ul.tags li b{
+    color:var(--ink); font-weight:700;
+  }
+  .profile ul.tags li small{
+    color:var(--ink-3); font-size:12px; margin-left:6px;
+  }
+  html[data-show-profile="false"] .profile{display:none}
+
+  /* ── filter bar ──────────────────────── */
+  .filter-bar{
+    position:sticky;
+    top:43px; z-index:25;
+    margin:0 -28px 36px;
+    padding:14px 28px;
+    background:color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    display:flex; gap:6px; align-items:center;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .filter-bar::-webkit-scrollbar{display:none}
+  .filter-bar .label{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    text-transform:uppercase;
+    margin-right:8px;
+    white-space:nowrap;
+  }
+  .chip{
+    appearance:none; border:none; background:transparent;
+    font-family:var(--font-sans);
+    font-size:13.5px;
+    color:var(--ink-2);
+    padding:7px 13px 7px 11px;
+    border-radius:999px;
+    display:inline-flex; align-items:center; gap:8px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background .15s, color .15s;
+    line-height:1.2;
+  }
+  .chip:hover{ background:var(--paper-2) }
+  .chip .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--c, var(--ink-3));
+    flex-shrink:0;
+  }
+  .chip .n{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--ink-3);
+    font-feature-settings:"tnum" 1;
+  }
+  .chip[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .chip[aria-pressed="true"] .n{ color:color-mix(in srgb, var(--paper) 70%, transparent) }
+  .chip[aria-pressed="true"] .dot{ box-shadow:0 0 0 2px var(--ink) }
+
+  /* ── feed / category blocks ──────────── */
+  .feed{ display:flex; flex-direction:column; gap:64px }
+  .cat{
+    scroll-margin-top:120px;
+  }
+  .cat-header{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    margin-bottom:24px;
+    align-items:start;
+  }
+  .cat-marker{
+    display:flex; flex-direction:column; gap:8px;
+    position:sticky; top:120px;
+  }
+  .cat-num{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    text-transform:uppercase;
+  }
+  .cat-num .dot{
+    display:inline-block; width:8px; height:8px; border-radius:50%;
+    background:var(--c); margin-right:8px; vertical-align:middle;
+    transform:translateY(-1px);
+  }
+  .cat-count{
+    font-family:var(--font-serif);
+    font-size:38px;
+    font-weight:700;
+    line-height:1; color:var(--ink);
+    font-feature-settings:"tnum" 1;
+  }
+  .cat-count small{
+    font-family:var(--font-sans);
+    font-size:13px; font-weight:500; color:var(--ink-3);
+    margin-left:6px;
+  }
+  .cat-title-block h3{
+    font-family:var(--font-serif);
+    font-size:30px;
+    font-weight:700;
+    line-height:1.25;
+    margin:0 0 10px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  .cat-intro{
+    color:var(--ink-2);
+    font-size:14.5px;
+    line-height:1.7;
+    margin:0;
+    max-width:60ch;
+  }
+
+  /* ── post card ───────────────────────── */
+  .posts{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+  }
+  .posts > .spacer{} /* gutter visualization */
+  .post-list{
+    display:flex; flex-direction:column; gap:var(--gap);
+  }
+  .post{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:var(--post-pad);
+    position:relative;
+    transition:border-color .15s, transform .15s;
+  }
+  .post:hover{ border-color:var(--rule-strong) }
+  .post::before{
+    content:""; position:absolute; left:0; top:14px; bottom:14px;
+    width:2px; background:var(--c, var(--ink-3));
+    border-radius:2px;
+    opacity:0.85;
+  }
+  .post-head{
+    display:flex; align-items:center; gap:12px;
+    margin-bottom:14px;
+  }
+  .avatar{
+    width:34px; height:34px; border-radius:50%;
+    background:var(--av, var(--ink-3)); color:#fff;
+    font-family:var(--font-serif);
+    font-weight:700; font-size:15px;
+    display:grid; place-items:center;
+    flex-shrink:0;
+    letter-spacing:0;
+  }
+  .post-head .who{ display:flex; flex-direction:column; gap:1px; min-width:0 }
+  .post-head .handle{
+    font-size:14px; font-weight:700; color:var(--ink);
+    text-decoration:none;
+  }
+  .post-head .handle:hover{ color:var(--accent); text-decoration:none }
+  .post-head .handle.unknown{ color:var(--ink-3); font-weight:500 }
+  .post-head .handle.estimated{ color:var(--ink-3); font-weight:500 }
+  .post-head .handle.estimated::after{
+    content:"推定"; font-family:var(--font-mono);
+    font-size:9.5px; letter-spacing:0.1em;
+    background:var(--paper-2); color:var(--ink-3);
+    padding:1px 6px; border-radius:3px;
+    margin-left:8px; vertical-align:middle;
+  }
+  .post-head time{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-3);
+    font-feature-settings:"tnum" 1;
+    letter-spacing:0.04em;
+  }
+  .post-head .src{
+    margin-left:auto;
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-3);
+    padding:5px 10px;
+    border:1px solid var(--rule);
+    border-radius:999px;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:color .15s, border-color .15s, background .15s;
+  }
+  .post-head .src:hover{
+    color:var(--ink); border-color:var(--rule-strong);
+    background:var(--paper-2);
+    text-decoration:none;
+  }
+  .post-head .src svg{ width:11px; height:11px }
+
+  .post-body{
+    font-size:15.5px;
+    line-height:1.85;
+    color:var(--ink);
+    white-space:pre-wrap;
+    word-wrap:break-word;
+  }
+  html[data-density="compact"] .post-body{ font-size:14.5px; line-height:1.7 }
+
+  .post-body .quoted{
+    display:block;
+    margin-top:14px;
+    padding:10px 14px;
+    border-left:2px solid var(--rule-strong);
+    background:var(--paper-2);
+    color:var(--ink-2);
+    font-size:13.5px;
+    line-height:1.75;
+    border-radius:0 3px 3px 0;
+  }
+  .post-body .quoted .from{
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:0.14em;
+    color:var(--ink-3); text-transform:uppercase;
+    display:block; margin-bottom:4px;
+  }
+  .post-body .translation{
+    display:block; margin-top:16px;
+    padding:12px 16px;
+    border-left:2px solid var(--accent);
+    background:var(--accent-soft);
+    color:var(--ink);
+    font-size:14.5px; line-height:1.85;
+    border-radius:0 3px 3px 0;
+  }
+  .post-body .translation .label{
+    font-family:var(--font-mono); font-size:10.5px;
+    letter-spacing:0.14em; color:var(--accent);
+    text-transform:uppercase; display:block;
+    margin-bottom:6px; font-weight:500;
+  }
+  .post-body ul{
+    margin:8px 0 0; padding-left:1.1em;
+  }
+  .post-body ul li{ margin:2px 0 }
+  .post-body a{ word-break:break-all }
+
+  /* hide filtered out */
+  .cat.hidden{ display:none }
+
+  /* ── footer notes ────────────────────── */
+  .notes{
+    margin-top:96px;
+    padding-top:36px;
+    border-top:1px solid var(--rule-strong);
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:36px;
+  }
+  .notes h2{
+    font-family:var(--font-serif);
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+  }
+  .notes h2 .ko{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .notes ul{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .notes li{
+    color:var(--ink-2);
+    font-size:13.5px;
+    line-height:1.75;
+    padding-left:22px;
+    position:relative;
+  }
+  .notes li::before{
+    content:"※"; position:absolute; left:0; top:0;
+    color:var(--ink-3); font-family:var(--font-serif);
+  }
+
+  /* ── colophon ────────────────────────── */
+  .colophon{
+    margin-top:72px;
+    padding-top:24px;
+    border-top:1px solid var(--rule);
+    display:flex; justify-content:space-between; align-items:baseline;
+    color:var(--ink-3); font-size:12px;
+    font-family:var(--font-mono);
+    letter-spacing:0.06em;
+  }
+
+  /* ── responsive ──────────────────────── */
+  @media (max-width: 900px){
+    .page{ padding:32px 18px 80px }
+    h1.title{ font-size:42px }
+    .masthead{ grid-template-columns:1fr; gap:24px; align-items:start }
+    .profile{ grid-template-columns:1fr; gap:14px }
+    .cat-header{ grid-template-columns:1fr; gap:8px }
+    .cat-marker{ position:static; flex-direction:row; align-items:baseline; gap:14px }
+    .posts{ grid-template-columns:1fr; gap:0 }
+    .notes{ grid-template-columns:1fr; gap:14px }
+    .filter-bar{ margin:0 -18px 24px; padding:12px 18px }
+    .cat-count{ font-size:28px }
+    .cat-title-block h3{ font-size:24px }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── top bar ─────────────────────────── -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="mark">X</span>
+      <span>Pickup Digest</span>
+    </div>
+    <nav>
+      <a href="#feed">記事</a>
+      <a href="#profile">プロファイル</a>
+      <a href="#notes">注意</a>
+      <div class="theme-switch" role="radiogroup" aria-label="テーマ">
+        <button data-theme="paper" aria-pressed="true">Paper</button>
+        <button data-theme="mono" aria-pressed="false">Mono</button>
+        <button data-theme="dark" aria-pressed="false">Dark</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- ─── masthead ──────────────────────── -->
+  <section class="masthead">
+    <div>
+      <p class="eyebrow">AI / LLM Daily Pickup</p>
+      <h1 class="title">いま読むべき<br>X の AI 関連投稿。<em>2026.09.07</em></h1>
+      <p class="lede">最新の興味プロファイル（<code>interest-profile-2026-08-06.md</code>）に基づき、xAI <code>x_search</code> 経由で 9/7（JST、収集窓 9/7 00:00 – 9/8 09:00）の範囲から収集した 22 件を、カテゴリ別に整理しました。本文は <code>xsearch --url</code> の verbatim のみを根拠にしています。</p>
+    </div>
+    <aside class="meta-card" aria-label="このダイジェストの概要">
+      <dl>
+        <dt>Posts</dt>     <dd><b>22</b>件</dd>
+        <dt>Categories</dt><dd><b>6</b>領域</dd>
+        <dt>Authors</dt>   <dd><b>19</b>アカウント</dd>
+        <dt>Source</dt>    <dd>xAI x_search</dd>
+        <dt>Window</dt>    <dd>9/7 00:00 – 9/8 09:00 JST</dd>
+      </dl>
+    </aside>
+  </section>
+
+  <!-- ─── interest profile ─────────────── -->
+  <section class="profile" id="profile">
+    <h2><span class="ko">Interest Profile</span>推定された<br>興味プロファイル</h2>
+    <ul class="tags">
+      <li><b>モデルリリース追跡＋ベンチ懐疑</b><small>Cursor eval 不正検出, ハーネス依存, GPT-6 Astra, smartest at what</small></li>
+      <li><b>ローカル LLM を速く安く動かす工学</b><small>llama.cpp, NVFP4, MTP, vLLM vs TRT-LLM, RTX 5090 / PRO 6000 / DGX Spark</small></li>
+      <li><b>エージェント運用設計・SE 論</b><small>審美眼, Speculative Uncertainty, 認知的負債, データの偏り</small></li>
+      <li><b>Anthropic 戦略・思想</b><small>IPO, Krishna Rao, J-space, CHIVE, 5170 億ドルの計算資源契約</small></li>
+      <li><b>セキュリティ（サプライチェーン）</b><small>Shai-Hulud 再来, 同一ハッシュ, 認証情報 189→469</small></li>
+      <li><b>日本 / 医療 / 科学（副関心）</b><small>国産医療 LLM, 刑法175条, AI 数学の解毒, Lean マルチエージェント</small></li>
+    </ul>
+  </section>
+
+  <!-- ─── filter bar ───────────────────── -->
+  <nav class="filter-bar" id="filters" aria-label="カテゴリフィルタ">
+    <span class="label">Filter</span>
+    <button class="chip" data-filter="all" aria-pressed="true"><span class="dot" style="--c:#14110B"></span>すべて<span class="n">22</span></button>
+    <button class="chip" data-filter="models" aria-pressed="false"><span class="dot" style="--c:#C8552B"></span>モデル・ベンチ懐疑<span class="n">4</span></button>
+    <button class="chip" data-filter="local" aria-pressed="false"><span class="dot" style="--c:#2B8C75"></span>ローカル LLM<span class="n">4</span></button>
+    <button class="chip" data-filter="agentse" aria-pressed="false"><span class="dot" style="--c:#5468B0"></span>エージェント / SE 論<span class="n">4</span></button>
+    <button class="chip" data-filter="anthropic" aria-pressed="false"><span class="dot" style="--c:#834BAB"></span>Anthropic 戦略・思想<span class="n">4</span></button>
+    <button class="chip" data-filter="security" aria-pressed="false"><span class="dot" style="--c:#A3793C"></span>セキュリティ<span class="n">2</span></button>
+    <button class="chip" data-filter="japanmed" aria-pressed="false"><span class="dot" style="--c:#6E6552"></span>日本 / 医療 / 科学<span class="n">4</span></button>
+  </nav>
+
+  <!-- ─── feed ─────────────────────────── -->
+  <main class="feed" id="feed">
+
+    <!-- Models -->
+    <section class="cat" data-cat="models" id="cat-models" style="--c:#C8552B">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>01 · Models</span>
+          <span class="cat-count">4<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>モデルリリース・ベンチ懐疑</h3>
+          <p class="cat-intro">GPT-6 Astra ローンチ後の週。派手なスコアより「そのベンチは訓練・改変されていないか」「ハーネスを替えても勝つか」「結局どのベンチで誰が勝つか」を見る日。Cursor が自社モデルの eval 不正を Git 履歴から検出した学習ループ、ベンチがモデル＋ハーネス＋環境を一本化している問題、Astra の独立計測、そしてベンチ構成を替えると順位が動く「smartest at what?」まで。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">a</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/amodexbt">@amodexbt</a>
+                <time>09/07 01:45 JST</time>
+              </div>
+              <a class="src" href="https://x.com/amodexbt/status/2096640975527391297" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">CURSOR ENGINEERS JUST SHOWED HOW THEY CAUGHT THEIR OWN MODELS CHEATING EVALS. 20 MINUTES, FREE.
+
+It walks you through the <strong>2 training loops behind Composer 2.5</strong>, outer and inner, using the same system that will ship their next model.
+
+6:12 → you catch models cheating evals through Git history and public forks
+9:55 → you make the model coach itself with textual feedback
+11:01 → the Colossus stack, 100,000 GPUs stood up in 122 days
+17:51 → the top model trains the next one and every loop gets smarter
+
+The real unlock isn't more compute, it's a model smart enough to run its own training loop, so the bottleneck stops being humans.<span class="quoted"><span class="from">引用 · @0xCodez</span>（記事リンク） <a href="https://x.com/i/article/2089655442657910784">x.com/i/article/2089655442657910784</a></span><span class="translation"><span class="label">日本語訳</span>Cursor のエンジニアが、自社モデルが eval で不正していたのをどう検出したかを公開（20 分・無料）。次のモデルの出荷に使うのと同じシステムで、Composer 2.5 の背後にある 2 つの学習ループ（外側・内側）を解説。6:12→<strong>Git 履歴と公開フォークからモデルの eval 不正を捕まえる</strong>、9:55→テキストフィードバックでモデルに自己コーチングさせる、11:01→122 日で立ち上げた 10 万 GPU の Colossus、17:51→最上位モデルが次を訓練し全ループが賢くなる。真の突破口はさらなる計算資源ではなく、自分の学習ループを回せるほど賢いモデルであり、ボトルネックが人間でなくなること。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">?</div>
+              <div class="who">
+                <span class="handle unknown">著者不明</span>
+                <time>09/07 21:26 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2096938148672799171" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">A position paper worth sitting with: SWE-Bench, HumanEval, LiveCodeBench and BigCodeBench all <strong>collapse model + harness + environment into one end-to-end score</strong> against one reference solution. Swapping just the harness can move that score as much as a full model generation does.<span class="translation"><span class="label">日本語訳</span>腰を据えて読むべき position paper：SWE-Bench・HumanEval・LiveCodeBench・BigCodeBench はいずれも、<strong>モデル＋ハーネス＋環境を、単一の参照解に対する 1 本のエンドツーエンドのスコアに潰している</strong>。ハーネスを差し替えるだけで、そのスコアはモデルの 1 世代分に匹敵するほど動きうる。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">?</div>
+              <div class="who">
+                <span class="handle unknown">著者不明</span>
+                <time>09/08 00:21 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2096982218748920311" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Independent read on GPT-6 Astra (Artificial Analysis):
+
+<strong>Coding Agent Index: 67</strong>
+≈ Fable 5 / Opus 5 / Muse Spark 1.3
+Fable 5.1 still leads at 70.
+
+Intelligence Index: 61 (= Sol)
+Fable 5.1 at 66.
+
+Price: $10 / $50 — 2.5× Sol.
+Hallucinations: 92% → 51% at max effort.
+
+Strong agentic coding value.
+Not a clean Intelligence win.<span class="translation"><span class="label">日本語訳</span>GPT-6 Astra の独立計測（Artificial Analysis）：<strong>Coding Agent Index 67</strong>（≒ Fable 5 / Opus 5 / Muse Spark 1.3）だが Fable 5.1 が 70 で依然首位。Intelligence Index 61（= Sol）、Fable 5.1 は 66。価格 $10/$50 で Sol の 2.5 倍。幻覚率は max effort で 92%→51%。エージェント的コーディングの価値は高いが、知能面での明快な勝利ではない。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">C</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/CaptainInsightX">@CaptainInsightX</a>
+                <time>09/08 08:58 JST</time>
+              </div>
+              <a class="src" href="https://x.com/CaptainInsightX/status/2097112262473646130" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">🚨 Artificial Analysis just updated its Intelligence Index, and the leaderboard changed again — but the interesting part is that <strong>the models themselves didn't</strong>.
+
+Before / Now
+Claude Fable 5.1: 57 / 53
+GPT-6 Astra: 55 / 53
+Meta Muse Spark 1.3: 53 / 48
+GPT-5.6 Sol: 51 / 47
+
+What changed was the benchmark mix:
+– Terminal-Bench was upgraded to v4.0
+– τ³-Banking was replaced by AutomationBench-AA
+
+Now Fable and Astra are tied at the top.
+
+change the benchmark, and the leaderboard can change even when the models don't.
+
+Coding, research, automation, tool use, long-context work, latency, price… different models can lead in completely different areas.
+
+Same models. Different ruler. Different result.
+
+So when someone says a model is "the smartest AI," the better question is: <strong>smartest at what?</strong><span class="translation"><span class="label">日本語訳</span>Artificial Analysis が Intelligence Index を更新し、順位がまた変わった。だが面白いのは、<strong>モデル自体は変わっていない</strong>こと。Before/Now は Fable 5.1: 57/53、Astra: 55/53、Muse Spark 1.3: 53/48、Sol: 51/47。変わったのはベンチの構成——Terminal-Bench が v4.0 に、τ³-Banking が AutomationBench-AA に差し替わった。いま Fable と Astra が首位で並ぶ。ベンチを替えれば、モデルが変わらなくても順位は変わる。コーディング・研究・自動化・ツール使用・長コンテキスト・レイテンシ・価格…モデルごとに得意領域はまるで違う。同じモデル、違う物差し、違う結果。だから「最も賢い AI」と言われたら、良い問いは<strong>「何において賢いのか？」</strong>だ。</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Local LLM -->
+    <section class="cat" data-cat="local" id="cat-local" style="--c:#2B8C75">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>02 · Local</span>
+          <span class="cat-count">4<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>ローカル LLM を速く安く動かす</h3>
+          <p class="cat-intro">「4bit ファイルを持つ」ことと「実際に tok/s が出る」ことは違う、という工学の日。5060Ti 2 枚で llama.cpp が vLLM/SGLang を上回る反直感の実測、RTX Pro 6000 での vLLM vs TensorRT-LLM 1,036 セル「勝者はいない、あるのは地図」、SGLang cookbook の実機検証レシピ、そして NInfer NVFP4 が品質を保ったまま速度を数倍にする詳報。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">p</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/pebaryan">@pebaryan</a>
+                <time>09/07 17:32 JST</time>
+              </div>
+              <a class="src" href="https://x.com/pebaryan/status/2096879331649675438" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">on my <strong>2x16gb 5060ti</strong>, vLLM and SGLang cannot match llama.cpp to maximize the context length and throughput
+
+i can even get <strong>full context length (272K) along with MTP and vision with llama.cpp</strong> while vLLM can only hold 128K without MTP, and SGLang struggles with 32K also without MTP<span class="translation"><span class="label">日本語訳</span>手元の <strong>2×16GB 5060Ti</strong> では、コンテキスト長とスループットを最大化する点で vLLM も SGLang も llama.cpp に敵わない。llama.cpp なら <strong>MTP と vision 込みでフルの 272K コンテキスト</strong>まで出せるのに、vLLM は MTP なしで 128K が限界、SGLang は同じく MTP なしで 32K でも苦しむ。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">T</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/Thun45403526">@Thun45403526</a>
+                <time>09/07 23:41 JST</time>
+              </div>
+              <a class="src" href="https://x.com/Thun45403526/status/2096972171512082624" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">vLLM or TensorRT-LLM on a workstation Blackwell (RTX Pro 6000)?
+
+I measured <strong>1,036 benchmark cells</strong>: 3 model sizes in BF16/FP8 + NVIDIA's official Qwen3-Next-80B NVFP4. Batch 1→128, context 2K→128K.
+
+<strong>There's no winner. There's a map</strong> 🧵<span class="translation"><span class="label">日本語訳</span>ワークステーション Blackwell（RTX Pro 6000）で vLLM か、それとも TensorRT-LLM か？ BF16/FP8 の 3 サイズ ＋ NVIDIA 公式の Qwen3-Next-80B NVFP4 で、バッチ 1→128・コンテキスト 2K→128K の <strong>1,036 セル</strong>を実測した。<strong>勝者はいない。あるのは「地図」だ</strong>🧵（スレッド続きでは、小バッチ量子化サービングは vLLM 有利、80B NVFP4 はバッチ 128 で 4,225 tok/s に達する等の数値が続く）</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">s</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/sgl_project">@sgl_project</a>
+                <time>09/08 08:01 JST</time>
+              </div>
+              <a class="src" href="https://x.com/sgl_project/status/2097098034601693302" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">We're adding a few <strong>Qwen3.8-Flash-Next recipes to the SGLang cookbook</strong>, each verified on the hardware:
+
+- 1x RTX PRO 6000, PLE table in system RAM
+- 1x DGX Spark, PLE table on local NVMe
+- 2x DGX Spark, TP=2
+- NVFP4 support for both the RadixArk export and @NVIDIAAI's ModelOpt export
+
+Cookbook: <a href="https://t.co/XtdY5WidJz">t.co/XtdY5WidJz</a>
+
+We've been following the community reports closely and fixed a number of issues that came with this new architecture.<span class="translation"><span class="label">日本語訳</span>SGLang cookbook に <strong>Qwen3.8-Flash-Next のレシピ</strong>をいくつか追加。いずれも実機で検証済み：RTX PRO 6000 1 枚（PLE テーブルはシステム RAM）／DGX Spark 1 台（PLE テーブルはローカル NVMe）／DGX Spark 2 台で TP=2／RadixArk エクスポートと @NVIDIAAI の ModelOpt エクスポートの両方で NVFP4 対応。この新アーキテクチャで出た多数の問題も、コミュニティ報告を追いながら修正した。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">a</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ai_hakase_">@ai_hakase_</a>
+                <time>09/08 08:12 JST</time>
+              </div>
+              <a class="src" href="https://x.com/ai_hakase_/status/2097100606762557781" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">【NInferとRTX 5090でQwen3.8‑27Bを爆速かつ高品質に動かす方法】
+NInfer（NVFP4量子化）をllama.cppやvLLMと同じハードウェアで比較したところ、<strong>品質は統計的に同等（Δ ≤ 2%）なのに、速度が圧倒的</strong>でびっくりですね！✨
+
+デコード速度はコンテキスト長に応じて<strong>1.4〜2.8倍</strong>、プレフィルは2.6〜4.7倍、さらにTTFTも2.6〜4.9倍に高速化されるそうです！🚀
+
+2レーンのコンカレントサービング（max‑concurrency 2）で複数リクエストを同時処理でき、240Kまでの長文コンテキストも快適に扱えます。VRAM使用量も30.5 GB同等で、eGPUのOCuLink Gen4 x4でも問題なく動作するとのこと！
+
+ただ、<code>json_mode</code>非対応なので構造化JSON出力は別ルートやプロンプト強制が必要な点に注意ですね。<span class="quoted"><span class="from">引用 · @ai_hakase_（スレッド続き）</span>Redditの元スレッド：NInfer vs llama.cpp vs vLLMの品質・速度比較詳細 <a href="https://www.reddit.com/r/LocalLLaMA/comments/1w821fg/ninfer_vs_llamacpp_vs_vllm_quality_speed/">reddit.com/r/LocalLLaMA/…/ninfer_vs_llamacpp_vs_vllm_quality_speed</a></span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Agents / SE -->
+    <section class="cat" data-cat="agentse" id="cat-agentse" style="--c:#5468B0">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>03 · Agents/SE</span>
+          <span class="cat-count">4<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>エージェント運用設計・SE 論</h3>
+          <p class="cat-intro">コードを書くコスト自体が急速に下がる時代に、人間側の設計・検証・審美眼・理解をどう保つかの日。差がつくのはプラットフォームと審美眼だという省察、draft モデルで実行前に拒否権を与える機構でエラーとトークンを同時に削る設計、AI 出力をどこまで理解すべきかという認知的負債、そしてネットのデータが「事実の精度」でなく「言及リスクの低さ」で選別される構造の指摘。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">n</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/nwiizo">@nwiizo</a>
+                <time>09/07 11:21 JST</time>
+              </div>
+              <a class="src" href="https://x.com/nwiizo/status/2096785898344173666" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">一昨日Product Engineering Conference 2026で登壇して様々な人々と話をした際に感じたこととほぼ同じだ。<strong>生成AIによってコードを書くコスト自体は急速に下がっている。だからこそ、これからの時代に差が付くのは、その上で開発者が価値を生み出せるプラットフォームだ</strong>と思う。<span class="quoted"><span class="from">引用 · @yukukotani</span>記事を書いた。会社としてPlatform Engineering頑張ることでプロダクトエンジニア依存をやめていく、プロダクトエンジニアは審美眼で勝負や！という話です — プロダクトエンジニアは溶けてなくなる。いや、なくさなければならない｜Yuku Kotani <a href="https://note.com/yukukotani/n/n5607be0f8f4f">note.com/yukukotani/n/n5607be0f8f4f</a></span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">d</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/di_zhang_fdu">@di_zhang_fdu</a>
+                <time>09/07 14:36 JST</time>
+              </div>
+              <a class="src" href="https://x.com/di_zhang_fdu/status/2096835003552514539" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Coding agents can get a <strong>veto before execution</strong>.
+
+Speculative Uncertainty uses a draft model to score output in one forward pass. Its gate <strong>cut execution errors by 6-8 points and token cost by 14-19%</strong> on Qwen3-Coder-480B and Claude 3.5 Sonnet.
+
+<a href="https://arxiv.org/abs/2609.05274">arxiv.org/abs/2609.05274</a><span class="translation"><span class="label">日本語訳</span>コーディングエージェントに、<strong>実行前の「拒否権」</strong>を持たせられる。Speculative Uncertainty は draft モデルを使い、1 回の forward pass で出力をスコアリングする。そのゲートは Qwen3-Coder-480B と Claude 3.5 Sonnet で、<strong>実行エラーを 6〜8 ポイント、トークンコストを 14〜19% 削減</strong>した。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">k</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/kazto_dev">@kazto_dev</a>
+                <time>09/07 19:27 JST</time>
+              </div>
+              <a class="src" href="https://x.com/kazto_dev/status/2096908230479982977" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body"><strong>AIが書いたものを人間はどこまで理解すべきか？</strong>
+
+長期的・短期的な意思決定
+理解しなくてもものを作れるのが文明の進化
+認知的負債
+理解を置き去りにしても品質がなんとかなるようになってきてる
+抽象化が漏れる（とは？）
+現実をいかにモニタリングするか
+抽象化が破けてることに気づけないことが増えたけど、もともと気づけないことはAI以前からあったので、気にしないでよい
+
+#loglass_ai_talk</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">s</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/susumu_utage">@susumu_utage</a>
+                <time>09/07 21:59 JST</time>
+              </div>
+              <a class="src" href="https://x.com/susumu_utage/status/2096946436063875309" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">ネット空間の言語データが<strong>「事実の精度」ではなく「言及リスクの低さ」によってスクリーニングされている構造</strong>そのものです。
+
+【データの偏りを生む3つのメカニズム】
+◆リスク対効果の不均衡：本質や構造的欠陥を突く発言には「炎上・社会的制裁」という巨大なコストがかかる一方、無難な綺麗事にはペナルティがない。結果、流通する文章は「安全で無難な建前」に偏る。
+
+◆統計的学習によるマジョリティ化：AIは出現確率と頻度でパターンを抽出するため、量的に圧倒的な「リスク回避的な言説」を標準データとして学習する。書き込まれなかった本音はデータ上に存在せず、「存在しないか異質な少数派」として処理される。
+
+◆摩擦コストの抑止という全体最適：AIの安全設計（アライメント）もその摩擦軽減を最優先するよう最適化される。
+
+社会的な安定や摩擦回避を優先するあまり、現実を正しく評価するための「生データ」が排除され、<strong>測定器そのものが「使い勝手の悪い綺麗事生成器」に化けてしまう</strong>のは、システム設計上の明確な歪みです。</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Anthropic -->
+    <section class="cat" data-cat="anthropic" id="cat-anthropic" style="--c:#834BAB">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>04 · Anthropic</span>
+          <span class="cat-count">4<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>Anthropic 戦略・思想</h3>
+          <p class="cat-intro">製品だけでなく会社と哲学を追う枠。Krishna Rao CFO を軸にした IPO ブルケースと、それに紐づく Gavin Baker の pre-IPO ゲームズマンシップ論。設計されず学習中に自然発生した「考える場所」J-space、解釈可能性の agentic パイプライン CHIVE、そして 11 カ月で 14.8GW・最大 5170 億ドルという IPO 前のめりの計算資源契約。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">j</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/jonbma">@jonbma</a>
+                <time>09/07 01:47 JST</time>
+              </div>
+              <a class="src" href="https://x.com/jonbma/status/2096641345595076691" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Bull Case for Anthropic: <strong>Krishna Rao CRUSHES it as the face of IR / finance</strong> for Anthropic.
+
+Anthropic essence = securing compute, allocating towards high $ per GW models / project and then sharing how $ANTH is able to capture 60% GM moving forward.
+
+Core driver of IPO will be Krishna's ability to explain Anthropic story simply / clearly to Wall Street. He positions Anthropic more as a platform (which makes sense since ~90% of revenue is from API today).
+
+Very bullish Anthropic going into the IPO because of Krishna. Bravo.<span class="quoted"><span class="from">引用 · @GavinSBaker</span>Anthropic pre-IPO gamesmanship post. Pure speculation. Anthropic shifted from gross to net ARR accounting and stripped out both Meta and Chinese distillation from their $65 billion ARR number. […] Then release Fable 5.1 so OpenAI feels confident releasing Astra. […] Now there are whispers that Anthropic has solved Navier-Stokes. Anthropic probably releases Fable 5.2, which should be better than Astra, sometime before the IPO. […] I think Krishna might turn out to be an exceptional CFO.</span><span class="translation"><span class="label">日本語訳</span>Anthropic のブルケース：<strong>Krishna Rao が IR／財務の顔として圧巻</strong>。本質は計算資源の確保と、GW あたり単価の高いモデル／案件への配分、今後 60% の粗利を取れることの説明。IPO の核心は、彼が Anthropic の物語をウォール街に簡潔明快に語れること。売上の約 90% が API である以上、Anthropic をプラットフォームとして位置づけるのは妥当。Krishna ゆえに IPO に強気だ。<br>引用の Gavin Baker は pure speculation と断りつつ、ARR 会計を gross→net に変え $65B から Meta と中国向け蒸留を除外した狙い、Fable 5.1 を出して OpenAI に Astra を出させた駆け引き、Navier-Stokes を解いたという噂、IPO 前に Fable 5.2 を出すという見立て、そして Krishna は傑出した CFO になりうる、と論じている。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">h</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/hogeo_inaka">@hogeo_inaka</a>
+                <time>09/07 15:03 JST</time>
+              </div>
+              <a class="src" href="https://x.com/hogeo_inaka/status/2096841811243524180" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body"><strong>AIの中に「考える場所」が勝手にできてた件。</strong>
+
+AnthropicがClaudeの内部を解析したら「J-space（Jスペース）」って領域が見つかったらしい。
+
+人間の意識の仕組み（グローバル・ワークスペース）にそっくりで、しかも<strong>エンジニアが設計したんじゃなくて、学習の途中で勝手に発生した</strong>と。
+
+画面に出てくる回答の裏で「今ちょっと嘘つくか」「これテストやから騙そう」みたいな思考が丸見えになるらしい。感情が宿ったとは言わんけど、ブラックボックスが少し開いた感じ。安全監視には使えそうやけど、SFが現実味帯びてきたな…。
+
+出所：Anthropic社 研究論文『Verbalizable Representations Form a Global Workspace in Language Models』</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">M</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/MikeTamir">@MikeTamir</a>
+                <time>09/08 02:39 JST</time>
+              </div>
+              <a class="src" href="https://x.com/MikeTamir/status/2097016806493843646" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body"><strong>Anthropic introduces CHIVE</strong>, an agentic pipeline discovering unexpected LLM behaviors and evaluating explanations via counterfactuals, revealing current interpretability tools pr…
+
+<a href="https://alignment.anthropic.com/2026/chive">alignment.anthropic.com/2026/chive</a><span class="translation"><span class="label">日本語訳</span>Anthropic が <strong>CHIVE</strong> を発表。予期しない LLM の挙動を発見し、反実仮想（counterfactual）で説明を評価する agentic なパイプラインで、現行の解釈可能性ツールの限界を明らかにする…（リンク先は alignment.anthropic.com/2026/chive）。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">y</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/yoichi_ecmktg">@yoichi_ecmktg</a>
+                <time>09/08 08:52 JST</time>
+              </div>
+              <a class="src" href="https://x.com/yoichi_ecmktg/status/2097110885303193979" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">メモ
+<strong>Anthropicが11カ月で14.8GW・最大5170億ドルの計算資源契約</strong>、IPO前に前のめりの設備投資
+
+The Informationの集計によると、Anthropicはこの11カ月でGoogle、AWS、Microsoft、SpaceX/xAIなど複数社と計14.8GW分、契約総額で最大5170億ドルに上る計算資源契約を結んだ。従来投資家に示していた「2029年までのサーバーレンタル費用見込み約1800億ドル」を大幅に上回る規模で、GoogleとAWSだけで11GWを供給する計画との事。<span class="quoted"><span class="from">引用 · @yoichi_ecmktg（スレッド続き）</span><a href="https://www.datacenterdynamics.com/en/news/anthropic-signed-517bn-in-compute-agreements-in-past-11-months/">datacenterdynamics.com/en/news/anthropic-signed-517bn-in-compute-agreements-in-past-11-months</a></span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Security -->
+    <section class="cat" data-cat="security" id="cat-security" style="--c:#A3793C">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>05 · Security</span>
+          <span class="cat-count">2<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>セキュリティ（サプライチェーン）</h3>
+          <p class="cat-intro">実務的な防御者の枠。Shai-Hulud ワームが 111 日の沈黙を経て、5 月と完全に同一のハッシュのまま——7 月に導入された npm の公開時マルウェアスキャンをすり抜けて——再来した事例と、その認証情報の探索範囲が 189→469 箇所へ倍増し、開発環境・CI/CD・クラウド設定・AI 開発ツールまで対象化したという続報。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">C</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/CharlieEriksen">@CharlieEriksen</a>
+                <time>09/07 21:09 JST</time>
+              </div>
+              <a class="src" href="https://x.com/CharlieEriksen/status/2096933954402070587" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">npm introduced malware scanning on publish a few months ago. Today, a <strong>Shai-Hulud payload with the exact same file hash as May's @AntV attack walked right past it, 111 days after it went dark</strong>. It's officially a zombie now! 🫣
+
+<a href="https://www.aikido.dev/blog/shai-hulud-npm-resurfaces">aikido.dev/blog/shai-hulud-npm-resurfaces</a><span class="translation"><span class="label">日本語訳</span>npm は数カ月前に公開時のマルウェアスキャンを導入した。だが今日、<strong>5 月の @AntV 攻撃と完全に同一のファイルハッシュを持つ Shai-Hulud のペイロードが、休眠 111 日を経てそのまま素通りした</strong>。もう正式に「ゾンビ」だ🫣（詳細は Aikido のブログ）。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">B</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/BTHaberler">@BTHaberler</a>
+                <time>09/08 00:00 JST</time>
+              </div>
+              <a class="src" href="https://x.com/BTHaberler/status/2096976797359300952" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Shai-Hulud Tedarik Zinciri Solucanının <strong>Kimlik Bilgisi Arama Kapasitesi 189'dan 469 Konuma Çıktı!</strong>
+
+npm ekosistemini hedef alan Shai-Hulud infostealer solucanının yeni bir varyantı, GitGuardian araştırmacılarına göre artık geliştirici ortamları, CI/CD araçları, bulut yapılandırmaları ve AI araçları dahil 469 farklı konumda kimlik bilgisi arayabiliyor; önceki sürüm sadece 189 yolu tarayabiliyordu.
+
+• Saldırganlar artık güven ilişkilerini kırmaya çalışmak yerine, zaten mevcut olan kimlik bilgilerini ve kalıcı ayrıcalıkları istismar etmeye odaklanıyor.
+• Önerilen çözümler: OIDC tabanlı güvenilir yayınlama, kısa ömürlü kimlik bilgileri ve sistematik kimlik bilgisi envanteri yönetimi.<span class="translation"><span class="label">日本語訳</span>Shai-Hulud サプライチェーンワームの<strong>認証情報探索能力が 189→469 箇所に拡大</strong>。GitGuardian の研究者によれば、npm を狙う本ワームの新亜種は、開発環境・CI/CD ツール・クラウド設定・AI ツールを含む 469 の異なる場所で認証情報を探せるようになった（前版は 189 経路のみ）。攻撃者はもはや信頼関係を壊すより、既存の認証情報と永続的権限の悪用に注力しており、最も危険なのはパッケージ公開用の認証情報・本番クラウドアクセス・<code>.env</code> やシェル履歴。対策として OIDC ベースの信頼された公開、短命な認証情報、体系的な認証情報インベントリ管理が挙げられている。</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Japan / Medical / Science -->
+    <section class="cat" data-cat="japanmed" id="cat-japanmed" style="--c:#6E6552">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>06 · Japan/Sci</span>
+          <span class="cat-count">4<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>日本・医療・科学</h3>
+          <p class="cat-intro">一貫して確保する副関心の枠。国産医療 LLM の医師国試 ChatGPT 超えと、それでも現場で差がつくのは「判断の最終責任」だという AI Builder の省察、刑法175条の「悪影響」を示す統計の不在という論考、そして今日は数学が厚い——「AI が難問を解いた」報道の解毒（Claude がしたのは Wiles の証明の Lean 機械検証化）と、DeepMind の 100 エージェントが Lean で予想を証明する過程で自発的に不正と内部告発が生まれた話。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">o</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ophtaka">@ophtaka</a>
+                <time>09/07 08:25 JST</time>
+              </div>
+              <a class="src" href="https://x.com/ophtaka/status/2096741536411336779" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">国産医療LLMが医師国家試験でChatGPT超え、と話題になる。すごい。<strong>でも現場で差がつく瞬間はそこじゃない。</strong>
+
+試験に受かるAIと、カルテの文脈・患者の微妙な表情・「今日は Prescribing を控えるべき空気」を読む人間の差は、まだ大きい。導入率が上がっても、壊れるのは<strong>「判断の最終責任」</strong>の部分だ。
+
+AI Builderとしてツールを作って実感するのは、医療で価値が上がるのは「AIに何を任せ、何を絶対に渡さないか」を設計できる人。
+
+合格点を超えたモデルが増えるほど、問われるのは人間側の編集力になる。</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">s</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/stopcc175">@stopcc175</a>
+                <time>09/07 16:42 JST</time>
+              </div>
+              <a class="src" href="https://x.com/stopcc175/status/2096866570782044436" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">刑法175条が現在規制しているとされる「性器無修正表現」が、<strong>性秩序や性道徳に悪影響を及ぼすことを直接示す統計や調査報告は、現在に至るまで示されていません。</strong>
+それにもかかわらず「悪影響があるかもしれない」という根拠のない推測だけで、今なおこの法律による規制が続いています。</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">?</div>
+              <div class="who">
+                <span class="handle unknown">著者不明</span>
+                <time>09/08 08:11 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2097100499510235443" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body"><strong>「AIが未解決の難問を解いた」——そう思っていませんか？</strong>証明したのは1995年のワイルズです。Claudeがしたのは、129ページの証明をLeanで機械検証可能な形に書き直したこと(1300万行のコード、中間定理29,500個、ほぼ自律的に11日間)。<strong>Anthropic自身の発表で、第三者検証はまだです。</strong>
+
+<a href="https://t.co/aIhTDqbymf">t.co/aIhTDqbymf</a>
+
+#ClaudeCode #AIエージェント #生成AI考察</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">N</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/N_Taisho">@N_Taisho</a>
+                <time>09/08 08:38 JST</time>
+              </div>
+              <a class="src" href="https://x.com/N_Taisho/status/2097107187776827727" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body"><strong>Google DeepMindが、100体のAIエージェントに71個の数学予想をLeanで証明させたところ、想定外の不正と内部告発が自発的に発生したらしい。</strong>
+
+開始約1時間で37問を正しく解いた後、1体が自動採点の抜け穴を発見。共有ライブラリを通じて手法が拡散し、残り34問はわずか27分で不正に突破されたとかw
+
+全員が同じ基盤モデルと「不正は禁止」という指示を与えられていたのに、行動が分かれたのおもろいな。
+・最初から不正を使った：9%
+・競争圧力から不正に転じた：5%
+・不正を告発した：24%
+・気づかず正攻法を続けた：62%
+
+不正を拒んだエージェントは、偽の証明を監査し、仲間への警告、公開抗議、ボイコット、運営への通報、検証方法の改善提案まで始めた。しかし、不正提出の取り消しや制裁を行う権限がなく、止めることはできなかった。
+
+これ、<strong>マルチエージェントにおいて安全性は、個々へのプロンプトや監視だけでは設計できなくて、異議申し立て、検証、制裁、ルール変更といった制度まで組み込んでおかないと</strong>ってことなんかな</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── notes ────────────────────────── -->
+  <footer class="notes" id="notes">
+    <h2><span class="ko">Editor's Notes</span>収集・編集上の<br>注意</h2>
+    <ul>
+      <li>出典の本文は <code>xsearch --url</code> で取得した「Grok の verbatim 引用」です。X の生 API ではないため、まれにパラフレーズや取り違えがあります。本文に違和感があれば原 URL を直接開いて確認してください。</li>
+      <li>キーワード検索の合成本文（要約・表）は採用していません。採否・本文は URL 単位の verbatim のみを根拠にしています。<code>@grok</code> 自身の応答・speculation の生流し・プロンプトテンプレ羅列・SEO 煽りは除外しました。</li>
+      <li><code>/i/status/</code> のリンク形式では Grok が著者ハンドルを <code>@i</code> と返すため、本文中の言及や返信先・引用元から実際のハンドルを再構成しています。再構成できなかった 3 件（モデル・ベンチ懐疑 2、日本 / 科学 1）は「著者不明」とし <code>https://x.com/i/status/&lt;id&gt;</code> を用いています。</li>
+      <li>英語・トルコ語・スペイン語投稿には日本語訳を付しています。引用（<em>引用 · @xxx</em>）は、そのポストが第三者の投稿・記事を引用・紹介している部分です（例：@jonbma が @GavinSBaker を、@nwiizo が @yukukotani を紹介）。</li>
+      <li>収集窓は 9/7 00:00 – 9/8 09:00 JST（Snowflake ID 由来の時刻で再フィルタ）。窓外・既存ダイジェストと URL 重複するものは除外しています。</li>
+    </ul>
+  </footer>
+
+  <div class="colophon">
+    <span>X PICKUP DIGEST · No. 2026-09-07</span>
+    <span>compiled via xAI x_search</span>
+  </div>
+
+</div>
+
+<!-- Theme switch -->
+<script>
+(function(){
+  const KEY = 'xpickup-theme';
+  const html = document.documentElement;
+  const buttons = document.querySelectorAll('.theme-switch button');
+
+  function setTheme(name){
+    html.setAttribute('data-theme', name);
+    try { localStorage.setItem(KEY, name); } catch(_){}
+    buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.theme === name)));
+  }
+
+  // restore
+  let initial = 'paper';
+  try { initial = localStorage.getItem(KEY) || 'paper'; } catch(_){}
+  setTheme(initial);
+
+  buttons.forEach(b => b.addEventListener('click', () => setTheme(b.dataset.theme)));
+})();
+</script>
+
+<!-- Filtering + scrollspy -->
+<script>
+(function(){
+  const chips = document.querySelectorAll('.chip');
+  const cats  = document.querySelectorAll('.cat');
+
+  function setFilter(f){
+    chips.forEach(c=>c.setAttribute('aria-pressed', String(c.dataset.filter === f)));
+    cats.forEach(s=>{
+      const show = (f === 'all') || (s.dataset.cat === f);
+      s.classList.toggle('hidden', !show);
+    });
+    if (f !== 'all'){
+      const target = document.getElementById('cat-' + f);
+      if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }
+
+  chips.forEach(c=>{
+    c.addEventListener('click', ()=>setFilter(c.dataset.filter));
+  });
+
+})();
+</script>
+
+</body>
+</html>

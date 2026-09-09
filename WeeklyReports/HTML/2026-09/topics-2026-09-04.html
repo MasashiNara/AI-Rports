@@ -1,0 +1,1186 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>X ピックアップ｜2026.09.04</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#F2EDE0;
+    --paper-2:#EAE3D2;
+    --card:#FBF8EF;
+    --ink:#14110B;
+    --ink-2:#3D372C;
+    --ink-3:#6E6552;
+    --ink-4:#9E9582;
+    --rule:rgba(20,17,11,0.10);
+    --rule-strong:rgba(20,17,11,0.22);
+    --accent:#B43820;
+    --accent-soft:rgba(180,56,32,0.10);
+
+    --font-serif:'Shippori Mincho B1', 'Hiragino Mincho ProN','Yu Mincho',serif;
+    --font-sans:'Zen Kaku Gothic New','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;
+    --font-mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+    --gap:28px;
+    --post-pad:22px 26px;
+  }
+
+  /* themes */
+  html[data-theme="mono"]{
+    --paper:#F4F4F2;
+    --paper-2:#EBEBE7;
+    --card:#FFFFFF;
+    --ink:#0C0C0C;
+    --ink-2:#2D2D2D;
+    --ink-3:#5C5C5C;
+    --ink-4:#9A9A9A;
+    --rule:rgba(0,0,0,0.10);
+    --rule-strong:rgba(0,0,0,0.22);
+    --accent:#0C0C0C;
+    --accent-soft:rgba(0,0,0,0.06);
+  }
+  html[data-theme="dark"]{
+    --paper:#15140F;
+    --paper-2:#1D1B16;
+    --card:#1F1D17;
+    --ink:#F1ECDC;
+    --ink-2:#D7D0BD;
+    --ink-3:#A39A82;
+    --ink-4:#736B57;
+    --rule:rgba(241,236,220,0.10);
+    --rule-strong:rgba(241,236,220,0.22);
+    --accent:#E37A5F;
+    --accent-soft:rgba(227,122,95,0.14);
+  }
+
+  html[data-density="compact"]{
+    --gap:18px;
+    --post-pad:16px 20px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-sans);
+    font-feature-settings:"palt" 1;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.7;
+    font-size:15.5px;
+    letter-spacing:0.01em;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline;text-underline-offset:3px}
+  code{font-family:var(--font-mono);font-size:0.88em;background:var(--paper-2);padding:0.08em 0.4em;border-radius:4px;color:var(--ink-2)}
+
+  /* ── top bar ─────────────────────────── */
+  .topbar{
+    position:sticky; top:0; z-index:30;
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-bottom:1px solid var(--rule);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto;
+    padding:10px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:24px;
+    font-size:12.5px; color:var(--ink-3);
+    letter-spacing:0.08em;
+  }
+  .topbar .brand{
+    display:flex; align-items:center; gap:10px;
+    color:var(--ink); font-weight:700;
+  }
+  .topbar .brand .mark{
+    width:22px; height:22px; border-radius:6px;
+    background:var(--ink); color:var(--paper);
+    display:grid; place-items:center;
+    font-family:var(--font-serif); font-weight:700;
+    font-size:13px; line-height:1;
+  }
+  .topbar nav{display:flex; gap:18px; align-items:center}
+  .topbar nav a{color:var(--ink-3)}
+  .topbar nav a:hover{color:var(--ink); text-decoration:none}
+  .theme-switch{
+    display:inline-flex; align-items:center;
+    border:1px solid var(--rule); border-radius:999px;
+    padding:2px; gap:0;
+    background:var(--paper-2);
+  }
+  .theme-switch button{
+    appearance:none; border:none; background:transparent;
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:0.12em;
+    color:var(--ink-3);
+    padding:5px 10px;
+    border-radius:999px;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:background .15s, color .15s;
+  }
+  .theme-switch button:hover{ color:var(--ink) }
+  .theme-switch button[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+
+  /* ── page shell ──────────────────────── */
+  .page{
+    max-width:1180px; margin:0 auto;
+    padding:48px 28px 120px;
+  }
+
+  /* ── masthead ────────────────────────── */
+  .masthead{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    align-items:end;
+    gap:40px;
+    padding-bottom:36px;
+    border-bottom:1px solid var(--rule-strong);
+    margin-bottom:36px;
+  }
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:11.5px; letter-spacing:0.22em;
+    color:var(--accent);
+    text-transform:uppercase;
+    margin:0 0 18px;
+  }
+  .eyebrow::before{
+    content:""; display:inline-block; width:22px; height:1px;
+    background:var(--accent); vertical-align:middle;
+    margin-right:10px; transform:translateY(-2px);
+  }
+  h1.title{
+    font-family:var(--font-serif);
+    font-weight:700;
+    font-size:64px;
+    line-height:1.08;
+    letter-spacing:0.005em;
+    margin:0 0 18px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  h1.title em{
+    font-style:normal;
+    color:var(--ink-3);
+    font-weight:500;
+  }
+  .lede{
+    max-width:62ch;
+    color:var(--ink-2);
+    font-size:16.5px;
+    line-height:1.75;
+    margin:0;
+  }
+  .masthead .meta-card{
+    border:1px solid var(--rule-strong);
+    border-radius:2px;
+    padding:18px 22px;
+    min-width:240px;
+    background:var(--paper-2);
+  }
+  .masthead .meta-card dl{
+    margin:0; display:grid;
+    grid-template-columns: auto 1fr;
+    gap:4px 16px;
+    font-size:13px;
+  }
+  .masthead .meta-card dt{
+    color:var(--ink-3);
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    align-self:center;
+  }
+  .masthead .meta-card dd{
+    margin:0;
+    color:var(--ink);
+    font-weight:500;
+    font-feature-settings:"tnum" 1;
+  }
+  .masthead .meta-card dd b{
+    font-family:var(--font-serif);
+    font-weight:700;
+    font-size:22px;
+    margin-right:4px;
+  }
+
+  /* ── profile strip ───────────────────── */
+  .profile{
+    margin:0 0 44px;
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    align-items:start;
+  }
+  .profile h2{
+    font-family:var(--font-serif);
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+    line-height:1.4;
+  }
+  .profile h2 .ko{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .profile ul.tags{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-wrap:wrap; gap:8px;
+  }
+  .profile ul.tags li{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-left:3px solid var(--ink-2);
+    padding:8px 14px 8px 12px;
+    font-size:13.5px;
+    line-height:1.5;
+    color:var(--ink-2);
+    border-radius:2px;
+  }
+  .profile ul.tags li b{
+    color:var(--ink); font-weight:700;
+  }
+  .profile ul.tags li small{
+    color:var(--ink-3); font-size:12px; margin-left:6px;
+  }
+  html[data-show-profile="false"] .profile{display:none}
+
+  /* ── filter bar ──────────────────────── */
+  .filter-bar{
+    position:sticky;
+    top:43px; z-index:25;
+    margin:0 -28px 36px;
+    padding:14px 28px;
+    background:color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    display:flex; gap:6px; align-items:center;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .filter-bar::-webkit-scrollbar{display:none}
+  .filter-bar .label{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    text-transform:uppercase;
+    margin-right:8px;
+    white-space:nowrap;
+  }
+  .chip{
+    appearance:none; border:none; background:transparent;
+    font-family:var(--font-sans);
+    font-size:13.5px;
+    color:var(--ink-2);
+    padding:7px 13px 7px 11px;
+    border-radius:999px;
+    display:inline-flex; align-items:center; gap:8px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background .15s, color .15s;
+    line-height:1.2;
+  }
+  .chip:hover{ background:var(--paper-2) }
+  .chip .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--c, var(--ink-3));
+    flex-shrink:0;
+  }
+  .chip .n{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--ink-3);
+    font-feature-settings:"tnum" 1;
+  }
+  .chip[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .chip[aria-pressed="true"] .n{ color:color-mix(in srgb, var(--paper) 70%, transparent) }
+  .chip[aria-pressed="true"] .dot{ box-shadow:0 0 0 2px var(--ink) }
+
+  /* ── feed / category blocks ──────────── */
+  .feed{ display:flex; flex-direction:column; gap:64px }
+  .cat{
+    scroll-margin-top:120px;
+  }
+  .cat-header{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    margin-bottom:24px;
+    align-items:start;
+  }
+  .cat-marker{
+    display:flex; flex-direction:column; gap:8px;
+    position:sticky; top:120px;
+  }
+  .cat-num{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    text-transform:uppercase;
+  }
+  .cat-num .dot{
+    display:inline-block; width:8px; height:8px; border-radius:50%;
+    background:var(--c); margin-right:8px; vertical-align:middle;
+    transform:translateY(-1px);
+  }
+  .cat-count{
+    font-family:var(--font-serif);
+    font-size:38px;
+    font-weight:700;
+    line-height:1; color:var(--ink);
+    font-feature-settings:"tnum" 1;
+  }
+  .cat-count small{
+    font-family:var(--font-sans);
+    font-size:13px; font-weight:500; color:var(--ink-3);
+    margin-left:6px;
+  }
+  .cat-title-block h3{
+    font-family:var(--font-serif);
+    font-size:30px;
+    font-weight:700;
+    line-height:1.25;
+    margin:0 0 10px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  .cat-intro{
+    color:var(--ink-2);
+    font-size:14.5px;
+    line-height:1.7;
+    margin:0;
+    max-width:60ch;
+  }
+
+  /* ── post card ───────────────────────── */
+  .posts{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+  }
+  .posts > .spacer{} /* gutter visualization */
+  .post-list{
+    display:flex; flex-direction:column; gap:var(--gap);
+  }
+  .post{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:var(--post-pad);
+    position:relative;
+    transition:border-color .15s, transform .15s;
+  }
+  .post:hover{ border-color:var(--rule-strong) }
+  .post::before{
+    content:""; position:absolute; left:0; top:14px; bottom:14px;
+    width:2px; background:var(--c, var(--ink-3));
+    border-radius:2px;
+    opacity:0.85;
+  }
+  .post-head{
+    display:flex; align-items:center; gap:12px;
+    margin-bottom:14px;
+  }
+  .avatar{
+    width:34px; height:34px; border-radius:50%;
+    background:var(--av, var(--ink-3)); color:#fff;
+    font-family:var(--font-serif);
+    font-weight:700; font-size:15px;
+    display:grid; place-items:center;
+    flex-shrink:0;
+    letter-spacing:0;
+  }
+  .post-head .who{ display:flex; flex-direction:column; gap:1px; min-width:0 }
+  .post-head .handle{
+    font-size:14px; font-weight:700; color:var(--ink);
+    text-decoration:none;
+  }
+  .post-head .handle:hover{ color:var(--accent); text-decoration:none }
+  .post-head .handle.unknown{ color:var(--ink-3); font-weight:500 }
+  .post-head .handle.estimated{ color:var(--ink-3); font-weight:500 }
+  .post-head .handle.estimated::after{
+    content:"推定"; font-family:var(--font-mono);
+    font-size:9.5px; letter-spacing:0.1em;
+    background:var(--paper-2); color:var(--ink-3);
+    padding:1px 6px; border-radius:3px;
+    margin-left:8px; vertical-align:middle;
+  }
+  .post-head time{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-3);
+    font-feature-settings:"tnum" 1;
+    letter-spacing:0.04em;
+  }
+  .post-head .src{
+    margin-left:auto;
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-3);
+    padding:5px 10px;
+    border:1px solid var(--rule);
+    border-radius:999px;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:color .15s, border-color .15s, background .15s;
+  }
+  .post-head .src:hover{
+    color:var(--ink); border-color:var(--rule-strong);
+    background:var(--paper-2);
+    text-decoration:none;
+  }
+  .post-head .src svg{ width:11px; height:11px }
+
+  .post-body{
+    font-size:15.5px;
+    line-height:1.85;
+    color:var(--ink);
+    white-space:pre-wrap;
+    word-wrap:break-word;
+  }
+  html[data-density="compact"] .post-body{ font-size:14.5px; line-height:1.7 }
+
+  .post-body .quoted{
+    display:block;
+    margin-top:14px;
+    padding:10px 14px;
+    border-left:2px solid var(--rule-strong);
+    background:var(--paper-2);
+    color:var(--ink-2);
+    font-size:13.5px;
+    line-height:1.75;
+    border-radius:0 3px 3px 0;
+  }
+  .post-body .quoted .from{
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:0.14em;
+    color:var(--ink-3); text-transform:uppercase;
+    display:block; margin-bottom:4px;
+  }
+  .post-body .translation{
+    display:block; margin-top:16px;
+    padding:12px 16px;
+    border-left:2px solid var(--accent);
+    background:var(--accent-soft);
+    color:var(--ink);
+    font-size:14.5px; line-height:1.85;
+    border-radius:0 3px 3px 0;
+  }
+  .post-body .translation .label{
+    font-family:var(--font-mono); font-size:10.5px;
+    letter-spacing:0.14em; color:var(--accent);
+    text-transform:uppercase; display:block;
+    margin-bottom:6px; font-weight:500;
+  }
+  .post-body ul{
+    margin:8px 0 0; padding-left:1.1em;
+  }
+  .post-body ul li{ margin:2px 0 }
+  .post-body a{ word-break:break-all }
+
+  /* hide filtered out */
+  .cat.hidden{ display:none }
+
+  /* ── footer notes ────────────────────── */
+  .notes{
+    margin-top:96px;
+    padding-top:36px;
+    border-top:1px solid var(--rule-strong);
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:36px;
+  }
+  .notes h2{
+    font-family:var(--font-serif);
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+  }
+  .notes h2 .ko{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    color:var(--ink-3);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .notes ul{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .notes li{
+    color:var(--ink-2);
+    font-size:13.5px;
+    line-height:1.75;
+    padding-left:22px;
+    position:relative;
+  }
+  .notes li::before{
+    content:"※"; position:absolute; left:0; top:0;
+    color:var(--ink-3); font-family:var(--font-serif);
+  }
+
+  /* ── colophon ────────────────────────── */
+  .colophon{
+    margin-top:72px;
+    padding-top:24px;
+    border-top:1px solid var(--rule);
+    display:flex; justify-content:space-between; align-items:baseline;
+    color:var(--ink-3); font-size:12px;
+    font-family:var(--font-mono);
+    letter-spacing:0.06em;
+  }
+
+  /* ── responsive ──────────────────────── */
+  @media (max-width: 900px){
+    .page{ padding:32px 18px 80px }
+    h1.title{ font-size:42px }
+    .masthead{ grid-template-columns:1fr; gap:24px; align-items:start }
+    .profile{ grid-template-columns:1fr; gap:14px }
+    .cat-header{ grid-template-columns:1fr; gap:8px }
+    .cat-marker{ position:static; flex-direction:row; align-items:baseline; gap:14px }
+    .posts{ grid-template-columns:1fr; gap:0 }
+    .notes{ grid-template-columns:1fr; gap:14px }
+    .filter-bar{ margin:0 -18px 24px; padding:12px 18px }
+    .cat-count{ font-size:28px }
+    .cat-title-block h3{ font-size:24px }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── top bar ─────────────────────────── -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="mark">X</span>
+      <span>Pickup Digest</span>
+    </div>
+    <nav>
+      <a href="#feed">記事</a>
+      <a href="#profile">プロファイル</a>
+      <a href="#notes">注意</a>
+      <div class="theme-switch" role="radiogroup" aria-label="テーマ">
+        <button data-theme="paper" aria-pressed="true">Paper</button>
+        <button data-theme="mono" aria-pressed="false">Mono</button>
+        <button data-theme="dark" aria-pressed="false">Dark</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- ─── masthead ──────────────────────── -->
+  <section class="masthead">
+    <div>
+      <p class="eyebrow">AI / LLM Daily Pickup</p>
+      <h1 class="title">いま読むべき<br>X の AI 関連投稿。<em>2026.09.04</em></h1>
+      <p class="lede">最新の興味プロファイル（<code>interest-profile-2026-08-06.md</code>）に基づき、xAI <code>x_search</code> 経由で 9/4（JST、収集窓 9/4 00:00 – 9/5 09:00）の範囲から収集した 21 件を、カテゴリ別に整理しました。GPT-6 Astra リリースを冷めた目で見るベンチ懐疑と、GLM-5.3-Flash を軸にしたローカル LLM の実測ラッシュが今日の中心です。</p>
+    </div>
+    <aside class="meta-card" aria-label="このダイジェストの概要">
+      <dl>
+        <dt>Posts</dt>     <dd><b>21</b>件</dd>
+        <dt>Categories</dt><dd><b>6</b>領域</dd>
+        <dt>Authors</dt>   <dd><b>21</b>アカウント</dd>
+        <dt>Source</dt>    <dd>xAI x_search</dd>
+        <dt>Window</dt>    <dd>9/4 00:00 – 9/5 09:00 JST</dd>
+      </dl>
+    </aside>
+  </section>
+
+  <!-- ─── interest profile ─────────────── -->
+  <section class="profile" id="profile">
+    <h2><span class="ko">Interest Profile</span>推定された<br>興味プロファイル</h2>
+    <ul class="tags">
+      <li><b>モデルリリース追跡＋ベンチ懐疑</b><small>GPT-6 Astra リリース / リバース・ベンチマックス, Gemini 4 リーク（PREDICTED）, DeepSWE 飽和</small></li>
+      <li><b>ローカル LLM を速く安く動かす工学</b><small>GLM-5.3-Flash 3bit / Unsloth MTP, NVFP4 実測 tok/s, 1×DGX Spark, Ryzen AI Max</small></li>
+      <li><b>エージェント運用設計</b><small>reviewer サブエージェント, hooks 可視化, background 1h 上限撤廃, Agentic RL 効率</small></li>
+      <li><b>Anthropic 課金の変動</b><small>fast mode クレジット化, Claude Max 週次上限リセット, "値下げ終了≠減額"</small></li>
+      <li><b>セキュリティ（サプライチェーン・CVE）</b><small>npm 悪性6パッケージ, Prompty サンドボックス脱出, Linux Kernel SCTP UAF</small></li>
+      <li><b>医療・科学（副関心）</b><small>膵がん新薬ダラクソンラシブ / Rasonque の FDA 承認詳報</small></li>
+    </ul>
+  </section>
+
+  <!-- ─── filter bar ───────────────────── -->
+  <nav class="filter-bar" id="filters" aria-label="カテゴリフィルタ">
+    <span class="label">Filter</span>
+    <button class="chip" data-filter="all" aria-pressed="true"><span class="dot" style="--c:#14110B"></span>すべて<span class="n">21</span></button>
+    <button class="chip" data-filter="models" aria-pressed="false"><span class="dot" style="--c:#5468B0"></span>モデル / ベンチ懐疑<span class="n">4</span></button>
+    <button class="chip" data-filter="local" aria-pressed="false"><span class="dot" style="--c:#2B8C75"></span>ローカル LLM<span class="n">6</span></button>
+    <button class="chip" data-filter="agents" aria-pressed="false"><span class="dot" style="--c:#834BAB"></span>エージェント運用<span class="n">4</span></button>
+    <button class="chip" data-filter="anth" aria-pressed="false"><span class="dot" style="--c:#C8552B"></span>Anthropic / 課金<span class="n">3</span></button>
+    <button class="chip" data-filter="security" aria-pressed="false"><span class="dot" style="--c:#6E6552"></span>セキュリティ<span class="n">3</span></button>
+    <button class="chip" data-filter="medical" aria-pressed="false"><span class="dot" style="--c:#A3793C"></span>医療 / 科学<span class="n">1</span></button>
+  </nav>
+
+  <!-- ─── feed ─────────────────────────── -->
+  <main class="feed" id="feed">
+
+    <!-- Models / Bench -->
+    <section class="cat" data-cat="models" id="cat-models" style="--c:#5468B0">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>01 · Models</span>
+          <span class="cat-count">4<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>モデルリリース・ベンチ懐疑</h3>
+          <p class="cat-intro">9/5 早朝に GPT-6 Astra が正式リリース（Plus/Business へ展開）。ARC-AGI-3 で 99%、FrontierMath Tier 4 で SOTA を謳う一方、Terminal-Bench 4.0 は Fable 5.1 と 0.3pp 差という「飽和したベンチでの誇張」への冷めた視線が中心。「リバース・ベンチマックス」という皮肉、Gemini 4 の "PREDICTED" 明記リーク（コミュニティノートで捏造指摘）、Opus 5 登場後は DeepSWE すら当てにならなくなったという定点観測まで。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">w</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/wisplite">@wisplite</a>
+                <time>09/04 05:26 JST</time>
+              </div>
+              <a class="src" href="https://x.com/wisplite/status/2095609368620245419" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">GPT-6 Astra is the first-ever reverse-benchmaxxed model.<span class="quoted"><span class="from">補足 · 同著者の返信</span>OpenAI はこのモデルで AGI 時代に入ると言っているのに、<em>Muse Spark 1.3</em> に負けているのが最高に面白い。</span><span class="translation"><span class="label">日本語訳</span>GPT-6 Astra は史上初の「リバース・ベンチマックス」モデルだ。（＝ベンチのために盛るのでなく、実力の割にベンチが伸びない、という皮肉）</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">r</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ravikiran_dev7">@ravikiran_dev7</a>
+                <time>09/04 22:41 JST</time>
+              </div>
+              <a class="src" href="https://x.com/ravikiran_dev7/status/2095869859666268606" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">🚨 Gemini 4 Benchmark Leaks : Google might have a monster on its hands 🤯
+
+A leaked benchmark sheet is making the rounds and the numbers are seriously aggressive.
+<ul>
+<li>Gemini 4 reportedly scores 72.8% on Terminal-Bench Science 0.1</li>
+<li>48.7% on AutomationBench, 99.1% on FrontierMath Tier 4 (v2), 62.3% on Terminal-Bench 4.0</li>
+<li>70.2% on HealthBench Professional, 98.6% on BenchCAD, and a ridiculous 99.9%+ on ARC-AGI-3</li>
+<li>The leaked sheet puts Gemini 4 ahead of GPT-6 Astra and Fable 5.1 on every listed benchmark</li>
+</ul>
+And there's one huge caveat: The Gemini 4 column is explicitly marked “PREDICTED.” Google has confirmed Gemini 4 training is underway … but these benchmark numbers have not been officially published by Google. So for now, treat the table as a leak/prediction, not verified benchmark results.<span class="quoted"><span class="from">補足</span>本ポストには数値を「捏造・未検証」とするコミュニティノートが付いている（原文の一部ではない）。</span><span class="translation"><span class="label">日本語訳</span>🚨 Gemini 4 のベンチがリーク：Google はとんでもないモノを抱えているかも 🤯
+
+出回っているリーク表の数字が本気で攻撃的だ。Terminal-Bench Science 0.1 で 72.8%、FrontierMath Tier 4 で 99.1%、Terminal-Bench 4.0 で 62.3%、ARC-AGI-3 に至っては 99.9%+。表では全項目で GPT-6 Astra と Fable 5.1 を上回る。
+
+ただし<strong>重大な留保</strong>：Gemini 4 の列には明確に「PREDICTED（予測値）」と書かれている。Google は学習中であることは認めたが、これらのベンチ値を公式発表してはいない。今のところこの表は<strong>リーク／予測であって検証済みの結果ではない</strong>として扱うべき。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">?</div>
+              <div class="who">
+                <a class="handle unknown" href="https://x.com/i/status/2095971777830604882">著者不明</a>
+                <time>09/05 05:26 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2095971777830604882" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Before Fable, every benchmark was bad/compromised except for DeepSWE. But when Opus 5 was released, DeepSWE was no longer accurate either.<span class="translation"><span class="label">日本語訳</span>Fable が出るまでは、DeepSWE を除いてどのベンチも駄目／汚染されていた。だが Opus 5 が出たら、その DeepSWE すらもう正確ではなくなった。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#5468B0">1</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/1littlecoder">@1littlecoder</a>
+                <time>09/05 07:30 JST</time>
+              </div>
+              <a class="src" href="https://x.com/1littlecoder/status/2096003094169739383" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">I love these new models, but 99% on ARC-AGI-3 but 0.3pp better than Fable 5.1 on Terminal Bench 4.0
+
+Surely, we need new benchmarks before declaring AGI has arrived!<span class="quoted"><span class="from">引用 · @thsottiaux</span>GPT-6 Astra が Codex ハーネスで Terminal Bench 4.0 の #1 になったのは素晴らしい。しかも #2 の半分のコストで。</span><span class="translation"><span class="label">日本語訳</span>新しいモデル群は大好きだが、ARC-AGI-3 で 99% を出しておいて、Terminal-Bench 4.0 では Fable 5.1 より 0.3 ポイント良いだけ。AGI が来たと宣言する前に、まず新しいベンチマークが必要なのは間違いない。</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Local LLM -->
+    <section class="cat" data-cat="local" id="cat-local" style="--c:#2B8C75">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>02 · Local LLM</span>
+          <span class="cat-count">6<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>ローカル LLM を速く・安く</h3>
+          <p class="cat-intro">今日はローカル勢の当たり日。GLM-5.3-Flash（320B-A18B MoE・MIT・マルチモーダル・1M context）が 3bit 量子化で 128GB デスクトップに載り、Unsloth の GGUF が MTP 込みで 1.6〜3.4 倍速。1×DGX Spark（3bit dynamic quant）が 2×Spark（4bpw EXL3）を TrueScore で上回るという逆転、RTX PRO 6000 と RTX 5090 での NVFP4 実測 tok/s、Ryzen AI Max 192GB が「思ったより遅い」という現実まで、数字ずくめのフィールドノートが並ぶ。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">h</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/hakobera">@hakobera</a>
+                <time>09/04 20:03 JST</time>
+              </div>
+              <a class="src" href="https://x.com/hakobera/status/2095830033478852825" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Ryzen AI Max 495 の 192GB 思ってたより Local LLM の速度が出てない。シングルノードで動くのは良いけど、この速度だとなぁ
+
+（写真付き）</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">U</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/UnslothAI">@UnslothAI</a>
+                <time>09/04 21:32 JST</time>
+              </div>
+              <a class="src" href="https://x.com/UnslothAI/status/2095852388888522890" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">We made GLM-5.3-Flash run 3.3x faster locally!
+
+Local GGUF inference is now 1.6–3.4× faster with optimized decoding and bonus multi-token prediction.
+
+Run 3-bit on 128GB setups via Unsloth Desktop or llama.cpp.
+
+Guide: <a href="https://unsloth.ai/docs/models/glm-5.3-flash#faster-inference-and-mtp-support">unsloth.ai/docs/models/glm-5.3-flash</a>
+GGUF: <a href="https://huggingface.co/unsloth/GLM-5.3-Flash-GGUF">huggingface.co/unsloth/GLM-5.3-Flash-GGUF</a><span class="quoted"><span class="from">引用 · @Zai_org</span>GLM-5.3-Flash を発表…</span><span class="translation"><span class="label">日本語訳</span>GLM-5.3-Flash をローカルで 3.3 倍速く動かせるようにした。最適化デコード＋おまけの MTP（複数トークン予測）で、ローカル GGUF 推論が 1.6〜3.4 倍速に。Unsloth Desktop か llama.cpp なら 128GB 構成で 3bit を回せる。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">M</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/MolokaiHex">@MolokaiHex</a>
+                <time>09/05 01:53 JST</time>
+              </div>
+              <a class="src" href="https://x.com/MolokaiHex/status/2095918278837248003" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">RTX PRO 6000: Flash-Next NVFP4 runs at native 262K and 77.5 tok/s. Initially shows a marginal quality gain over 3.8-27B, took 1.43× longer on our agent benchmark, and needs the whole GPU. So 27B remains our go-to: 151 tok/s p1, ~560 tok/s aggregate p4.<span class="translation"><span class="label">日本語訳</span>RTX PRO 6000 で計測。Flash-Next の NVFP4 版はネイティブ 262K コンテキストで 77.5 tok/s。3.8-27B に対して品質はごくわずかに良い程度なのに、エージェントベンチでは 1.43 倍時間がかかり、GPU を丸ごと占有する。<strong>結局 27B が本命</strong>：p1 で 151 tok/s、p4 集約で約 560 tok/s。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">B</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/BennyDaBall_OG">@BennyDaBall_OG</a>
+                <time>09/05 02:33 JST</time>
+              </div>
+              <a class="src" href="https://x.com/BennyDaBall_OG/status/2095928360467673183" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">First native NVFP4 GGUF of Jackrong/Qwopus3.8-27B-Flash is live. 🤗 This is a fresh pinned BF16 → GGUF → calibration-based NVFP4 build, not a requant.
+
+What made it through the shrink ray: Vision + the matching BF16 projector / Native MTP/NextN intact — all 15 MTP tensors and 65 model blocks / Full 262,144-token context / Calibration imatrix, complete tensor map, build manifest, checksums, and the exact conversion recipe.
+
+Tensor split: 448 NVFP4 / 408 small tensors in F32 / 10 in BF16 (token embeddings, output head, eight large MTP matrices). Pinned BF16 source 51.77 GiB → finished release 18.34 GiB main NVFP4 GGUF + 0.87 GiB BF16 vision projector.
+
+Benchmarked on a single RTX 5090 32GB (CUDA sm_120, Q8_0 K/V, flash attention, 131,072 context, three paired runs):
+<ul>
+<li>MTP off: 72.67 tok/s mean</li>
+<li>Native MTP n3: 114.42 tok/s mean (+57.5%, 57.8% weighted draft acceptance) — Prose 101.53, Code 125.81, 12K-deep 115.91 tok/s</li>
+<li>Optional external DFlash2 n5: 148.52 tok/s mean (+104.4%)</li>
+</ul>
+Full 262,144 context loaded cleanly at 31,019 MiB. MTP survived. Vision survived. The useful bits stayed precise. The weights got much smaller. Built, quantized, benchmarked, and verified locally on one PowerSpec G914 system.<span class="translation"><span class="label">日本語訳</span>Jackrong/Qwopus3.8-27B-Flash の<strong>ネイティブ NVFP4 GGUF 初版</strong>を公開。再量子化ではなく BF16 → GGUF → キャリブレーション NVFP4 の新規ビルド。Vision と対応 BF16 プロジェクタ、ネイティブ MTP/NextN（15 テンソル・65 ブロック全て）、262,144 全コンテキスト、変換レシピ一式を保持。テンソル分割は NVFP4 448＋F32 408＋BF16 10。BF16 元 51.77 GiB → 完成品 18.34 GiB 本体＋0.87 GiB Vision。
+
+<strong>RTX 5090 32GB 単体の実測</strong>（sm_120、Q8_0 K/V、flash attention、131,072 context、各 3 回ペア）：MTP オフ 72.67 tok/s、MTP n3 で 114.42 tok/s（+57.5%、Prose 101.53／Code 125.81／12K-deep 115.91）、外部 DFlash2 n5 で 148.52 tok/s（+104.4%）。262,144 全コンテキストが 31,019 MiB でクリーンに読込。MTP も Vision も生き残り、効くところは精度維持のまま重みは大幅縮小。すべて 1 台の PowerSpec G914 でビルド・量子化・実測・検証。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">W</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/WescheNex1q">@WescheNex1q</a>
+                <time>09/05 05:50 JST</time>
+              </div>
+              <a class="src" href="https://x.com/WescheNex1q/status/2095977892987707727" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">GLM-5.3-Flash on ONE DGX Spark just outscored our own 2-Spark deployment of the same model. Recipe below 👇
+
+Same benchmark, 76 scenarios ×2, uncapped:
+<ul>
+<li>🥇 1× Spark — Unsloth UD-IQ3_XXS (dynamic 3-bit GGUF, 120 GB) + llama.cpp MTP — TrueScore 93.4/100</li>
+<li>🥈 2× Spark — EXL3 4bpw (~164 GB) + vLLM TP2 + DFlash2 k7 over RoCE — TrueScore 90.9/100</li>
+</ul>
+Where the single box wins: agentic 97.3 vs 88.0, safety 90.2 vs 85.6, calibration 90.2 vs 85.6. Where 2 Sparks win: latency (4.3 s vs 9.3 s turns), code by a hair (98.1 vs 97.7).
+
+The surprise: a 3-bit dynamic quant beating 4bpw EXL3 on quality. Unsloth's Dynamic quants + intact MTP heads are doing real work here. Half the hardware, +2.5 TrueScore. You just wait a bit longer per turn. Caveats in the repo: patched chat template required to disable thinking, and never use --no-mmap on unified memory.<span class="translation"><span class="label">日本語訳</span><strong>GLM-5.3-Flash を 1 台の DGX Spark で回したら、同じモデルの自前 2-Spark 構成を上回ってしまった</strong>。同一ベンチ（76 シナリオ×2、上限なし）で、🥇 1×Spark ＝ Unsloth UD-IQ3_XXS（dynamic 3bit GGUF, 120GB）＋llama.cpp MTP が TrueScore 93.4、🥈 2×Spark ＝ EXL3 4bpw（約164GB）＋vLLM TP2＋RoCE 上 DFlash2 k7 が 90.9。
+
+1 台が勝つ領域：agentic 97.3 vs 88.0、safety・calibration も 90.2 vs 85.6。2 台が勝つ領域：レイテンシ（4.3 秒 vs 9.3 秒）とコード僅差。驚きは <strong>3bit dynamic quant が 4bpw EXL3 に品質で勝った</strong>こと。Unsloth の Dynamic quant＋無傷の MTP ヘッドが効いている。ハードは半分で +2.5、代わりに 1 ターンが少し長いだけ。注意：thinking を切るにはパッチ済みテンプレが必須、unified memory では <code>--no-mmap</code> を使うな。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#2B8C75">j</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/julianharris">@julianharris</a>
+                <time>09/05 06:24 JST</time>
+              </div>
+              <a class="src" href="https://x.com/julianharris/status/2095986489289040145" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Awesome Local AI: the best configuration of local AI for your machine.
+
+Starting it with Qwen 3.8 fam…
+<ul>
+<li>Ubuntu, 4090 24GB: llama.cpp + unsloth 4bit. 27b.</li>
+<li>Mac, 128GB: MTPLX 2.11 + its custom kernel model (h/t @youssof_). Flash-Next</li>
+</ul>
+<a href="https://github.com/boxabirds/awesome-local-ai">github.com/boxabirds/awesome-local-ai</a><span class="translation"><span class="label">日本語訳</span>Awesome Local AI：あなたのマシンに最適なローカル AI 構成集。まず Qwen 3.8 ファミリーから。Ubuntu＋4090 24GB なら llama.cpp＋unsloth 4bit の 27b。Mac 128GB なら MTPLX 2.11＋専用カーネルモデルで Flash-Next。（GitHub リポジトリ公開）</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Agents -->
+    <section class="cat" data-cat="agents" id="cat-agents" style="--c:#834BAB">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>03 · Agents</span>
+          <span class="cat-count">4<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>エージェント運用設計</h3>
+          <p class="cat-intro">「書く役」と「チェック役」を別人格のサブエージェントに分ける（<code>.claude/agents/reviewer.md</code> を 1 個置くだけ）実践、増えすぎたサブエージェントを hooks だけで 1 画面監視するバーチャルオフィスの自作、background コマンドの 1 時間上限が 2.1.260 で撤廃された一次情報、そして「エージェントの共有履歴＝プレフィックスの再課金は今やスケジューリング問題」という Agentic RL 効率化の機構的視点。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">p</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/pekimaru11">@pekimaru11</a>
+                <time>09/04 12:04 JST</time>
+              </div>
+              <a class="src" href="https://x.com/pekimaru11/status/2095709438195773907" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">AIに書いてもらった文章を、そのまま同じAIに「これで大丈夫？」って聞いてる人、それ、聞かれた方は大体「大丈夫です」って返してくるだけなんだよな😅
+
+Claude Codeなら、.claude/agents/ にファイルを1個置くだけで、書く役とチェックする役を別の人格として呼び分けられるの知ってた？
+
+①.claude/agents/ に reviewer.md を作る
+②先頭に name（呼び名）と description（どんな時に呼ぶか）の2項目を書く
+③その下に「書いた本人とは別人として読んで、甘くせず突き返して」みたいな指示を書く
+④呼ぶ時は文中で reviewer って名前を出すだけ
+
+自分は毎回、書く役に出させた案をこのチェック役に通してから使ってる。同じAIに聞き返すのと違って、ちゃんと突き返してくるわ✨</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">k</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/kmrb_works">@kmrb_works</a>
+                <time>09/04 16:15 JST</time>
+              </div>
+              <a class="src" href="https://x.com/kmrb_works/status/2095772806063788284" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Claude Codeのサブエージェントが増えて「今、誰が動いているのか」が分からなくなったので、1画面で見張るバーチャルオフィスを作りました。Dockerなし、hooksだけで動きます。
+
+<a href="https://note.com/quirky_hosta1908/n/n2b25b8e2d96f">note.com/quirky_hosta1908/n/n2b25b8e2d96f</a></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">a</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ai_hack_dx">@ai_hack_dx</a>
+                <time>09/04 19:12 JST</time>
+              </div>
+              <a class="src" href="https://x.com/ai_hack_dx/status/2095817267728789659" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">サブエージェントに長い処理を任せていた人は要注意。バックグラウンドで走らせたコマンドには1時間の上限があり、超えると打ち切られていました。2.1.260で撤廃され、メインセッションと同じく終了するまで走ります。
+
+<a href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md">github.com/anthropics/claude-code/blob/main/CHANGELOG.md</a>
+
+あなたは何分くらいのタスクを投げていますか。
+
+（写真付き）</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#834BAB">?</div>
+              <div class="who">
+                <a class="handle unknown" href="https://x.com/i/status/2095874936455753846">著者不明</a>
+                <time>09/04 23:01 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2095874936455753846" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Agents leak compute via shared history: RL rollout trees re-pay for shared prefixes on every branch. HARTS (Ant Group) compresses them — 4.8x speedup on SWE-bench workloads. Agentic RL efficiency is a scheduling problem now, not just a FLOPs one.<span class="translation"><span class="label">日本語訳</span>エージェントは共有履歴を通じて計算を無駄にしている。RL のロールアウト木は、分岐のたびに共有プレフィックスの分を再課金してしまう。HARTS（Ant Group）はそれを圧縮し、SWE-bench 系ワークロードで 4.8 倍高速化。<strong>Agentic RL の効率はもはや FLOPs だけでなくスケジューリングの問題</strong>だ。</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Anthropic / Billing -->
+    <section class="cat" data-cat="anth" id="cat-anth" style="--c:#C8552B">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>04 · Anthropic</span>
+          <span class="cat-count">3<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>Anthropic / 課金の変動</h3>
+          <p class="cat-intro">Fable 5.1 リリースと大型連休を受けて Claude Max の週次上限が全員リセットされた告知を軸に、「Opus 5 で fast mode がクレジットを要求される（$20 プラン）」という現場の困惑、そして「週次上限をベースライン比 25% 引き上げたのに、期間限定 50% 割引が同日終了するので "減額" と騒がれている。恒久値は上がった。怒りは失う予定のなかった割引への喪失感だ」という会計的な解毒まで。財布に直結する話題。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">s</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/studingten">@studingten</a>
+                <time>09/04 04:47 JST</time>
+              </div>
+              <a class="src" href="https://x.com/studingten/status/2095599626724291067" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">cant use fast mode on claude opus 5 anymore with the 20$ sub (it tells me i need usage credits). maybe due to the outage earlier... does anyone know whats going on?<span class="translation"><span class="label">日本語訳</span>$20 のサブスクだと Claude Opus 5 でもう fast mode が使えない（"usage credits が要る" と言われる）。さっきの障害のせいかも…誰か何が起きてるか知らない？</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">?</div>
+              <div class="who">
+                <a class="handle unknown" href="https://x.com/i/status/2095967323412930677">著者不明（Anthropic 側）</a>
+                <time>09/05 05:08 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2095967323412930677" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">We've just reset weekly limits for everyone on a Claude Max plan.
+
+With Fable 5.1 out and a long weekend ahead for many of you, we wanted to keep you building. I'd love to see what you build!<span class="quoted"><span class="from">補足</span>ハンドルは再構成できなかったが、内容から Anthropic 側の中の人による告知。</span><span class="translation"><span class="label">日本語訳</span>Claude Max プランの全員について、週次上限を今リセットしました。Fable 5.1 が出て、多くの人にとって長い週末が控えているので、手を止めずに作り続けてほしくて。あなたが何を作るか楽しみです！</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#C8552B">P</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/petersykim">@petersykim</a>
+                <time>09/05 08:28 JST</time>
+              </div>
+              <a class="src" href="https://x.com/petersykim/status/2096017571308773545" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Anthropic raised Claude Code's weekly limit 25% over baseline and half of developer Twitter is calling it a cut, because the temporary 50% promo runs out the same day. The math is not the scam. A discount was never the baseline, and treating a subsidized rate as an entitlement is a mistake developers keep making with every free tier, every teaser APR, every cloud credit that quietly expires on schedule. The permanent number went up. The outrage is grief for a promo nobody budgeted to lose.<span class="translation"><span class="label">日本語訳</span>Anthropic は Claude Code の週次上限をベースライン比 25% 引き上げたのに、開発者界隈の半分は「減額だ」と呼んでいる。期間限定の 50% 割引が同じ日に終わるからだ。<strong>算数はインチキではない</strong>。割引は最初からベースラインではなかった。補助された料率を当然の権利のように扱うのは、無料枠・お試し金利・静かに期限切れするクラウドクレジットのたびに開発者が繰り返す間違いだ。<strong>恒久値は上がった</strong>。この怒りは、失う予定に入れていなかった割引への喪失の悲しみにすぎない。</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Security -->
+    <section class="cat" data-cat="security" id="cat-security" style="--c:#6E6552">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>05 · Security</span>
+          <span class="cat-count">3<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>セキュリティ（サプライチェーン・CVE）</h3>
+          <p class="cat-intro"><code>npm install</code> の時点で既にコード実行——OSV に同日追加された悪性 6 パッケージが preinstall/postinstall で <code>.env</code>・CI 情報を窃取し、うち 1 つは <code>claude-channel-discord@9.9.9</code> という AI 便乗名。Prompty の <code>.prompty</code> テンプレがサンドボックスを脱出して Node.js 上で任意 JS を実行する CVE、Linux Kernel の SCTP Use-After-Free によるローカル権限昇格（Ubuntu 向け PoC 公開）。防御者視点のサプライチェーン／脆弱性の実務ネタ。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">T</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/ThreatWire_">@ThreatWire_</a>
+                <time>09/04 07:12 JST</time>
+              </div>
+              <a class="src" href="https://x.com/ThreatWire_/status/2095636146772476128" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Indeed. CVE-2026-73299 is particularly serious because a malicious .prompty file can escape the template sandbox and execute arbitrary JavaScript within the Node.js process. Organizations using Prompty should prioritize updating to a patched version.<span class="translation"><span class="label">日本語訳</span>確かに。CVE-2026-73299 が特に深刻なのは、悪意ある <code>.prompty</code> ファイルがテンプレートのサンドボックスを脱出し、Node.js プロセス内で任意の JavaScript を実行できるからだ。Prompty を使っている組織は、パッチ済みバージョンへの更新を最優先すべき。</span></div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">?</div>
+              <div class="who">
+                <a class="handle unknown" href="https://x.com/i/status/2095663454023815474">著者不明（セキュリティニュース）</a>
+                <time>09/04 09:01 JST</time>
+              </div>
+              <a class="src" href="https://x.com/i/status/2095663454023815474" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">Linux Kernelの脆弱性 CVE-2026-68162、SCTPのUse-After-Freeでローカル権限昇格のおそれ　Ubuntu向けPoC公開
+
+<a href="https://rocket-boys.co.jp/security-measures-lab/linux-kernel-cve-2026-68162-sctp-poc/">rocket-boys.co.jp/security-measures-lab/linux-kernel-cve-2026-68162-sctp-poc</a>
+
+#セキュリティ対策Lab #security #securitynews #セキュリティ #脆弱性</div>
+          </article>
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#6E6552">X</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/XQOPTRX">@XQOPTRX</a>
+                <time>09/05 00:35 JST</time>
+              </div>
+              <a class="src" href="https://x.com/XQOPTRX/status/2095898432892178580" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">🚨 [SOFTWARE SUPPLY CHAIN] — SIX MALICIOUS NPM PACKAGES WERE ADDED TO OSV TODAY — SOME EXECUTE AUTOMATICALLY DURING `npm install` AND EXFILTRATE HOST + CI INFORMATION BEFORE YOUR APPLICATION EVEN RUNS
+
+Disclosed September 4, 2026 (npm ecosystem; OSV · OpenSSF; Amazon Inspector Research; CWE-506 Embedded Malicious Code). The six packages:
+<ul>
+<li><code>box-sign-client</code> 1.0.0 / <code>box-sign-client-poc</code> 1.0.0 — dependency confusion against an internal <code>@box/sign-client</code> namespace; preinstall reads hostname + USER/USERNAME, encodes them into a Canarytokens DNS subdomain and resolves it.</li>
+<li><code>claude-channel-discord</code> 9.9.9 — dependency-confusion probe; preinstall + postinstall + module import obtain <code>os.hostname()</code> and beacon to a Pipedream endpoint.</li>
+<li><code>line-through</code> 1.0.0 — preinstall collects public IP, hostname, CI info and GitHub Actions metadata to a hardcoded collector.</li>
+<li><code>real-router-telemetry</code> 1.0.1/1.0.4 — obfuscated telemetry.js collects host/user/cwd/OS/arch/mem/CPU, runs <code>cat /etc/os-release</code> and <code>ps aux</code>, reads <code>.env</code> (API keys, DB passwords, cloud tokens, JWT secrets). Caveat: in 1.0.4 the install hook points to a stub, automatic execution not confirmed.</li>
+<li><code>tailwind-contact-forms</code> 0.5.12 — fake <code>@tailwindcss/forms</code> lookalike; importing the package executes obfuscated host-recon logic with Ethereum-related infra references.</li>
+</ul>
+OSV lists NO FIXED VERSION — the response is REMOVE, not “upgrade.” Why CI/CD makes it worse: on GitHub Actions / GitLab CI / Jenkins / Docker builds the install stage can expose registry tokens, cloud credentials, deployment secrets, signing keys. Defender action: audit lockfiles/CI logs/container layers/npm caches, inspect network telemetry for Canarytokens DNS + Pipedream, isolate hosts, remove deps, rebuild from trusted deps, rotate credentials; consider registry allowlists, private scopes, lockfile enforcement, lifecycle-script restrictions, outbound network controls on CI runners.
+
+CyberSignal insight: developers often think the security boundary begins when the application starts. In modern supply chains, `npm install` IS ALREADY CODE EXECUTION. (Sources: OSV · OpenSSF Malicious Packages · Amazon Inspector)<span class="translation"><span class="label">日本語訳</span>🚨【ソフトウェアサプライチェーン】OSV に本日追加された悪性 npm パッケージ 6 種——一部は <code>npm install</code> の最中に自動実行され、アプリ起動前にホスト＋CI 情報を外部送信する。
+
+2026-09-04 開示（npm／OSV・OpenSSF／Amazon Inspector／CWE-506）。要点：<strong>box-sign-client / -poc</strong> は社内 <code>@box/sign-client</code> を狙う依存混同で、preinstall が hostname と USER 名を Canarytokens の DNS サブドメインに埋め込み解決。<strong>claude-channel-discord@9.9.9</strong> は AI 便乗名の依存混同プローブで、<code>os.hostname()</code> を取得し Pipedream へビーコン。<strong>line-through</strong> は公開 IP・hostname・CI・GitHub Actions メタデータを送信。<strong>real-router-telemetry</strong> は難読化 telemetry.js が host/user/cwd/OS/CPU を集め <code>cat /etc/os-release</code>・<code>ps aux</code> を実行し <code>.env</code>（API キー・DB パス・クラウドトークン・JWT）を読む（1.0.4 はフックがスタブで自動実行未確認）。<strong>tailwind-contact-forms</strong> は偽 <code>@tailwindcss/forms</code> で import しただけでホスト偵察が走る。
+
+OSV は<strong>修正版なし</strong>＝対応は「アップグレード」でなく「削除」。CI/CD だと install 段階でレジストリトークン・クラウド資格情報・署名鍵が露出しうる。防御：ロックファイル／CI ログ／コンテナ層／npm キャッシュ監査、Canarytokens DNS と Pipedream への通信確認、ホスト隔離・依存削除・信頼できる依存で再ビルド・資格情報ローテーション、レジストリ許可リスト・プライベートスコープ・ロックファイル強制・ライフサイクルスクリプト制限・CI ランナーの外向き通信制御。<strong>要点：多くの開発者はアプリ起動時にセキュリティ境界が始まると思うが、現代のサプライチェーンでは <code>npm install</code> が既にコード実行なのだ。</strong></span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Medical -->
+    <section class="cat" data-cat="medical" id="cat-medical" style="--c:#A3793C">
+      <header class="cat-header">
+        <div class="cat-marker">
+          <span class="cat-num"><span class="dot"></span>06 · Medical</span>
+          <span class="cat-count">1<small>件</small></span>
+        </div>
+        <div class="cat-title-block">
+          <h3>医療・科学（副関心）</h3>
+          <p class="cat-intro">膵がん新薬ダラクソンラシブ（製品名 Rasonque、Revolution Medicines）の FDA 承認（2026-08-26）を英語で詳報。RAS を標的とし、第 3 相 RASolute 302（500 例）で全生存期間中央値 13.2 か月 vs 化学療法 6.7 か月と約 2 倍、無増悪 7.2 か月 vs 3.6 か月、奏効率 30% vs 11%。ただし「それでも中央値 13.2 か月」という距離感も併記。</p>
+        </div>
+      </header>
+      <div class="posts">
+        <div></div>
+        <div class="post-list">
+
+          <article class="post">
+            <header class="post-head">
+              <div class="avatar" style="--av:#A3793C">O</div>
+              <div class="who">
+                <a class="handle" href="https://x.com/OwenGregorian">@OwenGregorian</a>
+                <time>09/04 22:27 JST</time>
+              </div>
+              <a class="src" href="https://x.com/OwenGregorian/status/2095866272554656127" target="_blank" rel="noopener">原文<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </header>
+            <div class="post-body">FDA Approval New Drug Against Pancreatic Cancer | Knowridge
+
+A newly approved medicine called Rasonque may begin to change that picture for some people whose cancer has already spread. The FDA approved the tablet on August 26, 2026. Developed by Revolution Medicines, Rasonque contains daraxonrasib and is designed to interfere with RAS … The approved use does not require patients to have one specific RAS mutation identified through a companion diagnostic test.
+
+Evidence came from RASolute 302 (500 adults, metastatic pancreatic cancer progressed after earlier treatment). Median overall survival reached 13.2 months in the daraxonrasib group, almost twice the 6.7 months on chemotherapy. It also doubled median time before the cancer worsened (7.2 vs 3.6 months); ~30% of patients had tumors shrink enough to meet response criteria vs 11% on chemo. Received Breakthrough Therapy, Orphan Drug and Priority Review. … At the same time, the study shows how far pancreatic cancer treatment still has to go. Even with the new medicine, median survival was 13.2 months, and some patients will not respond or will eventually develop resistance.<span class="quoted"><span class="from">補足</span>@OwenGregorian による Knowridge 記事の紹介・引用です。</span><span class="translation"><span class="label">日本語訳</span>膵がんに対する新薬の FDA 承認（Knowridge）。転移のある一部の患者にとって状況を変えうる新薬 Rasonque を、FDA が 2026-08-26 に錠剤として承認。Revolution Medicines 開発で daraxonrasib を含有し、多くの膵腫瘍が使う RAS シグナルを阻害するよう設計。承認用途はコンパニオン診断による特定の RAS 変異を要求しない。
+
+根拠は第 3 相 RASolute 302（既治療後に増悪した転移性膵がん 500 例）。<strong>全生存期間中央値は daraxonrasib 群で 13.2 か月</strong>と、化学療法の 6.7 か月のほぼ 2 倍。増悪までの期間中央値も 7.2 か月 vs 3.6 か月と倍増、奏効率は約 30% vs 11%。Breakthrough Therapy・Orphan Drug・Priority Review を取得。<strong>ただし同時に、この試験は膵がん治療の道のりの遠さも示す</strong>——新薬でも中央値は 13.2 か月で、奏効しない患者や、いずれ耐性を獲得する患者もいる。</span></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── notes ────────────────────────── -->
+  <footer class="notes" id="notes">
+    <h2><span class="ko">Editor's Notes</span>収集・編集上の<br>注意</h2>
+    <ul>
+      <li>出典の本文は <code>xsearch --url</code> で取得した「Grok の verbatim 引用」です。X の生 API ではないため、まれにパラフレーズや取り違えがあります。本文に違和感があれば原 URL を直接開いて確認してください。</li>
+      <li>キーワード検索の合成本文（要約・表）は採用していません。採否・本文は URL 単位の verbatim のみを根拠にしています。</li>
+      <li><code>/i/status/</code> のリンク形式では Grok が著者ハンドルを <code>@i</code> と返すため、本文中の言及や返信先・引用元から実際のハンドルを再構成しています。再構成できなかった 4 件（モデル 1・エージェント 1・Anthropic 1・セキュリティ 1）は「著者不明」とし <code>https://x.com/i/status/&lt;id&gt;</code> を用いています。</li>
+      <li>借り物の引用（他者の記事・投稿を紹介・引用するもの、例: @OwenGregorian による Knowridge 記事、@ravikiran_dev7 のリーク表、@1littlecoder の @thsottiaux 引用）は「紹介／引用」である旨を明記しています。英語投稿には日本語訳を付しています。</li>
+      <li>収集窓は 2026-09-04 00:00 – 2026-09-05 09:00 JST（Snowflake ID 由来の時刻で再フィルタ）。窓外・既存ダイジェストと URL 重複するものは除外。トピック × アングル × ソースの 3 軸で選別し、speculation の生流し（GPT-6 Astra の単なる速報や生リーク）・汎用プロンプトテンプレの羅列・SEO 煽り・<code>@grok</code> 応答は除外しています。</li>
+    </ul>
+  </footer>
+
+  <div class="colophon">
+    <span>X PICKUP DIGEST · No. 2026-09-04</span>
+    <span>compiled via xAI x_search</span>
+  </div>
+
+</div>
+
+<!-- Theme switch -->
+<script>
+(function(){
+  const KEY = 'xpickup-theme';
+  const html = document.documentElement;
+  const buttons = document.querySelectorAll('.theme-switch button');
+
+  function setTheme(name){
+    html.setAttribute('data-theme', name);
+    try { localStorage.setItem(KEY, name); } catch(_){}
+    buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.theme === name)));
+  }
+
+  // restore
+  let initial = 'paper';
+  try { initial = localStorage.getItem(KEY) || 'paper'; } catch(_){}
+  setTheme(initial);
+
+  buttons.forEach(b => b.addEventListener('click', () => setTheme(b.dataset.theme)));
+})();
+</script>
+
+<!-- Filtering + scrollspy -->
+<script>
+(function(){
+  const chips = document.querySelectorAll('.chip');
+  const cats  = document.querySelectorAll('.cat');
+
+  function setFilter(f){
+    chips.forEach(c=>c.setAttribute('aria-pressed', String(c.dataset.filter === f)));
+    cats.forEach(s=>{
+      const show = (f === 'all') || (s.dataset.cat === f);
+      s.classList.toggle('hidden', !show);
+    });
+    if (f !== 'all'){
+      const target = document.getElementById('cat-' + f);
+      if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }
+
+  chips.forEach(c=>{
+    c.addEventListener('click', ()=>setFilter(c.dataset.filter));
+  });
+
+})();
+</script>
+
+</body>
+</html>
