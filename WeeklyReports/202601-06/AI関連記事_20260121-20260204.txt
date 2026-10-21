@@ -1,0 +1,198 @@
+## Groq CEO「AIは雇用を破壊せず労働力不足を生み、デフレ圧力をもたらす」
+
+* https://x.com/realBigBrainAI/status/2012887773150343484
+
+## 研究で判明したメンタルを壊す生活習慣：不規則な睡眠や朝の情報摂取など
+
+* https://x.com/nekokin123/status/2013355808348873208
+
+① 睡眠時間が毎日ズレる（ハーバード大学）
+② 朝起きてすぐ情報を浴びる（スタンフォード大学）
+③ 食事を「空いた時間」で済ませる（コロンビア大学）
+④ 体をほとんど動かさない（スタンフォード大学）
+⑤ 部屋の乱れを放置する（プリンストン大学）
+⑥ 予定を詰め込みすぎる（ハーバード大学）
+⑦ 休むことに理由を求める（ロンドン大学）
+⑧ 疲れを気合で処理しようとする（メイヨークリニック）
+⑨ 小さな不調を無視し続ける（ジョンズ・ホプキンズ大学）
+⑩ 感情を言語化しない（UCLA）
+⑪ 常に他人と比較する（コロンビア大学）
+⑫ 「忙しい」を口癖にする（イェール大学）
+⑬ 自分の予定を後回しにする（シカゴ大学）
+⑭ 生活リズムを見直さない（マギル大学）
+⑮ 立て直すタイミングを先延ばしにする（ケンブリッジ大学）
+
+## 128GB搭載OneXPlayer Super Xで大型ローカルLLMが持ち運び可能に
+
+* https://pc.watch.impress.co.jp/docs/news/2078481.html
+
+RAM 128GB/SSD 1TBで、¥493,200
+RAM 128GB/SSD 2TBで、¥538,200
+持ち運べるAI環境と言うのは少し惹かれますが、結構高いですね。
+
+## ロングコンテキストはストーリーのコンテキスト化で解決可能と判明
+
+* https://x.com/sarukun99/status/2013479376764182671
+* https://x.com/miyatti/status/2013452363420565612
+* https://x.com/miyatti/status/2013452533977522189
+* https://x.com/miyatti/status/2013453146815897738
+* https://x.com/miyatti/status/2013454440741904826
+* https://x.com/miyatti/status/2013529886003245340
+* https://x.com/miyatti/status/2013530485050286353
+* https://x.com/miyatti/status/2013530692014235706
+
+https://github.com/livyn-inc/aipm-commands
+
+## NotebookLMがニッチ分野の専門知識を完璧にナレッジベース化
+
+* https://x.com/izutorishima/status/2013717664812982334
+
+超ニッチすぎて ChatGPTとかに検索させても解像度高い情報が出てこない分野で、NotebookLM に自分の知る限りのナレッジ入れたら、
+超マニアックな質問に対しほぼ完璧に正答を叩き出せるらしい
+
+## Agent Skillsのコードは業務利用前に必読、個人サイトより信頼性高い
+
+* https://x.com/nukonuko/status/2013775106984587650
+
+ただし、自分で実装を読むのは大前提だよね、というお話。
+まあ、それはそう。
+
+## CodexとClaude Codeの連携サイクルをSKILLで自動化する方法
+
+* https://note.com/makaneko_ai/n/n3cefcec49e2d
+
+## AI活用でエンジニア20人分の作業を1人+AIで実現、コスト5分の1に
+
+* https://x.com/gunta85/status/2011524978978799818
+
+【従来】
+Claude Code: $0
+エンジニア20人 × 100万円 = 月2000万円
+→ 20人月
+
+【2026年型】
+Claude Code: 100万円/月（従量課金・速度制限なし）
+オーケストレーター1人: 月300万円
+→ 20人月相当
+
+本当にこんな割り当てで行けるとしたら、一人当たりの効率はかなり上がりますね。
+
+## GPT-5.2とCursorで300万行のブラウザを1週間で開発
+
+* https://x.com/kenn/status/2011741511298457832
+* https://x.com/mntruell/status/2011562190286045552
+
+とうぜん、完成度はWebKitやChromiumに全然及ばないそう。
+でも、たったそれだけの期間で、それだけできるのはスゴイですよね
+
+## Google、Gemma 3ベースの翻訳モデル「TranslateGemma」を発表
+
+* https://x.com/googleaidevs/status/2011846111128891868
+* https://huggingface.co/collections/google/translategemma
+
+社内の翻訳ツール用のモデルに良さそうです。
+
+## Claude Code改善には「Everything Claude Code」が必須、ハッカソン優勝者の設定で本番環境構築可能
+
+* https://x.com/The_AGI_WAY/status/2012903630949814539
+* https://github.com/affaan-m/everything-claude-code
+
+## SunoAIの効果音版のような新サービスが登場、無料版はクレジット消費が早い
+
+* https://x.com/KAZSIN_SOUND/status/2013147223987822687
+* https://wavesplace.casio.com/
+
+え、カシオがやってるんですね、これ
+
+## 30分で完全理解するTransformerの世界
+
+* https://zenn.dev/zenkigen_tech/articles/2023-01-shimizu
+
+この分量を３０分で理解するのはムリな気がします 笑
+
+## ChatGPTで架空ストーリーを作成しoiioiiで1分ムービー化
+
+* https://x.com/hAru_mAki_ch/status/2013357553527505173
+
+## 大学入学共通テスト、OpenAIは9科目満点　得点率97%でGoogleに勝利
+
+* https://x.com/nikkeishakai/status/2013379698433179943
+
+pdfで渡すと、マルチモーダル性能が良い geminiが勝利するらしいです
+
+## Claude Codeの公式ベストプラクティスガイドが公開
+
+* https://code.claude.com/docs/en/best-practices
+
+## マイクロソフトが自社Copilot持ちながら競合Claude Codeを社内導入推奨
+
+*  https://twitter.com/0xtom/status/2014463794068783259
+
+マイクロソフトはすごいですね
+自社にこだわらず、anthropicのclaude codeで開発を推奨しているそうです
+
+## SUNOがベータ版でサウンド作成機能を追加、効果音からフォーリーまで対応
+
+* https://x.com/suno/status/2014816424229814675
+
+## Microsoft、AI推論用チップ「Maia 200」発表、OpenAIモデル対応でコスト最適化
+
+* https://twitter.com/super_bonochin/status/2015837917156147408
+
+## Kimi-K2.5がオープンリリース、Opus4.5を上回る性能でビジョン機能も搭載
+
+* https://x.com/umiyuki_ai/status/2016167142086111236
+* https://x.com/Kimi_Moonshot/status/2016024049869324599
+
+## 知っているようで知らないCLAUDE.mdを深掘りする
+
+* https://gihyo.jp/article/2026/01/get-started-claude-code-06
+
+## 4bit量子化は万能でない、小型モデルは高精度化、数学推論は8bit以上が最適
+
+* https://x.com/webbigdata/status/2016741173759705471
+* https://arxiv.org/abs/2510.10964
+* Not All Bits Are Equal: Scale-Dependent Memory Optimization Strategies for Reasoning Models
+
+パラメータ数x量子化bit数が4.2GB未満だと、重み重視。それ以上だと、KVキャッシュ重視とのこと。
+
+
+## ClawdBot⇒Moltbot⇒OpenClawに改名、GitHub10万スター突破で快進撃
+
+* https://x.com/ytiskw/status/2017114675792794068
+
+## 慶應大学教授が公開したGitの内部構造を徹底解説する優秀な資料
+
+* https://speakerdeck.com/kaityo256/github-internals
+
+## Kimi-K2.5とClaudeの性能・コスト効率比較結果をまとめ
+
+* https://zenn.dev/robustonian/articles/claude_vs_kimi_k25
+
+## Microsoft、Windowsアプリ開発用CLI「winapp CLI」をリリース
+
+* https://gihyo.jp/article/2026/01/winapp-cli
+
+## LLM量子化の性能劣化原因を特定、ゲート機構で4bit量子化性能が劇的改善
+
+* https://x.com/webbigdata/status/2018542398943723803
+* https://x.com/rosinality/status/2018214954734866936
+* https://arxiv.org/abs/2601.22966
+
+## AIエンジニアがLangChainを推奨しない理由
+
+* https://zenn.dev/genshi_ai/articles/166cf652723496
+
+ちょっと、分かります。
+ラッパが厚すぎて、動作を追っていくの結構キツイんですよね、LangChain。
+
+
+## Qwen3-Coder-Next発表、80B MoEモデルで46GB以下のRAMで動作可能
+
+* https://x.com/UnslothAI/status/2018718997584474191
+* https://x.com/UnslothAI/status/2018721602754789563
+* https://x.com/Alibaba_Qwen/status/2018718453570707465
+
+使ってみた感じ、かなり賢いです。
+コーディングでは、gpt-oss:120bくらいに賢い感じ
+思考トークンは増えてしまいますが、qwen系は試行錯誤が得意なので、プログラムを任せるに向いている気がします。

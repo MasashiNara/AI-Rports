@@ -1,0 +1,79 @@
+## Mistral AI、企業向けカスタムAIモデル構築システム「Forge」をリリース
+
+* https://gigazine.net/news/20260318-mistral-forge/
+
+## GPT-5.4-miniがts-benchで満点近い高性能を示し前バージョンを大幅上回る
+
+* https://x.com/gosrum/status/2034060610913382606
+
+## Claude Code、3/12から権限判断を自動化する「オートモード」導入
+
+* https://x.com/makaneko_AI/status/2029387286396502488
+
+## DGX Sparkがスイッチ経由で4ノードクラスタリングに対応
+
+* https://x.com/_ksasaki/status/2034037833535758494
+   * デイジーチェーンで3台まで
+   * スイッチ経由で4台まで
+
+## Claude Opusでプロンプト末尾に特定フレーズを追加する便利機能を紹介
+
+* https://x.com/tetumemo/status/2033987595777212483
+   * 「ask_user_inputスタイルでお願い」「AskUserQuestionでお願い」と追加すると、選択肢をクリックすると先に進むモードになるらしい
+   * ただ、何も言わなくても、結構このモードで質問してくれる
+
+## Unsloth Studio：LLM訓練・実行対応のオープンソースWebUI登場
+
+* https://x.com/nukonuko/status/2033946452221956352
+
+## NVIDIA、10倍高速な新GPU「RTX PRO 4500」発表、DGX Station受注開始
+
+* https://pc.watch.impress.co.jp/docs/news/2093857.html
+   * 4500 は L4の後継
+   * DGX Station は、GB300 + RTX PRO 6000
+
+## MistralがLean4特化の119Bパラメータコーディング用AI「Leanstral-2603」をリリース
+
+* https://x.com/umiyuki_ai/status/2033889317236441392
+* https://www.reddit.com/r/LocalLLaMA/comments/1rvjvm9/mistralaileanstral2603_hugging_face/
+* https://huggingface.co/mistralai/Leanstral-2603
+
+## Mistral、119BパラメータのオープンソースAIモデルをApacheライセンスでリリース
+
+* https://x.com/umiyuki_ai/status/2033879972910084157
+* https://www.reddit.com/r/LocalLLaMA/comments/1rvlfbh/mistral_small_4119b2603/
+* https://huggingface.co/mistralai/Mistral-Small-4-119B-2603
+* https://huggingface.co/unsloth/Mistral-Small-4-119B-2603-GGUF
+
+## RakutenAI-3.0が日本語処理でGPT-4oを上回るもDeepSeek-V3ベースか
+
+* https://x.com/kis/status/2033785564382826883
+* https://huggingface.co/Rakuten/RakutenAI-3.0
+
+## RakutenAI-3.0のggufフォーマット変換版
+
+* https://x.com/WMjjRpISUEt2QZZ/status/2033887117898879041
+
+## Anthropic、Claude専用の認定資格試験を公開、AIアーキテクトスキルを公式証明
+
+* https://x.com/SuguruKun_ai/status/2033723447189344730
+
+## Claude Codeの公式ドキュメントが整理され、コマンドや環境変数等の情報が更新
+
+* https://x.com/oikon48/status/2033050249363873866
+
+## Claude Codeのセッション履歴が30日で自動削除されるため9999日に設定変更
+
+
+## Claude Code 2026年最新アップデートの登壇資料が公開
+
+* https://speakerdeck.com/oikon48/claude-code-0312
+
+## NYタイムズ調査でAI文章が人間を上回る、物書きは独自性が生存の鍵
+
+* https://x.com/BrandonKHill/status/2031619777563971956
+
+## LLMのページドアテンション機能の仕組みと効果を視覚的に解説
+
+* https://x.com/_avichawla/status/2031827029570854928
+* https://x.com/_avichawla/status/2031624056072712547

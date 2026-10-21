@@ -1,0 +1,37 @@
+## SlackからClaude Codeにタスクを直接委任可能に
+
+* https://x.com/claudeai/status/1998109170449719647
+
+## GoogleのTitans、RNNとTransformerを組み合わせた新アーキテクチャで処理速度と精度を両立
+
+* https://research.google/blog/titans-miras-helping-ai-have-long-term-memory/
+* Transformerの次のアーキテクチャらしいですね
+
+## GoogleドライブとGemini連携でフォルダ要約機能を試用、実用性を確認
+
+* https://x.com/hAru_mAki_ch/status/1997620116448846279
+* 雑なRAGとして、Googleドライブ+Gemini が使えるのかも？と思いました
+
+
+## Transformer論文著者のCEOが開発、8BのLLM「Rnj-1」がオープンリリース
+
+* https://x.com/umiyuki_ai/status/1997294538202009974
+* 8Bなのが残念。40B、80Bあたりのモデルも欲しかったかったです
+
+## Geminiは検索しないだけでなく検索しても間違いが多い
+
+* https://x.com/super_bonochin/status/1996125216867754013
+* Gemini 3 でベンチマーク上ではかなり良いですが、間違うことが多いようです
+
+## MistralがDevstral2シリーズをオープンリリース、24B と 123B の2モデル
+
+* https://mistral.ai/news/devstral-2-vibe-cli
+* 24BはApacheライセンス。123Bは前月売上げ2,000万ドル以上の企業は使えない修正MITライセンスだとのこと
+
+## AnthropicがMCPをLinux Foundationに寄付、オープンで中立的な仕様へ
+
+* https://www.itmedia.co.jp/enterprise/articles/2512/13/news014.html
+
+## 松尾研公開「AIコーディング実践環境の構築方法」が非常に有益
+
+* https://zenn.dev/mkj/articles/bf59c4c86d98a8

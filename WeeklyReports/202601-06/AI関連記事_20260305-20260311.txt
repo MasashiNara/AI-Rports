@@ -1,0 +1,225 @@
+## CLAUDE.mdの正しい書き方と日本語指定が守られない理由について
+
+* https://x.com/pirosikick/status/2028831363726749861
+* https://zenn.dev/cureapp/articles/65b9a99d22ce2b
+   * CLAUDE.mdはSystem Promptではなく、User Messageとして注入される
+   * セッション後半になると影響力が薄れるため、セッションを通して守らせたいルールの置き場所には向かない
+   * CLAUDE.mdにはセッション開始時の作業を助ける情報だけを書き、ルールは .claude/rules/ に置く
+
+## Claude Code、3/12から権限判断を自動化する「オートモード」導入
+
+* https://x.com/makaneko_AI/status/2029387286396502488
+
+## 1兆パラメータの完全オープンソースAI「Yuan 3.0-Ultra」が登場
+
+* https://x.com/ai_hakase_/status/2029455374911234522
+
+## ClaudeとChatGPTの差は技術力ではなく人格、AI企業に「魂を与える哲学者」が在籍
+
+* https://x.com/kawai_design/status/2029512257395097901
+* https://x.com/kawai_design/status/2029553183551590648
+* 
+
+## AIから見える場所に.envファイルを置かないよう啓蒙活動を実施
+
+* https://x.com/hassii_ad/status/2029481458218483742
+
+## GPT-5.4が世界最高モデルとして圧倒的性能を発揮、モデル選択議論に終止符
+
+* https://x.com/HayattiQ/status/2029681379047518663
+   * 過去のどのProよりも、GPT-5.4 Thinking が強いとのこと
+   * (今までProばかり使っていた方が、GPT-5.4 Thinkingばかり使うようになった)
+
+
+## OpenAIの新機能でスライド作成を試行、調整すれば実用可能
+
+* https://x.com/super_bonochin/status/2029693742714908784
+
+## ChatGPT 5.4が高度なコーディング力を統合し精度も大幅向上
+
+* https://x.com/nero_sansei/status/2029857317693300858
+
+なんか、モデルの方向性が、Claudeと似通ってきた感がありますね
+
+## アリババCEO、最強AI「Qwen」のオープンソース継続を明言
+
+* https://x.com/ai_hakase_/status/2029874984068255843
+
+Qwenがクローズになるとか、責任者が変わるとか色々ごたついていましたが、オープンソース戦略は続けてくれるみたいです。
+
+## AI駆動開発1年で退化したスキル、デバッグの勘など3つを実感
+
+* https://x.com/neurostack_0001/status/2030239788557644269
+   * 1つ目は、デバッグの勘。
+   * 2つ目は、コードの「違和感」を感じるセンサー。
+   * 3つ目は、ゼロから設計する力。
+
+## 激安AIの正体は公式モデルを装う偽装APIサービスと判明
+
+* https://x.com/compassinai/status/2030271327479955783
+   * 激安のAPIサービスでは、モデルを偽っていることがあるそうです
+
+## Claude Codeに新機能「/loop」追加、AIが最大3日間自律でタスク実行
+
+* https://x.com/AiAircle34052/status/2030292035614416915
+
+## ローカルLLMがWeb情報から断片的データでもっともらしい分析を生成する能力を獲得
+
+* https://x.com/nyaa_toraneko/status/2030365324030472462
+
+この考察、面白いですね。
+LLMが実際の記事情報を読めずに、周辺情報だけから「もっともらしい」分析を出してきていたらしいのですが、
+これ、クラウド上で動いているＬＬＭで同じことが起こっていても、判別できませんよね。
+でも、ローカルで動かしていたら、ログを見てこれを判定できる、というのがローカルＬＬＭの強みなのでは？　という考察です。
+
+## OpenAI、長時間タスクの耐久力を向上させたGPT-5.4のプロンプトガイドを公開
+
+* https://x.com/itarutomy/status/2030489983614931135
+* https://developers.openai.com/api/docs/guides/prompt-guidance
+
+## Qwen3.5中規模モデルでコーディングエージェント検証、gpt-oss-20bが最安定
+
+* https://x.com/kis/status/2030614362193568255
+
+Qwen3.5より、gpt-oss-20bの方が安定しているとのこと。
+私の感覚ともあう感じです。
+なんか、最近、Qwen3.5を凄く褒める記事が多くて、大丈夫か？と思っていたんですよね。
+
+## Hugging Faceが1T tokens超の強力な合成データセットを公開
+
+* https://x.com/alfredplpl/status/2030614871264625013
+* https://huggingface.co/spaces/HuggingFaceFW/finephrase
+* https://huggingface.co/datasets/HuggingFaceFW/finephrase
+
+## Claude Codeが消した2.5年分の本番データ
+
+* https://x.com/swarm_ai_cloud/status/2030633489478177100
+* https://note.com/joho_no_todai/n/n9447490ced5a
+
+
+どうも、新しく立ち上げる環境を、古くからある環境に相乗りさせようとしているときに、構成情報の伝え方をミスって、元の環境を吹っ飛ばされたっぽい？
+
+## 人間のコード作成からレビュー作業まで自動化が急速に進展
+
+* https://x.com/t_wada/status/2030814948566372587
+* https://zenn.dev/nuits_jp/articles/2026-03-08-reviewing-ai-code
+   * 今後コードレビュワーは育てられない
+   * AIはレビュワーを物量でひき殺す
+   * 今のままのレビューを人が続ける組織は、コードレビューを軽量化した組織に淘汰される
+
+## 48時間学習法を試すも学部生には困難、復習や実用には有効
+
+* https://x.com/Suzacque/status/2030834580476068165
+* https://x.com/ihtesham2005/status/2030214970353602806
+
+## Claude新機能「Code Security」でAIが脆弱性を自動検知・修正提案
+
+* https://x.com/lily_NIKKEIResk/status/2030844925303205921
+* https://www.anthropic.com/news/claude-code-security
+
+## Skillsを深掘りするための学習資料を発見
+
+* https://zenn.dev/yamato_snow/articles/30e8dcf9490c88
+* https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf
+
+## Claude Codeに新機能「コードレビュー」追加、PR時にAIエージェントがバグ検出
+
+* https://x.com/nukonuko/status/2031091678023659587
+* https://claude.com/blog/code-review
+* https://www.itmedia.co.jp/aiplus/articles/2603/10/news074.html
+
+## マイクロソフトがAnthropic提携で自律型AI「Copilot Cowork」発表
+
+* https://japan.cnet.com/article/35244807/
+
+* 
+## 「Anthropic公式が出してるガイドの内容と、自分の今のAIエージェントとの差分をAIに聞いて、構成に差分があれば組み込んで欲しい！」
+
+* https://x.com/shocolt/status/2031013430971465847
+
+## ByteDanceがAIスーパーエージェントをオープンソース化、GitHub22,000スター獲得
+
+* https://x.com/7_eito_7/status/2031047616067420197
+* https://github.com/bytedance/deer-flow
+
+## Claude Codeのステータスライン表示設定で便利な項目を紹介
+
+* https://x.com/tonkotsuboy_com/status/2031168969705734605
+* https://findy.connpass.com/event/384179/
+
+## AI業務効率化で期待値上昇、逆に人間の認知負荷が増加との研究結果
+
+* https://x.com/kosuke_agos/status/2031181024907112527
+
+> バークレー大学の研究により、AIを使って業務を高速化すると、「逆に仕事がより増殖し過酷になる」という残酷な現実が突きつけられました。
+
+
+## Getting started with Codex: Best practices for better results
+
+* https://x.com/derrickcchoi/status/2031023512534634758
+
+## Perplexity、複数AIモデル統合の自律作業ツール「Perplexity Computer」を発表
+
+* https://x.com/pop_ikeda/status/2031203401200206187
+
+## GPT Plus20ドルがClaude MAX200ドルより高性能でレート制限も緩い
+
+* https://x.com/ai_depression/status/2031227063479447931
+
+## SkillNet：AIスキルの作成・評価・接続を行うシステムの論文発表
+
+* https://x.com/LangChainJP/status/2031248738828624376
+* https://arxiv.org/abs/2603.04448
+
+## NVIDIA、GPU依存脱却の新AIプラットフォーム「NemoClaw」発表へ
+
+* https://xenospectrum.com/nvidia-nemoclaw-open-source-ai-agent-platform/
+
+## OpenClaw-RLが登場、リアルタイム会話からAIモデルの重みを直接学習
+
+* https://x.com/_avichawla/status/2031264340297527651
+
+メモリ情報やSkill情報を蓄えるのではなく、強化学習で強くする仕組みのようです。
+
+## AIが自律的に研究・学習する新時代の到来、Karpathyのツールが話題
+
+* https://x.com/tetumemo/status/2031289104084947141
+* https://x.com/karpathy/status/2030371219518931079
+
+## Claude Code Reviewを試したが1PRで20ドルかかりコスパが悪く断念
+
+* https://x.com/sue738/status/2031309751343325404
+
+## KVキャッシュの仕組みと効果を視覚的に解説
+
+* https://x.com/akshay_pachaar/status/2031315091862466938
+
+## GPT5.4Thinkingにアクセス集中による性能低下の可能性
+
+* https://x.com/kiyoshi_shin/status/2031345115374170220
+
+## 同職者が推薦する本物の記事、デザイナー以外にも読んでほしい
+
+* https://x.com/shibuya_tsuzuru/status/2031373005490897012
+
+## Amazon、AIコード開発にシニアエンジニア承認を義務化、障害多発で方針転換
+
+* https://x.com/joho_no_todai/status/2031375615966982554
+* https://note.com/joho_no_todai/n/n8ccc359382fe
+
+## Geminiのマルチモーダル埋め込みモデルが音声・動画・画像・テキストを統一ベクトル化
+
+* https://x.com/yugen_matuni/status/2031416934739357788
+
+## Claude Codeに作業中断せず質問できる/btwコマンド追加
+
+* https://x.com/oikon48/status/2031517622647533813
+
+
+## ヤン・ルカン氏によるAI企業、「世界モデル」構築へトヨタ・NVIDIAらから大規模調達
+
+* https://www.watch.impress.co.jp/docs/news/2092206.html
+
+## ChatGPTに図や動画で学ぶインタラクティブ・ラーニング機能を導入
+
+* https://x.com/itnavi2022/status/2031472353092546660

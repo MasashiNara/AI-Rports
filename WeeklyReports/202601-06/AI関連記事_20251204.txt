@@ -1,0 +1,74 @@
+## Mistral 3モデルファミリーをApache 2.0ライセンスで発表 ollamaも対応済み
+
+* https://mistral.ai/news/mistral-3
+* https://x.com/ollama/status/1995885696360566885
+* Msitralはフランスの企業なので、割と企業で利用しやすいモデルです。
+* ただ、今回は 3b, 8b, 14b と小さいモデルと、超巨大な 675b なので使い勝手がイマイチな感じですね
+
+## Anthropic公式プロンプティングベストプラクティスガイド公開
+
+* https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-4-best-practices
+
+## Claude Codeのカスタマイズブログ公開、初心者・新規ユーザー必見
+
+* https://www.claude.com/blog/using-claude-md-files
+
+## アップル、次世代SiriにGoogle Gemini採用へ
+
+* https://ascii.jp/elem/000/004/355/4355103/
+
+## 「AIに先にテストを全部書かせる」はTDDじゃない。でも、それもアリだよね。
+
+* https://zenn.dev/loglass/articles/16745471ef55ff
+
+## AIエージェント時代に、テスト駆動開発（TDD）は「ガードレール」になる【t_wada×やっとむ対談】
+
+* https://agilejourney.uzabase.com/entry/2025/08/29/103000
+
+## Claude Code はじめてガイド -1時間で学べるAI駆動開発の基本と実践-
+
+* https://speakerdeck.com/oikon48/claude-code-hazimetegaido-1shi-jian-dexue-beruaiqu-dong-kai-fa-noji-ben-toshi-jian
+
+## Anthropicが長時間稼働AIエージェント用ハーネス設計を公開
+
+* https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents
+* https://x.com/LangChainJP/status/1994647533516194262
+
+## Claude Code スキル・サブエージェント攻略ガイド
+
+* https://zenn.dev/oligin/articles/7691926a83936a
+
+## ITコンサル必読：総務省情報通信白書とIPA人材白書で上流工程を強化
+
+* https://www.mizuhobank.co.jp/corporate/industry/sangyou/pdf/1079.pdf
+
+## AIを自由利用可能にしても組織全体の生産性は横ばいという現実
+
+* https://note.com/yuichiro826/n/n285026b11564
+* ハイスキル層（もともと生産性が高い層）は、生産性が向上
+* ジュニア層が、生産性が落ちている
+
+ハイスキル層を活用するのが短期では得ですが、ジュニア層を育てないと先はありません。
+バランスが難しそうですよね
+
+## カルパシー氏、複数AIが議論して最終回答を出すllm-councilを開発
+
+* https://github.com/karpathy/llm-council
+
+## Claude CodeでCtrl-Gを押すとVimエディターでプロンプト入力が可能に
+
+* https://x.com/kfly8/status/1995325509660782923
+
+## もしAI素人が「明日からAIエージェント作ってくれ」と言われたら
+
+* https://note.com/moriya_gekko/n/n47aa474cf658
+
+## 政府が人型生成AIロボット開発へ、人間と同等の能力目指す
+
+* https://news.yahoo.co.jp/articles/90fd212ba5329a405b0e55b68885833ab0f5f90f
+
+政府が人型ロボットに注力するようです
+
+## LLMアプリケーション開発ではCS部門の知見が最重要、プロンプト調整が鍵
+
+* https://x.com/shogohayashi/status/1995411944615075983
